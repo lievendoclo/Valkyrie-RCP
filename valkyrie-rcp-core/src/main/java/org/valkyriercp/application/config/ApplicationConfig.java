@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.*;
+import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.factory.ButtonFactory;
@@ -37,4 +38,5 @@ public interface ApplicationConfig {
     MessageSource messageSource();
     ApplicationObjectConfigurer applicationObjectConfigurer();
     SecurityControllerManager securityControllerManager();
+    RegisterableExceptionHandler registerableExceptionHandler();
 }

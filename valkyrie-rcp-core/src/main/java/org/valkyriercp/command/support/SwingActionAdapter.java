@@ -9,7 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * An adapter between a Spring Rich Client {@link ActionCommand} and the Swing
+ * An adapter between a Valkyrie RCP {@link ActionCommand} and the Swing
  * {@link javax.swing.Action} interface.
  *
  * <p>

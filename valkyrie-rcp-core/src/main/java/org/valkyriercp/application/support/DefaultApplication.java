@@ -60,7 +60,7 @@ public class DefaultApplication implements Application {
         if( applicationDescriptor != null && StringUtils.hasText(applicationDescriptor.getDisplayName()) )
             return applicationDescriptor.getDisplayName();
 
-        return "Spring Rich Client Application";
+        return "Valkyrie RCP Application";
     }
 
     @Override

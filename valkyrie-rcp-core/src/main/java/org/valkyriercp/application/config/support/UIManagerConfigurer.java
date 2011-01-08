@@ -30,8 +30,7 @@ public class UIManagerConfigurer {
         }
         try {
             doInstallCustomDefaults();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ApplicationException("Unable to install subclass custom defaults", e);
         }
     }
@@ -59,8 +58,7 @@ public class UIManagerConfigurer {
             UIManager.put("Tree.closedIcon", null);
             UIManager.put("Tree.openIcon", null);
             UIManager.put("Tree.rightChildIndent", new Integer(10));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ApplicationException("Unable to set defaults", e);
         }
     }
@@ -68,7 +66,7 @@ public class UIManagerConfigurer {
     public void setProperties(Properties properties) {
         Iterator i = properties.entrySet().iterator();
         while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry)i.next();
+            Map.Entry entry = (Map.Entry) i.next();
             UIManager.put(entry.getKey(), entry.getValue());
         }
     }
@@ -81,12 +79,10 @@ public class UIManagerConfigurer {
             String className;
             if (feels.length == 1) {
                 className = feels[0];
-            }
-            else if (feels.length > 1) {
+            } else if (feels.length > 1) {
                 name = feels[0];
                 className = feels[1];
-            }
-            else {
+            } else {
                 throw new RuntimeException("Should not happen");
             }
             UIManager.installLookAndFeel(name, className);
@@ -97,36 +93,35 @@ public class UIManagerConfigurer {
         setLookAndFeel(lookAndFeel.getName());
     }
 
-    public void setLookAndFeel(String className) {
-        try {
-            UIManager.setLookAndFeel(className);
-        }
-        catch (Exception e) {
-            throw new ApplicationException("Unable to set look and feel", e);
-        }
+    public void setLookAndFeel(final String className) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(className);
+                } catch (Exception e) {
+                    throw new ApplicationException("Unable to set look and feel", e);
+                }
+            }
+        });
     }
 
     public void setLookAndFeelWithName(String lookAndFeelName) {
         try {
             if (lookAndFeelName.equalsIgnoreCase(SYSTEM_LOOK_AND_FEEL_NAME)) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }
-            else if (lookAndFeelName.equalsIgnoreCase(CROSS_PLATFORM_LOOK_AND_FEEL_NAME)) {
+            } else if (lookAndFeelName.equalsIgnoreCase(CROSS_PLATFORM_LOOK_AND_FEEL_NAME)) {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            }
-            else {
+            } else {
                 UIManager.LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
-                for (UIManager.LookAndFeelInfo feel : feels)
-                {
-                    if (feel.getName().equalsIgnoreCase(lookAndFeelName))
-                    {
+                for (UIManager.LookAndFeelInfo feel : feels) {
+                    if (feel.getName().equalsIgnoreCase(lookAndFeelName)) {
                         UIManager.setLookAndFeel(feel.getClassName());
                         break;
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ApplicationException("Unable to set look and feel", e);
         }
     }

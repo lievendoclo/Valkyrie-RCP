@@ -8,8 +8,12 @@ import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.ApplicationWindowConfigurer;
 import org.valkyriercp.application.StatusBar;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
+import org.valkyriercp.application.exceptionhandling.DefaultRegisterableExceptionHandler;
+import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
 import org.valkyriercp.application.support.DefaultStatusBar;
 import org.valkyriercp.command.support.CommandGroup;
+
+import javax.annotation.PostConstruct;
 
 @Component
 public abstract class AbstractApplicationLifecycleAdvisor implements ApplicationLifecycleAdvisor {
@@ -22,6 +26,9 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 	private ApplicationWindow openingWindow;
 
     protected String startingPageId;
+
+    @Autowired
+    private RegisterableExceptionHandler registerableExceptionHandler;
 
     @Override
     public String getStartingPageId() {
@@ -57,6 +64,12 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 		configurer.setTitle(application.getName());
 		configurer.setImage(application.getImage());
 	}
+
+
+    @PostConstruct
+    public void registerExceptionHandler() {
+        registerableExceptionHandler.registerExceptionHandler();
+    }
 
     public ApplicationWindow getOpeningWindow() {
         return openingWindow;

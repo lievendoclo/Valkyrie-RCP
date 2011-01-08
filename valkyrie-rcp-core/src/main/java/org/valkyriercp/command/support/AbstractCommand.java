@@ -18,6 +18,7 @@ import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -49,7 +50,7 @@ import java.util.NoSuchElementException;
  *
  */
 @Configurable
-public abstract class AbstractCommand extends AbstractPropertyChangePublisher implements InitializingBean,
+public abstract class AbstractCommand extends AbstractPropertyChangePublisher implements
         BeanNameAware, GuardedActionCommandExecutor, Secured {
 
 	/** Property used to notify changes in the <em>enabled</em> state. */
@@ -321,13 +322,16 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * dependencies have been set. If subclasses override this method, they
 	 * should begin by calling {@code super.afterPropertiesSet()}.
 	 */
+    @PostConstruct
 	public void afterPropertiesSet() {
 		if (getId() == null) {
 			logger.info("Command " + this + " has no set id; note: anonymous commands cannot be used in registries.");
 		}
 		if (this instanceof ActionCommand && !isFaceConfigured()) {
-			logger.warn("The face descriptor property is not yet set for action command '" + getId()
-					+ "'; command won't render correctly until this is configured");
+			logger.info("The face descriptor property is not yet set for action command '" + getId()
+					+ "'; configuring");
+            applicationConfig.commandConfigurer().configure(this);
+
 		}
 	}
 

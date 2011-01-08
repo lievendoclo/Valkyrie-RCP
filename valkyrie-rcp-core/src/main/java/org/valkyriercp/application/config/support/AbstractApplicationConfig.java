@@ -6,12 +6,15 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.context.support.StaticMessageSource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationObjectConfigurer;
+import org.valkyriercp.application.exceptionhandling.*;
 import org.valkyriercp.application.support.*;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandRegistry;
@@ -27,6 +30,11 @@ import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.ImageSource;
 import org.valkyriercp.security.SecurityControllerManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Autowired
@@ -60,11 +68,23 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public ApplicationDescriptor applicationDescriptor() {
-        return new DefaultApplicationDescriptor();
+        DefaultApplicationDescriptor defaultApplicationDescriptor = new DefaultApplicationDescriptor();
+        applicationObjectConfigurer().configure(defaultApplicationDescriptor, "applicationDescriptor");
+        return defaultApplicationDescriptor;
     }
 
     @Bean
-    public abstract ImageSource imageSource();
+    public ImageSource imageSource() {
+        DefaultImageSource imageSource = new DefaultImageSource(getImageSourceResources());
+        imageSource.setBrokenImageIndicator(applicationContext().getResource("classpath:/org/valkyriercp/images/alert/error_obj.gif"));
+        return imageSource;
+    }
+
+    public Map<String, Resource> getImageSourceResources() {
+        Map<String, Resource> resources = new HashMap<String, Resource>();
+        resources.put("default", applicationContext().getResource("classpath:/org/valkyriercp/images/images.properties"));
+        return resources;
+    }
 
     @Bean
     public WindowManager windowManager() {
@@ -127,7 +147,17 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     }
 
     @Bean
-    public abstract MessageSource messageSource();
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames(getResourceBundleLocations().toArray(new String[getResourceBundleLocations().size()]));
+        return messageSource;
+    }
+
+    public List<String> getResourceBundleLocations() {
+        ArrayList list =  new ArrayList<String>();
+        list.add("org.valkyriercp.messages.default");
+        return list;
+    }
 
     @Bean
     public ApplicationObjectConfigurer applicationObjectConfigurer() {
@@ -141,5 +171,13 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     public Class<?> getCommandConfigClass() {
         return DefaultCommandConfig.class;
+    }
+
+    @Bean
+    public RegisterableExceptionHandler registerableExceptionHandler() {
+        JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
+        DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+        handler.getDelegateList().add(new SimpleExceptionHandlerDelegate(Throwable.class, errorDialogExceptionHandler));
+        return handler;
     }
 }

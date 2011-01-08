@@ -261,6 +261,11 @@
                 <artifactId>substance</artifactId>
                 <version>6.0</version>
             </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
