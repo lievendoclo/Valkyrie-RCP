@@ -53,6 +53,10 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
         this.statusBar = getAdvisor().getStatusBar();
     }
 
+    public int getNumber() {
+        return number;
+    }
+
     @Override
     public JXFrame getControl() {
         return control;

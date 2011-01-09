@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.context.support.StaticMessageSource;
@@ -15,6 +16,8 @@ import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationObjectConfigurer;
 import org.valkyriercp.application.exceptionhandling.*;
+import org.valkyriercp.application.session.ApplicationSession;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.*;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandRegistry;
@@ -154,7 +157,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     }
 
     public List<String> getResourceBundleLocations() {
-        ArrayList list =  new ArrayList<String>();
+        ArrayList<String> list =  new ArrayList<String>();
         list.add("org.valkyriercp.messages.default");
         return list;
     }
@@ -179,5 +182,15 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
         handler.getDelegateList().add(new SimpleExceptionHandlerDelegate(Throwable.class, errorDialogExceptionHandler));
         return handler;
+    }
+
+    @Bean
+    public ApplicationSession applicationSession() {
+        return new ApplicationSession();
+    }
+
+    @Bean
+    public ApplicationSessionInitializer applicationSessionInitializer() {
+        return new ApplicationSessionInitializer();
     }
 }

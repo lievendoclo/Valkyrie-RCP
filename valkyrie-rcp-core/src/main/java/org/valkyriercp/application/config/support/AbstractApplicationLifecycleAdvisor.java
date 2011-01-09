@@ -10,6 +10,7 @@ import org.valkyriercp.application.StatusBar;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.exceptionhandling.DefaultRegisterableExceptionHandler;
 import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.DefaultStatusBar;
 import org.valkyriercp.command.support.CommandGroup;
 
@@ -29,6 +30,9 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
     @Autowired
     private RegisterableExceptionHandler registerableExceptionHandler;
+
+    @Autowired
+    private ApplicationSessionInitializer applicationSessionInitializer;
 
     @Override
     public String getStartingPageId() {
@@ -111,4 +115,8 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
     @Override
     public void onShutdown() { }
+
+    public ApplicationSessionInitializer getApplicationSessionInitializer() {
+        return applicationSessionInitializer;
+    }
 }

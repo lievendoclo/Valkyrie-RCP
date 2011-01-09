@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
+import org.valkyriercp.application.session.ApplicationSession;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.factory.ButtonFactory;
@@ -39,4 +41,6 @@ public interface ApplicationConfig {
     ApplicationObjectConfigurer applicationObjectConfigurer();
     SecurityControllerManager securityControllerManager();
     RegisterableExceptionHandler registerableExceptionHandler();
+    ApplicationSession applicationSession();
+    ApplicationSessionInitializer applicationSessionInitializer();
 }

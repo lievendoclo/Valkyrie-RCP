@@ -3,6 +3,7 @@ package org.valkyriercp.application.config;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.ApplicationWindowConfigurer;
 import org.valkyriercp.application.StatusBar;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.support.CommandGroup;
 
@@ -34,4 +35,6 @@ public interface ApplicationLifecycleAdvisor {
     StatusBar getStatusBar();
 
     void onShutdown();
+
+    ApplicationSessionInitializer getApplicationSessionInitializer();
 }
