@@ -8,6 +8,12 @@ import org.valkyriercp.command.config.AbstractCommandConfig;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupFactoryBean;
+import org.valkyriercp.command.support.WidgetViewCommand;
+import org.valkyriercp.widget.AbstractWidget;
+import org.valkyriercp.widget.Widget;
+import org.valkyriercp.widget.WidgetViewDescriptor;
+
+import javax.swing.*;
 
 @Configuration
 public class SimpleSampleCommandConfig extends AbstractCommandConfig {
@@ -19,7 +25,7 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
 
         CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
         fileMenuFactory.setGroupId("fileMenu");
-        fileMenuFactory.setMembers(exitCommand(), throwExceptionCommand());
+        fileMenuFactory.setMembers(newWindowCommand(), throwExceptionCommand(), showEmptyWidgetCommand(), showOtherWidgetCommand(),exitCommand());
 
         menuFactory.setMembers(fileMenuFactory.getCommandGroup());
         return menuFactory.getCommandGroup();
@@ -34,5 +40,20 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
     @Bean
     public AbstractCommand throwExceptionCommand() {
         return new ThrowExceptionCommand();
+    }
+
+    @Bean
+    public AbstractCommand showEmptyWidgetCommand() {
+        return new WidgetViewCommand("emptyWidgetCommand", new WidgetViewDescriptor("emptyWidget", Widget.EMPTY_WIDGET));
+    }
+
+    @Bean
+    public AbstractCommand showOtherWidgetCommand() {
+        return new WidgetViewCommand("otherWidgetCommand", new WidgetViewDescriptor("otherWidget",new AbstractWidget() {
+            @Override
+            public JComponent getComponent() {
+                return new JPanel();
+            }
+        }));
     }
 }

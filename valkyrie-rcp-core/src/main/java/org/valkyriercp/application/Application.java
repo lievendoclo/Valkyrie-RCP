@@ -12,4 +12,6 @@ public interface Application {
     void close();
 
     void close(boolean force, int exitCode);
+
+    void openWindow(String pageDescriptorId);
 }

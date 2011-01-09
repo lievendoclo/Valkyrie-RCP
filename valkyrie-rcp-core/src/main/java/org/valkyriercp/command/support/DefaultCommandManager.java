@@ -18,6 +18,8 @@ import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
 
+import java.util.List;
+
 /**
  * @author Keith Donald
  */
@@ -181,14 +183,6 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
         return newCommand;
     }
 
-    public CommandGroup createCommandGroup(String groupId, Object[] members) {
-        Assert.notNull(groupId, "Registered command groups must have an id.");
-        CommandGroup newGroup = new CommandGroupFactoryBean(groupId, this.commandRegistry, this, members)
-                .getCommandGroup();
-        registerCommand(newGroup);
-        return newGroup;
-    }
-
     public ExclusiveCommandGroup createExclusiveCommandGroup(String groupId, Object[] members) {
         Assert.notNull(groupId, "Registered exclusive command groups must have an id.");
         CommandGroupFactoryBean newGroupFactory = new CommandGroupFactoryBean(groupId, this.commandRegistry, this,
@@ -254,5 +248,71 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
     public boolean isTypeMatch(String commandId, Class targetType) {
         return this.commandRegistry.isTypeMatch(commandId, targetType);
     }
+
+    /**
+	 * Create a command group which holds all the given members.
+	 *
+	 * @param members members to add to the group.
+	 * @return a {@link CommandGroup} which contains all the members.
+	 */
+	@Override
+    public CommandGroup createCommandGroup(List<? extends AbstractCommand> members) {
+		return createCommandGroup(null, members.toArray(), false, null);
+	}
+
+    /**
+	 * Create a command group which holds all the given members.
+	 *
+	 * @param groupId the id to configure the group.
+	 * @param members members to add to the group.
+	 * @return a {@link CommandGroup} which contains all the members.
+	 */
+	@Override
+    public CommandGroup createCommandGroup(String groupId, Object[] members) {
+		return createCommandGroup(groupId, members, false, null);
+	}
+
+    /**
+	 * Create a command group which holds all the given members.
+	 *
+	 * @param groupId the id to configure the group.
+	 * @param members members to add to the group.
+	 * @return a {@link CommandGroup} which contains all the members.
+	 */
+	@Override
+    public CommandGroup createCommandGroup(String groupId, List<? extends AbstractCommand> members) {
+		return createCommandGroup(groupId, members.toArray(), false, null);
+	}
+
+	/**
+	 * Create a command group which holds all the given members.
+	 *
+	 * @param groupId the id to configure the group.
+	 * @param members members to add to the group.
+	 * @param configurer the configurer to use.
+	 * @return a {@link CommandGroup} which contains all the members.
+	 */
+	@Override
+    public CommandGroup createCommandGroup(String groupId, Object[] members, CommandConfigurer configurer) {
+		return createCommandGroup(groupId, members, false, configurer);
+	}
+
+    /**
+	 * Creates a command group, configuring the group using the ObjectConfigurer
+	 * service (pulling visual configuration properties from an external
+	 * source). This method will also auto-configure contained Command members
+	 * that have not yet been configured.
+	 *
+	 * @param groupId id to configure this commandGroup.
+	 * @param members members to add to the group.
+	 * @return a {@link CommandGroup} that holds the given members.
+	 */
+    @Override
+    public CommandGroup createCommandGroup(final String groupId, final Object[] members,
+                                           final boolean exclusive, final CommandConfigurer configurer) {
+		final CommandGroupFactoryBean groupFactory = new CommandGroupFactoryBean(groupId, null, commandConfigurer, members);
+		groupFactory.setExclusive(exclusive);
+		return groupFactory.getCommandGroup();
+	}
 
 }

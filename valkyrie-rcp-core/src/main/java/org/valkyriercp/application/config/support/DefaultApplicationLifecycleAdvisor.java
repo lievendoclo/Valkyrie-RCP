@@ -19,22 +19,11 @@ import java.util.List;
 /**
  * @author Keith Donald
  */
-public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifecycleAdvisor
-        implements ApplicationListener {
-    private String windowCommandBarDefinitions;
+public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifecycleAdvisor {
 
     private ConfigurableListableBeanFactory openingWindowCommandBarFactory;
 
     private Class<?> commandConfigClass;
-
-    /**
-     * Set of child command contexts created - used to bridge application events.
-     */
-    private ArrayList childContexts = new ArrayList();
-
-    public void setWindowCommandBarDefinitions(String commandBarDefinitionLocation) {
-        this.windowCommandBarDefinitions = commandBarDefinitionLocation;
-    }
 
     public ApplicationWindowCommandManager createWindowCommandManager() {
         initNewWindowCommandBarFactory();
@@ -52,7 +41,6 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
         } catch (Exception e) {
             throw new ConfigurationException("Command context could not be loaded", e);
         }
-        addChildCommandContext(commandBarContext);
         this.openingWindowCommandBarFactory = commandBarContext.getBeanFactory();
     }
 
@@ -76,42 +64,6 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
     public CommandGroup getToolBarCommandGroup() {
         CommandGroup toolBarCommandGroup = getCommandConfig().toolBarCommandGroup();
         return toolBarCommandGroup != null ? toolBarCommandGroup : super.getToolBarCommandGroup();
-    }
-
-
-    /**
-     * We need to deliver all application events down to the child command
-     * contexts that have been created.
-     *
-     * @param event to deliver
-     */
-    public void onApplicationEvent(ApplicationEvent event) {
-        // Dispatch the event to all the child command contexts
-        for (Iterator iter = getChildCommandContexts().iterator(); iter.hasNext();) {
-            ApplicationContext ctx = (ApplicationContext) iter.next();
-            ctx.publishEvent(event);
-        }
-    }
-
-    /**
-     * Get all the child command contexts that have been created.
-     * <p/>
-     * <em>Note, theactual collection is being returned - so be careful what you
-     * do to it.</em>
-     *
-     * @return list of contexts
-     */
-    protected List getChildCommandContexts() {
-        return childContexts;
-    }
-
-    /**
-     * Add a new child command context.
-     *
-     * @param context
-     */
-    protected void addChildCommandContext(ApplicationContext context) {
-        childContexts.add(context);
     }
 
     private class CommandBarApplicationContextFactory implements FactoryBean<AnnotationConfigApplicationContext>

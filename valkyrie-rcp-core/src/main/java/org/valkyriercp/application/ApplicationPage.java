@@ -10,6 +10,8 @@ public interface ApplicationPage extends ControlFactory {
     boolean close();
     boolean close(PageComponent pageComponent);
     public List<PageComponent> getPageComponents();
+    PageComponent getActiveComponent();
+    void setActiveComponent(PageComponent pageComponent);
     void addPageComponentListener(PageComponentListener listener);
     void removePageComponentListener(PageComponentListener listener);
     /**
@@ -57,4 +59,8 @@ public interface ApplicationPage extends ControlFactory {
      * @return the {@link View}, or <code>null</code>
      */
     <T extends View> T getView(String id);
+
+    View showView(ViewDescriptor viewDescriptor);
+
+    View showView(ViewDescriptor viewDescriptor, Object input);
 }

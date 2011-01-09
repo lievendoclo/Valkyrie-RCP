@@ -20,10 +20,12 @@ import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.*;
 import org.valkyriercp.command.CommandConfigurer;
+import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandRegistry;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.config.DefaultCommandConfig;
 import org.valkyriercp.command.config.DefaultCommandConfigurer;
+import org.valkyriercp.command.support.DefaultCommandManager;
 import org.valkyriercp.command.support.DefaultCommandRegistry;
 import org.valkyriercp.command.support.DefaultCommandServices;
 import org.valkyriercp.factory.*;
@@ -192,5 +194,15 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public ApplicationSessionInitializer applicationSessionInitializer() {
         return new ApplicationSessionInitializer();
+    }
+
+    @Bean
+    public MessageResolver messageResolver() {
+        return new MessageResolver();
+    }
+
+    @Bean
+    public CommandManager commandManager() {
+        return new DefaultCommandManager();
     }
 }

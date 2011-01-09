@@ -296,4 +296,13 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
         return commandManager.getSharedCommands();
     }
 
+    @Override
+    public ApplicationWindowCommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    @Override
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
 }

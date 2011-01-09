@@ -40,10 +40,12 @@ public class DefaultApplication implements Application {
         lifecycleAdvisor.onPostStartup();
     }
 
-    protected void openWindow(String startingPageId) {
+    public void openWindow(String pageDescriptorId) {
         ApplicationWindow window = initWindow(createNewWindow());
-        if(startingPageId == null) {
+        if(pageDescriptorId == null) {
             window.showPage(applicationPageFactory.createApplicationPage(window, new MultiViewPageDescriptor()));
+        } else {
+            window.showPage(pageDescriptorId);
         }
     }
 

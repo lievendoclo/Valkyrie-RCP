@@ -8,7 +8,9 @@ import org.valkyriercp.application.*;
 import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
+import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.command.CommandConfigurer;
+import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
@@ -43,4 +45,6 @@ public interface ApplicationConfig {
     RegisterableExceptionHandler registerableExceptionHandler();
     ApplicationSession applicationSession();
     ApplicationSessionInitializer applicationSessionInitializer();
+    MessageResolver messageResolver();
+    CommandManager commandManager();
 }
