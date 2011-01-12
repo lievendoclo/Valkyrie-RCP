@@ -17,7 +17,9 @@
             <groupId>org.valkyriercp</groupId>
             <artifactId>valkyrie-rcp-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.valkyriercp</groupId>
+            <artifactId>valkyrie-rcp-jideoss</artifactId>
+        </dependency>
     </dependencies>
-
-
 </project>

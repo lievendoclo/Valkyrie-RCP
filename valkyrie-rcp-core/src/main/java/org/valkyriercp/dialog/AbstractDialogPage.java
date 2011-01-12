@@ -1,0 +1,223 @@
+package org.valkyriercp.dialog;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.util.Assert;
+import org.valkyriercp.application.config.ApplicationObjectConfigurer;
+import org.valkyriercp.component.DefaultMessageAreaModel;
+import org.valkyriercp.core.Guarded;
+import org.valkyriercp.core.Message;
+import org.valkyriercp.core.support.LabeledObjectSupport;
+import org.valkyriercp.factory.AbstractControlFactory;
+import org.valkyriercp.factory.ControlFactory;
+import org.valkyriercp.image.config.IconConfigurable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+/**
+ * A convenience implementation of the DialogPage interface. Recommended to be
+ * used as a base class for all GUI dialog pages (or panes.)
+ *
+ * @author Keith Donald
+ * @see DialogPage
+ */
+@Configurable
+public abstract class AbstractDialogPage extends LabeledObjectSupport implements DialogPage, ControlFactory, Guarded,
+        IconConfigurable {
+
+	private final MessageChangeHandler messageChangeHandler = new MessageChangeHandler();
+
+	private String pageId;
+
+	private Icon icon;
+
+	private boolean pageComplete = true;
+
+	private DefaultMessageAreaModel messageBuffer;
+
+	private boolean visible = true;
+
+    @Autowired
+    private ApplicationObjectConfigurer applicationObjectConfigurer;
+
+	private AbstractControlFactory factory = new AbstractControlFactory() {
+		public JComponent createControl() {
+			return AbstractDialogPage.this.createControl();
+		}
+	};
+
+	/**
+	 * Creates a new dialog page. This titles of this dialog page will be
+	 * configured using the default ObjectConfigurer.
+	 *
+	 * @param pageId the id of this dialog page. This will be used to configure
+	 * the page.
+	 */
+	protected AbstractDialogPage(String pageId) {
+		this(pageId, true);
+	}
+
+	/**
+	 * Creates a new dialog page.
+	 *
+	 * @param pageId the id of this dialog page
+	 * @param autoConfigure whether or not to use an ObjectConfigurer to
+	 * configure the titles of this dialog page using the given pageId
+	 */
+	protected AbstractDialogPage(String pageId, boolean autoConfigure) {
+		this.messageBuffer = new DefaultMessageAreaModel(this);
+		this.messageBuffer.addPropertyChangeListener(messageChangeHandler);
+		setId(pageId, autoConfigure);
+	}
+
+	/**
+	 * Creates a new dialog page with the given title.
+	 *
+	 * @param pageId the id of this dialog page
+	 * @param autoConfigure whether or not to use an ObjectConfigurer to
+	 * configure the titles of this dialog page using the given pageId
+	 * @param title the title of this dialog page, or <code>null</code> if
+	 * none
+	 */
+	protected AbstractDialogPage(String pageId, boolean autoConfigure, String title) {
+		this(pageId, autoConfigure);
+		if (title != null) {
+			setTitle(title);
+		}
+	}
+
+	/**
+	 * Creates a new dialog page with the given title and image.
+	 *
+	 * @param pageId the id of this dialog page
+	 * @param autoConfigure whether or not to use an ObjectConfigurer to
+	 * configure the titles of this dialog page using the given pageId
+	 * @param title the title of this dialog page, or <code>null</code> if
+	 * none
+	 * @param icon the image for this dialog page, or <code>null</code> if
+	 * none
+	 */
+	protected AbstractDialogPage(String pageId, boolean autoConfigure, String title, Image icon) {
+		this(pageId, autoConfigure, title);
+		if (icon != null) {
+			setImage(icon);
+		}
+	}
+
+	public String getId() {
+		return pageId;
+	}
+
+	protected void setId(String pageId, boolean autoConfigure) {
+		Assert.hasText(pageId, "pageId is required");
+		String oldValue = this.pageId;
+		this.pageId = pageId;
+		firePropertyChange("id", oldValue, pageId);
+		if (autoConfigure) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Auto configuring dialog page with id " + pageId);
+			}
+			applicationObjectConfigurer.configure(this, pageId);
+		}
+	}
+
+	public String getTitle() {
+		return getDisplayName();
+	}
+
+	public Message getMessage() {
+		return messageBuffer.getMessage();
+	}
+
+	/**
+	 * Sets or clears the message for this page.
+	 *
+	 * @param newMessage the message, or <code>null</code> to clear the
+	 * message
+	 */
+	public void setMessage(Message newMessage) {
+		messageBuffer.setMessage(newMessage);
+	}
+
+	public boolean hasErrorMessage() {
+		return messageBuffer.hasErrorMessage();
+	}
+
+	public boolean hasWarningMessage() {
+		return messageBuffer.hasWarningMessage();
+	}
+
+	public boolean hasInfoMessage() {
+		return messageBuffer.hasInfoMessage();
+	}
+
+	public void setVisible(boolean visible) {
+		boolean oldValue = this.visible;
+		getControl().setVisible(visible);
+		this.visible = visible;
+		firePropertyChange("visible", oldValue, visible);
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public boolean isPageComplete() {
+		return pageComplete;
+	}
+
+	public void setPageComplete(boolean pageComplete) {
+		boolean oldValue = this.pageComplete;
+		this.pageComplete = pageComplete;
+		firePropertyChange("pageComplete", oldValue, pageComplete);
+	}
+
+	public boolean isEnabled() {
+		return isPageComplete();
+	}
+
+	public void setEnabled(boolean enabled) {
+		setPageComplete(enabled);
+	}
+
+	public JComponent getControl() {
+		return factory.getControl();
+	}
+
+	public boolean isControlCreated() {
+		return factory.isControlCreated();
+	}
+
+	public Window getParentWindowControl() {
+		return SwingUtilities.getWindowAncestor(getControl());
+	}
+
+	/**
+	 * This default implementation of an <code>AbstractDialogPage</code>
+	 * method does nothing. Subclasses should override to take some action in
+	 * response to a help request.
+	 */
+	public void performHelp() {
+		// do nothing by default
+	}
+
+	protected abstract JComponent createControl();
+
+	private class MessageChangeHandler implements PropertyChangeListener {
+		public void propertyChange(PropertyChangeEvent evt) {
+			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+		}
+	}
+
+	public void setIcon(Icon icon) {
+		this.icon = icon;
+	}
+
+	public Icon getIcon() {
+		return icon;
+	}
+}
+

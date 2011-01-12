@@ -1,5 +1,7 @@
 package org.valkyriercp.factory;
 
+import org.jdesktop.swingx.JXButton;
+
 import javax.swing.*;
 
 /**
@@ -13,7 +15,7 @@ public class DefaultButtonFactory implements ButtonFactory {
      * {@inheritDoc}
      */
     public AbstractButton createButton() {
-        return new JButton();
+        return new JXButton();
     }
 
     /**

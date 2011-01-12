@@ -1,5 +1,6 @@
 package org.valkyriercp.application.config;
 
+import org.springframework.binding.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,8 @@ import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandle
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.MessageResolver;
+import org.valkyriercp.binding.form.FieldFaceSource;
+import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandServices;
@@ -17,6 +20,8 @@ import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
 import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.ImageSource;
+import org.valkyriercp.rules.RulesSource;
+import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
 import org.valkyriercp.security.SecurityControllerManager;
 
 @Configuration
@@ -47,4 +52,9 @@ public interface ApplicationConfig {
     ApplicationSessionInitializer applicationSessionInitializer();
     MessageResolver messageResolver();
     CommandManager commandManager();
+    ValueChangeDetector valueChangeDetector();
+    MessageTranslatorFactory messageTranslatorFactory();
+    RulesSource rulesSource();
+    FieldFaceSource fieldFaceSource();
+    ConversionService conversionService();
 }

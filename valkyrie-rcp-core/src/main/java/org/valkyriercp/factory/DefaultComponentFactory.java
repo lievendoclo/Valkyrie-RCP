@@ -2,7 +2,7 @@ package org.valkyriercp.factory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdesktop.swingx.JXTitledSeparator;
+import org.jdesktop.swingx.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -91,7 +91,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey) {
-		JLabel label = createNewLabel();
+		JXLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey)).configureLabel(label);
 		return label;
 	}
@@ -100,7 +100,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String[] labelKeys) {
-		JLabel label = createNewLabel();
+		JXLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKeys)).configureLabel(label);
 		return label;
 	}
@@ -109,7 +109,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey, Object[] arguments) {
-		JLabel label = createNewLabel();
+		JXLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey, arguments)).configureLabel(label);
 		return label;
 	}
@@ -245,19 +245,19 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JLabel createLabelFor(String labelKey, JComponent component) {
-		JLabel label = createNewLabel();
+		JXLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey)).configureLabelFor(label, component);
 		return label;
 	}
 
 	public JLabel createLabelFor(String[] labelKeys, JComponent component) {
-		JLabel label = createNewLabel();
+		JXLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKeys)).configureLabelFor(label, component);
 		return label;
 	}
 
-	protected JLabel createNewLabel() {
-		return new JLabel();
+	protected JXLabel createNewLabel() {
+		return new JXLabel();
 	}
 
 	public JButton createButton(String labelKey) {
@@ -336,7 +336,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JList createList() {
-		return new JList();
+		return new JXList();
 	}
 
 	public JComboBox createComboBox() {
@@ -436,11 +436,11 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JPanel createPanel() {
-		return new JPanel();
+		return new JXPanel();
 	}
 
 	public JPanel createPanel(LayoutManager layoutManager) {
-		return new JPanel(layoutManager);
+		return new JXPanel(layoutManager);
 	}
 
 	private String getCaption(String labelKey) {
@@ -472,7 +472,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable() {
-		return (tableFactory != null) ? tableFactory.createTable() : new JTable();
+		return (tableFactory != null) ? tableFactory.createTable() : new JXTable();
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable(TableModel model) {
-		return (tableFactory != null) ? tableFactory.createTable(model) : new JTable(model);
+		return (tableFactory != null) ? tableFactory.createTable(model) : new JXTable(model);
 	}
 
 	/**

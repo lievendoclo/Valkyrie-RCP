@@ -1,5 +1,7 @@
 package org.valkyriercp.factory;
 
+import org.jdesktop.swingx.JXTable;
+
 import javax.swing.*;
 import javax.swing.table.TableModel;
 
@@ -17,12 +19,12 @@ public interface TableFactory {
      * Construct a JTable with a default model
      * @return new table instance
      */
-    public JTable createTable();
+    public JXTable createTable();
 
     /**
      * Construct a JTable with the specified table model
      * @param model TableModel to install into the new table
      * @return new table instance
      */
-    public JTable createTable(TableModel model);
+    public JXTable createTable(TableModel model);
 }

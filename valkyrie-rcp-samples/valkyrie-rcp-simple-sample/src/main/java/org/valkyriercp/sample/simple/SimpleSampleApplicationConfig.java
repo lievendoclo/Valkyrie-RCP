@@ -1,11 +1,13 @@
 package org.valkyriercp.sample.simple;
 
+import com.jidesoft.swing.JideTabbedPane;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlueSteelLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
+import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.TabbedApplicationPageFactory;
 
 import java.util.List;
@@ -34,6 +36,9 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 
     @Override
     public ApplicationPageFactory applicationPageFactory() {
-        return new TabbedApplicationPageFactory();
+        JideTabbedApplicationPageFactory jideTabbedApplicationPageFactory = new JideTabbedApplicationPageFactory();
+        jideTabbedApplicationPageFactory.setTabShape(JideTabbedPane.SHAPE_EXCEL);
+        jideTabbedApplicationPageFactory.setShowCloseButton(true);
+        return jideTabbedApplicationPageFactory;
     }
 }

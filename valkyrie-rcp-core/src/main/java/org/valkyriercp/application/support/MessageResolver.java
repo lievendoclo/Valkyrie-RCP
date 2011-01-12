@@ -1,11 +1,13 @@
 package org.valkyriercp.application.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 
 public class MessageResolver {
     @Autowired
@@ -49,5 +51,43 @@ public class MessageResolver {
         if (params != null)
             return MessageFormat.format(message, params);
         return message;
+    }
+
+    public String getMessage(final String[] messageCodes) {
+        MessageSourceResolvable resolvable = new MessageSourceResolvable() {
+            public String[] getCodes() {
+                return messageCodes;
+            }
+
+            public Object[] getArguments() {
+                return new Object[0];
+            }
+
+            public String getDefaultMessage() {
+                return messageCodes[0];
+            }
+        };
+        return messageSourceAccessor.getMessage(resolvable, Locale.getDefault());
+    }
+
+    public String getMessage(String messageCode, Object[] args) {
+        return messageSourceAccessor.getMessage(messageCode, args, messageCode, Locale.getDefault());
+    }
+
+    public String getMessage(final String[] messageCodes, final Object[] args) {
+        MessageSourceResolvable resolvable = new MessageSourceResolvable() {
+            public String[] getCodes() {
+                return messageCodes;
+            }
+
+            public Object[] getArguments() {
+                return args;
+            }
+
+            public String getDefaultMessage() {
+                return messageCodes[0];
+            }
+        };
+        return messageSourceAccessor.getMessage(resolvable, Locale.getDefault());
     }
 }

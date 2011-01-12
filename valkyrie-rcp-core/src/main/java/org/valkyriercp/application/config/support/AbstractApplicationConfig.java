@@ -19,6 +19,8 @@ import org.valkyriercp.application.exceptionhandling.*;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.*;
+import org.valkyriercp.binding.value.ValueChangeDetector;
+import org.valkyriercp.binding.value.support.DefaultValueChangeDetector;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandRegistry;
@@ -33,6 +35,10 @@ import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
 import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.ImageSource;
+import org.valkyriercp.rules.RulesSource;
+import org.valkyriercp.rules.reporting.DefaultMessageTranslatorFactory;
+import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
+import org.valkyriercp.rules.support.DefaultRulesSource;
 import org.valkyriercp.security.SecurityControllerManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
 
@@ -204,5 +210,20 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public CommandManager commandManager() {
         return new DefaultCommandManager();
+    }
+
+    @Bean
+    public ValueChangeDetector valueChangeDetector() {
+        return new DefaultValueChangeDetector();
+    }
+
+    @Override
+    public MessageTranslatorFactory messageTranslatorFactory() {
+        return new DefaultMessageTranslatorFactory();
+    }
+
+    @Override
+    public RulesSource rulesSource() {
+        return new DefaultRulesSource();
     }
 }
