@@ -20,15 +20,16 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
     @Bean
     @Qualifier("menubar")
     public CommandGroup menuBarCommandGroup() {
-        CommandGroupFactoryBean menuFactory = new CommandGroupFactoryBean();
-        menuFactory.setGroupId("menu");
-
-        CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
-        fileMenuFactory.setGroupId("fileMenu");
-        fileMenuFactory.setMembers(newWindowCommand(), throwExceptionCommand(), showEmptyWidgetCommand(), showOtherWidgetCommand(),exitCommand());
-
-        menuFactory.setMembers(fileMenuFactory.getCommandGroup());
-        return menuFactory.getCommandGroup();
+        return new CommandGroup();
+//        CommandGroupFactoryBean menuFactory = new CommandGroupFactoryBean();
+//        menuFactory.setGroupId("menu");
+//
+//        CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
+//        fileMenuFactory.setGroupId("fileMenu");
+//        fileMenuFactory.setMembers(newWindowCommand(), throwExceptionCommand(), showEmptyWidgetCommand(), showOtherWidgetCommand(),exitCommand());
+//
+//        menuFactory.setMembers(fileMenuFactory.getCommandGroup());
+//        return menuFactory.getCommandGroup();
     }
 
     @Bean

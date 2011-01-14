@@ -21,5 +21,9 @@
             <groupId>org.valkyriercp</groupId>
             <artifactId>valkyrie-rcp-jideoss</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>looks</artifactId>
+        </dependency>
     </dependencies>
 </project>

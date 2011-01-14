@@ -19,6 +19,7 @@ import org.valkyriercp.rules.reporting.MessageTranslator;
 import org.valkyriercp.rules.reporting.ObjectNameResolver;
 import org.valkyriercp.rules.reporting.PropertyResults;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 
 	private final DefaultValidationResults results = new DefaultValidationResults();
 
-	private final MessageTranslator messageTranslator;
+	private MessageTranslator messageTranslator;
 
 	private final Map validationErrors = new HashMap();
 
@@ -83,8 +84,13 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 		this.formModel = formModel;
 		this.rulesSource = rulesSource;
 		validationResultsCollector = new BeanValidationResultsCollector(new FormModelPropertyAccessStrategy(formModel));
-		messageTranslator = applicationConfig.messageTranslatorFactory().createTranslator(this);
+
 	}
+
+    @PostConstruct
+    private void postConstruct() {
+        messageTranslator = applicationConfig.messageTranslatorFactory().createTranslator(this);
+    }
 
 	/**
 	 * {@inheritDoc}

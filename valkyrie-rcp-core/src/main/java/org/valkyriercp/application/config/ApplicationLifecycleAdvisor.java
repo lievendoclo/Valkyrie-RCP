@@ -2,13 +2,17 @@ package org.valkyriercp.application.config;
 
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.ApplicationWindowConfigurer;
+import org.valkyriercp.application.PageDescriptor;
 import org.valkyriercp.application.StatusBar;
+import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.support.CommandGroup;
 
 public interface ApplicationLifecycleAdvisor {
-    String getStartingPageId();
+    PageDescriptor getStartingPageDescriptor();
+
+    void setStartingPageDescriptor(PageDescriptor descriptor);
 
     void onPreStartup();
 
@@ -37,4 +41,6 @@ public interface ApplicationLifecycleAdvisor {
     void onShutdown();
 
     ApplicationSessionInitializer getApplicationSessionInitializer();
+
+    RegisterableExceptionHandler getRegisterableExceptionHandler();
 }

@@ -36,7 +36,7 @@ public class DefaultApplication implements Application {
     @Override
     public void start() {
         lifecycleAdvisor.onPreStartup();
-        openWindow(lifecycleAdvisor.getStartingPageId());
+        openWindow(lifecycleAdvisor.getStartingPageDescriptor());
         lifecycleAdvisor.onPostStartup();
     }
 
@@ -47,6 +47,11 @@ public class DefaultApplication implements Application {
         } else {
             window.showPage(pageDescriptorId);
         }
+    }
+
+    public void openWindow(PageDescriptor pageDescriptor) {
+        ApplicationWindow window = initWindow(createNewWindow());
+        window.showPage(pageDescriptor);
     }
 
     protected ApplicationWindow initWindow(ApplicationWindow newWindow) {

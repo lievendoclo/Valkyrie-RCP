@@ -787,7 +787,11 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 		}
 	}
 
-	/**
+    protected ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    /**
 	 * Register the provided button as the default dialog button. The button
 	 * must be present on the dialog.
 	 *

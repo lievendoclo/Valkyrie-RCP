@@ -14,6 +14,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.java.dev.glazedlists</groupId>
+            <artifactId>glazedlists_java15</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
         </dependency>
@@ -38,8 +42,16 @@
             <artifactId>commons-collections</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
         </dependency>
         <dependency>
             <groupId>org.swinglabs</groupId>
@@ -57,10 +69,6 @@
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.java.net.substance</groupId>
-            <artifactId>substance</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.webflow</groupId>

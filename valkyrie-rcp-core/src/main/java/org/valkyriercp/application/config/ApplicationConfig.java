@@ -3,6 +3,7 @@ package org.valkyriercp.application.config;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.*;
@@ -10,6 +11,7 @@ import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandle
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.MessageResolver;
+import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FieldFaceSource;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.command.CommandConfigurer;
@@ -18,11 +20,15 @@ import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
+import org.valkyriercp.form.binding.BinderSelectionStrategy;
+import org.valkyriercp.form.binding.BindingFactoryProvider;
+import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
 import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.ImageSource;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
 import org.valkyriercp.security.SecurityControllerManager;
+import org.valkyriercp.util.DialogFactory;
 
 @Configuration
 public interface ApplicationConfig {
@@ -57,4 +63,9 @@ public interface ApplicationConfig {
     RulesSource rulesSource();
     FieldFaceSource fieldFaceSource();
     ConversionService conversionService();
+    FormComponentInterceptorFactory formComponentInterceptorFactory();
+    BinderSelectionStrategy binderSelectionStrategy();
+    BindingFactoryProvider bindingFactoryProvider();
+    DialogFactory dialogFactory();
+    BindingErrorMessageProvider bindingErrorMessageProvider();
 }

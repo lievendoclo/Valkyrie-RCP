@@ -9,6 +9,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.stereotype.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CachingMapDecorator;
 
@@ -54,7 +55,7 @@ import java.util.Map;
  *
  * @author Keith Donald
  */
-@org.springframework.stereotype.Component
+@Component
 public class DefaultImageSource implements ImageSource {
 	protected static final Log logger = LogFactory.getLog(DefaultImageSource.class);
 

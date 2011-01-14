@@ -1,6 +1,8 @@
 package org.valkyriercp.factory;
 
-import org.valkyriercp.core.ApplicationConfigAccessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.valkyriercp.application.config.ApplicationConfig;
 
 import javax.swing.*;
 
@@ -18,8 +20,12 @@ import javax.swing.*;
  *
  * @author Keith Donald
  */
-public abstract class AbstractControlFactory extends ApplicationConfigAccessor implements ControlFactory {
+@Configurable
+public abstract class AbstractControlFactory implements ControlFactory {
     private boolean singleton = true;
+
+    @Autowired
+    protected ApplicationConfig applicationConfig;
 
 	private JComponent control;
 
@@ -106,4 +112,7 @@ public abstract class AbstractControlFactory extends ApplicationConfigAccessor i
 	 */
 	protected abstract JComponent createControl();
 
+    protected ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
 }

@@ -3,10 +3,7 @@ package org.valkyriercp.application.config.support;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.valkyriercp.application.Application;
-import org.valkyriercp.application.ApplicationWindow;
-import org.valkyriercp.application.ApplicationWindowConfigurer;
-import org.valkyriercp.application.StatusBar;
+import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.exceptionhandling.DefaultRegisterableExceptionHandler;
 import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
@@ -26,7 +23,7 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
 	private ApplicationWindow openingWindow;
 
-    protected String startingPageId;
+    protected PageDescriptor startingPageId;
 
     @Autowired
     private RegisterableExceptionHandler registerableExceptionHandler;
@@ -35,11 +32,11 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
     private ApplicationSessionInitializer applicationSessionInitializer;
 
     @Override
-    public String getStartingPageId() {
+    public PageDescriptor getStartingPageDescriptor() {
         return startingPageId;
     }
 
-    public void setStartingPageId(String startingPageId) {
+    public void setStartingPageDescriptor(PageDescriptor startingPageId) {
         this.startingPageId = startingPageId;
     }
 
@@ -118,5 +115,10 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
     public ApplicationSessionInitializer getApplicationSessionInitializer() {
         return applicationSessionInitializer;
+    }
+
+    @Override
+    public RegisterableExceptionHandler getRegisterableExceptionHandler() {
+        return registerableExceptionHandler;
     }
 }

@@ -12,6 +12,7 @@ import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.factory.ControlFactory;
 import org.valkyriercp.image.config.IconConfigurable;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -48,8 +49,9 @@ public abstract class AbstractDialogPage extends LabeledObjectSupport implements
 			return AbstractDialogPage.this.createControl();
 		}
 	};
+    private boolean autoConfigure;
 
-	/**
+    /**
 	 * Creates a new dialog page. This titles of this dialog page will be
 	 * configured using the default ObjectConfigurer.
 	 *
@@ -112,17 +114,22 @@ public abstract class AbstractDialogPage extends LabeledObjectSupport implements
 	}
 
 	protected void setId(String pageId, boolean autoConfigure) {
-		Assert.hasText(pageId, "pageId is required");
+        this.autoConfigure = autoConfigure;
+        Assert.hasText(pageId, "pageId is required");
 		String oldValue = this.pageId;
 		this.pageId = pageId;
 		firePropertyChange("id", oldValue, pageId);
-		if (autoConfigure) {
+	}
+
+    @PostConstruct
+    private void configure() {
+        if (autoConfigure) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Auto configuring dialog page with id " + pageId);
 			}
 			applicationObjectConfigurer.configure(this, pageId);
 		}
-	}
+    }
 
 	public String getTitle() {
 		return getDisplayName();

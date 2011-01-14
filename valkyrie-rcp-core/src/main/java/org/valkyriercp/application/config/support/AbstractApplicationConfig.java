@@ -1,24 +1,30 @@
 package org.valkyriercp.application.config.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.context.support.StaticMessageSource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationObjectConfigurer;
-import org.valkyriercp.application.exceptionhandling.*;
+import org.valkyriercp.application.exceptionhandling.DelegatingExceptionHandler;
+import org.valkyriercp.application.exceptionhandling.JXErrorDialogExceptionHandler;
+import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
+import org.valkyriercp.application.exceptionhandling.SimpleExceptionHandlerDelegate;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.*;
+import org.valkyriercp.binding.form.BindingErrorMessageProvider;
+import org.valkyriercp.binding.form.FieldFaceSource;
+import org.valkyriercp.binding.form.support.DefaultBindingErrorMessageProvider;
+import org.valkyriercp.binding.form.support.MessageSourceFieldFaceSource;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.binding.value.support.DefaultValueChangeDetector;
 import org.valkyriercp.command.CommandConfigurer;
@@ -30,7 +36,15 @@ import org.valkyriercp.command.config.DefaultCommandConfigurer;
 import org.valkyriercp.command.support.DefaultCommandManager;
 import org.valkyriercp.command.support.DefaultCommandRegistry;
 import org.valkyriercp.command.support.DefaultCommandServices;
+import org.valkyriercp.convert.support.CollectionToListModelConverter;
+import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
+import org.valkyriercp.form.binding.BinderSelectionStrategy;
+import org.valkyriercp.form.binding.BindingFactoryProvider;
+import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
+import org.valkyriercp.form.binding.swing.SwingBindingFactoryProvider;
+import org.valkyriercp.form.builder.ChainedInterceptorFactory;
+import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
 import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
 import org.valkyriercp.image.IconSource;
@@ -41,7 +55,9 @@ import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
 import org.valkyriercp.rules.support.DefaultRulesSource;
 import org.valkyriercp.security.SecurityControllerManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
+import org.valkyriercp.util.DialogFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,12 +102,21 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public ImageSource imageSource() {
-        DefaultImageSource imageSource = new DefaultImageSource(getImageSourceResources());
+        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+        propertiesFactoryBean.setLocations(getImageSourceResources().values().toArray(new Resource[getImageSourceResources().size()]));
+        DefaultImageSource imageSource = null;
+        try {
+            propertiesFactoryBean.afterPropertiesSet();
+            imageSource = new DefaultImageSource(propertiesFactoryBean.getObject());
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error getting imagesource property file", e);
+        }
         imageSource.setBrokenImageIndicator(applicationContext().getResource("classpath:/org/valkyriercp/images/alert/error_obj.gif"));
         return imageSource;
     }
 
     public Map<String, Resource> getImageSourceResources() {
+
         Map<String, Resource> resources = new HashMap<String, Resource>();
         resources.put("default", applicationContext().getResource("classpath:/org/valkyriercp/images/images.properties"));
         return resources;
@@ -217,13 +242,51 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         return new DefaultValueChangeDetector();
     }
 
-    @Override
+    @Bean
     public MessageTranslatorFactory messageTranslatorFactory() {
         return new DefaultMessageTranslatorFactory();
     }
 
-    @Override
+    @Bean
     public RulesSource rulesSource() {
         return new DefaultRulesSource();
+    }
+
+    @Bean
+    public FieldFaceSource fieldFaceSource() {
+        return new MessageSourceFieldFaceSource();
+    }
+
+    @Bean
+    public ConversionService conversionService() {
+        DefaultConversionService conversionService =  new DefaultConversionService();
+        conversionService.addConverter(new ListToListModelConverter());
+        conversionService.addConverter(new CollectionToListModelConverter());
+        return conversionService;
+    }
+
+    @Bean
+    public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+        return new ChainedInterceptorFactory();
+    }
+
+    @Bean
+    public BinderSelectionStrategy binderSelectionStrategy() {
+        return new SwingBinderSelectionStrategy();
+    }
+
+    @Bean
+    public BindingFactoryProvider bindingFactoryProvider() {
+        return new SwingBindingFactoryProvider();
+    }
+
+    @Bean
+    public BindingErrorMessageProvider bindingErrorMessageProvider() {
+        return new DefaultBindingErrorMessageProvider();
+    }
+
+    @Bean
+    public DialogFactory dialogFactory() {
+        return new DialogFactory();
     }
 }
