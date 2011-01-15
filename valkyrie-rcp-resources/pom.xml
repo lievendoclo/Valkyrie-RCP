@@ -11,6 +11,16 @@
 
     <artifactId>valkyrie-rcp-resources</artifactId>
     <name>Valkyrie Resources</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.famfamfam</groupId>
+            <artifactId>silk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freedesktop.tango</groupId>
+            <artifactId>tango-icon-theme</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

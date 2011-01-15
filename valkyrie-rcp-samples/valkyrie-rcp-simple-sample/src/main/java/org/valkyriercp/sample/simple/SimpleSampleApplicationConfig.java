@@ -18,10 +18,7 @@ import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.jide.JideBindingFactoryProvider;
-import org.valkyriercp.form.builder.ChainedInterceptorFactory;
-import org.valkyriercp.form.builder.ColorValidationInterceptorFactory;
-import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
-import org.valkyriercp.form.builder.OverlayValidationInterceptorFactory;
+import org.valkyriercp.form.builder.*;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
 import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
@@ -89,6 +86,7 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
         List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
         factories.add(new ColorValidationInterceptorFactory());
+        factories.add(new OverlayValidationInterceptorFactory());
         factory.setInterceptorFactories(factories);
         return factory;
     }

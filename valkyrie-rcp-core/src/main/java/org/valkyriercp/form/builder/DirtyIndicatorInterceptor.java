@@ -115,7 +115,7 @@ public class DirtyIndicatorInterceptor extends AbstractFormComponentInterceptor 
 
 			control.setName("dirtyOverlay");
 
-			control.setOpaque(true);
+			control.setOpaque(false);
 
 			IconSource iconSource = getApplicationConfig().iconSource();
 			Icon icon = iconSource.getIcon(DIRTY_ICON_KEY);

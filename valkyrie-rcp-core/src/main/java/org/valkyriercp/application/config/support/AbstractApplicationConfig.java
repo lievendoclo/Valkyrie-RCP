@@ -113,7 +113,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         } catch (IOException e) {
             throw new IllegalArgumentException("Error getting imagesource property file", e);
         }
-        imageSource.setBrokenImageIndicator(applicationContext().getResource("classpath:/org/valkyriercp/images/alert/error_obj.gif"));
+        imageSource.setBrokenImageIndicator(applicationContext().getResource("classpath:/com/famfamfam/silk/error.png"));
         return imageSource;
     }
 
