@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.MessageSourceResolvable;
@@ -14,6 +15,8 @@ import org.springframework.core.enums.LabeledEnumResolver;
 import org.springframework.util.comparator.ComparableComparator;
 import org.springframework.util.comparator.CompoundComparator;
 import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
+import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.config.CommandButtonLabelInfo;
 import org.valkyriercp.component.PatchedJFormattedTextField;
 import org.valkyriercp.core.support.LabelInfo;
@@ -36,27 +39,30 @@ import java.util.Collection;
  *
  * @author Keith Donald
  */
+@Configurable
 public class DefaultComponentFactory implements ComponentFactory, MessageSourceAware {
 
 	private final Log logger = LogFactory.getLog(getClass());
 
+    @Autowired
 	private MessageSourceAccessor messages;
 
+    @Autowired
 	private IconSource iconSource;
 
+    @Autowired
 	private ButtonFactory buttonFactory;
 
+    @Autowired
 	private MenuFactory menuFactory;
 
+    @Autowired
+	private MessageSource messageSource;
+
+    @Autowired
 	private TableFactory tableFactory;
 
 	private int textFieldColumns = 25;
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
-    @Autowired
-    private MessageSource messageSource;
 
 	/**
 	 * {@inheritDoc}
@@ -91,7 +97,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey) {
-		JXLabel label = createNewLabel();
+		JLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey)).configureLabel(label);
 		return label;
 	}
@@ -100,7 +106,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String[] labelKeys) {
-		JXLabel label = createNewLabel();
+		JLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKeys)).configureLabel(label);
 		return label;
 	}
@@ -109,7 +115,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey, Object[] arguments) {
-		JXLabel label = createNewLabel();
+		JLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey, arguments)).configureLabel(label);
 		return label;
 	}
@@ -168,59 +174,56 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * Returns the messageSourceAccessor.
 	 */
 	private MessageSourceAccessor getMessages() {
-		if (messages == null) {
-			messages = applicationConfig.messageSourceAccessor();
-		}
 		return messages;
 	}
 
-//	/**
-//	 * {@inheritDoc}
-//	 */
-//	public JLabel createLabel(String labelKey, ValueModel[] argumentValueHolders) {
-//		return new LabelTextRefresher(labelKey, argumentValueHolders).getLabel();
-//	}
-//
-//	private class LabelTextRefresher implements PropertyChangeListener {
-//
-//		private String labelKey;
-//
-//		private JLabel label;
-//
-//		private ValueModel[] argumentHolders;
-//
-//		public LabelTextRefresher(String labelKey, ValueModel[] argumentHolders) {
-//			this.labelKey = labelKey;
-//			this.argumentHolders = argumentHolders;
-//			this.label = createNewLabel();
-//			subscribe();
-//			updateLabel();
-//		}
-//
-//		private void subscribe() {
-//			for (int i = 0; i < argumentHolders.length; i++) {
-//				ValueModel argHolder = argumentHolders[i];
-//				argHolder.addValueChangeListener(this);
-//			}
-//		}
-//
-//		public JLabel getLabel() {
-//			return label;
-//		}
-//
-//		public void propertyChange(PropertyChangeEvent evt) {
-//			updateLabel();
-//		}
-//
-//		private void updateLabel() {
-//			Object[] argValues = new Object[argumentHolders.length];
-//			for (int i = 0; i < argumentHolders.length; i++) {
-//				ValueModel argHolder = argumentHolders[i];
-//				argValues[i] = argHolder.getValue();
-//			}
-//			getLabelInfo(getRequiredMessage(labelKey, argValues)).configureLabel(label);
-//		}
-//	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public JLabel createLabel(String labelKey, ValueModel[] argumentValueHolders) {
+		return new LabelTextRefresher(labelKey, argumentValueHolders).getLabel();
+	}
+
+	private class LabelTextRefresher implements PropertyChangeListener {
+
+		private String labelKey;
+
+		private JLabel label;
+
+		private ValueModel[] argumentHolders;
+
+		public LabelTextRefresher(String labelKey, ValueModel[] argumentHolders) {
+			this.labelKey = labelKey;
+			this.argumentHolders = argumentHolders;
+			this.label = createNewLabel();
+			subscribe();
+			updateLabel();
+		}
+
+		private void subscribe() {
+			for (int i = 0; i < argumentHolders.length; i++) {
+				ValueModel argHolder = argumentHolders[i];
+				argHolder.addValueChangeListener(this);
+			}
+		}
+
+		public JLabel getLabel() {
+			return label;
+		}
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			updateLabel();
+		}
+
+		private void updateLabel() {
+			Object[] argValues = new Object[argumentHolders.length];
+			for (int i = 0; i < argumentHolders.length; i++) {
+				ValueModel argHolder = argumentHolders[i];
+				argValues[i] = argHolder.getValue();
+			}
+			getLabelInfo(getRequiredMessage(labelKey, argValues)).configureLabel(label);
+		}
+	}
 
 	private String getRequiredMessage(String messageKey, Object[] args) {
 		try {
@@ -245,19 +248,19 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JLabel createLabelFor(String labelKey, JComponent component) {
-		JXLabel label = createNewLabel();
+		JLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKey)).configureLabelFor(label, component);
 		return label;
 	}
 
 	public JLabel createLabelFor(String[] labelKeys, JComponent component) {
-		JXLabel label = createNewLabel();
+		JLabel label = createNewLabel();
 		getLabelInfo(getRequiredMessage(labelKeys)).configureLabelFor(label, component);
 		return label;
 	}
 
-	protected JXLabel createNewLabel() {
-		return new JXLabel();
+	protected JLabel createNewLabel() {
+		return new JLabel();
 	}
 
 	public JButton createButton(String labelKey) {
@@ -269,13 +272,10 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	protected ButtonFactory getButtonFactory() {
-		if (buttonFactory == null) {
-			buttonFactory = applicationConfig.buttonFactory();
-		}
 		return buttonFactory;
 	}
 
-	public JXTitledSeparator createLabeledSeparator(String labelKey) {
+	public JComponent createLabeledSeparator(String labelKey) {
 		return createLabeledSeparator(labelKey, Alignment.LEFT);
 	}
 
@@ -325,22 +325,25 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	protected MenuFactory getMenuFactory() {
-		if (menuFactory == null) {
-			menuFactory = applicationConfig.menuFactory();
-		}
 		return menuFactory;
 	}
 
-	public JXTitledSeparator createLabeledSeparator(String labelKey, Alignment alignment) {
-		return new JXTitledSeparator(getRequiredMessage(labelKey), alignment.getCode());
+	public JComponent createLabeledSeparator(String labelKey, Alignment alignment) {
+		return com.jgoodies.forms.factories.DefaultComponentFactory.getInstance().createSeparator(
+				getRequiredMessage(labelKey), ((Number) alignment.getCode()).intValue());
 	}
 
 	public JList createList() {
-		return new JXList();
+		return new JList();
 	}
 
 	public JComboBox createComboBox() {
 		return new JComboBox();
+	}
+
+	public JComboBox createListValueModelComboBox(ValueModel selectedItemValueModel,
+			ValueModel selectableItemsListHolder, String renderedPropertyPath) {
+		return null;
 	}
 
 	/**
@@ -367,7 +370,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		this.textFieldColumns = columns;
 	}
 
-	public JFormattedTextField createFormattedTextField(JFormattedTextField.AbstractFormatterFactory formatterFactory) {
+	public JFormattedTextField createFormattedTextField(AbstractFormatterFactory formatterFactory) {
 		PatchedJFormattedTextField patchedJFormattedTextField = new PatchedJFormattedTextField(formatterFactory);
 		configureTextField(patchedJFormattedTextField);
 		return patchedJFormattedTextField;
@@ -436,11 +439,11 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JPanel createPanel() {
-		return new JXPanel();
+		return new JPanel();
 	}
 
 	public JPanel createPanel(LayoutManager layoutManager) {
-		return new JXPanel(layoutManager);
+		return new JPanel(layoutManager);
 	}
 
 	private String getCaption(String labelKey) {
@@ -459,9 +462,6 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * Returns the icon source.
 	 */
 	private IconSource getIconSource() {
-		if (iconSource == null) {
-			iconSource = applicationConfig.iconSource();
-		}
 		return iconSource;
 	}
 
@@ -472,7 +472,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable() {
-		return (tableFactory != null) ? tableFactory.createTable() : new JXTable();
+		return (tableFactory != null) ? tableFactory.createTable() : new JTable();
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable(TableModel model) {
-		return (tableFactory != null) ? tableFactory.createTable(model) : new JXTable(model);
+		return (tableFactory != null) ? tableFactory.createTable(model) : new JTable(model);
 	}
 
 	/**

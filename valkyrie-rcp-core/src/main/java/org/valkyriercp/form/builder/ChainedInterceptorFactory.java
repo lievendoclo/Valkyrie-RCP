@@ -1,5 +1,6 @@
 package org.valkyriercp.form.builder;
 
+import com.google.common.collect.Lists;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 
@@ -14,12 +15,12 @@ import java.util.List;
  */
 public class ChainedInterceptorFactory implements FormComponentInterceptorFactory {
 
-    public List interceptorFactories = Collections.EMPTY_LIST;
+    public List<FormComponentInterceptorFactory> interceptorFactories = Lists.newArrayList();
 
     public ChainedInterceptorFactory() {
     }
 
-    public void setInterceptorFactories(List interceptorFactories) {
+    public void setInterceptorFactories(List<FormComponentInterceptorFactory> interceptorFactories) {
         Assert.notNull(interceptorFactories);
         this.interceptorFactories = interceptorFactories;
     }
@@ -34,8 +35,8 @@ public class ChainedInterceptorFactory implements FormComponentInterceptorFactor
 
     private List getInterceptors(FormModel formModel) {
         List interceptors = new ArrayList();
-        for (Iterator i = interceptorFactories.iterator(); i.hasNext();) {
-            FormComponentInterceptor interceptor = ((FormComponentInterceptorFactory)i.next())
+        for (FormComponentInterceptorFactory factory : interceptorFactories) {
+            FormComponentInterceptor interceptor = factory
                     .getInterceptor(formModel);
             if (interceptor != null) {
                 interceptors.add(interceptor);
@@ -45,22 +46,20 @@ public class ChainedInterceptorFactory implements FormComponentInterceptorFactor
     }
 
     private static class ChainedInterceptor implements FormComponentInterceptor {
-        private List interceptors;
+        private List<FormComponentInterceptor> interceptors;
 
-        public ChainedInterceptor(List interceptors) {
+        public ChainedInterceptor(List<FormComponentInterceptor> interceptors) {
             this.interceptors = interceptors;
         }
 
         public void processLabel(String propertyName, JComponent label) {
-            for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                FormComponentInterceptor interceptor = ((FormComponentInterceptor)i.next());
+            for (FormComponentInterceptor interceptor : interceptors) {
                 interceptor.processLabel(propertyName, label);
             }
         }
 
         public void processComponent(String propertyName, JComponent component) {
-            for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                FormComponentInterceptor interceptor = ((FormComponentInterceptor)i.next());
+            for (FormComponentInterceptor interceptor : interceptors) {
                 interceptor.processComponent(propertyName, component);
             }
         }

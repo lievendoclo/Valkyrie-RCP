@@ -70,8 +70,7 @@ public class ContactForm extends AbstractFocussableWidgetForm
 		// formBuilder.add(getBindingFactory().createBoundComboBox( "address.state", MasterLists.STATE_CODE), "colSpan=1 align=left" );
 		formBuilder.addPropertyAndLabel("address.state");
 		formBuilder.nextRow();
-        JComponent zipField = formBuilder.addPropertyAndLabel("address.zip")[1];
-		((JTextField) zipField).setColumns(8);
+        formBuilder.addPropertyAndLabel("address.zip");
         formBuilder.nextRow();
 		formBuilder.addHorizontalSeparator("Memo", 7);
 		formBuilder.nextRow("fill:default:grow");

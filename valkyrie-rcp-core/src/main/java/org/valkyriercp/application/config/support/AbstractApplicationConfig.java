@@ -36,6 +36,8 @@ import org.valkyriercp.command.config.DefaultCommandConfigurer;
 import org.valkyriercp.command.support.DefaultCommandManager;
 import org.valkyriercp.command.support.DefaultCommandRegistry;
 import org.valkyriercp.command.support.DefaultCommandServices;
+import org.valkyriercp.component.DefaultOverlayService;
+import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
@@ -288,5 +290,15 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public DialogFactory dialogFactory() {
         return new DialogFactory();
+    }
+
+    @Bean
+    public OverlayService overlayService() {
+        return new DefaultOverlayService();
+    }
+
+    @Bean
+    public TableFactory tableFactory() {
+        return new DefaultTableFactory();
     }
 }

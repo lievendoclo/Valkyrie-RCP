@@ -1,5 +1,6 @@
 package org.valkyriercp.sample.simple;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,17 @@ import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
+import org.valkyriercp.component.DefaultOverlayService;
+import org.valkyriercp.component.JideOssComponentFactory;
+import org.valkyriercp.component.JideOverlayService;
+import org.valkyriercp.component.OverlayService;
+import org.valkyriercp.factory.ComponentFactory;
+import org.valkyriercp.form.binding.BindingFactoryProvider;
+import org.valkyriercp.form.binding.jide.JideBindingFactoryProvider;
+import org.valkyriercp.form.builder.ChainedInterceptorFactory;
+import org.valkyriercp.form.builder.ColorValidationInterceptorFactory;
+import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
+import org.valkyriercp.form.builder.OverlayValidationInterceptorFactory;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
 import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
@@ -70,5 +82,14 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         viewProperties.put("contactDataStore", new ContactDataStore());
         initialView.setViewProperties(viewProperties);
         return initialView;
+    }
+
+    @Override
+    public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+        ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+        List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+        factories.add(new ColorValidationInterceptorFactory());
+        factory.setInterceptorFactories(factories);
+        return factory;
     }
 }

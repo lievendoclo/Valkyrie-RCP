@@ -17,9 +17,11 @@ import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandServices;
+import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
+import org.valkyriercp.factory.TableFactory;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
@@ -68,4 +70,6 @@ public interface ApplicationConfig {
     BindingFactoryProvider bindingFactoryProvider();
     DialogFactory dialogFactory();
     BindingErrorMessageProvider bindingErrorMessageProvider();
+    OverlayService overlayService();
+    TableFactory tableFactory();
 }

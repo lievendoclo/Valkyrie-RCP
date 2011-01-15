@@ -2,6 +2,7 @@ package org.valkyriercp.form.binding.swing;
 
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.AbstractBinder;
@@ -28,6 +29,6 @@ public class FormattedTextFieldBinder extends AbstractBinder {
 
     protected JComponent createControl(Map context) {
         return getComponentFactory().createFormattedTextField(
-                (JFormattedTextField.AbstractFormatterFactory)context.get(FORMATTER_FACTORY_KEY));
+                (AbstractFormatterFactory)context.get(FORMATTER_FACTORY_KEY));
     }
 }
