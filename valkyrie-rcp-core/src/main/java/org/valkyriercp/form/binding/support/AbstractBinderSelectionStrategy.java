@@ -219,7 +219,7 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
             throw new IllegalArgumentException("binder or binderRef is required");
     }
 
-    protected void registerBinderForPropertyType(Class propertyType, Binder binder) {
+    public void registerBinderForPropertyType(Class propertyType, Binder binder) {
         propertyTypeBinders.put(propertyType, binder);
     }
 
@@ -240,7 +240,7 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
         }
     }
 
-    protected void registerBinderForControlType(Class controlType, Binder binder) {
+    public void registerBinderForControlType(Class controlType, Binder binder) {
         controlTypeBinders.put(controlType, binder);
     }
 

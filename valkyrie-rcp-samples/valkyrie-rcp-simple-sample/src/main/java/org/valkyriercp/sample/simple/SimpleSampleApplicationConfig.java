@@ -16,8 +16,11 @@ import org.valkyriercp.component.JideOssComponentFactory;
 import org.valkyriercp.component.JideOverlayService;
 import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.factory.ComponentFactory;
+import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.jide.JideBindingFactoryProvider;
+import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
+import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
 import org.valkyriercp.form.builder.*;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
@@ -25,6 +28,7 @@ import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
 import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -89,5 +93,12 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         factories.add(new OverlayValidationInterceptorFactory());
         factory.setInterceptorFactories(factories);
         return factory;
+    }
+
+    @Override
+    public BinderSelectionStrategy binderSelectionStrategy() {
+        SwingBinderSelectionStrategy swingBinderSelectionStrategy  = new SwingBinderSelectionStrategy();
+        swingBinderSelectionStrategy.registerBinderForPropertyType(Date.class, new JXDatePickerDateFieldBinder());
+        return swingBinderSelectionStrategy;
     }
 }

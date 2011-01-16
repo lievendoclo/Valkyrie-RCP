@@ -15,9 +15,11 @@
  */
 package org.valkyriercp.sample.simple.ui;
 
+import com.google.common.collect.Maps;
 import com.jgoodies.forms.layout.FormLayout;
 import org.valkyriercp.form.FormModelHelper;
 import org.valkyriercp.form.binding.swing.NumberBinder;
+import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.sample.simple.domain.Contact;
 import org.valkyriercp.sample.simple.ui.binder.TodoItemListBinding;
@@ -25,6 +27,7 @@ import org.valkyriercp.widget.AbstractFocussableWidgetForm;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ContactForm extends AbstractFocussableWidgetForm
 {
@@ -43,7 +46,10 @@ public class ContactForm extends AbstractFocussableWidgetForm
         formBuilder.addPropertyAndLabel("lastName");
         setFocusControl(formBuilder.addPropertyAndLabel("firstName", 5)[1]);
         formBuilder.nextRow();
-        formBuilder.addPropertyAndLabel("dateOfBirth");
+        Map context = Maps.newHashMap();
+        context.put(JXDatePickerDateFieldBinder.DATE_FORMAT, "dd/MM/yyyy");
+        formBuilder.addLabel("dateOfBirth");
+        formBuilder.addBinding(getApplicationConfig().bindingFactoryProvider().getBindingFactory(getFormModel()).createBinding("dateOfBirth", context), 3);
         formBuilder.nextRow();
         formBuilder.addPropertyAndLabel("homePhone");
 		formBuilder.addPropertyAndLabel("workPhone", 5);
