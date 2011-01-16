@@ -41,11 +41,6 @@ import java.util.Map;
 public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 
     @Override
-    public ApplicationMode getApplicationMode() {
-        return ApplicationMode.DEVELOPMENT;
-    }
-
-    @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
         lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(contactView()));
@@ -99,15 +94,5 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         viewProperties.put("contactDataStore", new ContactDataStore());
         initialView.setViewProperties(viewProperties);
         return initialView;
-    }
-
-    @Override
-    public FormComponentInterceptorFactory formComponentInterceptorFactory() {
-        ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
-        List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
-        factories.add(new ColorValidationInterceptorFactory());
-        factories.add(new OverlayValidationInterceptorFactory());
-        factory.setInterceptorFactories(factories);
-        return factory;
     }
 }

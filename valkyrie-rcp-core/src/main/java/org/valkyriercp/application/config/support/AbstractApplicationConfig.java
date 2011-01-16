@@ -1,5 +1,6 @@
 package org.valkyriercp.application.config.support;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
@@ -51,8 +52,7 @@ import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.config.DefaultBinderConfig;
 import org.valkyriercp.form.binding.swing.*;
 import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
-import org.valkyriercp.form.builder.ChainedInterceptorFactory;
-import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
+import org.valkyriercp.form.builder.*;
 import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
 import org.valkyriercp.image.IconSource;
@@ -278,7 +278,14 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public FormComponentInterceptorFactory formComponentInterceptorFactory() {
-        return new ChainedInterceptorFactory();
+        ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+        List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+        factories.add(new ColorValidationInterceptorFactory());
+        factories.add(new OverlayValidationInterceptorFactory());
+        factories.add(new ShowCaptionInStatusBarInterceptorFactory());
+        factories.add(new ShowDescriptionInStatusBarInterceptorFactory());
+        factory.setInterceptorFactories(factories);
+        return factory;
     }
 
     public DefaultBinderConfig defaultBinderConfig() {
