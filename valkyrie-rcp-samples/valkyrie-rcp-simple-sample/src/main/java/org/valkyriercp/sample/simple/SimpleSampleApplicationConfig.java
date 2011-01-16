@@ -6,6 +6,7 @@ import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationMode;
@@ -32,6 +33,7 @@ import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +57,12 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         List<String> list = super.getResourceBundleLocations();
         list.add("org.valkyriercp.sample.simple.simple");
         return list;
+    }
+
+    public Map<String, Resource> getImageSourceResources() {
+        Map<String, Resource> resources = super.getImageSourceResources();
+        resources.put("simple", applicationContext().getResource("classpath:/org/valkyriercp/sample/simple/images.properties"));
+        return resources;
     }
 
     @Override

@@ -128,7 +128,6 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     }
 
     public Map<String, Resource> getImageSourceResources() {
-
         Map<String, Resource> resources = new HashMap<String, Resource>();
         resources.put("default", applicationContext().getResource("classpath:/org/valkyriercp/images/images.properties"));
         return resources;

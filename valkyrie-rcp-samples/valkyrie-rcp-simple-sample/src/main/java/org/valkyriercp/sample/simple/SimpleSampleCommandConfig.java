@@ -64,7 +64,10 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
     @Bean
     @Qualifier("toolbar")
     public CommandGroup toolBarCommandGroup() {
-        return new CommandGroup();
+        CommandGroupFactoryBean toolbarFactory = new CommandGroupFactoryBean();
+        toolbarFactory.setGroupId("toolbar");
+        toolbarFactory.setMembers("newContactCommand", "propertiesCommand", "deleteCommand");
+        return toolbarFactory.getCommandGroup();
     }
 
     @Bean
