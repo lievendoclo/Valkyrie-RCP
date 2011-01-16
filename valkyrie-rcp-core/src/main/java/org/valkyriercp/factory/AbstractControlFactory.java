@@ -3,6 +3,7 @@ package org.valkyriercp.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.application.config.ApplicationMode;
 
 import javax.swing.*;
 

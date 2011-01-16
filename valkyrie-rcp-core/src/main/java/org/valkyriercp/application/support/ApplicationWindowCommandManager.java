@@ -1,5 +1,6 @@
 package org.valkyriercp.application.support;
 
+import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.command.CommandRegistry;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.support.ActionCommand;
@@ -10,6 +11,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+@Configurable
 public class ApplicationWindowCommandManager extends DefaultCommandManager {
     private List sharedCommands;
 
@@ -25,7 +27,7 @@ public class ApplicationWindowCommandManager extends DefaultCommandManager {
         super(commandServices);
     }
 
-    public void setSharedCommandIds(String[] sharedCommandIds) {
+    public void setSharedCommandIds(String... sharedCommandIds) {
         if (sharedCommandIds.length == 0) {
             sharedCommands = Collections.EMPTY_LIST;
         }

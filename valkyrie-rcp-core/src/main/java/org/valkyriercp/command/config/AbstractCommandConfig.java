@@ -9,6 +9,7 @@ import org.valkyriercp.command.NewWindowCommand;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.ExitCommand;
+import org.valkyriercp.command.support.ShowViewMenu;
 
 public abstract class AbstractCommandConfig {
     @Autowired
@@ -36,5 +37,10 @@ public abstract class AbstractCommandConfig {
     @Bean
     public AbstractCommand newWindowCommand() {
         return new NewWindowCommand();
+    }
+
+    @Bean
+    public CommandGroup showViewMenu() {
+        return new ShowViewMenu();
     }
 }

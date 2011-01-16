@@ -33,6 +33,7 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
 
     private CommandServices commandServices;
 
+    @Autowired
     private CommandConfigurer commandConfigurer;
 
     @Autowired
@@ -67,9 +68,6 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
     }
 
     public CommandConfigurer getCommandConfigurer() {
-        if(commandConfigurer == null) {
-            commandConfigurer = applicationConfig.commandConfigurer();
-        }
         return commandConfigurer;
     }
 

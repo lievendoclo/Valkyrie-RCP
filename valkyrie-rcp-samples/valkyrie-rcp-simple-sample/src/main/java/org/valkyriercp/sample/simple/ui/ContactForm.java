@@ -46,10 +46,12 @@ public class ContactForm extends AbstractFocussableWidgetForm
         formBuilder.addPropertyAndLabel("lastName");
         setFocusControl(formBuilder.addPropertyAndLabel("firstName", 5)[1]);
         formBuilder.nextRow();
-        Map context = Maps.newHashMap();
-        context.put(JXDatePickerDateFieldBinder.DATE_FORMAT, "dd/MM/yyyy");
-        formBuilder.addLabel("dateOfBirth");
-        formBuilder.addBinding(getApplicationConfig().bindingFactoryProvider().getBindingFactory(getFormModel()).createBinding("dateOfBirth", context), 3);
+
+        formBuilder.addPropertyAndLabel("dateOfBirth", "jxDatePickerDateFieldBinder");
+//        Map context = Maps.newHashMap();
+//        context.put(JXDatePickerDateFieldBinder.DATE_FORMAT, "dd/MM/yyyy");
+//        formBuilder.addLabel("dateOfBirth");
+//        formBuilder.addBinding(getApplicationConfig().bindingFactoryProvider().getBindingFactory(getFormModel()).createBinding("dateOfBirth", context), 3);
         formBuilder.nextRow();
         formBuilder.addPropertyAndLabel("homePhone");
 		formBuilder.addPropertyAndLabel("workPhone", 5);
@@ -86,47 +88,6 @@ public class ContactForm extends AbstractFocussableWidgetForm
 		formBuilder.nextRow("fill:default:grow");
         TodoItemListBinding todoItemListBinding = new TodoItemListBinding(getFormModel(), "todoItems");
         formBuilder.addBinding(todoItemListBinding, 1, formBuilder.getRow(), 7, 1);
-
-        /*
-		TableFormBuilder formBuilder = new TableFormBuilder(getBindingFactory());
-		formBuilder.setLabelAttributes("colGrId=label colSpec=right:pref");
-
-		formBuilder.addSeparator("General");
-		formBuilder.row();
-		firstNameField = formBuilder.add("firstName")[1];
-		formBuilder.add("lastName");
-		formBuilder.row();
-		formBuilder.add("dateOfBirth", "colSpan=1");
-		formBuilder.row();
-		formBuilder.add("homePhone");
-		formBuilder.add("workPhone");
-		formBuilder.row();
-		formBuilder.add("emailAddress");
-		formBuilder.row();
-		formBuilder.row();
-		formBuilder.add("contactType", "colSpan=1 align=left");
-		formBuilder.row();
-		formBuilder.addSeparator("Address");
-		formBuilder.row();
-		formBuilder.add("address.address1");
-		formBuilder.row();
-		formBuilder.add("address.address2");
-		formBuilder.row();
-		formBuilder.add("address.address3");
-		formBuilder.row();
-		formBuilder.add("address.city", "colSpan=1 align=left");
-		formBuilder.row();
-		// formBuilder.add(getBindingFactory().createBoundComboBox( "address.state", MasterLists.STATE_CODE), "colSpan=1 align=left" );
-		formBuilder.add("address.state", "colSpan=1 align=left");
-		formBuilder.row();
-
-		// We want to make the zip code UI field smaller than the default. The add method
-		// returns an array of two components, the field label and the component bound to
-		// the property.
-		JComponent zipField = formBuilder.add("address.zip", "colSpan=1 align=left")[1];
-		((JTextField) zipField).setColumns(8);
-		formBuilder.row();
-		*/
 
 		return formBuilder.getPanel();
 	}

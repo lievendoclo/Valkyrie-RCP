@@ -5,8 +5,10 @@ import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
+import org.valkyriercp.application.config.ApplicationMode;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
@@ -18,6 +20,7 @@ import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
+import org.valkyriercp.form.binding.config.DefaultBinderConfig;
 import org.valkyriercp.form.binding.jide.JideBindingFactoryProvider;
 import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
 import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
@@ -34,6 +37,11 @@ import java.util.Map;
 
 @Configuration
 public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        return ApplicationMode.DEVELOPMENT;
+    }
 
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
@@ -93,12 +101,5 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         factories.add(new OverlayValidationInterceptorFactory());
         factory.setInterceptorFactories(factories);
         return factory;
-    }
-
-    @Override
-    public BinderSelectionStrategy binderSelectionStrategy() {
-        SwingBinderSelectionStrategy swingBinderSelectionStrategy  = new SwingBinderSelectionStrategy();
-        swingBinderSelectionStrategy.registerBinderForPropertyType(Date.class, new JXDatePickerDateFieldBinder());
-        return swingBinderSelectionStrategy;
     }
 }

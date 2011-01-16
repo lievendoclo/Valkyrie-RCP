@@ -34,6 +34,7 @@ import org.valkyriercp.util.DialogFactory;
 
 @Configuration
 public interface ApplicationConfig {
+    ApplicationMode getApplicationMode();
     ApplicationContext applicationContext();
     Application application();
     ApplicationPageFactory applicationPageFactory();

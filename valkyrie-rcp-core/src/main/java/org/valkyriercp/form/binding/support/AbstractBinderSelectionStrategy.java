@@ -42,7 +42,6 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
 
     public AbstractBinderSelectionStrategy(Class defaultControlType) {
         this.defaultControlType = defaultControlType;
-        registerDefaultBinders();
     }
 
     public Binder selectBinder(FormModel formModel, String propertyName) {
@@ -74,15 +73,6 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
         throw new UnsupportedOperationException("Unable to select a binder for form model [" + formModel
                 + "] property [" + propertyName + "]");
     }
-
-    /**
-     * Register the default set of binders. This method is called on construction.
-     *
-     * @see #registerBinderForPropertyName(Class, String, Binder)
-     * @see #registerBinderForPropertyType(Class, Binder)
-     * @see #registerBinderForControlType(Class, Binder)
-     */
-    protected abstract void registerDefaultBinders();
 
     /**
      * Try to find a binder for the provided parentObjectType and propertyName. If no
@@ -127,7 +117,8 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
         return (Binder)ClassUtils.getValueFromMapForClass(controlType, controlTypeBinders);
     }
 
-    protected void registerBinderForPropertyName(Class parentObjectType, String propertyName, Binder binder) {
+    @Override
+    public void registerBinderForPropertyName(Class parentObjectType, String propertyName, Binder binder) {
         propertyNameBinders.put(new PropertyNameKey(parentObjectType, propertyName), binder);
     }
 
@@ -219,6 +210,7 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
             throw new IllegalArgumentException("binder or binderRef is required");
     }
 
+    @Override
     public void registerBinderForPropertyType(Class propertyType, Binder binder) {
         propertyTypeBinders.put(propertyType, binder);
     }
@@ -240,6 +232,7 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
         }
     }
 
+    @Override
     public void registerBinderForControlType(Class controlType, Binder binder) {
         controlTypeBinders.put(controlType, binder);
     }

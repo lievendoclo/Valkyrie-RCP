@@ -85,21 +85,4 @@ public class SwingBinderSelectionStrategy extends AbstractBinderSelectionStrateg
     {
         return findBinderByControlType(controlType);
     }
-
-    protected void registerDefaultBinders()
-    {
-        registerBinderForPropertyType(String.class, new TextComponentBinder());
-        registerBinderForPropertyType(boolean.class, new CheckBoxBinder());
-        registerBinderForPropertyType(Boolean.class, new CheckBoxBinder());
-        registerBinderForPropertyType(Enum.class, new EnumComboBoxBinder());
-        registerBinderForControlType(JTextComponent.class, new TextComponentBinder());
-        registerBinderForControlType(JFormattedTextField.class, new FormattedTextFieldBinder(null));
-        registerBinderForControlType(JTextArea.class, new TextAreaBinder());
-        registerBinderForControlType(JToggleButton.class, new ToggleButtonBinder());
-        registerBinderForControlType(JCheckBox.class, new CheckBoxBinder());
-        registerBinderForControlType(JComboBox.class, new ComboBoxBinder());
-        registerBinderForControlType(JList.class, new ListBinder());
-        registerBinderForControlType(JLabel.class, new LabelBinder());
-        registerBinderForControlType(JScrollPane.class, new ScrollPaneBinder(this, JTextArea.class));
-    }
 }

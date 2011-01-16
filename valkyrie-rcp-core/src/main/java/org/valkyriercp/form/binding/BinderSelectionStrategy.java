@@ -29,4 +29,10 @@ public interface BinderSelectionStrategy {
      * binding to a pre-created control that is of the specified <code>controlType</code>.
      */
     Binder selectBinder(Class controlType, FormModel formModel, String propertyName);
+
+    void registerBinderForPropertyName(Class parentObjectType, String propertyName, Binder binder);
+
+    void registerBinderForPropertyType(Class propertyType, Binder binder);
+
+    void registerBinderForControlType(Class controlType, Binder binder);
 }
