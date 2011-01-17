@@ -7,11 +7,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
+import org.springframework.security.core.userdetails.memory.UserMap;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationMode;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.component.DefaultOverlayService;
@@ -46,6 +57,13 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(initialView()));
         return lifecycleAdvisor;
     }
+
+//    @Override
+//    public ApplicationSessionInitializer applicationSessionInitializer() {
+//        ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
+//        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+//        return initializer;
+//    }
 
     @Override
     public List<String> getResourceBundleLocations() {

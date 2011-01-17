@@ -1,8 +1,10 @@
 package org.valkyriercp.command.support;
 
+import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.ValueHolder;
 import org.valkyriercp.command.GuardedActionCommandExecutor;
+import org.valkyriercp.command.SecuredActionCommandExecutor;
 import org.valkyriercp.core.Secured;
 
 import java.beans.PropertyChangeListener;
@@ -11,14 +13,16 @@ import java.util.Map;
 /**
  * @author Keith Donald
  */
+@Configurable
 public class AbstractActionCommandExecutor implements ParameterizableActionCommandExecutor,
-        GuardedActionCommandExecutor, Secured {
+        SecuredActionCommandExecutor {
 
     private ValueModel enabled = new ValueHolder(Boolean.FALSE);
 
     private boolean authorized = true;
     private boolean maskedEnabledState = false;
     private String securityControllerId = null;
+    private String[] authorities;
 
     /**
      * Set the Id of the security controller that should manage this object.
@@ -111,4 +115,11 @@ public class AbstractActionCommandExecutor implements ParameterizableActionComma
     public void execute() {
     }
 
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String... authorities) {
+        this.authorities = authorities;
+    }
 }

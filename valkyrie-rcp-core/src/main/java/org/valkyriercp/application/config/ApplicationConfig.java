@@ -29,6 +29,7 @@ import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.ImageSource;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
+import org.valkyriercp.security.ApplicationSecurityManager;
 import org.valkyriercp.security.SecurityControllerManager;
 import org.valkyriercp.util.DialogFactory;
 
@@ -73,4 +74,5 @@ public interface ApplicationConfig {
     BindingErrorMessageProvider bindingErrorMessageProvider();
     OverlayService overlayService();
     TableFactory tableFactory();
+    ApplicationSecurityManager applicationSecurityManager();
 }

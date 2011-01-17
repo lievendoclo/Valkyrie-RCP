@@ -86,13 +86,15 @@ public class CommandGroupFactoryBean implements BeanNameAware, FactoryBean, Secu
 
 	private String securityControllerId;
 
+    private String[] authorities;
+
 	/**
 	 * Creates a new uninitialized {@code CommandGroupFactoryBean}. If created
 	 * by the Spring IoC container, the {@code groupId} assigned to this
 	 * instance will be the bean name of the bean as declared in the bean
 	 * definition file. If using this constructor, a non-null list of command
 	 * group members must be provided by calling the
-	 * {@link #setMembers(Object[])} method before this instance is used.
+	 * {@link #setMembers(Object...)} method before this instance is used.
 	 */
 	public CommandGroupFactoryBean() {
 		// do nothing
@@ -495,5 +497,13 @@ public class CommandGroupFactoryBean implements BeanNameAware, FactoryBean, Secu
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String... authorities) {
+        this.authorities = authorities;
     }
 }

@@ -21,12 +21,12 @@ public class ApplicationSessionInitializer
     /**
      * List of command ids to be executed before startup of the application window
      */
-    private List<AbstractCommand> preStartupCommands;
+    private List<String> preStartupCommands;
 
      /**
      * List of command ids to be executed after startup of the application window
      */
-    private List<AbstractCommand> postStartupCommands;
+    private List<String> postStartupCommands;
 
     /**
      * Sets extra user attributes to be added to the ApplicationSession after login
@@ -63,7 +63,7 @@ public class ApplicationSessionInitializer
      /**
      * Sets the list of command ids to be executed before startup of the application window
      */
-    public void setPreStartupCommands(List<AbstractCommand> commandIds)
+    public void setPreStartupCommands(List<String> commandIds)
     {
         this.preStartupCommands = commandIds;
     }
@@ -71,7 +71,7 @@ public class ApplicationSessionInitializer
     /**
      * @return the list of command ids to be executed before startup of the application window
      */
-    public List<AbstractCommand> getPreStartupCommands()
+    public List<String> getPreStartupCommands()
     {
         return preStartupCommands;
     }
@@ -79,7 +79,7 @@ public class ApplicationSessionInitializer
     /**
      * Sets the list of command ids to be executed after startup of the application window
      */
-    public void setPostStartupCommands(List<AbstractCommand> commandIds)
+    public void setPostStartupCommands(List<String> commandIds)
     {
         this.postStartupCommands = commandIds;
     }
@@ -87,7 +87,7 @@ public class ApplicationSessionInitializer
      /**
      * @return the list of command ids to be executed after startup of the application window
      */
-    public List<AbstractCommand> getPostStartupCommands()
+    public List<String> getPostStartupCommands()
     {
         return postStartupCommands;
     }

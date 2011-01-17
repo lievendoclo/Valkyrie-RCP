@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleVoter;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -61,7 +64,12 @@ import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.rules.reporting.DefaultMessageTranslatorFactory;
 import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
 import org.valkyriercp.rules.support.DefaultRulesSource;
+import org.valkyriercp.security.ApplicationSecurityManager;
+import org.valkyriercp.security.SecurityAwareConfigurer;
+import org.valkyriercp.security.SecurityController;
 import org.valkyriercp.security.SecurityControllerManager;
+import org.valkyriercp.security.support.AuthorityConfigurableSecurityController;
+import org.valkyriercp.security.support.DefaultApplicationSecurityManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
 import org.valkyriercp.util.DialogFactory;
 
@@ -213,7 +221,20 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public SecurityControllerManager securityControllerManager() {
-        return new DefaultSecurityControllerManager();
+        DefaultSecurityControllerManager defaultSecurityControllerManager = new DefaultSecurityControllerManager();
+        defaultSecurityControllerManager.setFallbackSecurityController(authorityConfigurableSecurityController());
+        return defaultSecurityControllerManager;
+    }
+
+    @Bean
+    public SecurityController authorityConfigurableSecurityController() {
+        AuthorityConfigurableSecurityController authorityConfigurableSecurityController = new AuthorityConfigurableSecurityController();
+        AffirmativeBased accessDecisionManager = new AffirmativeBased();
+        RoleVoter roleVoter = new RoleVoter();
+        roleVoter.setRolePrefix("");
+        accessDecisionManager.setDecisionVoters(Lists.<AccessDecisionVoter>newArrayList(roleVoter));
+        authorityConfigurableSecurityController.setAccessDecisionManager(accessDecisionManager);
+        return authorityConfigurableSecurityController;
     }
 
     public Class<?> getCommandConfigClass() {
@@ -340,6 +361,11 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         return new DefaultTableFactory();
     }
 
+    @Bean
+    public ApplicationSecurityManager applicationSecurityManager() {
+        return new DefaultApplicationSecurityManager(false);
+    }
+
     // Binders
 
     @Bean
@@ -405,5 +431,10 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Override
     public ApplicationMode getApplicationMode() {
         return ApplicationMode.PRODUCTION;
+    }
+
+    @Bean
+    public SecurityAwareConfigurer securityAwareConfigurer() {
+         return new SecurityAwareConfigurer();
     }
 }

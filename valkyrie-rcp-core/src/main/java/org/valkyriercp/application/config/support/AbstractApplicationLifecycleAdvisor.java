@@ -1,17 +1,21 @@
 package org.valkyriercp.application.config.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.exceptionhandling.DefaultRegisterableExceptionHandler;
 import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandler;
+import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.DefaultStatusBar;
+import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public abstract class AbstractApplicationLifecycleAdvisor implements ApplicationLifecycleAdvisor {
@@ -20,6 +24,9 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
     @Autowired
     protected ApplicationContext applicationContext;
+
+    @Autowired
+    protected ApplicationSession applicationSession;
 
 	private ApplicationWindow openingWindow;
 
@@ -81,7 +88,8 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
     }
 
     @Override
-    public void onCommandsCreated(ApplicationWindow window) {}
+    public void onCommandsCreated(ApplicationWindow window) {
+    }
 
     /**
 	 * Create the menuBar for the application.

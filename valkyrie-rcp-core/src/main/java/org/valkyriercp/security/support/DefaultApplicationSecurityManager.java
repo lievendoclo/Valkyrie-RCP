@@ -1,13 +1,13 @@
 package org.valkyriercp.security.support;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -70,7 +70,7 @@ import java.util.Map;
  * @author Larry Streepy
  *
  */
-
+@Configurable
 public class DefaultApplicationSecurityManager implements ApplicationSecurityManager, InitializingBean {
 
     private final Log logger = LogFactory.getLog(getClass());
@@ -263,9 +263,15 @@ public class DefaultApplicationSecurityManager implements ApplicationSecurityMan
             }
         }
 
-        // If we still don't have one, then that's it
+        // there's no config in the context, so security should be disabled
         if( authenticationManager == null ) {
-            throw new IllegalArgumentException( "authenticationManager must be defined" );
+            authenticationManager = new AbstractAuthenticationManager() {
+                @Override
+                protected Authentication doAuthentication(Authentication authentication) throws AuthenticationException {
+                    return new AnonymousAuthenticationToken("anon", "anon", Lists.<GrantedAuthority>newArrayList());
+                }
+            };
+//            throw new IllegalArgumentException( "authenticationManager must be defined" );
         }
     }
 

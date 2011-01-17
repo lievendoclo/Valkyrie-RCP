@@ -1,5 +1,7 @@
 package org.valkyriercp.security;
 
+import org.valkyriercp.core.Authorizable;
+
 import java.util.Map;
 
 /**
@@ -47,4 +49,8 @@ public interface SecurityControllerManager {
      * @return controller instance, or null if nothing is registered for the id
      */
     public SecurityController getSecurityController(String id);
+
+    public void addSecuredObject(Authorizable auth);
+
+    public void addSecuredObject(String securityControllerId, Authorizable auth);
 }

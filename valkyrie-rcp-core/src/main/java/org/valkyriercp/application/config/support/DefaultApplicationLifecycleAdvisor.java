@@ -4,16 +4,15 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.ConfigurationException;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.config.AbstractCommandConfig;
+import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -66,8 +65,40 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
         return toolBarCommandGroup != null ? toolBarCommandGroup : super.getToolBarCommandGroup();
     }
 
-    private class CommandBarApplicationContextFactory implements FactoryBean<AnnotationConfigApplicationContext>
-    {
+    @Override
+    public void onCommandsCreated(ApplicationWindow window) {
+        ApplicationSessionInitializer asi = getApplicationSessionInitializer();
+        if (asi != null) {
+            applicationSession.initializeSession();
+            List<String> commands = asi.getPreStartupCommands();
+            if (commands != null) {
+                for (String command : commands) {
+                    if (openingWindowCommandBarFactory.containsBean(command)) {
+                        openingWindowCommandBarFactory.getBean(command, AbstractCommand.class).execute();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPostStartup() {
+        ApplicationSessionInitializer asi = getApplicationSessionInitializer();
+        if (asi != null) {
+            List<String> commands = asi.getPostStartupCommands();
+            if (commands != null) {
+                for (String command : commands) {
+                    if (openingWindowCommandBarFactory.containsBean(command)) {
+                        openingWindowCommandBarFactory.getBean(command, AbstractCommand.class).execute();
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    private class CommandBarApplicationContextFactory implements FactoryBean<AnnotationConfigApplicationContext> {
         private ApplicationContext parent;
         private Class<?> configClass;
 

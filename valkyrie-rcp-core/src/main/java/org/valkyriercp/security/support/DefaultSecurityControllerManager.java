@@ -3,6 +3,7 @@ package org.valkyriercp.security.support;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.valkyriercp.core.Authorizable;
 import org.valkyriercp.security.SecurityController;
 import org.valkyriercp.security.SecurityControllerManager;
 
@@ -49,6 +50,16 @@ public class DefaultSecurityControllerManager implements SecurityControllerManag
             }
         }
         return sc;
+    }
+
+    @Override
+    public void addSecuredObject(Authorizable auth) {
+        fallbackController.addControlledObject(auth);
+    }
+
+    @Override
+    public void addSecuredObject(String securityControllerId, Authorizable auth) {
+        getSecurityController(securityControllerId).addControlledObject(auth);
     }
 
     /**

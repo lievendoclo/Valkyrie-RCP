@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.GuardedActionCommandExecutor;
+import org.valkyriercp.command.SecuredActionCommandExecutor;
 import org.valkyriercp.command.config.*;
 import org.valkyriercp.core.Secured;
 import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
@@ -51,7 +52,7 @@ import java.util.NoSuchElementException;
  */
 @Configurable
 public abstract class AbstractCommand extends AbstractPropertyChangePublisher implements
-        BeanNameAware, GuardedActionCommandExecutor, Secured {
+        BeanNameAware, SecuredActionCommandExecutor {
 
 	/** Property used to notify changes in the <em>enabled</em> state. */
 	public static final String ENABLED_PROPERTY_NAME = "enabled";
@@ -72,6 +73,8 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	private boolean authorized = true;
 
 	private String securityControllerId = null;
+
+    private String[] authorities;
 
 	private Map faceButtonManagers;
 
@@ -1027,7 +1030,15 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		return null;
 	}
 
-	/**
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String... authorities) {
+        this.authorities = authorities;
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
