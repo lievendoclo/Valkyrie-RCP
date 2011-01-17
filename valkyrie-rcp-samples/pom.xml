@@ -15,6 +15,7 @@
 
     <modules>
         <module>valkyrie-rcp-simple-sample</module>
+        <module>valkyrie-rcp-dataeditor-sample</module>
     </modules>
 
 

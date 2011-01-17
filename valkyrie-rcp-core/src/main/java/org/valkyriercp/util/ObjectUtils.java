@@ -5,17 +5,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.InvalidPropertyException;
-import org.springframework.beans.PropertyAccessor;
-import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.beans.*;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
+import org.valkyriercp.binding.form.FormModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility class for dealing with objects.
@@ -301,5 +301,30 @@ public final class ObjectUtils {
                 }
             }
         });
+    }
+
+    /**
+     * This method tries to map the values of the given object on the valueModels of the formModel. Instead of
+     * setting the object as a backing object, all valueModels are processed one by one and the corresponding
+     * property value is fetched from the objectToMap and set on that valueModel. This triggers the usual
+     * buffering etc. just as if the user entered the values.
+     *
+     * @param formModel
+     * @param objectToMap
+     */
+    public static void mapObjectOnFormModel(FormModel formModel, Object objectToMap)
+    {
+        BeanWrapper beanWrapper = new BeanWrapperImpl(objectToMap);
+        for (String fieldName : (Set<String>) formModel.getFieldNames())
+        {
+            try
+            {
+                formModel.getValueModel(fieldName).setValue(beanWrapper.getPropertyValue(fieldName));
+            }
+            catch (BeansException be)
+            {
+                // silently ignoring, just mapping values, so if there's one missing, don't bother
+            }
+        }
     }
 }

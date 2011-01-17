@@ -31,7 +31,7 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
     public CommandGroup menuBarCommandGroup() {
         CommandGroupFactoryBean menuFactory = new CommandGroupFactoryBean();
         menuFactory.setGroupId("menu");
-        menuFactory.setMembers(fileMenu(), windowMenu());
+        menuFactory.setMembers(fileMenu(), windowMenu(), helpMenu());
         return menuFactory.getCommandGroup();
     }
 
@@ -58,6 +58,14 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
         CommandGroupFactoryBean factory = new CommandGroupFactoryBean();
         factory.setGroupId("newMenu");
         factory.setMembers("newContactCommand");
+        return factory.getCommandGroup();
+    }
+
+      @Bean
+    public CommandGroup helpMenu() {
+        CommandGroupFactoryBean factory = new CommandGroupFactoryBean();
+        factory.setGroupId("helpMenu");
+        factory.setMembers(aboutCommand());
         return factory.getCommandGroup();
     }
 

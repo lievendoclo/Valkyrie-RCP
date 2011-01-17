@@ -254,7 +254,7 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
 	 * @return a {@link CommandGroup} which contains all the members.
 	 */
 	@Override
-    public CommandGroup createCommandGroup(List<? extends AbstractCommand> members) {
+    public CommandGroup createCommandGroup(List<? extends Object> members) {
 		return createCommandGroup(null, members.toArray(), false, null);
 	}
 
@@ -312,5 +312,19 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
 		groupFactory.setExclusive(exclusive);
 		return groupFactory.getCommandGroup();
 	}
+
+    public ActionCommand createDummyCommand(final String id, final String msg)
+    {
+        ActionCommand newCommand = new ActionCommand(id)
+        {
+
+            protected void doExecuteCommand()
+            {
+                System.out.println(msg);
+            }
+        };
+        commandConfigurer.configure(newCommand);
+        return newCommand;
+    }
 
 }

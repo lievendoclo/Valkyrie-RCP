@@ -3,6 +3,7 @@ package org.valkyriercp.command;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.config.CommandFaceDescriptorRegistry;
 import org.valkyriercp.command.support.AbstractCommand;
+import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.factory.CommandFactory;
 
@@ -14,7 +15,7 @@ public interface CommandManager extends CommandServices, CommandRegistry, Comman
 
     public void removeCommandInterceptor(String commandId, ActionCommandInterceptor interceptor);
 
-    CommandGroup createCommandGroup(List<? extends AbstractCommand> members);
+    CommandGroup createCommandGroup(List<? extends Object> members);
 
     CommandGroup createCommandGroup(String groupId, Object[] members);
 
@@ -24,4 +25,6 @@ public interface CommandManager extends CommandServices, CommandRegistry, Comman
 
     CommandGroup createCommandGroup(String groupId, Object[] members,
                                     boolean exclusive, CommandConfigurer configurer);
+
+    ActionCommand createDummyCommand(final String id, final String msg);
 }

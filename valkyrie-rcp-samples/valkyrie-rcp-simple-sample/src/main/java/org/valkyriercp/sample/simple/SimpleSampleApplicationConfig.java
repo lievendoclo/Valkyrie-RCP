@@ -43,7 +43,7 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
-        lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(contactView()));
+        lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(initialView()));
         return lifecycleAdvisor;
     }
 
