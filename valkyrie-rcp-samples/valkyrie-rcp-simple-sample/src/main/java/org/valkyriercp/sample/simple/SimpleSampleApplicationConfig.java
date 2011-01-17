@@ -58,12 +58,12 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
         return lifecycleAdvisor;
     }
 
-//    @Override
-//    public ApplicationSessionInitializer applicationSessionInitializer() {
-//        ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
-//        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
-//        return initializer;
-//    }
+    @Override
+    public ApplicationSessionInitializer applicationSessionInitializer() {
+        ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
+        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+        return initializer;
+    }
 
     @Override
     public List<String> getResourceBundleLocations() {

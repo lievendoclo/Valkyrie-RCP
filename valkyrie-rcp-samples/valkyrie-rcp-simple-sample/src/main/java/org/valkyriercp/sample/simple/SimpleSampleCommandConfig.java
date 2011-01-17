@@ -41,7 +41,7 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
         fileMenuFactory.setGroupId("fileMenu");
         fileMenuFactory.setMembers(newMenu(), CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, "propertiesCommand",
                 CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, "deleteCommand",
-                CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, exitCommand());
+                CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, logoutCommand(), exitCommand());
         return fileMenuFactory.getCommandGroup();
     }
 

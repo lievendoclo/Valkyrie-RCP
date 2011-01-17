@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.io.ClassPathResource;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.NewWindowCommand;
 import org.valkyriercp.command.support.*;
 import org.valkyriercp.security.LoginCommand;
+import org.valkyriercp.security.LogoutCommand;
 
 @Configuration
 @Lazy
@@ -48,11 +48,18 @@ public abstract class AbstractCommandConfig {
     }
 
     @Bean
-    public AbstractCommand loginCommand() {
+    public LoginCommand loginCommand() {
         LoginCommand loginCommand = new LoginCommand();
         loginCommand.setDisplaySuccess(false);
         loginCommand.setClearPasswordOnFailure(true);
         return loginCommand;
+    }
+
+    @Bean
+    public LogoutCommand logoutCommand() {
+        LogoutCommand logoutCommand = new LogoutCommand(loginCommand());
+        logoutCommand.setDisplaySuccess(false);
+        return logoutCommand;
     }
 
     @Bean

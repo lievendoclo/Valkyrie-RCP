@@ -11,13 +11,13 @@
 
     <bean class="org.valkyriercp.sample.simple.SimpleSampleApplicationConfig"/>
 
-    <!--<security:authentication-manager>-->
-        <!--<security:authentication-provider>-->
-            <!--<security:user-service>-->
-                <!--<security:user name="admin" password="admin" authorities="ADMIN"/>-->
-                <!--<security:user name="user" password="user" authorities="USER"/>-->
-            <!--</security:user-service>-->
-        <!--</security:authentication-provider>-->
-    <!--</security:authentication-manager>-->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="admin" authorities="ADMIN"/>
+                <security:user name="user" password="user" authorities="USER"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
 
 </beans>

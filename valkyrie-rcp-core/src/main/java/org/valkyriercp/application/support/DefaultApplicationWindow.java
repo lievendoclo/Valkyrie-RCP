@@ -28,4 +28,6 @@ public class DefaultApplicationWindow extends AbstractApplicationWindow {
         panel.add(page.getControl());
         panel.validate();
     }
+
+
 }
