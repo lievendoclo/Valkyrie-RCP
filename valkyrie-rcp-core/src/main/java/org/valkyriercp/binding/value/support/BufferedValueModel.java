@@ -7,6 +7,7 @@ import org.valkyriercp.binding.value.CommitTriggerListener;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.ValueModelWrapper;
 
+import javax.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -29,7 +30,7 @@ public class BufferedValueModel extends AbstractValueModel implements ValueModel
 
     private final ValueModel wrappedModel;
 
-    private final PropertyChangeListener wrappedModelChangeHandler;
+    private PropertyChangeListener wrappedModelChangeHandler;
 
     private Object bufferedValue;
 
@@ -58,10 +59,14 @@ public class BufferedValueModel extends AbstractValueModel implements ValueModel
     public BufferedValueModel(ValueModel wrappedModel, CommitTrigger commitTrigger) {
         Assert.notNull(wrappedModel, "Wrapped value model can not be null.");
         this.wrappedModel = wrappedModel;
-        this.wrappedModelChangeHandler = new WrappedModelValueChangeHandler();
-        this.wrappedModel.addValueChangeListener(wrappedModelChangeHandler);
         this.bufferedValue = wrappedModel.getValue();
         setCommitTrigger(commitTrigger);
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        this.wrappedModelChangeHandler = new WrappedModelValueChangeHandler();
+        this.wrappedModel.addValueChangeListener(wrappedModelChangeHandler);
     }
 
     /**

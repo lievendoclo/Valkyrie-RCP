@@ -26,7 +26,7 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
     private ApplicationPage currentApplicationPage;
     private ApplicationConfig applicationConfig;
     private ApplicationWindowConfigurer applicationWindowConfigurer;
-    private EventListenerListHelper pageListeners = new EventListenerListHelper(ApplicationPage.class);
+    private EventListenerListHelper pageListeners = new EventListenerListHelper(PageListener.class);
     private CommandGroup menuBarCommandGroup;
     private CommandGroup toolBarCommandGroup;
     private StatusBar statusBar;

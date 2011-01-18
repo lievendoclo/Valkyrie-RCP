@@ -39,7 +39,7 @@ import java.awt.*;
  * @author Keith Donald
  */
 @Configurable
-public class CommandGroupFactoryBean implements BeanNameAware, FactoryBean, Secured {
+public class CommandGroupFactoryBean implements FactoryBean, Secured {
 
 	/**
 	 * The string that represents a glue component, to be used between other
@@ -221,22 +221,6 @@ public class CommandGroupFactoryBean implements BeanNameAware, FactoryBean, Secu
 	}
 
 	/**
-	 * Accepts notification from the IoC container of this instance's bean name
-	 * as declared in the bean definition file. This value is used as the id of
-	 * the command group produced by this factory.
-	 */
-	public void setBeanName(String beanName) {
-		this.groupId = beanName;
-	}
-
-	/**
-	 * @return beanName.
-	 */
-	protected String getBeanName() {
-		return this.groupId;
-	}
-
-	/**
 	 * Returns the value of the flag that indicates whether or not this factory
 	 * produces an exclusive command group.
 	 * @return The exclusive flag.
@@ -315,12 +299,12 @@ public class CommandGroupFactoryBean implements BeanNameAware, FactoryBean, Secu
 	protected CommandGroup createCommandGroup() {
 		CommandGroup group;
 		if (isExclusive()) {
-			ExclusiveCommandGroup g = new ExclusiveCommandGroup(getBeanName(), getCommandRegistry());
+			ExclusiveCommandGroup g = new ExclusiveCommandGroup(getGroupId(), getCommandRegistry());
 			g.setAllowsEmptySelection(isAllowsEmptySelection());
 			group = g;
 		}
 		else {
-			group = new CommandGroup(getBeanName(), getCommandRegistry());
+			group = new CommandGroup(getGroupId(), getCommandRegistry());
 		}
 
 		// Apply our security controller id to the new group

@@ -33,6 +33,10 @@ public class BeanFactoryViewDescriptorRegistry implements ViewDescriptorRegistry
         return (ViewDescriptor[])beans.values().toArray(new ViewDescriptor[beans.size()]);
     }
 
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
     /**
      * Returns the view descriptor with the given identifier, or null if no such bean definition
      * with the given name exists in the current application context.
