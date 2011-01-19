@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.binding.convert.converters.PropertyEditorConverter;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;

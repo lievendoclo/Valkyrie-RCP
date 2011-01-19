@@ -42,6 +42,7 @@ public class DefaultApplication implements Application {
 
     public void openWindow(String pageDescriptorId) {
         ApplicationWindow window = initWindow(createNewWindow());
+        applicationConfig.windowManager().setActiveWindow(window);
         if(pageDescriptorId == null) {
             window.showPage(applicationPageFactory.createApplicationPage(window, new MultiViewPageDescriptor()));
         } else {
@@ -51,6 +52,7 @@ public class DefaultApplication implements Application {
 
     public void openWindow(PageDescriptor pageDescriptor) {
         ApplicationWindow window = initWindow(createNewWindow());
+        applicationConfig.windowManager().setActiveWindow(window);
         window.showPage(pageDescriptor);
     }
 

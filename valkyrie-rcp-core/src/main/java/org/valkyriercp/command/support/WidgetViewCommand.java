@@ -8,7 +8,6 @@ import org.valkyriercp.widget.WidgetViewDescriptor;
  */
 public class WidgetViewCommand extends AbstractWidgetCommand
 {
-
     protected final WidgetViewDescriptor widgetViewDescriptor;
 
     public WidgetViewCommand(String id, WidgetViewDescriptor widgetViewDescriptor) {

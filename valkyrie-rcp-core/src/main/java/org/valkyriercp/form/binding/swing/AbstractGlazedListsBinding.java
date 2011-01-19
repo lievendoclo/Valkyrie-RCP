@@ -1,5 +1,6 @@
 package org.valkyriercp.form.binding.swing;
 
+import com.google.common.collect.Lists;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.ActionCommand;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -460,9 +462,9 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
     {
         return new TitledApplicationDialog()
         {
-            protected Object[] getCommandGroupMembers()
+            protected ArrayList<AbstractCommand> getCommandGroupMembers()
             {
-                return new AbstractCommand[]{getFinishCommand()};
+                return Lists.<AbstractCommand>newArrayList(getFinishCommand());
             }
 
             @Override

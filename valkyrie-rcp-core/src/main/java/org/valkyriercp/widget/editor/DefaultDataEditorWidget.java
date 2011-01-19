@@ -24,6 +24,7 @@ import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 import org.valkyriercp.widget.table.glazedlists.GlazedListTableWidget;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -219,49 +220,55 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
      * @see #setTableWidget(TableDescription)
      * @see #setTableWidget(TableWidget)
      */
-    public DefaultDataEditorWidget()
-    {
-    }
-
-    /**
-     * Constructor with id and {@link DataProvider}. Add {@link org.valkyriercp.form.Form}s and listView later.
-     *
-     * @param id       used to fetch messages/icons.
-     * @param provider provides the data manipulation and possible CRUD options.
-     * @see #setDetailForm(AbstractForm)
-     * @see #setFilterForm(FilterForm)
-     * @see #setTableWidget(TableDescription)
-     * @see #setTableWidget(TableWidget)
-     */
-    public DefaultDataEditorWidget(String id, DataProvider provider)
-    {
-        this(id, provider, null, null, null);
-    }
-
-    public DefaultDataEditorWidget(DataProvider provider, AbstractForm form, TableDescription tableDesc,
-                                   FilterForm filterForm)
-    {
-        this(null, provider, form, tableDesc, filterForm);
-    }
-
-    /**
-     * Constructor allowing to set all major components at once.
-     *
-     * @param id         used to fetch messages/icons.
-     * @param provider   provides the data manipulation and possible CRUD options.
-     * @param form       used to display and edit one row detail.
-     * @param tableDesc  describes the columns of the table to build.
-     * @param filterForm optional form used to filter the data.
-     */
-    public DefaultDataEditorWidget(String id, DataProvider provider, AbstractForm form,
-                                   TableDescription tableDesc, FilterForm filterForm)
+    public DefaultDataEditorWidget(String id)
     {
         setId(id);
-        setDataProvider(provider);
-        setDetailForm(form);
-        setTableWidget(tableDesc);
-        setFilterForm(filterForm);
     }
+
+    @PostConstruct
+    private void configureDataEditorObject() {
+        applicationConfig.applicationObjectConfigurer().configure(this, getId());
+    }
+
+//    /**
+//     * Constructor with id and {@link DataProvider}. Add {@link org.valkyriercp.form.Form}s and listView later.
+//     *
+//     * @param id       used to fetch messages/icons.
+//     * @param provider provides the data manipulation and possible CRUD options.
+//     * @see #setDetailForm(AbstractForm)
+//     * @see #setFilterForm(FilterForm)
+//     * @see #setTableWidget(TableDescription)
+//     * @see #setTableWidget(TableWidget)
+//     */
+//    public DefaultDataEditorWidget(String id, DataProvider provider)
+//    {
+//        this(id, provider, null, null, null);
+//    }
+//
+//    public DefaultDataEditorWidget(DataProvider provider, AbstractForm form, TableDescription tableDesc,
+//                                   FilterForm filterForm)
+//    {
+//        this(null, provider, form, tableDesc, filterForm);
+//    }
+//
+//    /**
+//     * Constructor allowing to set all major components at once.
+//     *
+//     * @param id         used to fetch messages/icons.
+//     * @param provider   provides the data manipulation and possible CRUD options.
+//     * @param form       used to display and edit one row detail.
+//     * @param tableDesc  describes the columns of the table to build.
+//     * @param filterForm optional form used to filter the data.
+//     */
+//    public DefaultDataEditorWidget(String id, DataProvider provider, AbstractForm form,
+//                                   TableDescription tableDesc, FilterForm filterForm)
+//    {
+//        setId(id);
+//        setDataProvider(provider);
+//        setDetailForm(form);
+//        setTableWidget(tableDesc);
+//        setFilterForm(filterForm);
+//    }
 
     @Override
     public void setTitle(String title)
