@@ -181,6 +181,7 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
             }
         };
         frame.addWindowListener(windowCloseHandler);
+        new DefaultButtonFocusListener();
         return frame;
     }
 

@@ -66,6 +66,12 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
     }
 
     @Override
+    public CommandGroup getNavigationCommandGroup() {
+        CommandGroup navigationCommandGroup = getCommandConfig().navigationCommandGroup();
+        return navigationCommandGroup != null ? navigationCommandGroup : super.getNavigationCommandGroup();
+    }
+
+    @Override
     public void onCommandsCreated(ApplicationWindow window) {
         ApplicationSessionInitializer asi = getApplicationSessionInitializer();
         if (asi != null) {

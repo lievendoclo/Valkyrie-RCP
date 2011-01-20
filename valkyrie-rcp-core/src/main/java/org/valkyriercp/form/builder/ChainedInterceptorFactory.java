@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ChainedInterceptorFactory implements FormComponentInterceptorFactory {
 
-    public List<FormComponentInterceptorFactory> interceptorFactories = Lists.newArrayList();
+    private List<FormComponentInterceptorFactory> interceptorFactories = Lists.newArrayList();
 
     public ChainedInterceptorFactory() {
     }
@@ -23,6 +23,10 @@ public class ChainedInterceptorFactory implements FormComponentInterceptorFactor
     public void setInterceptorFactories(List<FormComponentInterceptorFactory> interceptorFactories) {
         Assert.notNull(interceptorFactories);
         this.interceptorFactories = interceptorFactories;
+    }
+
+    public List<FormComponentInterceptorFactory> getInterceptorFactories() {
+        return interceptorFactories;
     }
 
     public FormComponentInterceptor getInterceptor(FormModel formModel) {

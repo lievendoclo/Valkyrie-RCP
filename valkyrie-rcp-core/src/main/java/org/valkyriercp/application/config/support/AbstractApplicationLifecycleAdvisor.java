@@ -109,6 +109,11 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 		return new CommandGroup();
 	}
 
+    @Override
+    public CommandGroup getNavigationCommandGroup() {
+        return new CommandGroup();
+    }
+
     /**
 	 * Create the statusBar for the application.
 	 *

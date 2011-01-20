@@ -14,6 +14,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.l2fprod</groupId>
+            <artifactId>l2fprod-common-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.java.dev.glazedlists</groupId>
             <artifactId>glazedlists_java15</artifactId>
         </dependency>

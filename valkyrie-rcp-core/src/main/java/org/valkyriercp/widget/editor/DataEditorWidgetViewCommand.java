@@ -11,6 +11,7 @@ public class DataEditorWidgetViewCommand extends WidgetViewCommand
 {
     public DataEditorWidgetViewCommand(String id, WidgetViewDescriptor widgetViewDescriptor) {
         super(id, widgetViewDescriptor);
+        setWidget(widgetViewDescriptor.getWidget());
     }
 
     /**
@@ -28,7 +29,6 @@ public class DataEditorWidgetViewCommand extends WidgetViewCommand
         {
             dataEditorWidget.executeFilter((Map<String, Object>)dataEditorParameters);
         }
-
         super.doExecuteCommand();
     }
 }

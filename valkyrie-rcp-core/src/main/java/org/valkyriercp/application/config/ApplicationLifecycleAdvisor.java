@@ -36,6 +36,8 @@ public interface ApplicationLifecycleAdvisor {
 
     CommandGroup getToolBarCommandGroup();
 
+    CommandGroup getNavigationCommandGroup();
+
     StatusBar getStatusBar();
 
     void onShutdown();

@@ -394,7 +394,7 @@ public abstract class AbstractLookupBinding extends CustomBinding {
                     Object result = initializeDataEditor();
 
                     //no match
-                    if (result == null) {
+                    if (result == null || ((result instanceof java.util.List) && (((java.util.List<?>) result).size() == 0))) {
                         if (!revertValueOnFocusLost())
                             getValueModel().setValue(createFilterFromString(textFieldValue));
                         if ((getAutoPopupDialog() & AUTOPOPUPDIALOG_NO_MATCH) == AUTOPOPUPDIALOG_NO_MATCH)

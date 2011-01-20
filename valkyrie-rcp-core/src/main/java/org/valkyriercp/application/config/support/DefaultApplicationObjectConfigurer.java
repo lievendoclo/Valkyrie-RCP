@@ -49,7 +49,7 @@ import java.util.Locale;
  * @author Keith Donald
  * @author Kevin Stembridge
  */
-public class DefaultApplicationObjectConfigurer implements ApplicationObjectConfigurer, BeanPostProcessor {
+public class DefaultApplicationObjectConfigurer implements ApplicationObjectConfigurer /*, BeanPostProcessor */ {
 
 	/**
 	 * The key fragment used to retrieve the <i>pressed</i> icon for a given
@@ -658,10 +658,10 @@ public class DefaultApplicationObjectConfigurer implements ApplicationObjectConf
 	 * Configures the given object.
 	 * @see #configure(Object, String)
 	 */
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		configure(bean, beanName);
-		return bean;
-	}
+//	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+//		configure(bean, beanName);
+//		return bean;
+//	}
 
 	/**
 	 * Attempts to load a {@link Color} by decoding the message that is found by
@@ -760,8 +760,8 @@ public class DefaultApplicationObjectConfigurer implements ApplicationObjectConf
 	/**
 	 * A default implemenation, performing no operation.
 	 */
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		return bean;
-	}
+//	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+//		return bean;
+//	}
 
 }

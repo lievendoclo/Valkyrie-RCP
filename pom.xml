@@ -332,6 +332,11 @@
                 <artifactId>mockito-core</artifactId>
                 <version>1.8.5</version>
             </dependency>
+            <dependency>
+                <groupId>com.l2fprod</groupId>
+                <artifactId>l2fprod-common-all</artifactId>
+                <version>7.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

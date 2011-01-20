@@ -27,4 +27,8 @@ public final class WidgetViewDescriptor extends DefaultViewDescriptor
         sv.setDescriptor(this);
         return sv;
     }
+
+    public Widget getWidget() {
+        return widget;
+    }
 }

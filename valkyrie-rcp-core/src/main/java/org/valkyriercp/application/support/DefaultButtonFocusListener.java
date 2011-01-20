@@ -60,7 +60,5 @@ public class DefaultButtonFocusListener implements PropertyChangeListener
     {
         comp.putClientProperty(DefaultButtonFocusListener.DEFAULT_COMMAND, command);
     }
-
-
 }
 

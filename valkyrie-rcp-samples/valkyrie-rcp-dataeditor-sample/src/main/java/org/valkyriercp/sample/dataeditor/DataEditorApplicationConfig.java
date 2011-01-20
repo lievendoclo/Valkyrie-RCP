@@ -6,16 +6,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.valkyriercp.application.ApplicationPageFactory;
+import org.valkyriercp.application.ApplicationWindowFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
+import org.valkyriercp.application.support.TabbedApplicationPageFactory;
 import org.valkyriercp.form.binding.Binder;
+import org.valkyriercp.form.builder.ChainedInterceptorFactory;
+import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
+import org.valkyriercp.form.builder.ToolTipInterceptorFactory;
 import org.valkyriercp.sample.dataeditor.domain.ItemService;
 import org.valkyriercp.sample.dataeditor.domain.SupplierService;
 import org.valkyriercp.sample.dataeditor.ui.*;
+import org.valkyriercp.taskpane.TaskPaneNavigatorApplicationWindowFactory;
+import org.valkyriercp.text.SelectAllFormComponentInterceptorFactory;
 import org.valkyriercp.widget.WidgetViewDescriptor;
-import org.valkyriercp.widget.editor.provider.DataProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +61,24 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
         return configurer;
     }
 
+    @Override
+    public ApplicationPageFactory applicationPageFactory() {
+        return new TabbedApplicationPageFactory();
+    }
+
+    @Override
+    public ApplicationWindowFactory applicationWindowFactory() {
+        return new TaskPaneNavigatorApplicationWindowFactory();
+    }
+
+    @Override
+    public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+        ChainedInterceptorFactory formComponentInterceptorFactory = (ChainedInterceptorFactory) super.formComponentInterceptorFactory();
+        formComponentInterceptorFactory.getInterceptorFactories().add(new SelectAllFormComponentInterceptorFactory());
+        formComponentInterceptorFactory.getInterceptorFactories().add(new ToolTipInterceptorFactory());
+        return formComponentInterceptorFactory;    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     // widgets
 
     @Bean
@@ -88,7 +113,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public WidgetViewDescriptor supplierView() {
-         return itemDataEditor().createViewDescriptor("supplierView");
+         return supplierDataEditor().createViewDescriptor("supplierView");
     }
 
     // Services

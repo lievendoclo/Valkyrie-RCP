@@ -33,6 +33,13 @@ public abstract class AbstractCommandConfig {
     public abstract CommandGroup toolBarCommandGroup();
 
     @Bean
+    @Qualifier("navigation")
+    public CommandGroup navigationCommandGroup() {
+        return new CommandGroup();
+    }
+
+
+    @Bean
     public AbstractCommand exitCommand() {
         return new ExitCommand();
     }

@@ -21,7 +21,6 @@ public class WidgetViewCommand extends AbstractWidgetCommand
     protected void doExecuteCommand()
     {
         getApplicationWindow().getPage().showView(widgetViewDescriptor);
-
     }
 
     @Override

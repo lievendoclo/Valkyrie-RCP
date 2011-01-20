@@ -288,7 +288,7 @@ public abstract class AbstractApplicationPage extends AbstractControlFactory imp
 
     private View showView(ViewDescriptor viewDescriptor, boolean setInput, Object input) {
         Assert.notNull(viewDescriptor, "viewDescriptor cannot be null");
-        applicationConfig.applicationObjectConfigurer().configure(viewDescriptor, viewDescriptor.getId());
+//        applicationConfig.applicationObjectConfigurer().configure(viewDescriptor, viewDescriptor.getId());
         View view = (View) findPageComponent(viewDescriptor.getId());
         if (view == null) {
             view = (View) createPageComponent(viewDescriptor);
