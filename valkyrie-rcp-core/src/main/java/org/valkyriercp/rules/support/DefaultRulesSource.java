@@ -103,6 +103,14 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
         return null;
     }
 
+    public static RulesSource create(Rules... rules) {
+        DefaultRulesSource rulesSource = new DefaultRulesSource();
+        for(Rules rule : rules ) {
+            rulesSource.addRules(rule);
+        }
+        return rulesSource;
+    }
+
     public String toString() {
         return new ToStringCreator(this).append("rules", ruleContexts).toString();
     }

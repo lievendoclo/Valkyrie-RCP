@@ -14,6 +14,7 @@ import org.valkyriercp.core.DescribedElement;
 import org.valkyriercp.core.DescriptionConfigurable;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.core.VisualizedElement;
+import org.valkyriercp.image.config.IconConfigurable;
 import org.valkyriercp.image.config.ImageConfigurable;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ import java.beans.PropertyChangeSupport;
  * @author Keith Donald
  */
 public class LabeledObjectSupport implements DescribedElement, VisualizedElement,
-        CommandLabelConfigurable, ImageConfigurable, DescriptionConfigurable, TitleConfigurable {
+        CommandLabelConfigurable, ImageConfigurable, IconConfigurable, DescriptionConfigurable, TitleConfigurable {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private CommandButtonLabelInfo label;
@@ -41,6 +42,8 @@ public class LabeledObjectSupport implements DescribedElement, VisualizedElement
 	private String description;
 
 	private Image image;
+
+    private Icon icon;
 
 	private PropertyChangeSupport propertyChangeSupport;
 
@@ -114,11 +117,14 @@ public class LabeledObjectSupport implements DescribedElement, VisualizedElement
 		return image;
 	}
 
-	public Icon getIcon() {
-		if (image != null)
-			return new ImageIcon(image);
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
 
-		return null;
+    public Icon getIcon() {
+		if (icon == null && image != null)
+			return new ImageIcon(image);
+		return icon;
 	}
 
 	public int getMnemonic() {

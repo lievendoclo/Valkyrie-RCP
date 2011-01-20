@@ -11,6 +11,10 @@ public class ItemForm extends TabbedForm
     public ItemForm()
     {
         super(FormModelHelper.createFormModel(new Item(), "itemForm"));
+        // enable this to see validation in action!
+//        Rules rules = new Rules(Item.class);
+//        rules.addRequired("name");
+//        getFormModel().setValidator(new RulesValidator(getFormModel(), DefaultRulesSource.create(rules)));
     }
 
     protected Tab[] getTabs()

@@ -1,6 +1,11 @@
 package org.valkyriercp.component;
 
 import com.jgoodies.forms.factories.FormFactory;
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.painter.CompoundPainter;
+import org.jdesktop.swingx.painter.GlossPainter;
+import org.jdesktop.swingx.painter.MattePainter;
+import org.jdesktop.swingx.painter.PinstripePainter;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.factory.AbstractControlFactory;
@@ -29,7 +34,7 @@ public class TitlePane extends AbstractControlFactory implements MessagePane, Ti
 
     private JLabel titleLabel;
 
-    private JLabel iconLabel;
+//    private JLabel iconLabel;
 
     private MessagePane messagePane;
 
@@ -53,9 +58,9 @@ public class TitlePane extends AbstractControlFactory implements MessagePane, Ti
 
     public void setImage(Image image) {
         this.image = image;
-        if (isControlCreated()) {
-            iconLabel.setIcon(getIcon());
-        }
+//        if (isControlCreated()) {
+//            iconLabel.setIcon(getIcon());
+//        }
     }
 
     protected JComponent createControl() {
@@ -65,20 +70,27 @@ public class TitlePane extends AbstractControlFactory implements MessagePane, Ti
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         titleLabel.setText(title);
 
-        iconLabel = new JLabel();
-        iconLabel.setName("icon");
-        iconLabel.setBackground(getBackgroundColor());
-        iconLabel.setIcon(getIcon());
+//        iconLabel = new JLabel();
+//        iconLabel.setName("icon");
+//        iconLabel.setBackground(getBackgroundColor());
+//        iconLabel.setIcon(getIcon());
 
-        JPanel panel = new JPanel();
+        JXPanel panel = new JXPanel();
+
+        MattePainter matte = new MattePainter(new Color(200,200,200));
+        PinstripePainter pinstripe = new PinstripePainter();
+        pinstripe.setPaint(new Color(1f,1f,1f,0.17f));
+        pinstripe.setSpacing(5.);
+        GlossPainter gloss = new GlossPainter();
+        CompoundPainter painter = new CompoundPainter(matte, pinstripe, gloss);
+        panel.setBackgroundPainter(painter);
+
         panel.setName("panel");
         panel.setBackground(getBackgroundColor());
         TableLayoutBuilder table = new TableLayoutBuilder(panel);
         table.row(FormFactory.LINE_GAP_ROWSPEC);
         table.gapCol();
         table.cell(titleLabel);
-        table.gapCol();
-        table.cell(iconLabel, "rowspan=2 colspec=pref");
         table.row(FormFactory.NARROW_LINE_GAP_ROWSPEC);
         table.cell(messagePane.getControl());
         table.row(FormFactory.NARROW_LINE_GAP_ROWSPEC);

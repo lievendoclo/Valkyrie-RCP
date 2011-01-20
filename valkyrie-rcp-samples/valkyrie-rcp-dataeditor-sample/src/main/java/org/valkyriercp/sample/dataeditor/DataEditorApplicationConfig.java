@@ -61,10 +61,10 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
         return configurer;
     }
 
-    @Override
-    public ApplicationPageFactory applicationPageFactory() {
-        return new TabbedApplicationPageFactory();
-    }
+//    @Override
+//    public ApplicationPageFactory applicationPageFactory() {
+//        return new TabbedApplicationPageFactory();
+//    }
 
     @Override
     public ApplicationWindowFactory applicationWindowFactory() {

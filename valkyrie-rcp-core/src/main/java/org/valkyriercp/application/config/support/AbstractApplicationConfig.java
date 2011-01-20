@@ -164,7 +164,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public PageComponentPaneFactory pageComponentPaneFactory() {
-        return new DefaultPageComponentPaneFactory();
+        return new SimplePageComponentPaneFactory();
     }
 
     @Bean
