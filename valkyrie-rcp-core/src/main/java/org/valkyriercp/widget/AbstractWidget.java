@@ -61,4 +61,12 @@ public abstract class AbstractWidget implements Widget
     {
         return Collections.emptyList();
     }
+
+    public WidgetViewDescriptor createViewDescriptor(String id) {
+        return new WidgetViewDescriptor(id, this);
+    }
+
+    public WidgetViewDescriptor createViewDescriptor() {
+        return new WidgetViewDescriptor(getId(), this);
+    }
 }

@@ -775,6 +775,11 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
         this.theTable.requestFocusInWindow();
     }
 
+    @Override
+    public String getId() {
+        return "glazedListTableWidget";
+    }
+
     public Set getDirtyRows() {
         return dirtyRows;
     }

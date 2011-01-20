@@ -308,6 +308,11 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
             {
                 return Arrays.asList(getDetailForm().getCommitCommand());
             }
+
+            @Override
+            public String getId() {
+                return DefaultDataEditorWidget.this.getId() + "." + getDetailForm().getId();
+            }
         };
     }
 

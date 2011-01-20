@@ -23,7 +23,14 @@ public interface Widget
         public JComponent getComponent()
         {
             return new JPanel();
-        }};
+        }
+
+        @Override
+        public String getId() {
+            return "emptyWidget";
+        }
+    };
+
 
     /**
      * @return A not <code>null</code> graphical component built using the
@@ -62,4 +69,6 @@ public interface Widget
      * Returns a list of commands for this widget.
      */
     public List<? extends AbstractCommand> getCommands();
+
+    public String getId();
 }

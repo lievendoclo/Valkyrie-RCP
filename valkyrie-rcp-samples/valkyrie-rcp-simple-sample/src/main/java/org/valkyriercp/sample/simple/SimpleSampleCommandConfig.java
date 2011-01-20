@@ -77,24 +77,4 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
         toolbarFactory.setMembers("newContactCommand", "propertiesCommand", "deleteCommand");
         return toolbarFactory.getCommandGroup();
     }
-
-    @Bean
-    public AbstractCommand throwExceptionCommand() {
-        return new ThrowExceptionCommand();
-    }
-
-    @Bean
-    public AbstractCommand showEmptyWidgetCommand() {
-        return new WidgetViewCommand("emptyWidgetCommand", new WidgetViewDescriptor("emptyWidget", Widget.EMPTY_WIDGET));
-    }
-
-    @Bean
-    public AbstractCommand showOtherWidgetCommand() {
-        return new WidgetViewCommand("otherWidgetCommand", new WidgetViewDescriptor("otherWidget", new AbstractWidget() {
-            @Override
-            public JComponent getComponent() {
-                return new JPanel();
-            }
-        }));
-    }
 }

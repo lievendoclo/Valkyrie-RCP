@@ -77,5 +77,10 @@ public class ScreenSimulationWidget extends AbstractWidget
     {
         return mainComponent;
     }
+
+    @Override
+    public String getId() {
+        return "screenSimulationWidget";
+    }
 }
 

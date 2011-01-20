@@ -36,7 +36,7 @@ public class DataEditorCommandConfig extends DefaultCommandConfig {
     public CommandGroup fileMenu() {
         CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
         fileMenuFactory.setGroupId("fileMenu");
-        fileMenuFactory.setMembers(logoutCommand(), exitCommand());
+        fileMenuFactory.setMembers(exitCommand());
         return fileMenuFactory.getCommandGroup();
     }
 
@@ -44,11 +44,11 @@ public class DataEditorCommandConfig extends DefaultCommandConfig {
     public CommandGroup windowMenu() {
         CommandGroupFactoryBean windowMenuFactory = new CommandGroupFactoryBean();
         windowMenuFactory.setGroupId("windowMenu");
-        windowMenuFactory.setMembers(newWindowCommand(), showViewMenu());
+        windowMenuFactory.setMembers(newWindowCommand());
         return windowMenuFactory.getCommandGroup();
     }
 
-    @Bean
+   @Bean
     public CommandGroup helpMenu() {
         CommandGroupFactoryBean factory = new CommandGroupFactoryBean();
         factory.setGroupId("helpMenu");

@@ -81,14 +81,14 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public WidgetViewDescriptor itemView() {
-        return new WidgetViewDescriptor("itemView", itemDataEditor());
+        return itemDataEditor().createViewDescriptor("itemView");
 
     }
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public WidgetViewDescriptor supplierView() {
-         return new WidgetViewDescriptor("supplierView", supplierDataEditor());
+         return itemDataEditor().createViewDescriptor("supplierView");
     }
 
     // Services

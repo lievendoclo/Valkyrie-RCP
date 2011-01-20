@@ -107,6 +107,11 @@ public class HTMLViewWidget extends AbstractWidget
     {
         return this.hasContent ? this.mainComponent : new JPanel();
     }
+
+    @Override
+    public String getId() {
+        return "htmlViewWidget";
+    }
 }
 
 
