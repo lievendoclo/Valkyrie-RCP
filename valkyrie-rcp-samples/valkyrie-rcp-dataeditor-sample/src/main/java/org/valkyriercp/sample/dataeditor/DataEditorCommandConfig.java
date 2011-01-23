@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.config.DefaultCommandConfig;
 import org.valkyriercp.command.support.*;
 import org.valkyriercp.widget.editor.DataEditorWidgetViewCommand;
@@ -12,6 +13,13 @@ import org.valkyriercp.widget.editor.DataEditorWidgetViewCommand;
 public class DataEditorCommandConfig extends DefaultCommandConfig {
     @Autowired
     private DataEditorApplicationConfig appConfig;
+
+    @Override
+    public ApplicationWindowCommandManager applicationWindowCommandManager() {
+        ApplicationWindowCommandManager applicationWindowCommandManager = super.applicationWindowCommandManager();
+        applicationWindowCommandManager.addSharedCommandIds("universalSearchCommand");
+        return applicationWindowCommandManager;
+    }
 
     @Bean
     public AbstractCommand itemDataEditorCommand() {

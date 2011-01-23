@@ -16,6 +16,7 @@ public class SupplierDataEditor extends DefaultDataEditorWidget
     {
         super("supplierDataEditor");
         this.supplierDataProvider = supplierDataProvider;
+
     }
 
     @PostConstruct

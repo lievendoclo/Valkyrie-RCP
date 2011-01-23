@@ -40,6 +40,18 @@ public class ApplicationWindowCommandManager extends DefaultCommandManager {
         }
     }
 
+    public void addSharedCommandIds(String... sharedCommandIds) {
+        if (sharedCommands == null) {
+            sharedCommands = Collections.EMPTY_LIST;
+        }
+        else {
+            for (int i = 0; i < sharedCommandIds.length; i++) {
+                ActionCommand globalCommand = createTargetableActionCommand(sharedCommandIds[i], null);
+                sharedCommands.add(globalCommand);
+            }
+        }
+    }
+
     public Iterator getSharedCommands() {
         if (sharedCommands == null) {
             return Collections.EMPTY_LIST.iterator();

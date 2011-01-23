@@ -14,8 +14,10 @@ public interface ApplicationWindow {
     boolean close();
     void setWindowManager(WindowManager windowManager);
     public Iterator getSharedCommands();
-
     ApplicationWindowCommandManager getCommandManager();
-
     StatusBar getStatusBar();
+
+    void addPageListener(PageListener listener);
+
+    void removePageListener(PageListener listener);
 }

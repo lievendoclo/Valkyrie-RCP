@@ -260,10 +260,12 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
         WindowUtils.centerOnScreen(windowControl);
     }
 
+    @Override
     public void addPageListener(PageListener listener) {
         this.pageListeners.add(listener);
     }
 
+    @Override
     public void removePageListener(PageListener listener) {
         this.pageListeners.remove(listener);
     }

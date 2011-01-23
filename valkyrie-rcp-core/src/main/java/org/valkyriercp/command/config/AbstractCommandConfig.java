@@ -19,9 +19,8 @@ public abstract class AbstractCommandConfig {
     protected ApplicationConfig parentConfig;
 
     @Bean
-    public ApplicationWindowCommandManager applicationWindowCommandManager()
-    {
-         return new ApplicationWindowCommandManager();
+    public ApplicationWindowCommandManager applicationWindowCommandManager() {
+        return new ApplicationWindowCommandManager();
     }
 
     @Bean
