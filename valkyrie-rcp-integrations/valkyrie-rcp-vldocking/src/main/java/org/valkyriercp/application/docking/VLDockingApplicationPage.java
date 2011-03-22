@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package be.valkyriercp.application.docking;
+package org.valkyriercp.application.docking;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -306,7 +306,7 @@ public class VLDockingApplicationPage extends AbstractApplicationPage implements
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.springframework.richclient.application.vldocking.VLDockingLayoutManager#addDockable(com.vlsolutions.swing.docking.DockingDesktop,
          *      com.vlsolutions.swing.docking.Dockable)
          */
@@ -316,7 +316,7 @@ public class VLDockingApplicationPage extends AbstractApplicationPage implements
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.springframework.richclient.application.vldocking.VLDockingLayoutManager#removeDockable(com.vlsolutions.swing.docking.DockingDesktop,
          *      com.vlsolutions.swing.docking.Dockable)
          */

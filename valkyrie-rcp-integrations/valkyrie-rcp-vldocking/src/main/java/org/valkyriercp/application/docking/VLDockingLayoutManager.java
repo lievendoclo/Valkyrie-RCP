@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package be.valkyriercp.application.docking;
+package org.valkyriercp.application.docking;
 
 import com.vlsolutions.swing.docking.Dockable;
 import com.vlsolutions.swing.docking.DockingDesktop;
@@ -21,10 +21,10 @@ import com.vlsolutions.swing.docking.DockingDesktop;
 /**
  * @author Rogan Dawes
  */
-public interface VLDockingLayoutBuilder {
+public interface VLDockingLayoutManager {
 
-	void addDockable(DockingDesktop desktop, Dockable dockable);
+    void addDockable(DockingDesktop desktop, Dockable dockable);
 
-	void layoutDockables(DockingDesktop desktop);
+    void removeDockable(DockingDesktop desktop, Dockable dockable);
 
 }

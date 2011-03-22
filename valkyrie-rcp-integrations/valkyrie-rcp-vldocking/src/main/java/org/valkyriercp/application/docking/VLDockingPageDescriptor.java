@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package be.valkyriercp.application.docking;
+package org.valkyriercp.application.docking;
 
 import org.springframework.core.io.Resource;
 import org.valkyriercp.application.support.MultiViewPageDescriptor;
