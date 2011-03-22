@@ -1,0 +1,49 @@
+<html>
+<body>
+<p>
+This is the initial view for the application. It was configured in the
+<tt>richclient-application-context.xml</tt> file with the <tt>lifecycleAdvisor.startingPageId</tt> property.
+The source for this view is in <tt>InitialView.java</tt>.
+</p><p>
+This is a very simple view containing this text area and the label below.
+The rest of the window layout (menus, toolbar, status bar, etc.) was created
+by the platform from configuration information in the application context
+and the <tt>commands-context.xml.</tt>
+</p><p>
+The text being displayed in this scroll pane and the text in the label at the bottom
+of the view were configured in the application context as shown below.
+The label text was specified using a message key, with a key of <tt>firstMessage.text</tt>
+that was resolved by the messageSource from the <tt>messages.properties</tt> file.
+All this configuration setup comes for free from the Spring platform.
+</p>
+<pre color=green>
+&lt;bean id=&quot;initialView&quot;
+  class=&quot;org.springframework.richclient.application.support.DefaultViewDescriptor&quot;&gt;
+  &lt;property name=&quot;viewClass&quot;&gt;
+    &lt;value&gt;org.springframework.richclient.samples.simple.ui.InitialView&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;viewProperties&quot;&gt;
+    &lt;map&gt;
+      &lt;entry key=&quot;firstMessage&quot;&gt;
+        &lt;value&gt;firstMessage.text&lt;/value&gt;
+      &lt;/entry&gt;
+      &lt;entry key="descriptionTextPath"&gt;
+         &lt;value&gt;org/springframework/richclient/samples/simple/ui/initialViewText.html&lt;/value&gt;
+       &lt;/entry&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+</pre>
+<p>
+So far, this view is all pretty much straight Swing, nothing to interesting.
+To see a more complex view using more of the platform features, in the menus
+above, select
+<tt color=blue>Window&nbsp;-&gt;&nbsp;Show&nbsp;View&nbsp;-&gt;&nbsp;Contacts</tt>
+</p><p>
+This menu item was created automatically by the platform based on all the
+views defined in the context.  Take a look at the class
+<tt>org.springframework.richclient.command.support.ShowViewMenu</tt> to see
+how it's done.
+</p>
+</body>
+</html>
