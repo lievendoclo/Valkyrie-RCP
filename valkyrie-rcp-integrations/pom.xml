@@ -15,6 +15,7 @@
 
     <modules>
         <module>valkyrie-rcp-vldocking</module>
+        <module>valkyrie-rcp-jideoss</module>
     </modules>
 
     <dependencies>

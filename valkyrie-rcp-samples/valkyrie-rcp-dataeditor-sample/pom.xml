@@ -25,5 +25,9 @@
             <groupId>com.jgoodies</groupId>
             <artifactId>looks</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.java.net.substance</groupId>
+            <artifactId>substance</artifactId>
+        </dependency>
     </dependencies>
 </project>
