@@ -16,7 +16,11 @@
 package be.valkyriercp.application.docking;
 
 import com.vlsolutions.swing.docking.DockingConstants;
+import org.valkyriercp.application.View;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Rogan Dawes
@@ -42,6 +46,20 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	private boolean floatEnabled = DEFAULT_FLOATENABLED;
 
 	private boolean maximizeEnabled = DEFAULT_MAXIMIZEENABLED;
+
+     public VLDockingViewDescriptor() {
+        // default constructor for spring creation
+    }
+
+    public VLDockingViewDescriptor(String id, Class<? extends View> viewClass) {
+        this(id, viewClass, Collections.<String, Object> emptyMap());
+    }
+
+    public VLDockingViewDescriptor(String id, Class<? extends View> viewClass, Map<String, Object> viewProperties) {
+        setId(id);
+        setViewClass(viewClass);
+        setViewProperties(viewProperties);
+    }
 
 	/**
 	 * @return the autoHideBorder

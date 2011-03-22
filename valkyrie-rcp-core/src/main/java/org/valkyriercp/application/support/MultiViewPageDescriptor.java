@@ -1,6 +1,8 @@
 package org.valkyriercp.application.support;
 
+import com.google.common.collect.Lists;
 import org.valkyriercp.application.PageLayoutBuilder;
+import org.valkyriercp.application.ViewDescriptor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,20 +10,19 @@ import java.util.List;
 
 public class MultiViewPageDescriptor  extends AbstractPageDescriptor {
 
-    private List viewDescriptors = new ArrayList();
+    private List<ViewDescriptor> viewDescriptors = Lists.newArrayList();
 
     public void buildInitialLayout(PageLayoutBuilder pageLayout) {
-        for (Iterator iter = viewDescriptors.iterator(); iter.hasNext();) {
-            String viewDescriptorId = (String) iter.next();
-            pageLayout.addView(viewDescriptorId);
+        for (ViewDescriptor viewDescriptor : getViewDescriptors()) {
+            pageLayout.addView(viewDescriptor.getId());
         }
     }
 
-    public List getViewDescriptors() {
+    public List<ViewDescriptor> getViewDescriptors() {
         return viewDescriptors;
     }
 
-    public void setViewDescriptors(List viewDescriptors) {
+    public void setViewDescriptors(List<ViewDescriptor> viewDescriptors) {
         this.viewDescriptors = viewDescriptors;
     }
 
