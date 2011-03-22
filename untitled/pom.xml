@@ -9,18 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>valkyrie-rcp-jideoss</artifactId>
-    <name>Valkyrie Jide OSS integration</name>
-    <dependencies>
-        <dependency>
-            <groupId>com.jidesoft</groupId>
-            <artifactId>jide-oss</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.valkyriercp</groupId>
-            <artifactId>valkyrie-rcp-core</artifactId>
-        </dependency>
-    </dependencies>
+    <artifactId>valkyrie-rcp-archetype</artifactId>
 
 
 </project>
