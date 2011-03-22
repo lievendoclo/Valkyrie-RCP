@@ -1,8 +1,8 @@
 package org.valkyriercp.sample.simple;
 
-import be.valkyriercp.application.docking.VLDockingApplicationPageFactory;
-import be.valkyriercp.application.docking.VLDockingPageDescriptor;
-import be.valkyriercp.application.docking.VLDockingViewDescriptor;
+import org.valkyriercp.application.docking.VLDockingApplicationPageFactory;
+import org.valkyriercp.application.docking.VLDockingPageDescriptor;
+import org.valkyriercp.application.docking.VLDockingViewDescriptor;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
