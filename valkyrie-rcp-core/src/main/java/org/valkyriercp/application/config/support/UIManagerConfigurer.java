@@ -5,6 +5,8 @@ import org.springframework.util.StringUtils;
 import org.valkyriercp.application.ApplicationException;
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +16,7 @@ import java.util.Properties;
  *
  * @author Keith Donald
  */
-public class UIManagerConfigurer {
+public class UIManagerConfigurer implements PropertyChangeListener {
 
     private static final String CROSS_PLATFORM_LOOK_AND_FEEL_NAME = "crossPlatform";
 
@@ -36,13 +38,25 @@ public class UIManagerConfigurer {
     }
 
     /**
+     * Creates the look and feel configurer.
+     * <p>
+     * Specifying look and feel name in constructor ensures look and feel is stablished before splash screen is shown.
+     *
+     * @param lookAndFeelName
+     *            the look and feel name to be used.
+     */
+    public UIManagerConfigurer(String lookAndFeelName) {
+        this.setLookAndFeel(lookAndFeelName);
+    }
+
+    /**
      * Template method subclasses may override to install custom look and feels
      * or UIManager defaults.
      *
      * @throws Exception
      */
     protected void doInstallCustomDefaults() throws Exception {
-
+        System.setProperty("sun.awt.noerasebackground", "true");
     }
 
     /**
@@ -124,5 +138,28 @@ public class UIManagerConfigurer {
         } catch (Exception e) {
             throw new ApplicationException("Unable to set look and feel", e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void propertyChange(PropertyChangeEvent evt) {
+
+        if ("lookAndFeel".equals(evt.getPropertyName())) {
+            this.onLookAndFeelChange((LookAndFeel) evt.getOldValue(), (LookAndFeel) evt.getNewValue());
+        }
+    }
+
+    /**
+     * Allow subclasses be aware of look and feel changes.
+     *
+     * @param oldLookAndFeel
+     *            the old look and feel.
+     * @param newLookAndFeel
+     *            the new look and feel.
+     */
+    protected void onLookAndFeelChange(LookAndFeel oldLookAndFeel, LookAndFeel newLookAndFeel) {
+
     }
 }

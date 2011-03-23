@@ -110,14 +110,15 @@ public class EnumComboBoxBinder extends ComboBoxBinder
 
         for (Enum e : enumPropertyType.getEnumConstants())
         {
-            String desc = messageResolver.getMessage(enumPropertyType.getName() + "." + e.name());
+            String messageKey = enumPropertyType.getName() + "." + e.name();
+            String desc = messageResolver.getMessage(messageKey);
             if (!StringUtils.isEmpty(desc))
             {
                 out.add(e);
             }
             else
             {
-                log.warn("No message found for: " + e + ", ignoring!");
+                log.warn("No message found for: " + messageKey + ", ignoring!");
             }
         }
 
