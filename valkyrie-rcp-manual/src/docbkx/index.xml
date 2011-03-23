@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+<book xmlns:xi="http://www.w3.org/2001/XInclude">
+  <bookinfo>
+    <title>Valkyrie RCP Reference Guide</title>
+
+
+    <releaseinfo>&version;</releaseinfo>
+
+    <authorgroup>
+      <author>
+        <othername>The Valkyrie RCP team</othername>
+      </author>
+    </authorgroup>
+
+    <legalnotice>
+      <para>
+        Copies of this document may be made for your own use and for
+        distribution to others, provided that you do not charge any fee for such
+        copies and further provided that each copy contains this Copyright
+        Notice, whether distributed in print or electronically.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <toc/>
+
+  <!--<xi:include href="preface.xml"/>-->
+
+  <!--<xi:include href="chapters/introduction.xml"/>-->
+  <!--<xi:include href="chapters/applications.xml"/>-->
+  <!--<xi:include href="chapters/commands.xml"/>-->
+  <!--<xi:include href="chapters/views.xml"/>-->
+  <!--<xi:include href="chapters/binding_forms.xml"/>-->
+  <!--<xi:include href="chapters/validation.xml"/>-->
+  <!--<xi:include href="chapters/exceptionhandling.xml"/>-->
+  <!--<xi:include href="chapters/security.xml"/>-->
+  <!--<xi:include href="chapters/widgets.xml"/>-->
+  <!--<xi:include href="chapters/interceptors.xml"/>-->
+  <!--<xi:include href="chapters/wizards.xml"/>-->
+  <!--<xi:include href="chapters/integration.xml"/>-->
+</book>

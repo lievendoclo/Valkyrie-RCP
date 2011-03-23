@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>valkyrie-rcp</artifactId>
+        <groupId>org.valkyriercp</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.valkyriercp</groupId>
+    <artifactId>valkyrie-rcp-manual</artifactId>
+    <packaging>pom</packaging>
+    <name>Valkyrie Manual</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.agilejava.docbkx</groupId>
+                <artifactId>docbkx-maven-plugin</artifactId>
+                <version>2.0.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-html</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.docbook</groupId>
+                        <artifactId>docbook-xml</artifactId>
+                        <version>4.4</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.xmlgraphics</groupId>
+                        <artifactId>fop</artifactId>
+                        <version>0.95</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <includes>index.xml,faq.xml,issues.xml</includes>
+                    <chunkedOutput>true</chunkedOutput>
+                    <htmlStylesheet>css/html.css</htmlStylesheet>
+                    <xincludeSupported>true</xincludeSupported>
+                    <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
+                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
+                    <!--<highlightSource>1</highlightSource>-->
+                    <!--<highlightDefaultLanguage>java</highlightDefaultLanguage>-->
+                    <entities>
+                        <entity>
+                            <name>version</name>
+                            <value>${project.version}</value>
+                        </entity>
+                    </entities>
+                    <postProcess>
+                        <copy todir="target/site/reference">
+                            <fileset dir="target/docbkx">
+                                <include name="**/*.html"/>
+                                <include name="**/*.pdf"/>
+                            </fileset>
+                        </copy>
+                        <copy todir="target/site/reference/html">
+                            <fileset dir="src/docbkx/resources">
+                                <include name="**/*.css"/>
+                                <include name="**/*.png"/>
+                                <include name="**/*.gif"/>
+                                <include name="**/*.jpg"/>
+                                <include name="**/*.js"/>
+                            </fileset>
+                        </copy>
+                        <move file="target/site/reference/pdf/index.pdf"
+                              tofile="target/site/reference/pdf/spring-rich-client-reference.pdf" failonerror="false"/>
+                        <!--<move file="target/site/reference/pdf/faq.pdf" tofile="target/site/reference/pdf/spring-dm-faq.pdf" failonerror="false" />-->
+                        <!--<move file="target/site/reference/pdf/issues.pdf" tofile="target/site/reference/pdf/spring-dm-issues.pdf" failonerror="false" />-->
+                    </postProcess>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
