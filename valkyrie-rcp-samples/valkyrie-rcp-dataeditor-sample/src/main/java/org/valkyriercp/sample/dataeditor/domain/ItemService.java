@@ -1,12 +1,10 @@
 package org.valkyriercp.sample.dataeditor.domain;
 
 import com.google.common.collect.Maps;
-import com.sun.xml.internal.bind.v2.util.QNameMap;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ItemService
 {

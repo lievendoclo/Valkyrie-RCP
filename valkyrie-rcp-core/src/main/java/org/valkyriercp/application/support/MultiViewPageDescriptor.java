@@ -10,19 +10,27 @@ import java.util.List;
 
 public class MultiViewPageDescriptor  extends AbstractPageDescriptor {
 
-    private List<ViewDescriptor> viewDescriptors = Lists.newArrayList();
+    private List viewDescriptors = Lists.newArrayList();
 
     public void buildInitialLayout(PageLayoutBuilder pageLayout) {
-        for (ViewDescriptor viewDescriptor : getViewDescriptors()) {
-            pageLayout.addView(viewDescriptor.getId());
+        for (Object viewDescriptor : getViewDescriptors()) {
+            String descriptor = null;
+            if (viewDescriptor instanceof String) {
+               descriptor = (String) viewDescriptor;
+            } else if(viewDescriptor instanceof ViewDescriptor) {
+                descriptor = ((ViewDescriptor) viewDescriptor).getId();
+            } else {
+                throw new IllegalStateException("ViewDescriptors should either be String or ViewDescriptor elements");
+            }
+            pageLayout.addView(descriptor);
         }
     }
 
-    public List<ViewDescriptor> getViewDescriptors() {
+    public List getViewDescriptors() {
         return viewDescriptors;
     }
 
-    public void setViewDescriptors(List<ViewDescriptor> viewDescriptors) {
+    public void setViewDescriptors(List viewDescriptors) {
         this.viewDescriptors = viewDescriptors;
     }
 

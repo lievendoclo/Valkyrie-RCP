@@ -11,7 +11,7 @@
 
     <artifactId>valkyrie-rcp-vldocking</artifactId>
     <name>Valkyrie VLDocking integration</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>org.valkyriercp</groupId>
