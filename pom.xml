@@ -205,6 +205,11 @@
                 <artifactId>valkyrie-rcp-vldocking</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.valkyriercp</groupId>
+                <artifactId>valkyrie-rcp-mydoggy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
@@ -346,6 +351,21 @@
                 <groupId>com.vlsolutions</groupId>
                 <artifactId>vldocking</artifactId>
                 <version>2.1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.noos.xing</groupId>
+                <artifactId>mydoggy-res</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.noos.xing</groupId>
+                <artifactId>mydoggy-plaf</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.noos.xing</groupId>
+                <artifactId>mydoggy-api</artifactId>
+                <version>1.5.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
