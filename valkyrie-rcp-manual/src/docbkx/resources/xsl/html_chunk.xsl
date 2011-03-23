@@ -193,8 +193,8 @@
                                 </td>
                                 <td width="20%" align="center">
                                     <span style="color:white;font-size:90%;">
-                                        <a href="http://www.SpringSource.com/"
-                                           title="SpringSource - Spring from the Source">Sponsored by SpringSource
+                                        <a href="http://www.gitorious.org/valkyrie-rcp"
+                                           title="Valkyrie RCP">Valkyrie RCP
                                         </a>
                                     </span>
                                 </td>
