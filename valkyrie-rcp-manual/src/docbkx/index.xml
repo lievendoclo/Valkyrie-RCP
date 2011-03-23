@@ -27,9 +27,9 @@
 
   <toc/>
 
-  <!--<xi:include href="preface.xml"/>-->
+  <xi:include href="preface.xml"/>
 
-  <!--<xi:include href="chapters/introduction.xml"/>-->
+  <xi:include href="chapters/introduction/index.xml"/>
   <!--<xi:include href="chapters/applications.xml"/>-->
   <!--<xi:include href="chapters/commands.xml"/>-->
   <!--<xi:include href="chapters/views.xml"/>-->
