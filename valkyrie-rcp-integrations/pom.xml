@@ -11,11 +11,12 @@
 
     <artifactId>valkyrie-rcp-integrations</artifactId>
     <name>Valkyrie integrations</name>
-    <packaging>pom</packaging>  \
+    <packaging>pom</packaging>
 
     <modules>
         <module>valkyrie-rcp-vldocking</module>
         <module>valkyrie-rcp-jideoss</module>
+        <module>valkyrie-rcp-mydoggy</module>
     </modules>
 
     <dependencies>
