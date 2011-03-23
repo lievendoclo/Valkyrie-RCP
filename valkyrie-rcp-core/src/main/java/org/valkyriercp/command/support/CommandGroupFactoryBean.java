@@ -76,7 +76,7 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
     @Autowired
 	private CommandConfigurer commandConfigurer;
 
-	private Object[] members;
+	private Object[] members = new Object[0];
 
 	private boolean exclusive;
 
