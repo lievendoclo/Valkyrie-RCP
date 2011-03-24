@@ -18,22 +18,8 @@ import java.util.Map;
 
 @Configuration
 public class SimpleApplicationConfig extends AbstractApplicationConfig {
-
-    @Override
-    public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
-        ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
-        lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(initialView()));
-        return lifecycleAdvisor;
-    }
-
     @Override
     public Class<?> getCommandConfigClass() {
         return SimpleCommandConfig.class;
-    }
-
-    @Bean
-    public ViewDescriptor initialView() {
-        DefaultViewDescriptor initialView = new WidgetViewDescriptor("initialView", Widget.EMPTY_WIDGET);
-        return initialView;
     }
 }

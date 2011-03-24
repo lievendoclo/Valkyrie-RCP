@@ -14,7 +14,7 @@ import org.valkyriercp.security.LogoutCommand;
 
 @Configuration
 @Lazy
-public abstract class AbstractCommandConfig {
+public class AbstractCommandConfig {
     @Autowired
     protected ApplicationConfig parentConfig;
 
@@ -25,11 +25,29 @@ public abstract class AbstractCommandConfig {
 
     @Bean
     @Qualifier("menubar")
-    public abstract CommandGroup menuBarCommandGroup();
+    public CommandGroup menuBarCommandGroup() {
+        CommandGroupFactoryBean menuFactory = new CommandGroupFactoryBean();
+        menuFactory.setGroupId("menu");
+        populateMenuBar(menuFactory);
+        return menuFactory.getCommandGroup();
+    }
 
     @Bean
     @Qualifier("toolbar")
-    public abstract CommandGroup toolBarCommandGroup();
+    public CommandGroup toolBarCommandGroup() {
+        CommandGroupFactoryBean toolbarFactory = new CommandGroupFactoryBean();
+        toolbarFactory.setGroupId("toolbar");
+        populateToolBar(toolbarFactory);
+        return toolbarFactory.getCommandGroup();
+    }
+
+    protected void populateMenuBar(CommandGroupFactoryBean menuBar) {
+
+    }
+
+    protected void populateToolBar(CommandGroupFactoryBean toolBar) {
+
+    }
 
     @Bean
     @Qualifier("navigation")

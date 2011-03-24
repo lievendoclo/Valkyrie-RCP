@@ -73,6 +73,8 @@ import org.valkyriercp.security.support.AuthorityConfigurableSecurityController;
 import org.valkyriercp.security.support.DefaultApplicationSecurityManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
 import org.valkyriercp.util.DialogFactory;
+import org.valkyriercp.widget.Widget;
+import org.valkyriercp.widget.WidgetViewDescriptor;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -111,7 +113,13 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
         advisor.setCommandConfigClass(getCommandConfigClass());
+        advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(emptyViewDescriptor()));
         return advisor;
+    }
+
+    @Bean
+    public ViewDescriptor emptyViewDescriptor() {
+        return new WidgetViewDescriptor("empty", Widget.EMPTY_WIDGET);
     }
 
     @Bean
