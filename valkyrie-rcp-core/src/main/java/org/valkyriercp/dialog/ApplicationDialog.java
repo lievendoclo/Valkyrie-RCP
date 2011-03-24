@@ -767,7 +767,7 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 	 * @return The array of commands (may also be a separator or glue
 	 * identifier)
 	 */
-	protected java.util.List<AbstractCommand> getCommandGroupMembers() {
+	protected java.util.List<? extends AbstractCommand> getCommandGroupMembers() {
 		return Lists.<AbstractCommand>newArrayList(getFinishCommand(), getCancelCommand());
 	}
 
