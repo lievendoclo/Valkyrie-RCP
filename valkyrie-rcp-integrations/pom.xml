@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>valkyrie-rcp-integrations</artifactId>
-    <name>Valkyrie integrations</name>
+    <name>Valkyrie Integrations</name>
     <packaging>pom</packaging>
 
     <modules>
