@@ -49,7 +49,6 @@
                                 <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             </manifest>
-                            <index>true</index>
                         </archive>
                     </configuration>
                 </plugin>
