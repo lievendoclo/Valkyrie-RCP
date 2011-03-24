@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <packaging>jar</packaging>
+    <version>${version}</version>
+    <name>Valkyrie Project Archetype</name>
+
+    <properties>
+        <valkyrie.version>1.0-SNAPSHOT</valkyrie.version>
+        <logback.version>0.9.26</logback.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!-- this configuration generates the manifest in target/${artifactId}-${version}.jar -->
+                    <archive>
+                        <manifest>
+                            <!-- specify the main class for your application -->
+                            <mainClass>${groupId}.ApplicationRunner</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <addExtensions/>
+                            <classpathPrefix>lib</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- This plugin copies the runtime dependencies into target/lib -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <includeScope>runtime</includeScope>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Valkyrie -->
+        <dependency>
+            <groupId>org.valkyriercp</groupId>
+            <artifactId>valkyrie-rcp-core</artifactId>
+            <version>${valkyrie.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.valkyriercp</groupId>
+            <artifactId>valkyrie-rcp-resources</artifactId>
+            <version>${valkyrie.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>
