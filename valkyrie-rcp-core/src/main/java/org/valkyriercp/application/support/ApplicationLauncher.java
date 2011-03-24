@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.Application;
 import org.valkyriercp.application.config.support.ApplicationObjectConfigurerBeanPostProcessor;
+import org.valkyriercp.application.splash.DefaultSplashScreenConfig;
 import org.valkyriercp.application.splash.MonitoringSplashScreen;
 import org.valkyriercp.application.splash.SplashScreen;
 import org.valkyriercp.application.splash.SplashScreenConfig;
@@ -55,6 +56,10 @@ public class ApplicationLauncher {
 
 	private ApplicationContext rootApplicationContext;
 
+    public ApplicationLauncher() {
+        this(DefaultSplashScreenConfig.class, "/META-INF/valkyrie/context.xml");
+    }
+
 	/**
 	 * Launches the application defined by the Spring application context file
 	 * at the provided classpath-relative location.
@@ -77,7 +82,7 @@ public class ApplicationLauncher {
 	 * @throws IllegalArgumentException if {@code rootContextPath} is null or empty.
 	 */
 	public ApplicationLauncher(String[] rootContextConfigLocations) {
-		this(null, rootContextConfigLocations);
+		this(DefaultSplashScreenConfig.class , rootContextConfigLocations);
 	}
 
 	/**
@@ -140,7 +145,7 @@ public class ApplicationLauncher {
 	 * null.
 	 */
 	public ApplicationLauncher(ApplicationContext rootApplicationContext) {
-		this(null, rootApplicationContext);
+		this(DefaultSplashScreenConfig.class, rootApplicationContext);
 	}
 
 	/**
