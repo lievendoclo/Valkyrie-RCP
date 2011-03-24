@@ -11,35 +11,64 @@
     <properties>
         <valkyrie.version>1.0-SNAPSHOT</valkyrie.version>
         <logback.version>0.9.26</logback.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <includeScope>runtime</includeScope>
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- this configuration generates the manifest in target/${artifactId}-${version}.jar -->
+                        <archive>
+                            <manifest>
+                                <!-- specify the main class for your application -->
+                                <mainClass>${groupId}.ApplicationRunner</mainClass>
+                                <addClasspath>true</addClasspath>
+                                <addExtensions/>
+                                <classpathPrefix>lib</classpathPrefix>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <index>true</index>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <!-- this configuration generates the manifest in target/${artifactId}-${version}.jar -->
-                    <archive>
-                        <manifest>
-                            <!-- specify the main class for your application -->
-                            <mainClass>${groupId}.ApplicationRunner</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <addExtensions/>
-                            <classpathPrefix>lib</classpathPrefix>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <!-- This plugin copies the runtime dependencies into target/lib -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <includeScope>runtime</includeScope>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </configuration>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
