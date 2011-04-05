@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
 <!-- 
     This is the XSL HTML configuration file for the Spring Reference Documentation.
 -->
@@ -7,17 +25,17 @@
                 version="1.0">
 
     <xsl:import href="urn:docbkx:stylesheet"/>
+    <xsl:import href="highlight.xsl"/>
+    
+
     <!--###################################################
                      HTML Settings
     ################################################### -->
     <xsl:param name="chunk.section.depth">'5'</xsl:param>
     <xsl:param name="use.id.as.filename">'1'</xsl:param>
-    <xsl:param name="html.stylesheet">html.css</xsl:param>
-    <!-- These extensions are required for table printing and other stuff -->
-    <xsl:param name="use.extensions">1</xsl:param>
-    <xsl:param name="tablecolumns.extension">0</xsl:param>
-    <xsl:param name="callout.extensions">1</xsl:param>
+  <xsl:param name="tablecolumns.extension">0</xsl:param>
     <xsl:param name="graphicsize.extension">0</xsl:param>
+    <xsl:param name="ignore.image.scaling">1</xsl:param>
     <!--###################################################
                       Table Of Contents
     ################################################### -->
@@ -25,7 +43,6 @@
     <xsl:param name="generate.toc">
         book toc
         qandaset toc
-        chapter toc
     </xsl:param>
     <!-- Show only Sections up to level 3 in the TOCs -->
     <xsl:param name="toc.section.depth">3</xsl:param>
@@ -42,6 +59,14 @@
     <!-- Place callout marks at this column in annotated areas -->
     <xsl:param name="callout.graphics">1</xsl:param>
     <xsl:param name="callout.defaultcolumn">90</xsl:param>
+    
+    <!--###################################################
+                      Admonitions
+   ################################################### -->
+
+    <!-- Use nice graphics for admonitions -->
+    <xsl:param name="admon.graphics">1</xsl:param>
+  <xsl:param name="admon.graphics.path">images/admons/</xsl:param>    
     <!--###################################################
                           Misc
     ################################################### -->
@@ -76,17 +101,15 @@
     <!--###################################################
                      Headers and Footers
     ################################################### -->
-    <!-- let's have a Spring and I21 banner across the top of each page -->
     <xsl:template name="user.header.navigation">
-        <!--<div style="background-color:white;border:none;height:73px;border:1px solid black;">-->
-            <!--<a style="border:none;" href="http://www.springframework.org/spring-rcp/"-->
-               <!--title="The Spring Framework - Spring Rich Client Project">-->
-                <!--<img style="border:none;" src="images/xdev-spring_logo.jpg"/>-->
-            <!--</a>-->
-            <!--<a style="border:none;" href="http://www.SpringSource.com/" title="SpringSource - Spring from the Source">-->
-                <!--<img style="border:none;position:absolute;padding-top:5px;right:42px;" src="images/ss-banner-rhs.png"/>-->
-            <!--</a>-->
-        <!--</div>-->
+        <div id="top">
+            <div id="header">
+                <div class="projectlogo">
+                    <a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0" /></a>
+                </div>
+            </div>
+        </div>
+        <div class="mhSpacer"></div>            
     </xsl:template>
     <!-- no other header navigation (prev, next, etc.) -->
     <xsl:template name="header.navigation"/>
@@ -192,10 +215,8 @@
                                     <xsl:text>&#160;</xsl:text>
                                 </td>
                                 <td width="20%" align="center">
-                                    <span style="color:white;font-size:90%;">
-                                        <a href="http://www.gitorious.org/valkyrie-rcp"
-                                           title="Valkyrie RCP">Valkyrie RCP
-                                        </a>
+                                    <span style="color:white;font-size:85%;">
+                                        <a href="http://www.gitorious.com/valkyriercp" title="Valkyrie framework">Valkyrie</a>
                                     </span>
                                 </td>
                                 <td width="40%" align="right" valign="top">
@@ -211,38 +232,4 @@
             </div>
         </xsl:if>
     </xsl:template>
-
-  <xsl:template name="user.head.content">
-    <link rel="stylesheet"
-          type="text/css"
-          href="css/SyntaxHighlighter.css">
-    </link>
-    <xsl:call-template name="script">
-      <xsl:with-param name="src" select="concat('', 'script/shCore.js')"/>
-    </xsl:call-template>
-    <xsl:call-template name="script">
-      <xsl:with-param name="src" select="concat('', 'script/shBrushJava.js')"/>
-    </xsl:call-template>
-    <xsl:call-template name="script">
-      <xsl:with-param name="src" select="concat('', 'script/shBrushXml.js')"/>
-    </xsl:call-template>
-    <xsl:call-template name="script">
-      <xsl:with-param name="src" select="concat('', 'script/shBrushText.js')"/>
-    </xsl:call-template>
-  </xsl:template>
-
-  <xsl:template name="body.attributes">
-    <xsl:attribute name="onLoad">dp.SyntaxHighlighter.HighlightAll('pre', 'programlisting', null, false);</xsl:attribute>
-  </xsl:template>
-
-  <xsl:template name="script">
-    <xsl:param name="src"></xsl:param>
-    <script>
-      <xsl:attribute name="language">JavaScript</xsl:attribute>
-      <xsl:attribute name="type">text/javascript</xsl:attribute>
-      <xsl:attribute name="src">
-        <xsl:value-of select="$src"/>
-      </xsl:attribute>
-    </script>
-  </xsl:template>
 </xsl:stylesheet>

@@ -7,7 +7,7 @@
     <title>Valkyrie RCP Reference Guide</title>
 
 
-    <releaseinfo>&version;</releaseinfo>
+    <releaseinfo><?eval ${project.version}?></releaseinfo>
 
     <authorgroup>
       <author>
@@ -30,10 +30,11 @@
   <xi:include href="preface.xml"/>
 
   <xi:include href="chapters/introduction/index.xml"/>
-  <!--<xi:include href="chapters/applications.xml"/>-->
-  <!--<xi:include href="chapters/commands.xml"/>-->
-  <!--<xi:include href="chapters/views.xml"/>-->
-  <!--<xi:include href="chapters/binding_forms.xml"/>-->
+  <xi:include href="chapters/basics/index.xml"/>
+  <xi:include href="chapters/applications/index.xml"/>
+  <xi:include href="chapters/commands/index.xml"/>
+  <xi:include href="chapters/views/index.xml"/>
+  <xi:include href="chapters/forms/index.xml"/>
   <!--<xi:include href="chapters/validation.xml"/>-->
   <!--<xi:include href="chapters/exceptionhandling.xml"/>-->
   <!--<xi:include href="chapters/security.xml"/>-->

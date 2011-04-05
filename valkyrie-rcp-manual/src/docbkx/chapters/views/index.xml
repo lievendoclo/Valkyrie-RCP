@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+<chapter id="views" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <title>Views</title>
+
+    <toc/>
+
+    <section id="views:what">
+        <title>What is a view</title>
+        <para>
+            A view is a visual representation of concepts within your application. Everything you show in the main application
+            window is contained within a view.
+        </para>
+        <para>
+            There can be multiple views on an application page, but only one view is active at a time. View instances
+            encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor,
+            which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an
+            application with multiple windows. In other words, a single view instance is never shared between windows.
+        </para>
+    </section>
+
+    <section id="views:descriptors">
+        <title>View descriptors</title>
+        <para>
+            There can be multiple views on an application page, but only one view is active at a time. View instances
+            encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor,
+            which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an
+            application with multiple windows. In other words, a single view instance is never shared between windows.
+        </para>
+        <para>
+            View descriptors produce the page components (in this case views) that will be shown to the users.
+        </para>
+    </section>
+
+    <section id="views:create">
+        <title>Creating views</title>
+        <para>
+            Creating a new view is done through subclassing the AbstractView class. This class mandates you to implement one
+            method: createControl. In our example, the initial view class looks like this:
+        </para>
+        <programlisting language="java"><![CDATA[public class InitialView extends AbstractView
+{
+    // omitted for brevity
+
+	protected JComponent createControl()
+        {
+		// In this view, we're just going to use standard Swing to place a
+		// few controls.
+
+		// The location of the text to display has been set as a Resource in the
+		// property descriptionTextPath. So, use that resource to obtain a URL
+		// and set that as the page for the text pane.
+
+		JTextPane textPane = new JTextPane();
+		JScrollPane spDescription = getComponentFactory().createScrollPane(textPane);
+		try {
+			textPane.setPage(getDescriptionTextPath().getURL());
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Unable to load description URL", e);
+		}
+
+		JLabel lblMessage = getComponentFactory().createLabel(getFirstMessage());
+		lblMessage.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		JPanel panel = getComponentFactory().createPanel(new BorderLayout());
+		panel.add(spDescription);
+		panel.add(lblMessage, BorderLayout.SOUTH);
+
+		return panel;
+	}
+}]]></programlisting>
+    </section>
+
+    <section id="views:create-descriptor">
+        <title>Creating a view descriptor for a view</title>
+        <para>
+            To show a view on screen, you need to create a view descriptor. Creating a descriptor is easy based on the view. Every view can
+            gas a view descriptor, creating it if needed.
+        </para>
+        <programlisting language="xml">
+            <programlisting language="java"><![CDATA[view.getDescriptor();]]></programlisting>
+        </programlisting>
+    </section>
+
+    <section id="views:show-view">
+        <title>Showing the view in the application</title>
+        <para>
+            Setting the current view is done by using a ShowViewCommand. This command sets the view of the application window
+            in which the command is located.
+        </para>
+        <para>
+            To create such a command, use the following definition:
+        </para>
+        <programlisting
+                language="java"><![CDATA[new ShowViewCommand("myId", myView.getDescriptor());]]></programlisting>
+        <para>
+            You can now use this command in your menu, or create a button in another view to switch to the defined view.
+        </para>
+    </section>
+
+    <section id="views:global-commands">
+        <title>Changing the behavior of global commands in a view context</title>
+        <para>
+            In the previous chapter, we explained how we can make shared commands, whose behavior is dependent on the context.
+        </para>
+        <para>
+            When creating a view, these shared commands’ behavior can be changed to add context-specific behavior (such as a
+            ‘New’ or ‘Delete’ action). This is done by registering a command executor to the shared command’s id. The view
+            class supports this registration by overriding a method
+        </para>
+        <programlisting language="java:nogutter">
+            <programlisting
+                    language="java"><![CDATA[context.register("newContactCommand", newContactExecutor);]]></programlisting>
+        </programlisting>
+        <para>
+            This executor then handles the behavior of the command
+        </para>
+        <programlisting language="java:nogutter">
+            <programlisting language="java"><![CDATA[private class NewContactExecutor implements ActionCommandExecutor
+{
+    public void execute() {
+        // put logic here
+    }
+}]]></programlisting>
+        </programlisting>
+    </section>
+</chapter>

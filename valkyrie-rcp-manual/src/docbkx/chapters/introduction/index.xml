@@ -167,9 +167,40 @@
             <para>
                 Implementing a view is quite simple. When viewing the example view, you’ll see this:
             </para>
-            <programlisting language="java:nogutter">
-                <xi:include href="../../codesamples/introduction/java/sample1.java" parse="text"/>
-            </programlisting>
+            <programlisting language="java"><![CDATA[public class InitialView extends AbstractView {
+	// omitted for brevity...
+
+	/**
+     * Create the actual UI control for this view. It will be placed into the window according to the layout of
+     * the page holding this view.
+	 */
+	protected JComponent createControl() {
+		// In this view, we're just going to use standard Swing to place a
+		// few controls.
+
+		// The location of the text to display has been set as a Resource in the
+		// property descriptionTextPath. So, use that resource to obtain a URL
+		// and set that as the page for the text pane.
+
+		JTextPane textPane = new JTextPane();
+		JScrollPane spDescription = getComponentFactory().createScrollPane(textPane);
+		try {
+			textPane.setPage(getDescriptionTextPath().getURL());
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Unable to load description URL", e);
+		}
+
+		JLabel lblMessage = getComponentFactory().createLabel(getFirstMessage());
+		lblMessage.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		JPanel panel = getComponentFactory().createPanel(new BorderLayout());
+		panel.add(spDescription);
+		panel.add(lblMessage, BorderLayout.SOUTH);
+
+		return panel;
+	}
+}]]></programlisting>
             <para>
                 AbstractView mandates that you implement the createControl method. This method can deliver any JComponent to
                 show its contents. In most cases, this will be some sort of container or panel.
@@ -191,9 +222,25 @@
             <para>
                 In our example, the command configuration looks like this:
             </para>
-            <programlisting language="java:nogutter">
-                <xi:include href="../../codesamples/introduction/java/sample2.java" parse="text"/>
-            </programlisting>
+            <programlisting language="java"><![CDATA[@Configuration
+public class SimpleSampleCommandConfig extends AbstractCommandConfig {
+
+    @Bean
+    @Qualifier("menubar")
+    public CommandGroup menuBarCommandGroup() {
+        CommandGroupFactoryBean menuFactory = new CommandGroupFactoryBean();
+        menuFactory.setGroupId("menu");
+        return menuFactory.getCommandGroup();
+    }
+
+    @Bean
+    @Qualifier("toolbar")
+    public CommandGroup toolBarCommandGroup() {
+        CommandGroupFactoryBean toolbarFactory = new CommandGroupFactoryBean();
+        toolbarFactory.setGroupId("toolbar");
+        return toolbarFactory.getCommandGroup();
+    }
+}]]></programlisting>
             <para>
                 A basic command context expects the configuration of a toolbar and a menubar. Commands can be added to those bars.
             </para>
@@ -231,6 +278,4 @@
             </para>
         </section>
     </section>
-
-
 </chapter>

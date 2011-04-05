@@ -27,7 +27,7 @@
 
     <!-- Generate the TOCs for named components only -->
     <xsl:param name="generate.toc">
-        book toc
+        <!--book toc -->
     </xsl:param>
 
     <!-- Show only Sections up to level 3 in the TOCs -->
@@ -48,6 +48,7 @@
 
     <!-- Use images for callouts instead of (1) (2) (3) -->
     <xsl:param name="callout.graphics">1</xsl:param>
+    <xsl:param name="callout.graphics.path">http://www.springfuse.com/documentation/springfuse/images/callouts/</xsl:param>
 
     <!-- Place callout marks at this column in annotated areas -->
     <xsl:param name="callout.defaultcolumn">90</xsl:param>
@@ -58,7 +59,7 @@
 
     <!-- Use nice graphics for admonitions -->
     <xsl:param name="admon.graphics">1</xsl:param>
-  <xsl:param name="admon.graphics.path">images/admons/</xsl:param>
+  <xsl:param name="admon.graphics.path">http://www.springfuse.com/documentation/springfuse/images/admons/</xsl:param>
     <!--###################################################
                          Misc
    ################################################### -->
@@ -70,22 +71,8 @@
         table before
         procedure before
     </xsl:param>
-    <xsl:template match="author" mode="titlepage.mode">
-        <xsl:if test="name(preceding-sibling::*[1]) = 'author'">
-            <xsl:text>, </xsl:text>
-        </xsl:if>
-        <span class="{name(.)}">
-            <xsl:call-template name="person.name"/> 
-            (<xsl:value-of select="affiliation"/>)
-            <xsl:apply-templates mode="titlepage.mode" select="./contrib"/>
-        </span>
-    </xsl:template>
-    <xsl:template match="authorgroup" mode="titlepage.mode">
-        <div class="{name(.)}">
-            <h2>Authors</h2>
-            <p/>
-            <xsl:apply-templates mode="titlepage.mode"/>
-        </div>
-    </xsl:template>
+    
+    <xsl:template name="book.titlepage.recto"></xsl:template>
+    
 </xsl:stylesheet>
 

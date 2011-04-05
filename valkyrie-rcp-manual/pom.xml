@@ -12,77 +12,141 @@
     <artifactId>valkyrie-rcp-manual</artifactId>
     <packaging>pom</packaging>
     <name>Valkyrie Manual</name>
+    <properties>
+		<docbook.source>${project.basedir}/src/docbkx</docbook.source>
+		<docbook.target>${project.build.directory}/docbkx</docbook.target>
+	</properties>
+    <profiles>
+		<profile>
+			<id>install</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<echo>Downloading http://download.java.net/media/jai/builds/release/1_1_3/jai-1_1_3-lib.zip</echo>
+										<mkdir dir="target/" />
+										<get src="http://download.java.net/media/jai/builds/release/1_1_3/jai-1_1_3-lib.zip" dest="target/jai-1_1_3-lib.zip" />
+										<unzip src="target/jai-1_1_3-lib.zip" dest="target/" />
+										<echo>Please install both files by executing target/install.bat</echo>
+										<echo file="target/install.bat"><![CDATA[
+call mvn install:install-file -Dfile=jai-1_1_3\lib\jai_core.jar -DgroupId=javax.media -DartifactId=jai-core -Dversion=1.1.3 -Dpackaging=jar -DgeneratePom=true
+call mvn install:install-file -Dfile=jai-1_1_3\lib\jai_codec.jar -DgroupId=javax.media -DartifactId=jai-codec -Dversion=1.1.3 -Dpackaging=jar -DgeneratePom=true
+]]></echo>
+										<echo file="target/install.sh"><![CDATA[
+mvn install:install-file -Dfile=jai-1_1_3/lib/jai_core.jar -DgroupId=javax.media -DartifactId=jai-core -Dversion=1.1.3 -Dpackaging=jar -DgeneratePom=true
+mvn install:install-file -Dfile=jai-1_1_3/lib/jai_codec.jar -DgroupId=javax.media -DartifactId=jai-codec -Dversion=1.1.3 -Dpackaging=jar -DgeneratePom=true
+]]></echo>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
     <build>
         <plugins>
             <plugin>
-                <groupId>com.agilejava.docbkx</groupId>
-                <artifactId>docbkx-maven-plugin</artifactId>
-                <version>2.0.11</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-html</goal>
-                        </goals>
-                        <phase>pre-site</phase>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.docbook</groupId>
-                        <artifactId>docbook-xml</artifactId>
-                        <version>4.4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.docbook</groupId>
-                        <artifactId>docbook-xml</artifactId>
-                        <version>4.4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.xmlgraphics</groupId>
-                        <artifactId>fop</artifactId>
-                        <version>0.95</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <includes>index.xml,faq.xml,issues.xml</includes>
-                    <chunkedOutput>true</chunkedOutput>
-                    <htmlStylesheet>css/html.css</htmlStylesheet>
-                    <xincludeSupported>true</xincludeSupported>
-                    <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
-                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
-                    <!--<highlightSource>1</highlightSource>-->
-                    <!--<highlightDefaultLanguage>java</highlightDefaultLanguage>-->
-                    <entities>
-                        <entity>
-                            <name>version</name>
-                            <value>${project.version}</value>
-                        </entity>
-                    </entities>
-                    <postProcess>
-                        <copy todir="target/site/reference">
-                            <fileset dir="target/docbkx">
-                                <include name="**/*.html"/>
-                                <include name="**/*.pdf"/>
-                            </fileset>
-                        </copy>
-                        <copy todir="target/site/reference/html">
-                            <fileset dir="src/docbkx/resources">
-                                <include name="**/*.css"/>
-                                <include name="**/*.png"/>
-                                <include name="**/*.gif"/>
-                                <include name="**/*.jpg"/>
-                                <include name="**/*.js"/>
-                            </fileset>
-                        </copy>
-                        <move file="target/site/reference/pdf/index.pdf"
-                              tofile="target/site/reference/pdf/spring-rich-client-reference.pdf" failonerror="false"/>
-                        <!--<move file="target/site/reference/pdf/faq.pdf" tofile="target/site/reference/pdf/spring-dm-faq.pdf" failonerror="false" />-->
-                        <!--<move file="target/site/reference/pdf/issues.pdf" tofile="target/site/reference/pdf/spring-dm-issues.pdf" failonerror="false" />-->
-                    </postProcess>
-                </configuration>
-            </plugin>
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<version>2.0.7</version>
+				<executions>
+					<!--<execution>-->
+						<!--<id>produce single page html</id>-->
+						<!--<goals>-->
+							<!--<goal>generate-html</goal>-->
+						<!--</goals>-->
+						<!--<configuration>-->
+							<!--<chunkedOutput>false</chunkedOutput>-->
+							<!--<htmlCustomization>${docbook.source}/resources/xsl/html.xsl</htmlCustomization>-->
+							<!--<targetDirectory>${docbook.target}/html-single</targetDirectory>-->
+							<!--<postProcess>-->
+								<!--<copy todir="${docbook.target}/html-single">-->
+									<!--<fileset dir="${docbook.source}/resources">-->
+										<!--<include name="**/*.css" />-->
+										<!--<include name="**/*.png" />-->
+										<!--<include name="**/*.gif" />-->
+										<!--<include name="**/*.jpg" />-->
+									<!--</fileset>-->
+								<!--</copy>-->
+							<!--</postProcess>-->
+						<!--</configuration>-->
+						<!--<phase>generate-resources</phase>-->
+					<!--</execution>-->
+					<execution>
+						<id>produce multi-pages html</id>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<configuration>
+							<chunkedOutput>true</chunkedOutput>
+							<htmlCustomization>src/docbkx/resources/xsl/html-chunk.xsl</htmlCustomization>
+							<targetDirectory>${docbook.target}/html</targetDirectory>
+							<postProcess>
+								<copy todir="${docbook.target}/html">
+									<fileset dir="${docbook.source}/resources">
+										<include name="**/*.css" />
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+							</postProcess>
+						</configuration>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+					<!--  image support for pdf production -->
+					<dependency>
+						<groupId>javax.media</groupId>
+						<artifactId>jai-core</artifactId>
+						<version>1.1.3</version>
+						<scope>runtime</scope>
+					</dependency>
+					<dependency>
+						<groupId>javax.media</groupId>
+						<artifactId>jai-codec</artifactId>
+						<version>1.1.3</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>index.xml</includes>
+					<htmlStylesheet>css/html.css</htmlStylesheet>
+					<xincludeSupported>true</xincludeSupported>
+					<sourceDirectory>${docbook.source}</sourceDirectory>
+					<imgSrcPath>./</imgSrcPath>
+					<!-- use extensions -->
+					<useExtensions>1</useExtensions>
+					<highlightSource>1</highlightSource>
+					<highlightDefaultLanguage></highlightDefaultLanguage>
+					<!-- callouts -->
+					<calloutsExtension>1</calloutsExtension>
+				</configuration>
+			</plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/docbkx</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
