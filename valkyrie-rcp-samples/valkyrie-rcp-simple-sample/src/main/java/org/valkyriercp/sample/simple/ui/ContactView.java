@@ -20,13 +20,11 @@ import ca.odell.glazedlists.FilterList;
 import ca.odell.glazedlists.GlazedLists;
 import ca.odell.glazedlists.TextFilterator;
 import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.PageComponentContext;
 import org.valkyriercp.application.event.LifecycleApplicationEvent;
 import org.valkyriercp.application.support.AbstractView;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.ActionCommandExecutor;
-import org.valkyriercp.command.GuardedActionCommandExecutor;
 import org.valkyriercp.command.SecuredActionCommandExecutor;
 import org.valkyriercp.command.support.AbstractActionCommandExecutor;
 import org.valkyriercp.command.support.ActionCommand;
@@ -93,6 +91,7 @@ public class ContactView extends AbstractView
      */
     public ContactView()
     {
+       super("contactView");
     }
 
     /**

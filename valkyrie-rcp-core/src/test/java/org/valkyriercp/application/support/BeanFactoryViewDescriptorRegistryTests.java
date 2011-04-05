@@ -1,7 +1,6 @@
 package org.valkyriercp.application.support;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
@@ -94,6 +93,10 @@ public class BeanFactoryViewDescriptorRegistryTests {
 
     private class NullView extends AbstractView
     {
+
+        protected NullView() {
+            super("nullView");
+        }
 
         protected JComponent createControl()
         {

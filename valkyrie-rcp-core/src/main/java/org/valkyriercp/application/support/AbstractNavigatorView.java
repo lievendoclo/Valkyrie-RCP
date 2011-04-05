@@ -13,6 +13,7 @@ public abstract class AbstractNavigatorView extends AbstractView
 
     protected AbstractNavigatorView(CommandGroup currentNavigation)
     {
+        super("abstractNavigatorView");
         this.currentNavigation = currentNavigation;
     }
 

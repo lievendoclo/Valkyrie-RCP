@@ -13,7 +13,6 @@
         <module>valkyrie-rcp-samples</module>
         <module>valkyrie-rcp-resources</module>
         <module>valkyrie-rcp-integrations</module>
-        <module>valkyrie-rcp-manual</module>
         <module>valkyrie-rcp-archetype</module>
     </modules>
 

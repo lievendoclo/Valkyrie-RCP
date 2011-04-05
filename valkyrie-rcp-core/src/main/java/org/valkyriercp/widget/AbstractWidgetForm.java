@@ -1,5 +1,6 @@
 package org.valkyriercp.widget;
 
+import org.valkyriercp.application.PageComponentContext;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.form.HierarchicalFormModel;
 import org.valkyriercp.binding.value.ValueModel;
@@ -91,6 +92,11 @@ public abstract class AbstractWidgetForm extends AbstractForm implements Widget
     protected String getRevertCommandFaceDescriptorId()
     {
         return UNDO_CMD_ID;
+    }
+
+    @Override
+    public void registerLocalCommandExecutors(PageComponentContext context) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
 

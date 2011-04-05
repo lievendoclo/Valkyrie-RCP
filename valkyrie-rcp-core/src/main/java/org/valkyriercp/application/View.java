@@ -23,4 +23,6 @@ public interface View extends PageComponent {
      *            the input, can be <code>null</code>
      */
     void setInput(Object input);
+
+    ViewDescriptor getDescriptor();
 }

@@ -63,6 +63,10 @@ public class DefaultViewDescriptorTests {
 
         private String stringProperty;
 
+        protected TestView() {
+            super("testView");
+        }
+
         @Override
         protected JComponent createControl() {
             return new JLabel("test");

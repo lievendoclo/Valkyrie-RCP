@@ -4,10 +4,10 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.valkyriercp.application.PageComponentContext;
 import org.valkyriercp.application.support.AbstractView;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.support.AbstractCommand;
-import org.valkyriercp.command.support.DefaultCommandManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,10 +25,12 @@ public class WidgetView extends AbstractView
 
     public WidgetView()
     {
+        super("widgetView");
     }
 
     public WidgetView(Widget widget)
     {
+        super(widget.getId());
         setWidget(widget);
     }
 
@@ -40,6 +42,11 @@ public class WidgetView extends AbstractView
     public Widget getWidget()
     {
         return this.widget;
+    }
+
+    @Override
+    protected void registerLocalCommandExecutors(PageComponentContext context) {
+        widget.registerLocalCommandExecutors(context);
     }
 
     protected JComponent createControl()

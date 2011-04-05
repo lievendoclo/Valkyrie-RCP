@@ -26,9 +26,13 @@ public class TitledWidgetForm extends AbstractTitledWidget
     /**
      * Set the inner form that needs decorating.
      */
+
     public void setForm(AbstractForm form)
     {
         this.form = form;
+        if(getId() == null) {
+            setId(form.getId());
+        }
     }
 
     /**

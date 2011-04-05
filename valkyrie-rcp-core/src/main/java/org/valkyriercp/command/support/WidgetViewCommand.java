@@ -1,16 +1,15 @@
 package org.valkyriercp.command.support;
 
 import org.valkyriercp.application.ViewDescriptor;
-import org.valkyriercp.widget.WidgetViewDescriptor;
 
 /**
  * Widget command that shows a widget in a view
  */
 public class WidgetViewCommand extends AbstractWidgetCommand
 {
-    protected final WidgetViewDescriptor widgetViewDescriptor;
+    protected final ViewDescriptor widgetViewDescriptor;
 
-    public WidgetViewCommand(String id, WidgetViewDescriptor widgetViewDescriptor) {
+    public WidgetViewCommand(String id, ViewDescriptor widgetViewDescriptor) {
         super(id);
         this.widgetViewDescriptor = widgetViewDescriptor;
     }

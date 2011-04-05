@@ -46,7 +46,8 @@ public abstract class AbstractTitledWidget extends AbstractWidget implements Tit
 
     public void setBeanName(String beanName)
     {
-        setId(beanName);
+        if(id != null)
+            setId(beanName);
     }
 
     public boolean isEnabled()

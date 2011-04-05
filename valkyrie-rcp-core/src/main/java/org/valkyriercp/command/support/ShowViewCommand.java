@@ -7,6 +7,8 @@ import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.PropertyNotSetException;
 import org.valkyriercp.application.ViewDescriptor;
 
+import javax.annotation.PostConstruct;
+
 /**
  * An action command for displaying a {@link org.valkyriercp.application.View} based on a provided {@link ViewDescriptor}.
  */
@@ -21,6 +23,16 @@ public class ShowViewCommand extends ApplicationWindowAwareCommand implements In
      */
     public ShowViewCommand() {
         //do nothing
+    }
+
+    /**
+     * Creates a new @code ShowViewCommand}. The {@code applicationWindow} and
+     * {@code viewDescriptor} properties must be set before using the new instance.
+     */
+    public ShowViewCommand(String id, ViewDescriptor descriptor) {
+        setId(id);
+        setViewDescriptor(descriptor);
+        setEnabled(true);
     }
 
     /**
@@ -44,8 +56,9 @@ public class ShowViewCommand extends ApplicationWindowAwareCommand implements In
     /**
      * {@inheritDoc}
      */
+    @PostConstruct
     public void afterPropertiesSet() {
-        PropertyNotSetException.throwIfNull(getApplicationWindow(), "applicationWindow", getClass());
+//        PropertyNotSetException.throwIfNull(getApplicationWindow(), "applicationWindow", getClass());
         PropertyNotSetException.throwIfNull(this.viewDescriptor, "viewDescriptor", getClass());
     }
 

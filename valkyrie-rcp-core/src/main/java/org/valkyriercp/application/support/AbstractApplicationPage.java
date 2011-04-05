@@ -1,5 +1,6 @@
 package org.valkyriercp.application.support;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -24,6 +25,7 @@ public abstract class AbstractApplicationPage extends AbstractControlFactory imp
 
     private ViewDescriptorRegistry viewDescriptorRegistry;
 
+    @Autowired
     private PageComponentPaneFactory pageComponentPaneFactory;
 
     private final List<PageComponent> pageComponents = new ArrayList<PageComponent>();
@@ -402,10 +404,6 @@ public abstract class AbstractApplicationPage extends AbstractControlFactory imp
     }
 
     public PageComponentPaneFactory getPageComponentPaneFactory() {
-        if (pageComponentPaneFactory == null) {
-            pageComponentPaneFactory = getApplicationConfig().pageComponentPaneFactory();
-        }
-
         return pageComponentPaneFactory;
     }
 }

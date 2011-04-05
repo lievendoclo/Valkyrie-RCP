@@ -15,18 +15,12 @@
  */
 package org.valkyriercp.sample.simple.ui;
 
-import java.awt.BorderLayout;
-import java.io.IOException;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
 import org.springframework.core.io.Resource;
 import org.valkyriercp.application.support.AbstractView;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 
 /**
  * This class defines the initial view to be presented in the sample application. It is constructed automatically by the
@@ -67,7 +61,11 @@ public class InitialView extends AbstractView {
 
 	private Resource descriptionTextPath;
 
-	/**
+    public InitialView() {
+        super("initialView");
+    }
+
+    /**
 	 * @return the firstMessage
 	 */
 	public String getFirstMessage() {

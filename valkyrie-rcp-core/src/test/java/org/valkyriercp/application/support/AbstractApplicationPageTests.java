@@ -1,6 +1,5 @@
 package org.valkyriercp.application.support;
 
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
@@ -119,6 +118,7 @@ public abstract class AbstractApplicationPageTests extends AbstractValkyrieTest 
         private boolean setInputCalled;
 
         public TestView(String label) {
+            super("testView");
             this.label = label;
         }
 

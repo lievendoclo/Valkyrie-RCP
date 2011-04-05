@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.config.DefaultCommandConfig;
-import org.valkyriercp.command.support.*;
-import org.valkyriercp.widget.editor.DataEditorWidgetViewCommand;
+import org.valkyriercp.command.support.AbstractCommand;
+import org.valkyriercp.command.support.CommandGroup;
+import org.valkyriercp.command.support.CommandGroupFactoryBean;
+import org.valkyriercp.command.support.ShowViewCommand;
 
 @Configuration
 public class DataEditorCommandConfig extends DefaultCommandConfig {
@@ -23,12 +25,12 @@ public class DataEditorCommandConfig extends DefaultCommandConfig {
 
     @Bean
     public AbstractCommand itemDataEditorCommand() {
-        return new WidgetViewCommand("itemDataEditorCommand", appConfig.itemView());
+        return new ShowViewCommand("itemDataEditorCommand", appConfig.itemView());
     }
 
     @Bean
     public AbstractCommand supplierDataEditorCommand() {
-        return new WidgetViewCommand("supplierDataEditorCommand", appConfig.supplierView());
+        return new ShowViewCommand("supplierDataEditorCommand", appConfig.supplierView());
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package org.valkyriercp.widget;
 
+import org.valkyriercp.application.PageComponentContext;
 import org.valkyriercp.command.support.AbstractCommand;
 
 import javax.swing.*;
@@ -71,4 +72,6 @@ public interface Widget
     public List<? extends AbstractCommand> getCommands();
 
     public String getId();
+
+    public void registerLocalCommandExecutors(PageComponentContext context);
 }

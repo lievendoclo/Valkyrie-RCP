@@ -1,10 +1,7 @@
 package org.valkyriercp.application.support;
 
 import org.springframework.util.Assert;
-import org.valkyriercp.application.PageComponentContext;
-import org.valkyriercp.application.PageComponentDescriptor;
-import org.valkyriercp.application.StatusBar;
-import org.valkyriercp.application.View;
+import org.valkyriercp.application.*;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.factory.AbstractControlFactory;
 
@@ -17,10 +14,19 @@ public abstract class AbstractView extends AbstractControlFactory implements Vie
 
     private PageComponentContext context;
 
+    protected AbstractView(String id) {
+        setDescriptor(createViewDescriptor(id));
+    }
+
     public void setDescriptor(PageComponentDescriptor descriptor) {
+        if(!(descriptor instanceof ViewDescriptor))
+            throw new IllegalArgumentException("descriptor should be a ViewDescriptor");
         Assert.notNull(descriptor, "The view descriptor is required");
-        Assert.state(this.descriptor == null, "A view's descriptor may only be set once");
         this.descriptor = descriptor;
+    }
+
+    public void setDescriptor(ViewDescriptor descriptor) {
+        setDescriptor((PageComponentDescriptor) descriptor);
     }
 
     public final void setContext(PageComponentContext context) {
@@ -34,13 +40,17 @@ public abstract class AbstractView extends AbstractControlFactory implements Vie
         return getDescriptor().getId();
     }
 
-    public PageComponentDescriptor getDescriptor() {
-        Assert.state(descriptor != null, "View descriptor property is not set; it is required");
-        return descriptor;
+    public ViewDescriptor getDescriptor() {
+        Assert.notNull(this.descriptor, "A viewdescriptor must be set!");
+        return (ViewDescriptor) descriptor;
     }
 
     public PageComponentContext getContext() {
         return context;
+    }
+
+    protected ViewDescriptor createViewDescriptor(String id) {
+        return new SimpleViewDescriptor(id, this);
     }
 
     public void componentOpened() {

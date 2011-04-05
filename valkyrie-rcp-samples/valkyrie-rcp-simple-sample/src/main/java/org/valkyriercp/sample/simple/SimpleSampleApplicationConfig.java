@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -71,12 +72,10 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 
     @Bean
     public ViewDescriptor initialView() {
-        DefaultViewDescriptor initialView = new DefaultViewDescriptor("initialView", InitialView.class);
-        Map<String,Object> viewProperties = Maps.newHashMap();
-        viewProperties.put("firstMessage", "firstMessage.text");
-        viewProperties.put("descriptionTextPath", "org/valkyriercp/sample/simple/ui/initialViewText.html");
-        initialView.setViewProperties(viewProperties);
-        return initialView;
+        InitialView view = new InitialView();
+        view.setFirstMessage("firstMessage.text");
+        view.setDescriptionTextPath(new ClassPathResource("/org/valkyriercp/sample/simple/ui/initialViewText.html"));
+        return view.getDescriptor();
     }
 
     @Bean
