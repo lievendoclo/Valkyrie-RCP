@@ -7,7 +7,7 @@ package org.valkyriercp.binding.validation;
  *
  * @author Oliver Hutchison
  */
-public interface RichValidator extends Validator {
+public interface RichValidator<T> extends Validator<T> {
 
 	/**
 	 * Validates the given property of the provided object.
@@ -18,5 +18,5 @@ public interface RichValidator extends Validator {
 	 * last call to validate.
 	 * @return the results on the validation
 	 */
-	ValidationResults validate(Object object, String property);
+	ValidationResults validate(T object, String property);
 }
