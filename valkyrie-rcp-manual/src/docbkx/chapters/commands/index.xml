@@ -285,7 +285,7 @@ windowManager.getActiveWindow().getCommandManager.getCommand(commandId);]]></pro
         <para>
             Shortcuts that can be used are compliant to the Keystroke class in standard Java, which amounts to
         </para>
-        <<programlisting><![CDATA[modifiers>* (<typedID> | <pressedReleasedID>)
+        <programlisting><![CDATA[modifiers>* (<typedID> | <pressedReleasedID>)
 
 modifiers := shift | control | ctrl | meta | alt | button1 | button2 | button3
 typedID := typed <typedKey>

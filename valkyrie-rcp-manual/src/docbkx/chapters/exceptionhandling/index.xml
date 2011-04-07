@@ -267,13 +267,13 @@ Please report this bug.]]></programlisting>
 
     <para>For example, here we configure authentication and authorization
       exceptions to a WARN<literal>MessagesDialogExceptionHandler</literal>,
-      hibernate validator exceptions to an INFO
-      <literal>HibernateValidatorDialogExceptionHandler</literal>
+      JSR303 validator exceptions to an INFO
+      <literal>JSR303ValidatorDialogExceptionHandler</literal>
       and the rest
       to an ERROR<literal>MessagesDialogExceptionHandler</literal>.
     </para>
 
-    <programlisting language="xml"><xi:include href="../codesamples/exception-handling/xml/sample5.xml" parse="text"/></programlisting>
+    <programlisting><![CDATA[TODO]]></programlisting>
 
     <section>
       <title>SimpleExceptionHandlerDelegate</title>
@@ -308,13 +308,13 @@ Please report this bug.]]></programlisting>
         <literal>includeThrowableClassList</literal>
         is stripped from all it's
         wrapper exceptions and handled by the exception handler or evaluated by
-        the delegate. For example, we want to handle every
+        the delegate. For example, we whibernateant to handle every
         <literal>MySQLIntegrityConstraintViolationException</literal>
         even if
         it's wrapped:
       </para>
 
-      <programlisting language="xml"><xi:include href="../codesamples/exception-handling/xml/sample6.xml" parse="text"/></programlisting>
+      <programlisting><![CDATA[TODO]]></programlisting>
 
       <para>A chained exception of the type in the
         <literal>excludeThrowableClassList</literal>
@@ -327,7 +327,7 @@ Please report this bug.]]></programlisting>
         of it:
       </para>
 
-      <programlisting language="xml"><xi:include href="../codesamples/exception-handling/xml/sample7.xml" parse="text"/></programlisting>
+      <programlisting><![CDATA[TODO]]></programlisting>
     </section>
   </section>
 </chapter>
