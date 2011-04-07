@@ -14,7 +14,7 @@
     <name>Valkyrie Manual</name>
     <properties>
 		<docbook.source>${project.basedir}/src/docbkx</docbook.source>
-		<docbook.target>${project.build.directory}/docbkx</docbook.target>
+		<docbook.target>${project.basedir}/target/docbkx</docbook.target>
 	</properties>
     <profiles>
 		<profile>
@@ -89,7 +89,7 @@ mvn install:install-file -Dfile=jai-1_1_3/lib/jai_codec.jar -DgroupId=javax.medi
 						</goals>
 						<configuration>
 							<chunkedOutput>true</chunkedOutput>
-							<htmlCustomization>src/docbkx/resources/xsl/html-chunk.xsl</htmlCustomization>
+							<htmlCustomization>${docbook.source}/resources/xsl/html-chunk.xsl</htmlCustomization>
 							<targetDirectory>${docbook.target}/html</targetDirectory>
 							<postProcess>
 								<copy todir="${docbook.target}/html">
