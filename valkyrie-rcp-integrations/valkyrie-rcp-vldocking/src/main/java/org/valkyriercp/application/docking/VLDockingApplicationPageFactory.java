@@ -15,6 +15,14 @@
  */
 package org.valkyriercp.application.docking;
 
+import com.vlsolutions.swing.docking.DockingContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.valkyriercp.application.*;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,19 +30,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.vlsolutions.swing.docking.DockingContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.valkyriercp.application.*;
-
 /**
  * <tt>ApplicationPageFactory</tt> that creates instances of <tt>VLDockingApplicationPage</tt>.
  * 
  * @author Rogan Dawes
  */
+@Configurable
 public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
 
     private static final Log logger = LogFactory.getLog(VLDockingApplicationPageFactory.class);
