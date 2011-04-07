@@ -45,6 +45,11 @@ public abstract class AbstractView extends AbstractControlFactory implements Vie
         return (ViewDescriptor) descriptor;
     }
 
+    public ViewDescriptor getDescriptor(String id) {
+        Assert.notNull(this.descriptor, "A viewdescriptor must be set!");
+        return createViewDescriptor(id);
+    }
+
     public PageComponentContext getContext() {
         return context;
     }

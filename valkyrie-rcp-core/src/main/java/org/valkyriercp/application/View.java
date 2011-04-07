@@ -25,4 +25,6 @@ public interface View extends PageComponent {
     void setInput(Object input);
 
     ViewDescriptor getDescriptor();
+
+    ViewDescriptor getDescriptor(String id);
 }
