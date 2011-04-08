@@ -1,7 +1,8 @@
 package org.valkyriercp.application.exceptionhandling;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 import org.springframework.core.ErrorCoded;
 
 import java.sql.SQLException;
@@ -10,19 +11,33 @@ import java.sql.SQLException;
  * Superclass of logging exception handlers.
  * It handles a throwable by logging it and notify it to the user.
  * Subclasses determine how it's notified to the user.
+ *
  * @author Geoffrey De Smet
  * @since 0.3
  */
 public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterableExceptionHandler {
 
-    protected final transient Log logger = LogFactory.getLog(getClass());
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     protected ExceptionPurger exceptionPurger = null;
 
     private final ThreadLocal<Boolean> alreadyHandlingExceptionOnThisThread = new ThreadLocal<Boolean>();
 
+    private LoggingLevel level = LoggingLevel.ERROR;
+
+    private Marker marker;
+
+    public static enum LoggingLevel {
+        TRACE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR
+    }
+
     /**
      * If set the throwable will first be purged before handling it.
+     *
      * @param exceptionPurger
      */
     public void setExceptionPurger(ExceptionPurger exceptionPurger) {
@@ -36,15 +51,15 @@ public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterab
      * An infinite loop can occur in different cases:
      * <ul>
      * <li>
-     *   Case 1: The ExceptionHandler throws an exception, which is handled by the ExceptionHandler,
-     *   which throws an exception, ...
+     * Case 1: The ExceptionHandler throws an exception, which is handled by the ExceptionHandler,
+     * which throws an exception, ...
      * </li>
      * <li>
-     *   Case 2: notifyUserAboutException uses a modal dialog that triggers the event queue to do a focus lost
-     *   That focus lost throws a new exception, catched by the event queue, which delegates it to the ExceptionHandler,
-     *   which still hasn't returned from handling the original exception!
-     *   Then the ExceptionHandler uses a modal dialog again, focus lost, throws exception, ...
-     *   This causes a StackOverflowError or a hang-application-by-starvation due to too many dialogs.</li>
+     * Case 2: notifyUserAboutException uses a modal dialog that triggers the event queue to do a focus lost
+     * That focus lost throws a new exception, catched by the event queue, which delegates it to the ExceptionHandler,
+     * which still hasn't returned from handling the original exception!
+     * Then the ExceptionHandler uses a modal dialog again, focus lost, throws exception, ...
+     * This causes a StackOverflowError or a hang-application-by-starvation due to too many dialogs.</li>
      * </ul>
      */
     public final void uncaughtException(Thread thread, Throwable throwable) {
@@ -116,7 +131,28 @@ public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterab
         } else {
             logMessage = "Uncaught throwable handled.";
         }
-        logger.error(logMessage, throwable);
+        doLogException(logMessage, throwable);
+
+    }
+
+    private void doLogException(String logMessage, Throwable throwable) {
+        switch (level) {
+            case TRACE:
+                logger.trace(marker, logMessage, throwable);
+                break;
+            case DEBUG:
+                logger.debug(marker, logMessage, throwable);
+                break;
+            case INFO:
+                logger.info(marker, logMessage, throwable);
+                break;
+            case WARN:
+                logger.warn(marker, logMessage, throwable);
+                break;
+            case ERROR:
+                logger.error(marker, logMessage, throwable);
+                break;
+        }
     }
 
     /**
@@ -124,4 +160,15 @@ public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterab
      */
     public abstract void notifyUserAboutException(Thread thread, Throwable throwable);
 
+    public void setLevel(LoggingLevel level) {
+        this.level = level;
+    }
+
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
+    }
 }
