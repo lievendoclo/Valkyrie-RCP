@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.noos.xing</groupId>
+        <artifactId>mydoggy</artifactId>
+        <version>1.5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mydoggy-plaf</artifactId>
+    <version>1.5.0</version>
+    <name>MyDoggy - My Java Docking Framework - API Implementation</name>
+    <url>http://mydoggy.sourceforge.net</url>
+    <description>MyDoggy-Plaf is the default implementation of mydoggy-api.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>tablelayout</groupId>
+            <artifactId>TableLayout</artifactId>
+            <version>20050920</version>
+        </dependency>
+        <dependency>
+            <groupId>org.noos.xing</groupId>
+            <artifactId>mydoggy-api</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.noos.xing</groupId>
+            <artifactId>mydoggy-res</artifactId>
+            <version>1.5.0</version>
+        </dependency>        
+    </dependencies>
+</project>
+

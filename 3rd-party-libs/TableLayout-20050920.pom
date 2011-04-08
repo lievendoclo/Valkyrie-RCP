@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>tablelayout</groupId>
+    <artifactId>TableLayout</artifactId>
+    <packaging>jar</packaging>
+    <version>20050920</version>
+    <name>TableLayout</name>
+    <url>https://tablelayout.dev.java.net</url>
+    <description>
+        TableLayout is a totally free layout manager designed to make
+        creating user interfaces fast and easy. It can do anything
+        GridBagLayout can do and much, much more. Yet it is remarkably
+        simple and easy to use.
+    </description>
+    <licenses>
+        <license>
+            <name>dev.java.net "Other" License</name>
+            <url>https://tablelayout.dev.java.net/servlets/LicenseDetails?licenseID=18</url>
+            <distribution>repo</distribution>
+            <comments>No explicit license terms, but the source, JavaDoc, and binaries are freely downloadable from the project Web site.</comments>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:cvs:pserver:cvs.dev.java.net:/cvs:tablelayout</connection>
+        <developerConnection>scm:cvs:pserver:cvs.dev.java.net:/cvs:tablelayout</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://tablelayout.dev.java.net/source/browse/tablelayout</url>
+    </scm>
+</project>

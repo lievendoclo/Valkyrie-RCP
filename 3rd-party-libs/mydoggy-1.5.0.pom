@@ -1,0 +1,212 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.noos.xing</groupId>
+    <artifactId>mydoggy</artifactId>
+    <packaging>pom</packaging>
+    <version>1.5.0</version>
+    <name>MyDoggy - My Java Docking Framework</name>
+    <url>http://mydoggy.sourceforge.net</url>
+    <description>
+        MyDoggy is an IntelliJ Idea like docking framework for managing secondary windows within the main window.
+        MyDoggy allows to move, resize or extract those secondary windows. Also, MyDoggy provides support for content
+        management of the main window. MyDoggy is a Java docking framework for use in cross-platform Swing applications.
+    </description>
+
+    <developers>
+        <developer>
+            <id>adecaro</id>
+            <name>Angelo De Caro</name>
+            <email>adecaro@users.sourceforge.net</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>toxtox</id>
+            <name>David Dolcimascolo</name>
+            <email>toxtox@users.sourceforge.net</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>LGPL - GNU LESSER GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>mydoggy-site-skin</module>
+        <module>mydoggy-api</module>
+        <module>mydoggy-res</module>
+        <module>mydoggy-plaf</module>
+        <module>mydoggy-examples</module>
+    </modules>
+
+    <scm>
+        <connection>scm:svn:https://mydoggy.svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk</connection>
+        <developerConnection>scm:svn:https://mydoggy.svn.sourceforge.net/svnroot/mydoggy/mydoggy/trunk
+        </developerConnection>
+        <url>http://mydoggy.svn.sourceforge.net/viewvc/mydoggy/mydoggy/trunk/</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>mydoggy.local.snapshots</id>
+            <name>Local Snapshot Release Repository</name>
+            <url>dav:http://localhost:8080/archiva/repository/snapshots/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <!-- Profile which creates an assembly using mydoggy-distro.xml -->
+        <profile>
+            <id>distro</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/mydoggy-distro.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>distro</name>
+                </property>
+            </activation>
+        </profile>
+
+        <!-- Profile which creates an assembly using mydoggy-site.xml -->
+        <profile>
+            <id>site</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/mydoggy-site.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <configuration>
+                            <locales>en</locales>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>site</name>
+                </property>
+            </activation>
+        </profile>
+
+        <!-- Profile which creates an assembly using mydoggy-distro.xml -->
+        <profile>
+            <id>bundle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/mydoggy-bundle.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <activation>
+                <property>
+                    <name>bundle</name>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.2</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>project-team</report>
+                            <report>license</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+<!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+-->
+        </plugins>
+    </reporting>
+</project>

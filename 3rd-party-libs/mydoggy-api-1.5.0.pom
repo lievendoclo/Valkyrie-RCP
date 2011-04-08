@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.noos.xing</groupId>
+        <artifactId>mydoggy</artifactId>
+        <version>1.5.0</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mydoggy-api</artifactId>
+    <packaging>jar</packaging>
+    <version>1.5.0</version>
+    <name>MyDoggy - My Java Docking Framework - API</name>
+    <url>http://mydoggy.sourceforge.net</url>
+    <description>
+        MyDoggy-Api contains the application program interface of MyDoggy to manage every aspects of the framework.
+    </description>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
