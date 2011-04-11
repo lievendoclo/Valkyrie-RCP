@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public class DelegatingExceptionHandler extends AbstractRegisterableExceptionHandler implements InitializingBean {
+public class DelegatingExceptionHandler<T extends DelegatingExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> implements InitializingBean {
 
     protected final transient Log logger = LogFactory.getLog(getClass());
 
@@ -40,6 +41,15 @@ public class DelegatingExceptionHandler extends AbstractRegisterableExceptionHan
         this.delegateList = delegateList;
     }
 
+    public T withDelegateList(List<ExceptionHandlerDelegate> delegateList) {
+        setDelegateList(delegateList);
+        return self();
+    }
+
+    public void addDelegateToList(ExceptionHandlerDelegate... delegateList) {
+        getDelegateList().addAll(Arrays.asList(delegateList));
+    }
+
     public List<ExceptionHandlerDelegate> getDelegateList() {
         if(delegateList == null)
             delegateList = new ArrayList<ExceptionHandlerDelegate>();
@@ -52,6 +62,11 @@ public class DelegatingExceptionHandler extends AbstractRegisterableExceptionHan
      */
     public void setExceptionPurger(ExceptionPurger exceptionPurger) {
         this.exceptionPurger = exceptionPurger;
+    }
+
+    public T withExceptionPurger(ExceptionPurger exceptionPurger) {
+        setExceptionPurger(exceptionPurger);
+        return self();
     }
 
     public void afterPropertiesSet() throws Exception {

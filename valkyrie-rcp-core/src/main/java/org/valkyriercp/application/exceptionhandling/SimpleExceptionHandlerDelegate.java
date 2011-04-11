@@ -11,7 +11,7 @@ import java.util.List;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public class SimpleExceptionHandlerDelegate extends AbstractExceptionHandlerDelegate {
+public class SimpleExceptionHandlerDelegate<SELF extends SimpleExceptionHandlerDelegate<SELF>> extends AbstractExceptionHandlerDelegate<SELF> {
 
     private List<Class<? extends Throwable>> throwableClassList;
 
@@ -19,12 +19,12 @@ public class SimpleExceptionHandlerDelegate extends AbstractExceptionHandlerDele
     }
 
     public SimpleExceptionHandlerDelegate(Class<? extends Throwable> throwableClass,
-            Thread.UncaughtExceptionHandler exceptionHandler) {
+                                          Thread.UncaughtExceptionHandler exceptionHandler) {
         this(Lists.<Class<? extends Throwable>>newArrayList(throwableClass), exceptionHandler);
     }
 
     public SimpleExceptionHandlerDelegate(List<Class<? extends Throwable>> throwableClassList,
-            Thread.UncaughtExceptionHandler exceptionHandler) {
+                                          Thread.UncaughtExceptionHandler exceptionHandler) {
         super(exceptionHandler);
         this.throwableClassList = throwableClassList;
     }
@@ -33,10 +33,20 @@ public class SimpleExceptionHandlerDelegate extends AbstractExceptionHandlerDele
         setThrowableClassList(Lists.<Class<? extends Throwable>>newArrayList(throwableClass));
     }
 
+    public SELF withThrowableClass(Class throwableClass) {
+        setThrowableClass(throwableClass);
+        return self();
+    }
+
+
     public void setThrowableClassList(List<Class<? extends Throwable>> throwableClassList) {
         this.throwableClassList = throwableClassList;
     }
 
+    public SELF withThrowableClassList(List<Class<? extends Throwable>> throwableClassList) {
+        setThrowableClassList(throwableClassList);
+        return self();
+    }
 
     public boolean hasAppropriateHandlerPurged(Throwable throwable) {
         for (Class throwableClass : throwableClassList) {

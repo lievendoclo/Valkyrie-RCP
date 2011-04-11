@@ -9,12 +9,16 @@ import java.util.List;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public class DefaultExceptionPurger implements ExceptionPurger {
+public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> implements ExceptionPurger {
 
     protected List<Class> includeThrowableClassList = Collections.emptyList();
     protected List<Class> excludeThrowableClassList = Collections.emptyList();
 
     public DefaultExceptionPurger() {}
+
+    protected final SELF self() {
+        return (SELF) this;
+    }
 
     public DefaultExceptionPurger(Class includeThrowableClass, Class excludeThrowableClass) {
         if (includeThrowableClass != null) {
@@ -42,6 +46,11 @@ public class DefaultExceptionPurger implements ExceptionPurger {
         setIncludeThrowableClassList(Collections.singletonList(includeThrowableClass));
     }
 
+    public SELF withIncludeThrowableClass(Class includeThrowableClass) {
+        setIncludeThrowableClass(includeThrowableClass);
+        return self();
+    }
+
     /**
      * Sets Throwables that if found, are unwrapped.
      * These Throwables are ussually very specific exceptions, for example: LoginCredentialsExpiredException.
@@ -63,12 +72,26 @@ public class DefaultExceptionPurger implements ExceptionPurger {
         this.includeThrowableClassList = includeThrowableClassList;
     }
 
+    public SELF withIncludeThrowableClassList(List<Class> includeThrowableClassList) {
+        setIncludeThrowableClassList(includeThrowableClassList);
+        return self();
+    }
+
     /**
      * See @{link {@link #setExcludeThrowableClassList(List)}.
      * @param excludeThrowableClass used as a singleton list for excludeThrowableClassList
      */
     public void setExcludeThrowableClass(Class excludeThrowableClass) {
         setExcludeThrowableClassList(Collections.singletonList(excludeThrowableClass));
+    }
+
+    /**
+     * See @{link {@link #setExcludeThrowableClassList(List)}.
+     * @param excludeThrowableClass used as a singleton list for excludeThrowableClassList
+     */
+    public SELF withExcludeThrowableClass(Class excludeThrowableClass) {
+        setExcludeThrowableClass(excludeThrowableClass);
+        return self();
     }
 
     /**
@@ -93,6 +116,10 @@ public class DefaultExceptionPurger implements ExceptionPurger {
         this.excludeThrowableClassList = excludeThrowableClassList;
     }
 
+    public SELF withExcludeThrowableClassList(List<Class> excludeThrowableClassList) {
+        setExcludeThrowableClassList(excludeThrowableClassList);
+        return self();
+    }
 
     public Throwable purge(Throwable root) {
         Throwable excludedPurged = root;

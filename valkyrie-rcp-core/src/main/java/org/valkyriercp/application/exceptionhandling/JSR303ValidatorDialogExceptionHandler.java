@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-public class JSR303ValidatorDialogExceptionHandler extends AbstractDialogExceptionHandler {
+public class JSR303ValidatorDialogExceptionHandler<T extends JSR303ValidatorDialogExceptionHandler<T>> extends AbstractDialogExceptionHandler<T> {
 
     private static final String CAPTION_KEY = "jsr303ValidatorDialogExceptionHandler.caption";
     private static final String EXPLANATION_KEY = "jsr303ValidatorDialogExceptionHandler.explanation";

@@ -11,7 +11,7 @@ import java.util.logging.Level;
  *
  * @author Jan Hoskens
  */
-public class JXErrorDialogExceptionHandler extends MessagesDialogExceptionHandler {
+public class JXErrorDialogExceptionHandler<T extends JXErrorDialogExceptionHandler<T>> extends MessagesDialogExceptionHandler<T> {
 
     private ErrorReporter errorReporter;
 
@@ -30,6 +30,11 @@ public class JXErrorDialogExceptionHandler extends MessagesDialogExceptionHandle
      */
     public void setErrorReporter(ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
+    }
+
+    public T withErrorReporter(ErrorReporter errorReporter) {
+        setErrorReporter(errorReporter);
+        return  self();
     }
 
     /**

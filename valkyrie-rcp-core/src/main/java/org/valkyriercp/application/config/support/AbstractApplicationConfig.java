@@ -4,13 +4,11 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.converters.PropertyEditorConverter;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -254,7 +252,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     public RegisterableExceptionHandler registerableExceptionHandler() {
         JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
         DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
-        handler.getDelegateList().add(new SimpleExceptionHandlerDelegate(Throwable.class, errorDialogExceptionHandler));
+        handler.addDelegateToList(new SimpleExceptionHandlerDelegate().withThrowableClass(Throwable.class).withExceptionHandler(errorDialogExceptionHandler));
         return handler;
     }
 

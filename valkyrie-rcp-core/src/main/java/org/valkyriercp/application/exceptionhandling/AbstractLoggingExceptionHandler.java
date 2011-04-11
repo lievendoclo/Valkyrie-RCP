@@ -15,7 +15,7 @@ import java.sql.SQLException;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterableExceptionHandler {
+public abstract class AbstractLoggingExceptionHandler<T extends AbstractLoggingExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -164,11 +164,21 @@ public abstract class AbstractLoggingExceptionHandler extends AbstractRegisterab
         this.level = level;
     }
 
+    public T withLevel(LoggingLevel level) {
+        setLevel(level);
+        return self();
+    }
+
     public Marker getMarker() {
         return marker;
     }
 
     public void setMarker(Marker marker) {
         this.marker = marker;
+    }
+
+    public T withMarker(Marker marker) {
+        setMarker(marker);
+        return self();
     }
 }

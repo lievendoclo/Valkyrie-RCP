@@ -6,7 +6,7 @@ package org.valkyriercp.application.exceptionhandling;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public abstract class AbstractExceptionHandlerDelegate implements ExceptionHandlerDelegate {
+public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends AbstractExceptionHandlerDelegate<SELF_TYPE>> implements ExceptionHandlerDelegate {
 
     protected Thread.UncaughtExceptionHandler exceptionHandler;
     protected ExceptionPurger exceptionPurger = null;
@@ -14,6 +14,10 @@ public abstract class AbstractExceptionHandlerDelegate implements ExceptionHandl
     protected boolean purgeOnHandling = true;
 
     public AbstractExceptionHandlerDelegate() {
+    }
+
+    protected final SELF_TYPE self() {
+        return (SELF_TYPE) this;
     }
 
     public AbstractExceptionHandlerDelegate(Thread.UncaughtExceptionHandler exceptionHandler) {
@@ -24,6 +28,11 @@ public abstract class AbstractExceptionHandlerDelegate implements ExceptionHandl
         this.exceptionHandler = exceptionHandler;
     }
 
+    public SELF_TYPE withExceptionHandler(Thread.UncaughtExceptionHandler exceptionHandler) {
+        setExceptionHandler(exceptionHandler);
+        return self();
+    }
+
     /**
      * If set the throwable will first be purged before doing the approriate check or handling it.
      * @param exceptionPurger
@@ -32,12 +41,27 @@ public abstract class AbstractExceptionHandlerDelegate implements ExceptionHandl
         this.exceptionPurger = exceptionPurger;
     }
 
+    public SELF_TYPE withExceptionPurger(ExceptionPurger exceptionPurger) {
+        setExceptionPurger(exceptionPurger);
+        return self();
+    }
+
     public void setPurgeOnAppropriateCheck(boolean purgeOnAppropriateCheck) {
         this.purgeOnAppropriateCheck = purgeOnAppropriateCheck;
     }
 
+    public SELF_TYPE withPurgeOnAppropriateCheck(boolean purgeOnAppropriateCheck) {
+        setPurgeOnAppropriateCheck(purgeOnAppropriateCheck);
+        return self();
+    }
+
     public void setPurgeOnHandling(boolean purgeOnHandling) {
         this.purgeOnHandling = purgeOnHandling;
+    }
+
+    public SELF_TYPE withPurgeOnHandling(boolean purgeOnHandling) {
+        setPurgeOnHandling(purgeOnHandling);
+        return self();
     }
 
 

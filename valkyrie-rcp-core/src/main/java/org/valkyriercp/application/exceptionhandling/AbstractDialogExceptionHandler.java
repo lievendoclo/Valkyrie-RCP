@@ -1,7 +1,6 @@
 package org.valkyriercp.application.exceptionhandling;
 
 import org.jdesktop.swingx.JXFrame;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -17,7 +16,7 @@ import javax.swing.*;
  * @since 0.3
  */
 @Configurable
-public abstract class AbstractDialogExceptionHandler extends AbstractLoggingExceptionHandler {
+public abstract class AbstractDialogExceptionHandler<T extends AbstractDialogExceptionHandler<T>> extends AbstractLoggingExceptionHandler<T> {
 
     private static final String DIALOG_EXCEPTION_HANDLER_KEY = "dialogExceptionHandler";
 
@@ -44,6 +43,11 @@ public abstract class AbstractDialogExceptionHandler extends AbstractLoggingExce
         this.modalDialog = modalDialog;
     }
 
+    public T withModalDialog(boolean modalDialog) {
+        setModalDialog(modalDialog);
+        return self();
+    }
+
     /**
      * Wheter or not the user should be asked or obligated to shutdown the application.
      * The default is ASK.
@@ -52,6 +56,11 @@ public abstract class AbstractDialogExceptionHandler extends AbstractLoggingExce
      */
     public void setShutdownPolicy(ShutdownPolicy shutdownPolicy) {
         this.shutdownPolicy = shutdownPolicy;
+    }
+
+    public T withShutdownPolicy(ShutdownPolicy shutdownPolicy) {
+        setShutdownPolicy(shutdownPolicy);
+        return self();
     }
 
     public void notifyUserAboutException(Thread thread, Throwable throwable) {

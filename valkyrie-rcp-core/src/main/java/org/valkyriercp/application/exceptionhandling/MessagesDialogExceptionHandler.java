@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-public class MessagesDialogExceptionHandler extends AbstractDialogExceptionHandler {
+public class MessagesDialogExceptionHandler<T extends MessagesDialogExceptionHandler<T>> extends AbstractDialogExceptionHandler<T> {
 
     private int wrapLength = 120;
     private int identLength = 2;
@@ -42,6 +42,11 @@ public class MessagesDialogExceptionHandler extends AbstractDialogExceptionHandl
         this.wrapLength = wrapLength;
     }
 
+    public T withWrapLength(int wrapLength) {
+        setWrapLength(wrapLength);
+        return self();
+    }
+
     /**
      * Sets the identation applied on the exception message passed as a parameter.
      * Defaults to 2.
@@ -49,6 +54,11 @@ public class MessagesDialogExceptionHandler extends AbstractDialogExceptionHandl
      */
     public void setIdentLength(int identLength) {
         this.identLength = identLength;
+    }
+
+    public T withIdentLength(int identLength) {
+        setIdentLength(identLength);
+        return self();
     }
 
     /**
@@ -60,6 +70,11 @@ public class MessagesDialogExceptionHandler extends AbstractDialogExceptionHandl
      */
     public void setMessagesKey(String messagesKey) {
         this.messagesKey = messagesKey;
+    }
+
+    public T withMessagesKey(String messagesKey) {
+        setMessagesKey(messagesKey);
+        return self();
     }
 
 

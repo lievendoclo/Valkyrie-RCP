@@ -3,9 +3,7 @@ package org.valkyriercp.application.exceptionhandling;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.util.StringUtils;
-import org.valkyriercp.application.Application;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -15,7 +13,7 @@ import org.valkyriercp.core.Severity;
 
 import javax.swing.*;
 
-public class DefaultRegisterableExceptionHandler extends AbstractRegisterableExceptionHandler {
+public class DefaultRegisterableExceptionHandler<T extends DefaultRegisterableExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> {
     @Autowired
     private ApplicationConfig applicationConfig;
 
