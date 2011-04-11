@@ -2,9 +2,68 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
         "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 
-<chapter id="integration">
+<chapter id="integration" xmlns:xi="http://www.w3.org/2001/XInclude">
   <title>Integration with other frameworks</title>
 
   <toc/>
-
+  
+  <section id="integration:flexibility">
+    <title>Flexibility</title>
+    <para>
+      Valkyrie, being a framework, provides the flexibility to add support for other Swing frameworks. This
+      way, the standard toolkit can be enriched with all sorts of open-source, closed-source or even proprietary
+      components.
+    </para>
+    <para>
+      We’ll take a quick look at the current integrations for Valkyrie.
+    </para>
+  </section>
+  <section id="integration:vldocking">
+    <title>VLDocking</title>
+    <para>
+      VLDocking is a set of Java components that helps the Swing developer to build applications with docking
+      capabilities, and even leverage existing applications to higher standards.
+    </para>
+    <para>
+      Valkyrie provides an integration for this docking framework out-of-the-box. Examples on this integration
+      are available in the samples included in Valkyrie.
+    </para>
+  </section>
+  <section id="integration:jide">
+    <title>JIDE</title>
+    <para>
+      JIDE provides a lot of Swing components that add a plethora of functionalities to the standard Swing toolkit. JIDE has both commercial as open-source components, so the possibilities for integrations are vast.
+    </para>
+  </section>
+  <section id="integration:other">
+    <title>Adding support for other frameworks</title>
+    <para>
+      Support for other Swing libraries can come in different sizes:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Other docking frameworks
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          MDI frameworks
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Input controls to create binders and bindings with
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Form frameworks
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      Valkyrie is meant to be extended, so we’re sure some integrations are still to pop up.
+    </para>
+  </section>
 </chapter>
