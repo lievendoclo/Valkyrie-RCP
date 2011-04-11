@@ -2,9 +2,209 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
         "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 
-<chapter id="interceptors">
-  <title>Interceptors</title>
+<chapter id="interceptors" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <title>Form component interceptors</title>
 
-  <toc/>
+    <toc/>
+
+    <section id="interceptors:intro">
+        <title>Introduction</title>
+        <para>
+            Form component interceptors provide a way to intercept and add extra functionality to input components on a form.
+        </para>
+        <para>
+            The application context specifies the list of interceptors to attach to controls constructed by the platform. This
+            allows for a declarative model for specifying "additional" functionality to be added to various components.
+        </para>
+        <para>
+            Examples are interceptors to overlay validation error images and background color changes, provide popup menus in
+            text fields, and autocompletion (as you type) for comboboxes.
+        </para>
+    </section>
+
+    <section id="interceptors:create">
+        <title>Creating your own interceptor</title>
+        <para>
+            To create your own <classname>FormComponentInterceptor</classname>, you have to provide both a FormComponentInterceptor and a
+            <classname>FormComponentInterceptorFactory</classname> implementation.
+        </para>
+        <programlisting language="java"><![CDATA[public interface FormComponentInterceptor {
+    public void processLabel(String propertyName, JComponent label);
+
+    public void processComponent(String propertyName, JComponent component);
+}]]></programlisting>
+    </section>
+
+    <section id="interceptors:config">
+        <title>Configuration</title>
+        <para>
+            The configuration of the interceptors in the application context is done by defining the
+            <classname>FormComponentInterceptorFactory</classname> in the <literal>formComponentInterceptorFactory</literal> method.
+        </para>
+        <para>
+            This is the standard configuration:
+        </para>
+        <programlisting language="java"><![CDATA[@Bean
+public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+    ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+    List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+    factories.add(new ColorValidationInterceptorFactory());
+    factories.add(new OverlayValidationInterceptorFactory());
+    factories.add(new ShowCaptionInStatusBarInterceptorFactory());
+    factories.add(new ShowDescriptionInStatusBarInterceptorFactory());
+    factory.setInterceptorFactories(factories);
+    return factory;
+}]]></programlisting>
+    </section>
+
+    <section id="interceptors:builtin">
+        <title>Built-in interceptors</title>
+        <para>
+            There are a number of built-in interceptors provided with the framework. We’ll quickly explain them.
+        </para>
+
+        <section id="interceptors:builtin:erroroverlay">
+            <title>Error overlay image</title>
+            <para>
+                There are a number of built-in interceptors provided with the framework. We’ll quickly explain them.
+            </para>
+            --- IMAGE ---
+            <para>
+                This class has been specifically made to work with Valkyrie’s validation framework and will show the
+                errors coming from that framework
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new OverlayValidationInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:errorbackground">
+            <title>Error background color</title>
+            <para>
+                Changes the background color of the form component when an invalid value is entered. The color of the background
+                can be set through a property.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new ColorValidationInterceptorFactory()]]></programlisting>
+            --- IMAGE ---
+        </section>
+
+        <section id="interceptors:builtin:textediting">
+            <title>Text editing popup (undo, copy, paste, ...)</title>
+            <para>
+                Adds more advanced text editing functionality to text components. It adds a popup menu with
+                "undo/redo/cut/copy/paste/select all" items. It also adds the standard keyboard accelerators for these commands
+                to the component.
+            </para>
+            --- IMAGE ---
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new TextComponentPopupInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:combobox">
+            <title>Combobox auto completion</title>
+            <para>
+                Adds auto completion to a combobox.
+            </para>
+            --- IMAGE ---
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new ComboBoxAutoCompletionInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:dirty">
+            <title>Overlay image indicating dirty value</title>
+            <para>
+                Shows an image in the top left corner of the component if the contents of the component has been changed by the
+                user. The image also has a tooltip showing the original value. To the right of the image is a small revert
+                button. Pushing this button restores the original value in the component
+            </para>
+            --- IMAGE ---
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new DirtyIndicatorInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:selectall">
+            <title>Select all text on focus</title>
+            <para>
+                Selects all the text in text fields and spinners when they receive focus.
+            </para>
+            --- IMAGE ---
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new SelectAllFormComponentInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:caretbeginning">
+            <title>Setting the caret to the beginning of the field</title>
+            <para>
+                If the text is set in a text component, the caret position is set to the end of the text. This means the
+                beginning of the text will not be visible if the text is too long to fit in the text component.
+            </para>
+            <para>
+                This FormComponentInterceptor "fixes" this behavior, and sets the caret to position 0.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new TextCaretFormComponentInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:tooltip">
+            <title>Showing a tooltip</title>
+            <para>
+                If a form property has a caption defined in the messages.properties file it will be used as the tooltip for the
+                form component.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new ToolTipInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:checkbox">
+            <title>Changing the rendering of a checkbox</title>
+            <para>
+                Allows customization on how a CheckBox form property is rendered, for example whether the label needs to be
+                shown.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            new CheckBoxFormComponentInterceptorFactory()
+        </section>
+
+        <section id="interceptors:builtin:captionstatusbar">
+            <title>Showing the caption of the currently focussed component in the statusbar</title>
+            <para>
+                Shows the caption of the form component in the statusbar when the component is focused.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new ShowCaptionInStatusBarInterceptorFactory()]]></programlisting>
+        </section>
+
+        <section id="interceptors:builtin:descriptionstatusbar">
+            <title>Showing the description of the currently focussed component in the statusbar</title>
+            <para>
+                Shows the description of the form component in the statusbar when the component is focused.
+            </para>
+            <para>
+                To configure this interceptor, you need to use this interceptor factory:
+            </para>
+            <programlisting language="java"><![CDATA[new ShowDescriptionInStatusBarInterceptorFactory()]]></programlisting>
+        </section>
+
+    </section>
 
 </chapter>
