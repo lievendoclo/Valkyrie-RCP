@@ -216,7 +216,7 @@
                                 </td>
                                 <td width="20%" align="center">
                                     <span style="color:white;font-size:85%;">
-                                        <a href="http://www.gitorious.com/valkyriercp" title="Valkyrie framework">Valkyrie</a>
+                                        <a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a>
                                     </span>
                                 </td>
                                 <td width="40%" align="right" valign="top">
