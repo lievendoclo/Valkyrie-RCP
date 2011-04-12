@@ -6,7 +6,7 @@ package org.valkyriercp.application.exceptionhandling;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends AbstractExceptionHandlerDelegate<SELF_TYPE>> implements ExceptionHandlerDelegate {
+public abstract class AbstractExceptionHandlerDelegate<SELF extends AbstractExceptionHandlerDelegate<SELF>> implements ExceptionHandlerDelegate {
 
     protected Thread.UncaughtExceptionHandler exceptionHandler;
     protected ExceptionPurger exceptionPurger = null;
@@ -16,8 +16,8 @@ public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends Abstrac
     public AbstractExceptionHandlerDelegate() {
     }
 
-    protected final SELF_TYPE self() {
-        return (SELF_TYPE) this;
+    protected final SELF self() {
+        return (SELF) this;
     }
 
     public AbstractExceptionHandlerDelegate(Thread.UncaughtExceptionHandler exceptionHandler) {
@@ -28,7 +28,7 @@ public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends Abstrac
         this.exceptionHandler = exceptionHandler;
     }
 
-    public SELF_TYPE withExceptionHandler(Thread.UncaughtExceptionHandler exceptionHandler) {
+    public SELF handledBy(Thread.UncaughtExceptionHandler exceptionHandler) {
         setExceptionHandler(exceptionHandler);
         return self();
     }
@@ -41,7 +41,7 @@ public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends Abstrac
         this.exceptionPurger = exceptionPurger;
     }
 
-    public SELF_TYPE withExceptionPurger(ExceptionPurger exceptionPurger) {
+    public SELF purgedBy(ExceptionPurger exceptionPurger) {
         setExceptionPurger(exceptionPurger);
         return self();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends Abstrac
         this.purgeOnAppropriateCheck = purgeOnAppropriateCheck;
     }
 
-    public SELF_TYPE withPurgeOnAppropriateCheck(boolean purgeOnAppropriateCheck) {
+    public SELF purgingOnAppropriateCheck(boolean purgeOnAppropriateCheck) {
         setPurgeOnAppropriateCheck(purgeOnAppropriateCheck);
         return self();
     }
@@ -59,7 +59,7 @@ public abstract class AbstractExceptionHandlerDelegate<SELF_TYPE extends Abstrac
         this.purgeOnHandling = purgeOnHandling;
     }
 
-    public SELF_TYPE withPurgeOnHandling(boolean purgeOnHandling) {
+    public SELF purgingOnHandling(boolean purgeOnHandling) {
         setPurgeOnHandling(purgeOnHandling);
         return self();
     }

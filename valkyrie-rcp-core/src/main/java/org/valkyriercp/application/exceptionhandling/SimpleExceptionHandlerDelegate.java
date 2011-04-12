@@ -29,11 +29,11 @@ public class SimpleExceptionHandlerDelegate<SELF extends SimpleExceptionHandlerD
         this.throwableClassList = throwableClassList;
     }
 
-    public void setThrowableClass(Class throwableClass) {
+    public void setThrowableClass(Class<? extends Throwable> throwableClass) {
         setThrowableClassList(Lists.<Class<? extends Throwable>>newArrayList(throwableClass));
     }
 
-    public SELF withThrowableClass(Class throwableClass) {
+    public SELF forThrowable(Class<? extends Throwable> throwableClass) {
         setThrowableClass(throwableClass);
         return self();
     }
@@ -43,7 +43,7 @@ public class SimpleExceptionHandlerDelegate<SELF extends SimpleExceptionHandlerD
         this.throwableClassList = throwableClassList;
     }
 
-    public SELF withThrowableClassList(List<Class<? extends Throwable>> throwableClassList) {
+    public SELF forThrowables(List<Class<? extends Throwable>> throwableClassList) {
         setThrowableClassList(throwableClassList);
         return self();
     }

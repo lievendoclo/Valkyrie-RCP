@@ -13,7 +13,7 @@ import org.valkyriercp.core.Severity;
 
 import javax.swing.*;
 
-public class DefaultRegisterableExceptionHandler<T extends DefaultRegisterableExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> {
+public class DefaultRegisterableExceptionHandler<SELF extends DefaultRegisterableExceptionHandler<SELF>> extends AbstractRegisterableExceptionHandler<SELF> {
     @Autowired
     private ApplicationConfig applicationConfig;
 

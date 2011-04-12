@@ -1,12 +1,12 @@
 package org.valkyriercp.application.exceptionhandling;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ import java.util.List;
  * @author Geoffrey De Smet
  * @since 0.3.0
  */
-public class DelegatingExceptionHandler<T extends DelegatingExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> implements InitializingBean {
+public class DelegatingExceptionHandler<SELF extends DelegatingExceptionHandler<SELF>> extends AbstractRegisterableExceptionHandler<SELF> implements InitializingBean {
 
     protected final transient Log logger = LogFactory.getLog(getClass());
 
@@ -41,13 +41,13 @@ public class DelegatingExceptionHandler<T extends DelegatingExceptionHandler<T>>
         this.delegateList = delegateList;
     }
 
-    public T withDelegateList(List<ExceptionHandlerDelegate> delegateList) {
-        setDelegateList(delegateList);
+    public SELF delegatingInOrderTo(ExceptionHandlerDelegate... delegateList) {
+        setDelegateList(Lists.newArrayList(delegateList));
         return self();
     }
 
     public void addDelegateToList(ExceptionHandlerDelegate... delegateList) {
-        getDelegateList().addAll(Arrays.asList(delegateList));
+        getDelegateList().addAll(Lists.newArrayList(delegateList));
     }
 
     public List<ExceptionHandlerDelegate> getDelegateList() {
@@ -64,7 +64,7 @@ public class DelegatingExceptionHandler<T extends DelegatingExceptionHandler<T>>
         this.exceptionPurger = exceptionPurger;
     }
 
-    public T withExceptionPurger(ExceptionPurger exceptionPurger) {
+    public SELF purgedBy(ExceptionPurger exceptionPurger) {
         setExceptionPurger(exceptionPurger);
         return self();
     }

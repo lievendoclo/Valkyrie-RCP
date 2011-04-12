@@ -15,7 +15,7 @@ import java.sql.SQLException;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-public abstract class AbstractLoggingExceptionHandler<T extends AbstractLoggingExceptionHandler<T>> extends AbstractRegisterableExceptionHandler<T> {
+public abstract class AbstractLoggingExceptionHandler<SELF extends AbstractLoggingExceptionHandler<SELF>> extends AbstractRegisterableExceptionHandler<SELF> {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,6 +42,11 @@ public abstract class AbstractLoggingExceptionHandler<T extends AbstractLoggingE
      */
     public void setExceptionPurger(ExceptionPurger exceptionPurger) {
         this.exceptionPurger = exceptionPurger;
+    }
+
+    public SELF purgedBy(ExceptionPurger exceptionPurger) {
+        setExceptionPurger(exceptionPurger);
+        return self();
     }
 
     /**
@@ -164,7 +169,7 @@ public abstract class AbstractLoggingExceptionHandler<T extends AbstractLoggingE
         this.level = level;
     }
 
-    public T withLevel(LoggingLevel level) {
+    public SELF loggingToLevel(LoggingLevel level) {
         setLevel(level);
         return self();
     }
@@ -177,7 +182,7 @@ public abstract class AbstractLoggingExceptionHandler<T extends AbstractLoggingE
         this.marker = marker;
     }
 
-    public T withMarker(Marker marker) {
+    public SELF withMarker(Marker marker) {
         setMarker(marker);
         return self();
     }

@@ -16,7 +16,7 @@ import javax.swing.*;
  * @since 0.3
  */
 @Configurable
-public abstract class AbstractDialogExceptionHandler<T extends AbstractDialogExceptionHandler<T>> extends AbstractLoggingExceptionHandler<T> {
+public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialogExceptionHandler<SELF>> extends AbstractLoggingExceptionHandler<SELF> {
 
     private static final String DIALOG_EXCEPTION_HANDLER_KEY = "dialogExceptionHandler";
 
@@ -43,7 +43,7 @@ public abstract class AbstractDialogExceptionHandler<T extends AbstractDialogExc
         this.modalDialog = modalDialog;
     }
 
-    public T withModalDialog(boolean modalDialog) {
+    public SELF usingModalDialog(boolean modalDialog) {
         setModalDialog(modalDialog);
         return self();
     }
@@ -58,7 +58,7 @@ public abstract class AbstractDialogExceptionHandler<T extends AbstractDialogExc
         this.shutdownPolicy = shutdownPolicy;
     }
 
-    public T withShutdownPolicy(ShutdownPolicy shutdownPolicy) {
+    public SELF havingShutdownPolicy(ShutdownPolicy shutdownPolicy) {
         setShutdownPolicy(shutdownPolicy);
         return self();
     }

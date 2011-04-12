@@ -252,7 +252,9 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     public RegisterableExceptionHandler registerableExceptionHandler() {
         JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
         DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
-        handler.addDelegateToList(new SimpleExceptionHandlerDelegate().withThrowableClass(Throwable.class).withExceptionHandler(errorDialogExceptionHandler));
+        handler.addDelegateToList(new SimpleExceptionHandlerDelegate()
+                .forThrowable(Throwable.class)
+                .handledBy(errorDialogExceptionHandler));
         return handler;
     }
 

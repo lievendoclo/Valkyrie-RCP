@@ -6,7 +6,7 @@ package org.valkyriercp.application.exceptionhandling;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-public class SilentExceptionHandler<T extends SilentExceptionHandler<T>> extends AbstractLoggingExceptionHandler<T> {
+public class SilentExceptionHandler<SELF extends SilentExceptionHandler<SELF>> extends AbstractLoggingExceptionHandler<SELF> {
 
     /**
      * Does nothing.

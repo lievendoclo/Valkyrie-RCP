@@ -1,5 +1,7 @@
 package org.valkyriercp.application.exceptionhandling;
 
+import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -11,8 +13,8 @@ import java.util.List;
  */
 public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> implements ExceptionPurger {
 
-    protected List<Class> includeThrowableClassList = Collections.emptyList();
-    protected List<Class> excludeThrowableClassList = Collections.emptyList();
+    protected List<Class<? extends Throwable>> includeThrowableClassList = Collections.emptyList();
+    protected List<Class<? extends Throwable>> excludeThrowableClassList = Collections.emptyList();
 
     public DefaultExceptionPurger() {}
 
@@ -20,16 +22,16 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
         return (SELF) this;
     }
 
-    public DefaultExceptionPurger(Class includeThrowableClass, Class excludeThrowableClass) {
+    public DefaultExceptionPurger(Class<? extends Throwable> includeThrowableClass, Class<? extends Throwable> excludeThrowableClass) {
         if (includeThrowableClass != null) {
-            this.includeThrowableClassList = Collections.singletonList(includeThrowableClass);
+            setIncludeThrowableClasses(includeThrowableClass);
         }
         if (excludeThrowableClass != null) {
-            this.excludeThrowableClassList = Collections.singletonList(excludeThrowableClass);
+            setExcludeThrowableClasses(excludeThrowableClass);
         }
     }
 
-    public DefaultExceptionPurger(List<Class> includeThrowableClassList, List<Class> excludeThrowableClassList) {
+    public DefaultExceptionPurger(List<Class<? extends Throwable>> includeThrowableClassList, List<Class<? extends Throwable>> excludeThrowableClassList) {
         if (includeThrowableClassList != null) {
             this.includeThrowableClassList = includeThrowableClassList;
         }
@@ -38,16 +40,8 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
         }
     }
 
-    /**
-     * See @{link {@link #setIncludeThrowableClassList(List)}.
-     * @param includeThrowableClass used as a singleton list for includeThrowableClassList
-     */
-    public void setIncludeThrowableClass(Class includeThrowableClass) {
-        setIncludeThrowableClassList(Collections.singletonList(includeThrowableClass));
-    }
-
-    public SELF withIncludeThrowableClass(Class includeThrowableClass) {
-        setIncludeThrowableClass(includeThrowableClass);
+    public SELF including(Class includeThrowableClass) {
+        setIncludeThrowableClasses(includeThrowableClass);
         return self();
     }
 
@@ -68,29 +62,21 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
      * When combined, includeThrowableClassList takes priority over excludeThrowableClassList.
      * @param includeThrowableClassList a list of classes
      */
-    public void setIncludeThrowableClassList(List<Class> includeThrowableClassList) {
-        this.includeThrowableClassList = includeThrowableClassList;
+    public void setIncludeThrowableClasses(Class<? extends Throwable>... includeThrowableClassList) {
+        this.includeThrowableClassList = Lists.newArrayList(includeThrowableClassList);
     }
 
-    public SELF withIncludeThrowableClassList(List<Class> includeThrowableClassList) {
-        setIncludeThrowableClassList(includeThrowableClassList);
+    public SELF including(Class<? extends Throwable>... throwableClasses) {
+        setIncludeThrowableClasses(throwableClasses);
         return self();
     }
 
     /**
-     * See @{link {@link #setExcludeThrowableClassList(List)}.
+     * See @{link {@link #setExcludeThrowableClasses(Class...)}.
      * @param excludeThrowableClass used as a singleton list for excludeThrowableClassList
      */
-    public void setExcludeThrowableClass(Class excludeThrowableClass) {
-        setExcludeThrowableClassList(Collections.singletonList(excludeThrowableClass));
-    }
-
-    /**
-     * See @{link {@link #setExcludeThrowableClassList(List)}.
-     * @param excludeThrowableClass used as a singleton list for excludeThrowableClassList
-     */
-    public SELF withExcludeThrowableClass(Class excludeThrowableClass) {
-        setExcludeThrowableClass(excludeThrowableClass);
+    public SELF excluding(Class<? extends Throwable> excludeThrowableClass) {
+        setExcludeThrowableClasses(excludeThrowableClass);
         return self();
     }
 
@@ -110,15 +96,10 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
      * {D, C} return D1;
      * </p>
      * When combined, includeThrowableClassList takes priority over excludeThrowableClassList.
-     * @param excludeThrowableClassList a list of classes
+     * @param throwableClasses a list of classes
      */
-    public void setExcludeThrowableClassList(List<Class> excludeThrowableClassList) {
-        this.excludeThrowableClassList = excludeThrowableClassList;
-    }
-
-    public SELF withExcludeThrowableClassList(List<Class> excludeThrowableClassList) {
-        setExcludeThrowableClassList(excludeThrowableClassList);
-        return self();
+    public void setExcludeThrowableClasses(Class<? extends Throwable>... throwableClasses) {
+        this.excludeThrowableClassList = Lists.newArrayList(throwableClasses);
     }
 
     public Throwable purge(Throwable root) {
@@ -156,7 +137,7 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
 //        return purged;
 //    }
 
-    protected boolean containedIn(Throwable e, List<Class> throwableClassList) {
+    protected boolean containedIn(Throwable e, List<Class<? extends Throwable>> throwableClassList) {
         for (Class throwableClass : throwableClassList) {
             if (throwableClass.isInstance(e)) {
                 return true;
