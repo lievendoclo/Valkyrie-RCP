@@ -8,7 +8,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.application.config.ApplicationConfig;
-import org.valkyriercp.application.config.ApplicationObjectConfigurer;
 import org.valkyriercp.binding.form.CommitListener;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.form.HierarchicalFormModel;
@@ -17,13 +16,11 @@ import org.valkyriercp.binding.validation.ValidationListener;
 import org.valkyriercp.binding.value.IndexAdapter;
 import org.valkyriercp.binding.value.ObservableList;
 import org.valkyriercp.binding.value.ValueModel;
-import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.core.Guarded;
 import org.valkyriercp.core.Messagable;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.form.binding.BindingFactory;
-import org.valkyriercp.form.binding.BindingFactoryProvider;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -767,5 +764,9 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 
     protected ApplicationConfig getApplicationConfig() {
         return applicationConfig;
+    }
+
+    protected String getMessage(String key, Object... args) {
+        return applicationConfig.messageResolver().getMessage(key, args);
     }
 }
