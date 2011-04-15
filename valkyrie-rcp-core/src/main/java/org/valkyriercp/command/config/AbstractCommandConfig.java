@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.ImportResource;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.NewWindowCommand;
@@ -13,8 +13,8 @@ import org.valkyriercp.security.LoginCommand;
 import org.valkyriercp.security.LogoutCommand;
 
 @Configuration
-@Lazy
-public class AbstractCommandConfig {
+@ImportResource("/org/valkyriercp/application/valkyrie-command-base.xml")
+public class AbstractCommandConfig implements CommandConfig {
     @Autowired
     protected ApplicationConfig parentConfig;
 
@@ -23,6 +23,7 @@ public class AbstractCommandConfig {
         return new ApplicationWindowCommandManager();
     }
 
+    @Override
     @Bean
     @Qualifier("menubar")
     public CommandGroup menuBarCommandGroup() {
@@ -32,6 +33,7 @@ public class AbstractCommandConfig {
         return menuFactory.getCommandGroup();
     }
 
+    @Override
     @Bean
     @Qualifier("toolbar")
     public CommandGroup toolBarCommandGroup() {
@@ -49,6 +51,7 @@ public class AbstractCommandConfig {
 
     }
 
+    @Override
     @Bean
     @Qualifier("navigation")
     public CommandGroup navigationCommandGroup() {

@@ -3,7 +3,6 @@ package org.valkyriercp.security.support;
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -71,7 +70,7 @@ import java.util.Map;
  *
  */
 @Configurable
-public class DefaultApplicationSecurityManager implements ApplicationSecurityManager, InitializingBean {
+public class DefaultApplicationSecurityManager implements ApplicationSecurityManager {
 
     private final Log logger = LogFactory.getLog(getClass());
 

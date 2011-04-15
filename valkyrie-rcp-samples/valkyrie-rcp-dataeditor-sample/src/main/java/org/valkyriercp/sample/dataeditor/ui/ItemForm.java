@@ -1,22 +1,13 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
 import com.jgoodies.forms.layout.FormLayout;
-import org.valkyriercp.form.FormModelHelper;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.sample.dataeditor.domain.Item;
 import org.valkyriercp.widget.TabbedForm;
 
 public class ItemForm extends TabbedForm
 {
-    public ItemForm()
-    {
-        super(FormModelHelper.createFormModel(new Item(), "itemForm"));
-        // enable this to see validation in action!
-//        Rules rules = new Rules(Item.class);
-//        rules.addRequired("name");
-//        getFormModel().setValidator(new RulesValidator(getFormModel(), DefaultRulesSource.create(rules)));
-    }
-
     protected Tab[] getTabs()
     {
         FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow, 3dlu, 100dlu", "default");
@@ -28,5 +19,10 @@ public class ItemForm extends TabbedForm
         builder.addPropertyAndLabel("supplier", "supplierBinder");
 
         return new Tab[] { new Tab("detail", builder.getPanel())};
+    }
+
+    @Override
+    public FormModel createFormModel() {
+        return formModelFactory.createFormModel(new Item(),"itemForm");
     }
 }

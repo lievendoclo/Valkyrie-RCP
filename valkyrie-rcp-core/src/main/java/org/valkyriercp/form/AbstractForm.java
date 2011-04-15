@@ -88,102 +88,32 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
     @Autowired
 	private ApplicationConfig applicationConfig;
 
+    @Autowired
+    protected FormModelFactory formModelFactory;
+
 	private BindingFactory bindingFactory;
 
 	private Map childForms = new HashMap();
 
 	private List validationResultsReporters = new ArrayList();
 
-	/**
-	 * Default constructor will use the uncapitalized simplename of the class to
-	 * construct its id.
-	 */
-	protected AbstractForm() {
-		setId(StringUtils.uncapitalize(getClass().getSimpleName()));
-	}
-
-	/**
-	 * Id configurable constructor.
-	 */
-	protected AbstractForm(String formId) {
-		setId(formId);
-	}
-
-	/**
-	 * Convenience constructor which creates a {@link FormModel} by calling
-	 * {@link FormModelHelper#createFormModel(Object)}.
-	 *
-	 * @param formObject object used to create the formModel.
-	 * @see #AbstractForm(FormModel)
-	 */
-	protected AbstractForm(Object formObject) {
-		this(FormModelHelper.createFormModel(formObject));
-	}
-
-	/**
-	 * Create an AbstractForm with the given {@link FormModel}. Use the
-	 * formModel's id to configure the Form.
-	 *
-	 * @see #AbstractForm(FormModel, String)
-	 */
-	protected AbstractForm(FormModel formModel) {
-		this(formModel, formModel.getId());
-	}
-
-	/**
-	 * Create an AbstractForm.
-	 */
-	protected AbstractForm(FormModel formModel, String formId) {
-		setId(formId);
-		if (formModel instanceof ValidatingFormModel) {
-			setFormModel((ValidatingFormModel) formModel);
-		}
-		else {
-			throw new IllegalArgumentException("Unsupported form model implementation " + formModel);
-		}
-	}
-
-	/**
-	 * Create a Form with a FormModel that has a child-parent relation with the
-	 * provided parentFormModel.
-	 *
-	 * @param parentFormModel the parent formModel.
-	 * @param formId id used for this Form's configuration.
-	 * @param childFormObjectPropertyPath the path relative to the
-	 * parentFormModel's formObject that leads to the child formObject that will
-	 * be handled by this Form.
-	 * @see FormModelHelper#createChildPageFormModel(HierarchicalFormModel,
-	 * String, String)
-	 */
-	protected AbstractForm(HierarchicalFormModel parentFormModel, String formId, String childFormObjectPropertyPath) {
-		setId(formId);
-		this.parentFormModel = parentFormModel;
-		setFormModel(FormModelHelper.createChildPageFormModel(parentFormModel, formId, childFormObjectPropertyPath));
-	}
-
-	/**
-	 * Create a Form with a FormModel that has a child-parent relation with the
-	 * provided parentFormModel.
-	 *
-	 * @param parentFormModel the parent formModel.
-	 * @param formId id used for this Form's configuration.
-	 * @param childFormObjectHolder the valueModel of the parentFormModel that
-	 * holds the child formObject that will be handled by this Form.
-	 * @see FormModelHelper#createChildPageFormModel(HierarchicalFormModel,
-	 * String, ValueModel)
-	 */
-	protected AbstractForm(HierarchicalFormModel parentFormModel, String formId, ValueModel childFormObjectHolder) {
-		setId(formId);
-		this.parentFormModel = parentFormModel;
-		setFormModel(FormModelHelper.createChildPageFormModel(parentFormModel, formId, childFormObjectHolder));
-	}
+    public abstract FormModel createFormModel();
 
 	/**
 	 * Hook called when constructing the Form.
 	 */
     @PostConstruct
 	protected void init() {
-
+        FormModel model = createFormModel();
+        if(getId() == null)
+            setId(model.getId());
+        if (model instanceof ValidatingFormModel) {
+            ValidatingFormModel validatingFormModel = (ValidatingFormModel) model;
+            setFormModel(validatingFormModel);
+        } else {
+            throw new IllegalArgumentException("Unsupported form model implementation " + formModel);
+        }
+        getApplicationConfig().applicationObjectConfigurer().configure(this, getId());
 	}
 
 	public String getId() {

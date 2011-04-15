@@ -1,9 +1,6 @@
 package org.valkyriercp.widget;
 
 import org.valkyriercp.application.PageComponentContext;
-import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.binding.form.HierarchicalFormModel;
-import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.form.AbstractForm;
 
@@ -23,34 +20,6 @@ public abstract class AbstractWidgetForm extends AbstractForm implements Widget
     public static final String SAVE_CMD_ID = "save";
 
     protected boolean showing = false;
-
-    protected AbstractWidgetForm() {
-        super();
-    }
-
-    protected AbstractWidgetForm(String formId) {
-        super(formId);
-    }
-
-    protected AbstractWidgetForm(Object formObject) {
-        super(formObject);
-    }
-
-    protected AbstractWidgetForm(FormModel pageFormModel) {
-        super(pageFormModel);
-    }
-
-    protected AbstractWidgetForm(FormModel formModel, String formId) {
-        super(formModel, formId);
-    }
-
-    protected AbstractWidgetForm(HierarchicalFormModel parentFormModel, String formId, String childFormObjectPropertyPath) {
-        super(parentFormModel, formId, childFormObjectPropertyPath);
-    }
-
-    protected AbstractWidgetForm(HierarchicalFormModel parentFormModel, String formId, ValueModel childFormObjectHolder) {
-        super(parentFormModel, formId, childFormObjectHolder);
-    }
 
     public boolean canClose()
     {

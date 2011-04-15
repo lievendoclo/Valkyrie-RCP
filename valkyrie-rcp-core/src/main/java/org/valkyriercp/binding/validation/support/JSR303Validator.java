@@ -119,7 +119,8 @@ public class JSR303Validator<T>  implements RichValidator<T>, ObjectNameResolver
 			for (final PropertyDescriptor prop : propertyDescriptors) {
 				String propertyName = prop.getName();
 				if (formModel.hasValueModel(propertyName) && !ignoredProperties.contains(propertyName)) {
-					final Set<ConstraintViolation<T>> result = validator.validateProperty(object, property);
+					final Set<ConstraintViolation<T>> result = validator.validateValue(beanClass, propertyName, formModel
+							.getValueModel(propertyName).getValue()); //validator.validateProperty(object, propertyName);
 					if (result != null) {
 						ret.addAll(result);
 					}
@@ -128,7 +129,8 @@ public class JSR303Validator<T>  implements RichValidator<T>, ObjectNameResolver
 			return ret;
 		}
 		else if (!ignoredProperties.contains(property) && formModel.hasValueModel(property)) {
-			return validator.validateProperty(object, property);
+			return validator.validateValue(beanClass, property, formModel
+							.getValueModel(property).getValue());
 		}
 		else {
 			return null;

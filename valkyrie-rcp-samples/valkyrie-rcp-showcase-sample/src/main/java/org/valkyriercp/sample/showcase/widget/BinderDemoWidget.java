@@ -1,7 +1,7 @@
 package org.valkyriercp.sample.showcase.widget;
 
 import com.jgoodies.forms.layout.FormLayout;
-import org.valkyriercp.form.FormModelHelper;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.widget.AbstractWidgetForm;
 import org.valkyriercp.widget.TitledWidgetForm;
@@ -17,10 +17,10 @@ public class BinderDemoWidget extends TitledWidgetForm {
 
     public static class BinderDemoForm extends AbstractWidgetForm {
 
-        public BinderDemoForm() {
-            super(FormModelHelper.createFormModel(new BinderDemo(), "binderDemoForm"));
+        @Override
+        public FormModel createFormModel() {
+            return formModelFactory.createFormModel(new BinderDemo(), "binderDemoForm");
         }
-
 
         @Override
         protected JComponent createFormControl() {

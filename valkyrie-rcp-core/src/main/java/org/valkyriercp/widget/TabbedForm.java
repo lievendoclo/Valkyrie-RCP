@@ -6,7 +6,6 @@ import org.valkyriercp.binding.form.NewFormObjectAware;
 import org.valkyriercp.binding.form.VetoableCommitListener;
 import org.valkyriercp.component.MessagableTabbedPane;
 import org.valkyriercp.component.SkipComponentsFocusTraversalPolicy;
-import org.valkyriercp.form.FormModelHelper;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -21,24 +20,6 @@ public abstract class TabbedForm extends AbstractFocussableWidgetForm implements
     private List<VetoableCommitListener> vetoableCommitListeners;
 
     private JTabbedPane tabbedPane = null;
-
-    public TabbedForm(Object formObject, String formId)
-    {
-        this(FormModelHelper.createFormModel(formObject), formId);
-    }
-
-    public TabbedForm(FormModel formModel, String formId)
-    {
-        super(formModel, formId);
-
-        if (this.getFormModel().getId() == null)
-            this.getFormModel().setId(formId);
-    }
-
-    public TabbedForm(FormModel formModel)
-    {
-        this(formModel, formModel.getId());
-    }
 
     protected JTabbedPane getTabbedPane()
     {

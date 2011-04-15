@@ -15,11 +15,9 @@
  */
 package org.valkyriercp.sample.simple.ui;
 
-import com.google.common.collect.Maps;
 import com.jgoodies.forms.layout.FormLayout;
-import org.valkyriercp.form.FormModelHelper;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.swing.NumberBinder;
-import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.sample.simple.domain.Contact;
 import org.valkyriercp.sample.simple.ui.binder.TodoItemListBinding;
@@ -27,15 +25,21 @@ import org.valkyriercp.widget.AbstractFocussableWidgetForm;
 
 import javax.swing.*;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ContactForm extends AbstractFocussableWidgetForm
 {
-	public ContactForm(Contact contact) {
-		super(FormModelHelper.createFormModel(contact, "contactForm"));
-	}
+    private Contact contact;
 
-	protected JComponent createFormControl()
+	public ContactForm(Contact contact) {
+        this.contact = contact;
+    }
+
+    @Override
+    public FormModel createFormModel() {
+        return formModelFactory.createFormModel(contact, "contactForm");
+    }
+
+    protected JComponent createFormControl()
     {
         FormLayout layout = new FormLayout("right:pref, 4dlu, fill:pref:grow, 6dlu, right:pref, 4dlu, fill:pref:grow", "default");
         FormLayoutFormBuilder formBuilder = new FormLayoutFormBuilder(getBindingFactory(), layout);

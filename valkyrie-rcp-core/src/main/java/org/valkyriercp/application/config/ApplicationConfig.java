@@ -3,7 +3,6 @@ package org.valkyriercp.application.config;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.*;
@@ -22,6 +21,7 @@ import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
 import org.valkyriercp.factory.TableFactory;
+import org.valkyriercp.form.FormModelFactory;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
@@ -75,4 +75,5 @@ public interface ApplicationConfig {
     OverlayService overlayService();
     TableFactory tableFactory();
     ApplicationSecurityManager applicationSecurityManager();
+    FormModelFactory formModelFactory();
 }

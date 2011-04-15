@@ -3,12 +3,8 @@ package org.valkyriercp.widget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.config.ApplicationObjectConfigurer;
-import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.binding.form.HierarchicalFormModel;
-import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.component.Focussable;
 import org.valkyriercp.util.DialogFactory;
-import org.valkyriercp.widget.AbstractWidgetForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,72 +66,6 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
             EventQueue.invokeLater(focusRequestRunnable);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm()
-    {
-        super();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(FormModel formModel, String formId)
-    {
-        super(formModel, formId);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(FormModel pageFormModel)
-    {
-        super(pageFormModel);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(HierarchicalFormModel parentFormModel, String formId,
-                                        String childFormObjectPropertyPath)
-    {
-        super(parentFormModel, formId, childFormObjectPropertyPath);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(HierarchicalFormModel parentFormModel, String formId,
-                                        ValueModel childFormObjectHolder)
-    {
-        super(parentFormModel, formId, childFormObjectHolder);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(HierarchicalFormModel parentFormModel, String formId)
-    {
-        super(parentFormModel, formId);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(Object formObject)
-    {
-        super(formObject);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public AbstractFocussableWidgetForm(String formId)
-    {
-        super(formId);
-    }
-
     public boolean canClose()
     {
         boolean userBreak = false;
@@ -173,18 +103,6 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
         }
 
         return !userBreak;
-    }
-
-    @Override
-    protected void init()
-    {
-        // eerst wordt parent object constructor opgeroepen waarin deze init
-        // wordt opgeroepen. Gewone fields zijn dan nog niet gezet dus doe dat
-        // hier expliciet ipv in velddeclaratie.
-//        authorized = true;
-//        enabled = true;
-//        setSecurityControllerId(getId() + ".authorize");
-        applicationObjectConfigurer.configure(this, getId());
     }
 }
 

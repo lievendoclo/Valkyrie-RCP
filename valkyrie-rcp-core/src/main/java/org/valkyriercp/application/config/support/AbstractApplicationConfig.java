@@ -48,6 +48,7 @@ import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
+import org.valkyriercp.form.FormModelFactory;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
@@ -445,5 +446,10 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public SecurityAwareConfigurer securityAwareConfigurer() {
          return new SecurityAwareConfigurer();
+    }
+
+    @Bean
+    public FormModelFactory formModelFactory() {
+        return new FormModelFactory();
     }
 }

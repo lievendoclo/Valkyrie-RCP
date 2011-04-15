@@ -11,15 +11,15 @@ import java.util.Map;
  * Binder for a list of Enum values. Shows all possible enum values in a checkbox list and binds on the selected ones.
  */
 public class CheckBoxListEnumBinder implements Binder {
-    private Class<Enum> enumClass;
+    private Class<? extends Enum> enumClass;
 
     private boolean scrollPaneNeeded = true;
 
-    public Class<Enum> getEnumClass() {
+    public Class<? extends Enum> getEnumClass() {
         return enumClass;
     }
 
-    public void setEnumClass(Class<Enum> enumClass) {
+    public void setEnumClass(Class<? extends Enum> enumClass) {
         this.enumClass = enumClass;
     }
 

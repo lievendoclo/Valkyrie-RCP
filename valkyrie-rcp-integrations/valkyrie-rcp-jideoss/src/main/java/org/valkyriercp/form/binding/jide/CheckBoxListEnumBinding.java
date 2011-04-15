@@ -5,13 +5,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.binding.value.support.ListListModel;
 import org.valkyriercp.component.EnumListRenderer;
-import org.valkyriercp.form.binding.support.CustomBinding;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +18,12 @@ public class CheckBoxListEnumBinding extends CheckBoxListBinding<Enum> {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CheckBoxList list;
-    private Class<Enum> enumClass;
+    private Class<? extends Enum> enumClass;
     private List<Enum> possibleValues;
 
     private boolean scrollPaneNeeded;
 
-    protected CheckBoxListEnumBinding(FormModel formModel, String formPropertyPath, Class<Enum> enumClass) {
+    protected CheckBoxListEnumBinding(FormModel formModel, String formPropertyPath, Class<? extends Enum> enumClass) {
         super(formModel, formPropertyPath);
         this.enumClass = enumClass;
     }

@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
+import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.form.binding.Binder;
@@ -37,6 +38,9 @@ public abstract class AbstractBinder implements Binder {
 
     @Autowired
     private ComponentFactory componentFactory;
+
+    @Autowired
+    protected ApplicationConfig applicationConfig;
 
     protected AbstractBinder(Class requiredSourceClass) {
         this.requiredSourceClass = requiredSourceClass;

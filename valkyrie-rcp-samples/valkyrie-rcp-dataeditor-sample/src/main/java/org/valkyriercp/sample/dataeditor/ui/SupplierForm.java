@@ -1,18 +1,13 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
 import com.jgoodies.forms.layout.FormLayout;
-import org.valkyriercp.form.FormModelHelper;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.sample.dataeditor.domain.Supplier;
 import org.valkyriercp.widget.TabbedForm;
 
 public class SupplierForm extends TabbedForm
 {
-    public SupplierForm()
-    {
-        super(FormModelHelper.createFormModel(new Supplier(), "supplierForm"));
-    }
-
     protected Tab[] getTabs()
     {
         FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow", "default");
@@ -22,5 +17,10 @@ public class SupplierForm extends TabbedForm
         builder.addPropertyAndLabel("contactName");
 
         return new Tab[] { new Tab("detail", builder.getPanel())};
+    }
+
+    @Override
+    public FormModel createFormModel() {
+        return formModelFactory.createFormModel(new Supplier(), "supplierForm");
     }
 }

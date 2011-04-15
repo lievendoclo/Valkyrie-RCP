@@ -1,5 +1,6 @@
 package org.valkyriercp.form;
 
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.core.TitleConfigurable;
 
 public abstract class FilterForm extends AbstractForm implements TitleConfigurable
@@ -8,20 +9,17 @@ public abstract class FilterForm extends AbstractForm implements TitleConfigurab
 
     protected FilterForm()
     {
+        this("filterForm");
     }
 
     protected FilterForm(String id)
     {
-        super(id);
+        setId(id);
     }
 
     @Override
-    protected void init()
-    {
-        Object filterModel = newFormObject();
-        setFormModel(FormModelHelper.createFormModel(filterModel));
-        getFormModel().setId(getId());
-        getApplicationConfig().applicationObjectConfigurer().configure(this, getId());
+    public FormModel createFormModel() {
+        return formModelFactory.createFormModel(newFormObject(), getId());
     }
 
     public Object getFilterCriteria()

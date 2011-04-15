@@ -1,7 +1,7 @@
 package org.valkyriercp.sample.simple.ui;
 
 import com.jgoodies.forms.layout.FormLayout;
-import org.valkyriercp.form.FormModelHelper;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.sample.simple.domain.TodoItem;
 import org.valkyriercp.widget.AbstractFocussableWidgetForm;
@@ -10,9 +10,9 @@ import javax.swing.*;
 
 public class TodoForm  extends AbstractFocussableWidgetForm
 {
-    public TodoForm()
-    {
-        super(FormModelHelper.createFormModel(new TodoItem(), "todoItemForm"));
+    @Override
+    public FormModel createFormModel() {
+        return formModelFactory.createFormModel(new TodoItem(), "todoItemForm");
     }
 
     protected JComponent createFormControl()

@@ -1,12 +1,10 @@
 package org.valkyriercp.form.binding.jide;
 
 import com.jidesoft.swing.CheckBoxList;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.support.ListListModel;
-import org.valkyriercp.component.EnumListRenderer;
 import org.valkyriercp.form.binding.support.CustomBinding;
 
 import javax.swing.*;
@@ -26,12 +24,10 @@ public class CheckBoxListBinding<T> extends CustomBinding {
     public CheckBoxListBinding(FormModel formModel, String formPropertyPath, List<T> possibleValues) {
         super(formModel, formPropertyPath, List.class);
         this.possibleValues = possibleValues;
-        list = createList();
     }
 
     protected CheckBoxListBinding(FormModel formModel, String formPropertyPath) {
         super(formModel, formPropertyPath, List.class);
-        list = createList();
     }
 
     private CheckBoxList createList() {
@@ -71,6 +67,7 @@ public class CheckBoxListBinding<T> extends CustomBinding {
 
     @Override
     protected JComponent doBindControl() {
+        list = createList();
         list.getCheckBoxListSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
