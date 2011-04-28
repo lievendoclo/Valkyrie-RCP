@@ -27,6 +27,8 @@ public abstract class AbstractCRUDBinding extends CustomBinding
 
     private boolean showDetailSupported;
 
+    private boolean filteringSupported;
+
     protected AbstractCRUDBinding(FormModel formModel, String formPropertyPath, Class requiredSourceClass)
     {
         super(formModel, formPropertyPath, requiredSourceClass);
@@ -131,6 +133,14 @@ public abstract class AbstractCRUDBinding extends CustomBinding
     public void setShowDetailSupported(boolean showDetailSupported)
     {
         this.showDetailSupported = showDetailSupported;
+    }
+
+    public boolean isFilteringSupported() {
+        return filteringSupported;
+    }
+
+    public void setFilteringSupported(boolean filteringSupported) {
+        this.filteringSupported = filteringSupported;
     }
 }
 

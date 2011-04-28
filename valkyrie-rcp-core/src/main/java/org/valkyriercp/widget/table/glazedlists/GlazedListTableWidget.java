@@ -23,6 +23,7 @@ import org.valkyriercp.widget.table.TableCellRenderers;
 import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.*;
@@ -117,10 +118,24 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
         this(rows, tableDesc, tableDesc.getDefaultComparator());
     }
 
+    public GlazedListTableWidget(List<? extends Object> rows, TableDescription tableDesc, boolean enableFiltering) {
+        this(rows, tableDesc, tableDesc.getDefaultComparator(), enableFiltering);
+    }
+
     public GlazedListTableWidget(List<? extends Object> rows, TableDescription tableDesc,
                                  Comparator comparator) {
-        this(tableDesc.getDataType(), rows, GlazedListsSupport.makeTableFormat(tableDesc), GlazedListsSupport
-                .makeFilterProperties(tableDesc), comparator, tableDesc.hasSelectColumn());
+        this(rows, tableDesc, comparator, true);
+        // Als de tablewidget met ons eigen TableDescription class is gemaakt
+        // kunnen we additionele dingen als width/resizable/renderer en editor
+        // zetten
+        // bedenking: zouden we tabledesc van een iterator voorzien om over de
+        // kolommen te lopen?
+    }
+
+    public GlazedListTableWidget(List<? extends Object> rows, TableDescription tableDesc,
+                                 Comparator comparator, boolean enableFiltering) {
+        this(tableDesc.getDataType(), rows, GlazedListsSupport.makeTableFormat(tableDesc), enableFiltering?GlazedListsSupport
+                .makeFilterProperties(tableDesc):null, comparator, tableDesc.hasSelectColumn());
         mTableDesc = tableDesc;
         // Als de tablewidget met ons eigen TableDescription class is gemaakt
         // kunnen we additionele dingen als width/resizable/renderer en editor
@@ -152,8 +167,8 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
         mAddHighlightSelectColumn = addHighlightSelectColumn;
     }
 
-//    @PostConstruct
-    private void createComponent() {
+    @PostConstruct
+    private void postConstruct() {
         theTable.setColumnControlVisible(true);
         dataList = mRows == null ? new BasicEventList<Object>() : GlazedLists.eventList(mRows);
 
@@ -648,7 +663,6 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
     }
 
     public JComponent getComponent() {
-        createComponent();
         return this.tableScroller;
     }
 

@@ -1,10 +1,10 @@
 package org.valkyriercp.application.config.support;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.ConfigurationException;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
@@ -118,9 +118,11 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
 
         @Override
         public AnnotationConfigApplicationContext getObject() throws Exception {
-            CommandBarApplicationContext context = new CommandBarApplicationContext();
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
             context.setParent(parent);
             context.register(configClass);
+            AnnotationConfigUtils.registerAnnotationConfigProcessors(context);
+            context.getBeanFactory().addBeanPostProcessor(new ApplicationWindowSetter(getOpeningWindow()));
             context.refresh();
             return context;
         }
@@ -136,20 +138,20 @@ public class DefaultApplicationLifecycleAdvisor extends AbstractApplicationLifec
         }
     }
 
-    /**
-     * Simple extension to allow us to inject our special bean post-processors
-     * and control event publishing.
-     */
-    private class CommandBarApplicationContext extends AnnotationConfigApplicationContext {
-        /**
-         * Install our bean post-processors.
-         *
-         * @param beanFactory the bean factory used by the application context
-         * @throws org.springframework.beans.BeansException
-         *          in case of errors
-         */
-        protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-            beanFactory.addBeanPostProcessor(new ApplicationWindowSetter(getOpeningWindow()));
-        }
-    }
+//    /**
+//     * Simple extension to allow us to inject our special bean post-processors
+//     * and control event publishing.
+//     */
+//    private class CommandBarApplicationContext extends AnnotationConfigApplicationContext {
+//        /**
+//         * Install our bean post-processors.
+//         *
+//         * @param beanFactory the bean factory used by the application context
+//         * @throws org.springframework.beans.BeansException
+//         *          in case of errors
+//         */
+//        protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+//            beanFactory.addBeanPostProcessor(new ApplicationWindowSetter(getOpeningWindow()));
+//        }
+//    }
 }

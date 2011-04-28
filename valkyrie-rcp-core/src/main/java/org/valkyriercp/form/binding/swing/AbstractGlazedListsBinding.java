@@ -197,10 +197,11 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
     {
         if (table == null)
         {
-            if (useOriginalSortOrder)
-                this.table = new GlazedListTableWidget(null, getTableDescription(), null);
+            if (useOriginalSortOrder) {
+                this.table = new GlazedListTableWidget(null, getTableDescription(), null, isFilteringSupported());
+            }
             else
-                this.table = new GlazedListTableWidget(null, getTableDescription());
+                this.table = new GlazedListTableWidget(null, getTableDescription(), isFilteringSupported());
         }
         return this.table;
     }
@@ -550,7 +551,6 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
             ((Collection) list).add(newItem);
             return newItem;
         }
-
         throw new UnsupportedOperationException(
                 "onFinishAdd received a non Collection object, needs alternate implementation");
     }
