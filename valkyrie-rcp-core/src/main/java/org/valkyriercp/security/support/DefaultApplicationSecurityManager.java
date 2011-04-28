@@ -74,6 +74,7 @@ public class DefaultApplicationSecurityManager implements ApplicationSecurityMan
 
     private final Log logger = LogFactory.getLog(getClass());
 
+    @Autowired(required = false)
     private AuthenticationManager authenticationManager = null;
 
     private Authentication currentAuthentication = null;
