@@ -211,9 +211,7 @@ public class ApplicationLauncher {
 
             applicationContext.addBeanFactoryPostProcessor(
                     new ProgressMonitoringBeanFactoryPostProcessor(tracker));
-
         }
-
         applicationContext.refresh();
 
         return applicationContext;

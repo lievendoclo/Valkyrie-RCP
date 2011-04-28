@@ -3,6 +3,7 @@ package org.valkyriercp.widget.editor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingworker.SwingWorker;
+import org.springframework.util.Assert;
 import org.valkyriercp.application.StatusBar;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.support.StatusBarProgressMonitor;
@@ -13,6 +14,7 @@ import org.valkyriercp.core.DefaultMessage;
 import org.valkyriercp.core.Severity;
 import org.valkyriercp.form.AbstractForm;
 import org.valkyriercp.form.FilterForm;
+import org.valkyriercp.util.CachedCallable;
 import org.valkyriercp.util.MessageConstants;
 import org.valkyriercp.widget.AbstractWidget;
 import org.valkyriercp.widget.Widget;
@@ -56,7 +58,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
     /**
      * Table with data objects
      */
-    private TableWidget tableWidget;
+    private CachedCallable<TableWidget> tableWidget;
 
     /**
      * Constant to be used to embed a dataEditor parameterMap in a command parameterMap.
@@ -202,11 +204,11 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
 
         if (defaultSelectedObject == null)
         {
-            tableWidget.selectRowObject(0, null);
+            getTableWidget().selectRowObject(0, null);
         }
         else
         {
-            tableWidget.selectRowObject(defaultSelectedObject, null);
+            getTableWidget().selectRowObject(defaultSelectedObject, null);
         }
     }
 
@@ -218,7 +220,6 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
      * @see #setFilterForm(FilterForm)
      * @see #setId(String)
      * @see #setTableWidget(TableDescription)
-     * @see #setTableWidget(TableWidget)
      */
     public DefaultDataEditorWidget(String id)
     {
@@ -274,7 +275,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
     public void setTitle(String title)
     {
         super.setTitle(title);
-        tableWidget.getTable().setName(title);
+        getTableWidget().getTable().setName(title);
     }
 
     /**
@@ -377,37 +378,41 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
      *
      * @param tableDescription description of columns used to create the table.
      */
-    protected void setTableWidget(TableDescription tableDescription)
+    protected void setTableWidget(final TableDescription tableDescription)
     {
-        if (tableDescription != null)
-        {
-            TableWidget tableWidget = new GlazedListTableWidget(null, tableDescription);
-            setTableWidget(tableWidget);
-        }
+        Assert.notNull(tableDescription);
+        tableWidget = new CachedCallable<TableWidget>() {
+            @Override
+            protected TableWidget doCall() {
+                TableWidget tableWidget = new GlazedListTableWidget(null, tableDescription);
+                tableWidget.addSelectionObserver(tableSelectionObserver);
+                return tableWidget;
+            }
+        };
     }
 
-    /**
-     * Set the listView of this dataEditor.
-     */
-    protected void setTableWidget(TableWidget tableWidget)
-    {
-        if (this.tableWidget != null)
-        {
-            this.tableWidget.removeSelectionObserver(tableSelectionObserver);
-        }
-
-        this.tableWidget = tableWidget;
-
-        if (this.tableWidget != null)
-        {
-            this.tableWidget.addSelectionObserver(tableSelectionObserver);
-        }
-    }
+//    /**
+//     * Set the listView of this dataEditor.
+//     */
+//    protected void setTableWidget(TableWidget tableWidget)
+//    {
+//        if (this.tableWidget != null)
+//        {
+//            this.tableWidget.removeSelectionObserver(tableSelectionObserver);
+//        }
+//
+//        this.tableWidget = tableWidget;
+//
+//        if (this.tableWidget != null)
+//        {
+//            this.tableWidget.addSelectionObserver(tableSelectionObserver);
+//        }
+//    }
 
     @Override
     public TableWidget getTableWidget()
     {
-        return this.tableWidget;
+        return this.tableWidget.safeCall();
     }
 
     /**
@@ -566,7 +571,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
      */
     protected void setRows(List dataSet)
     {
-        tableWidget.setRows(dataSet);
+        getTableWidget().setRows(dataSet);
     }
 
     protected Object getBaseCriteria()
@@ -652,7 +657,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
             int act = obsAct.getEventType();
             if (act == DataProviderEvent.EVENT_TYPE_NEW)
             {
-                this.tableWidget.addRowObject(obsAct.getNewEntity());
+                this.getTableWidget().addRowObject(obsAct.getNewEntity());
             }
             else if (act == DataProviderEvent.EVENT_TYPE_UPDATE)
             {
@@ -660,7 +665,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
             }
             else if (act == DataProviderEvent.EVENT_TYPE_DELETE)
             {
-                this.tableWidget.removeRowObject(obsAct.getOldEntity());
+                this.getTableWidget().removeRowObject(obsAct.getOldEntity());
             }
         }
     }
@@ -681,16 +686,16 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
             ((Widget) detailForm).onAboutToShow();
         }
 
-        tableWidget.onAboutToShow();
+        getTableWidget().onAboutToShow();
         // lazy loading, if no list is present, load when widget is shown
         // include RefreshPolicy given by DataProvider
-        if ((dataProvider.getRefreshPolicy() != DataProvider.RefreshPolicy.NEVER) && (tableWidget.isEmpty()))
+        if ((dataProvider.getRefreshPolicy() != DataProvider.RefreshPolicy.NEVER) && (getTableWidget().isEmpty()))
         {
             executeFilter();
         }
-        else if (!tableWidget.hasSelection())
+        else if (!getTableWidget().hasSelection())
         {
-            tableWidget.selectRowObject(0, this);
+            getTableWidget().selectRowObject(0, this);
         }
     }
 
@@ -734,9 +739,9 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget
     public Object setSelectedSearch(Object criteria)
     {
         // filterField leegmaken
-        if (tableWidget.getTextFilterField() != null)
+        if (getTableWidget().getTextFilterField() != null)
         {
-            tableWidget.getTextFilterField().setText("");
+            getTableWidget().getTextFilterField().setText("");
         }
         // if Referable == null, empty filterForm and execute filter
         if (criteria == null)

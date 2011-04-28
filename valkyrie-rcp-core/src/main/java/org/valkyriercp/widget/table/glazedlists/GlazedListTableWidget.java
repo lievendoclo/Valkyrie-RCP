@@ -23,7 +23,6 @@ import org.valkyriercp.widget.table.TableCellRenderers;
 import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.*;
@@ -153,8 +152,8 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
         mAddHighlightSelectColumn = addHighlightSelectColumn;
     }
 
-    @PostConstruct
-    private void postConstruct() {
+//    @PostConstruct
+    private void createComponent() {
         theTable.setColumnControlVisible(true);
         dataList = mRows == null ? new BasicEventList<Object>() : GlazedLists.eventList(mRows);
 
@@ -649,6 +648,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements Table
     }
 
     public JComponent getComponent() {
+        createComponent();
         return this.tableScroller;
     }
 
