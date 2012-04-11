@@ -19,7 +19,13 @@ h2. And so, what's new ?
 * Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken.
 
 
+h2. How to build
+
+Just clone the repository, and then use a @mvn install@ command.
+The build was tested with "Maven 3.0.3":http://archive.apache.org/dist/maven/binaries/. 
+
+
 h2. Greetings
 
-Big thanks to "lievendoclo":https://github.com/lievendoclo for his work on this !
+Big thanks to "lievendoclo":http://twitter.com/lievendoclo for his work on this !
 
