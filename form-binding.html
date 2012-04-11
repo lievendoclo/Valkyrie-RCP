@@ -1,0 +1,582 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;6.&nbsp;Forms and binding</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="views.html" title="Chapter&nbsp;5.&nbsp;Views"><link rel="next" href="validation.html" title="Chapter&nbsp;7.&nbsp;Validation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;6.&nbsp;Forms and binding"><div class="titlepage"><div><div><h2 class="title"><a name="form-binding"></a>Chapter&nbsp;6.&nbsp;Forms and binding</h2></div></div></div>
+  
+
+  
+
+  <div class="section" title="6.1.&nbsp;FormModel and ValueModel"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="form-binding:formmodel-valuemodel"></a>6.1.&nbsp;FormModel and ValueModel</h2></div></div></div>
+    
+    <div class="section" title="6.1.1.&nbsp;What is a ValueModel"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:valuemodel-what"></a>6.1.1.&nbsp;What is a ValueModel</h3></div></div></div>
+      
+      <p>
+        A valuemodel provides a way for listening for changes on a property. In its simplest form, it is a property
+        listener wrapper around a particular property. Its purpose is to track change, so that secondary functionality
+        such as undo functionality and validation can be provided.
+      </p>
+    </div>
+    <div class="section" title="6.1.2.&nbsp;What is a FormModel"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:formmodel-what"></a>6.1.2.&nbsp;What is a FormModel</h3></div></div></div>
+      
+      <p>
+        A formmodel is a wrapper around a particular instance of an object. In essence, it is a consisting of
+        valuemodels for the various properties of an object. It handles the overall state of the object.
+      </p>
+    </div>
+    <div class="section" title="6.1.3.&nbsp;The default formmodel"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:formmodel-default"></a>6.1.3.&nbsp;The default formmodel</h3></div></div></div>
+      
+      <p>
+        The default formmodel in Valkyrie handles more than just the overall state of the object by managing
+        its value object. It also provides :
+      </p>
+      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          <p>
+            Buffering of values, effectively providing undo functionality
+          </p>
+        </li><li class="listitem">
+          <p>
+            Dirty tracking
+          </p>
+        </li><li class="listitem">
+          <p>
+            Validation possibilities through validators
+          </p>
+        </li><li class="listitem">
+          <p>
+            Set certain properties of an object to read-only, even if they have setters
+          </p>
+        </li></ul></div>
+      <p>
+        Creating a formmodel of any given object can be done through this:
+      </p>
+      <pre class="programlisting">MyObject object = new MyObject();
+ValidatingFormModel model = new DefaultFormModel(object);</pre>
+      <p>
+         From then on, you can set the values of the object through the valueobject.
+      </p>
+      <pre class="programlisting">model.getValueModel("someProperty").setValue("xyz");</pre>
+      <p>
+        Valuemodels in formmodels are created on-demand. After creating a formmodel on an object, no valuemodels are
+        present until you start calling for them. Valkyrie will then make these on-demand.
+      </p>
+    </div>
+    <div class="section" title="6.1.4.&nbsp;Buffering"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:buffering"></a>6.1.4.&nbsp;Buffering</h3></div></div></div>
+      
+      <p>
+        Buffering provides the necessary plumbing needed for undo functionality. When changing values of property, a
+        buffered valuemodel will still hold the old values and can revert to these if necessary.
+      </p>
+      <pre class="programlisting">MyObject object = new MyObject();
+object.setXyz("xyz");
+ValidatingFormModel model = new DefaultFormModel(object);
+model.getValueModel("xyz").setValue("abc");
+// object hasn't changed, object.getXyz() will return xyz
+model.commit();
+// object has changed, object.getXyz() will return abc</pre>
+      <p>
+        Calling revert() before a commit on a formmodel will return all properties to their original values. Individual
+        valuemodels can be reverted too by calling revert() on them.
+      </p>
+    </div>
+    <div class="section" title="6.1.5.&nbsp;Read-only manipulation"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:read-only"></a>6.1.5.&nbsp;Read-only manipulation</h3></div></div></div>
+      
+      <p>
+        An entire formmodel can be set to be read-only by using the setReadOnly(&#8230;) method.
+      </p>
+      <p>
+        Setting individual properties read-only is a little bit more complicated. Out of the box, Valkyrie
+        will inspect the object and determine whether a property is read-only, based on the existence of a setter method
+        for that property.
+      </p>
+      <p>
+        However, there might be cases where you&#8217;d want to deliberately change the read-only behavior of a property, even
+        if it has a setter. The fact whether a property is set as read-only is held by field metadata.
+      </p>
+      <p>
+        For any given property you can ask the formmodel for the field metadata by calling
+      </p>
+      <pre class="programlisting">FieldMetaData meta = model.getFieldMetaData("xyz");</pre>      
+      <p>
+        Through this field metadata, you can set the read-only property of a property
+      </p>
+      <pre class="programlisting">meta.setReadOnly(true);</pre>    
+      <p>
+        Obviously, trying to set a property that has no setter to writable will cause an exception when the valuemodels
+        are committed (and the respective setters are called).
+      </p>
+    </div>
+    <div class="section" title="6.1.6.&nbsp;Validation"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:validation"></a>6.1.6.&nbsp;Validation</h3></div></div></div>
+      
+      <p>
+        The default form model also contains functionality for validating the enclosed values. The validation is done
+        through Valkyrie&#8217;s own validation subsystem by utilizing validators. We&#8217;ll discuss the details of
+        these validators in detail later.
+      </p>
+      <p>
+        When a property is changed, the validator will be called to check whether the object is still in a consistent
+        state. If not, the validator will produce validation errors, which then can be showed to the user through
+        various means.
+      </p>
+      <p>
+        Setting a validator on a formmodel is done through
+      </p>
+      <pre class="programlisting">model.setValidator(someValidator);</pre>
+      <p>
+        After that, the validation is automatically turned on. If you needed to, you could turn it off by calling
+      </p>
+      <pre class="programlisting">model.setValidating(false);</pre>
+      <p>
+        A model can be validated at any time. A model is aware whether it has validation errors, and if so, contains a
+        collection of these.
+      </p>
+      <p>
+        For more information on this, refer to the JavaDocs on ValidatingFormModel and DefaultFormModel
+      </p>
+    </div>
+    <div class="section" title="6.1.7.&nbsp;Creating formmodels"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:formmodel-valuemodel:create-formmodel"></a>6.1.7.&nbsp;Creating formmodels</h3></div></div></div>
+      
+      <p>
+        To create a formmodel, Valkyrie has provided a factory class that can create various formmodels called
+        FormModelHelper and is the preferred way to create formmodels.
+      </p>
+      <p>
+        For example, if you want to create a formmodel of an object, the simplest way would be:
+      </p>
+      <pre class="programlisting">FormModelHelper.createFormModel(new SomeObject(), "formModelId")</pre>;
+      <p>
+        With the FormModelHelper, you can create:
+      </p>
+      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          <p>
+            Default formmodels (with validation and buffering)
+          </p>
+        </li><li class="listitem">
+          <p>
+            Non-buffered formmodels
+          </p>
+        </li><li class="listitem">
+          <p>
+            Child formmodels of existing formmodels
+          </p>
+        </li></ul></div>
+      <p>
+        Formmodels, at this time, are object based. To create a formmodel, you need to be able to create an object of
+        the class to be utilized by the formmodel.
+      </p>
+      <p>
+        There are implementations on the way to make these class-based, but these are still in development and shaky at
+        best at the moment.
+      </p>
+    </div>
+  </div>
+
+  <div class="section" title="6.2.&nbsp;Binding"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="form-binding:binding"></a>6.2.&nbsp;Binding</h2></div></div></div>
+    
+    <div class="section" title="6.2.1.&nbsp;What is binding"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:binding:what"></a>6.2.1.&nbsp;What is binding</h3></div></div></div>
+      
+      <p>
+         Binding in Valkyrie encompasses the connection between a visual component and the state of a certain property.
+      </p>
+    </div>
+    <div class="section" title="6.2.2.&nbsp;How does binding work and what does it do"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:binding:how-works"></a>6.2.2.&nbsp;How does binding work and what does it do</h3></div></div></div>
+      
+      <p>
+        Binding is done through a valuemodel. A binding covers only one property at a time, most of the time (a binding
+        could be done by aggregating different valuemodels, but that&#8217;s way out of scope for this introduction).
+      </p>
+      <p>
+        A binding will transfer all property changes to the object behind it, and vice versa. It&#8217;s bound to a particular
+        formmodel and property (and therefore, a valuemodel), and is responsible for creating the visual component
+      </p>
+    </div>
+    <div class="section" title="6.2.3.&nbsp;Binders"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:binding:binders"></a>6.2.3.&nbsp;Binders</h3></div></div></div>
+      
+      <p>
+        Binders are factories for bindings. Generally, for each sort of binding you&#8217;ll use in your application, you&#8217;ll
+        have one (or more, if there are specific variants of certain bindings that may be occurring).
+      </p>
+    </div>
+    <div class="section" title="6.2.4.&nbsp;Binder examples"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:binding:binder-examples"></a>6.2.4.&nbsp;Binder examples</h3></div></div></div>
+      
+      <p>
+        In Valkyrie, a number of binders have been implemented out of the box.
+      </p>
+      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          <p>
+            TextComponentBinder: can handle text-type variables like strings
+          </p>
+        </li><li class="listitem">
+          <p>
+            CheckBoxBinder: can handle Boolean-type variables
+          </p>
+        </li><li class="listitem">
+          <p>
+            ListBinder: can handle lists
+          </p>
+        </li><li class="listitem">
+          <p>
+            And many more&#8230;
+          </p>
+        </li></ul></div>
+      <p>
+        There is even a binder available for enums, which visually is represented by a combobox.
+      </p>
+    </div>
+    <div class="section" title="6.2.5.&nbsp;Creating a custom binder"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:binding:create-binder"></a>6.2.5.&nbsp;Creating a custom binder</h3></div></div></div>
+      
+      <p>
+        Say we want to create a binder for JodaTime&#8217;s classes. Java&#8217;s standard date classes are bad to work with, so
+        this example may even be somewhat useful.
+      </p>
+      <p>
+        We start off by creating the binder. A binder is able to bind any JComponent to a value, so we&#8217;ll use SwingX&#8217;s
+        JXDatePicker class to visually represent the date.
+      </p>
+      <pre class="programlisting">public class JodaTimeDateTimeBinding extends CustomBinding implements PropertyChangeListener
+{
+    private final JXDatePicker datePicker;
+    private final boolean readOnly;
+
+    private boolean isSettingText = false;
+
+    public JodaTimeDateTimeBinding(FormModel model, String path, JXDatePicker datePicker, boolean readOnly)
+    {
+        super(model, path, DateTime.class);
+        this.datePicker = datePicker;
+        this.readOnly = readOnly;
+    }
+
+    @Override
+    protected void valueModelChanged(Object newValue)
+    {
+        isSettingText = true;
+        setDatePickerValue((DateTime) newValue);
+        readOnlyChanged();
+        isSettingText = false;
+    }
+
+    private void setDatePickerValue(DateTime dateTime)
+    {
+        if (dateTime == null)
+        {
+            datePicker.setDate(null);
+        }
+        else
+        {
+            datePicker.setDate(dateTime.toDate());
+        }
+    }
+
+    @Override
+    protected JComponent doBindControl()
+    {
+        setDatePickerValue((DateTime) getValue());
+        datePicker.getEditor().addPropertyChangeListener("value", this);
+        return datePicker;
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        if (!isSettingText &amp;&amp; !isReadOnly())
+            controlValueChanged(new DateTime(datePicker.getDate()));
+    }
+
+    @Override
+    protected void readOnlyChanged()
+    {
+        datePicker.setEditable(isEnabled() &amp;&amp; !this.readOnly &amp;&amp; !isReadOnly());
+    }
+
+    @Override
+    protected void enabledChanged()
+    {
+        datePicker.setEnabled(isEnabled());
+        readOnlyChanged();
+    }
+}</pre>
+      <p>
+        As you can see the class does the 2 way binding. This part
+      </p>
+        <pre class="programlisting">@Override
+protected void valueModelChanged(Object newValue)
+{
+    isSettingText = true;
+    setDatePickerValue((DateTime) newValue);
+    readOnlyChanged();
+    isSettingText = false;
+}</pre>      
+      <p>
+        handles the propagation of changes in the formmodel to the actual component, whereas the property change
+        listener (which in this case is the binder itself, handled by
+      </p>
+      <pre class="programlisting">public void propertyChange(PropertyChangeEvent evt)
+{
+    if (!isSettingText &amp;&amp; !isReadOnly())
+        controlValueChanged(new DateTime(datePicker.getDate()));
+}</pre>
+      <p>
+        The isSettingText flag is there to prevent cyclic calls (formmodel changes component, which change the
+        formmodel, which changes, &#8230;).
+      </p>
+      <p>
+        Binding the control to the value is done through the doBindControl() method. This method is called to wire the
+        component to the binding and prepares all the plumbing to make the binding work.
+      </p>
+      <p>
+        Creating the binder is most of the time the easiest job of the two.
+      </p>
+      <pre class="programlisting">public class JodaTimeDateTimeBinder extends org.springframework.richclient.form.binding.support.AbstractBinder
+{
+    private boolean defaultsSet = false;
+
+    private boolean readOnly = false;
+
+    public JodaTimeDateTimeBinder()
+    {
+        super(DateTime.class);
+    }
+
+    public void setReadOnly(boolean readOnly)
+    {
+        this.readOnly = readOnly;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected JComponent createControl(Map context)
+    {
+        JXDatePicker datePicker = new JXDatePicker();
+        datePicker.setEditor(new DateTextField());
+        return datePicker;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    protected Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context)
+    {
+        if (!defaultsSet)
+        {
+            Map&lt;Object, Object&gt; defaults = UIManager.getDefaults();
+            defaults.put("JXDatePicker.longFormat", "EEE dd/MM/yyyy");
+            defaults.put("JXDatePicker.mediumFormat", "dd/MM/yyyy");
+            defaults.put("JXDatePicker.shortFormat", "dd/MM");
+            defaultsSet = true;
+        }
+        return new JodaTimeDateTimeBinding(formModel, formPropertyPath, ((JXDatePicker) control), this.readOnly);
+    }
+}</pre>
+      <p>
+        The createControl() method creates the control that is to be used in bindings. Every time a binding is done, a
+        new control will be created through this method.
+      </p>
+      <p>
+        The actual binding is done through the doBind(). It will create a binding, do some specific behavior in some
+        case (here we&#8217;re manipulating some UI properties to alter the JXDatePicker&#8217;s appearance.
+      </p>
+    </div>
+  </div>
+  <div class="section" title="6.3.&nbsp;Forms"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="form-binding:forms"></a>6.3.&nbsp;Forms</h2></div></div></div>
+    
+    <p>
+       Now that we have covered the formmodels and the binding, we can now cover the combination of these.
+    </p>
+    <div class="section" title="6.3.1.&nbsp;What is a form"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:what"></a>6.3.1.&nbsp;What is a form</h3></div></div></div>
+      
+      <p>
+        Whereas a binding covers a single property, a form covers an entire object. It can contain many bindings, backed
+        up by a formmodel that wraps the form&#8217;s object.
+      </p>
+    </div>
+    <div class="section" title="6.3.2.&nbsp;Creating a form"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:create"></a>6.3.2.&nbsp;Creating a form</h3></div></div></div>
+      
+      <p>
+        Forms are created for a specific purpose and specific objects. Say we have the following object:
+      </p>
+      <pre class="programlisting">public class TestObject
+{
+    private String field1;
+    private String field2;
+
+    public String getField1()
+    {
+        return field1;
+    }
+
+    public void setField1(String field1)
+    {
+        this.field1 = field1;
+    }
+
+    public String getField2()
+    {
+        return field2;
+    }
+
+    public void setField2(String field2)
+    {
+        this.field2 = field2;
+    }
+}</pre>
+      <p>
+        If we want to make a form for this, we might be using something like this
+      </p>
+      <pre class="programlisting">public class TestForm extends AbstractForm
+{
+    public TestForm()
+    {
+        super(FormModelHelper.createFormModel(new TestObject(), "testForm"));
+    }
+
+    protected JComponent createFormControl()
+    {
+        JPanel content = new JPanel();
+        content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        content.setLayout(new FormLayout(
+                new ColumnSpec[]
+                        {
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC
+                        },
+                new RowSpec[]
+                        {
+                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.LINE_GAP_ROWSPEC,
+                                FormFactory.DEFAULT_ROWSPEC
+                        }
+        ));
+
+        TextComponentBinder binder = new TextComponentBinder();
+
+        Map map = new HashMap();
+
+        content.add(new JLabel("Field 1"), new CellConstraints(1, 1));
+        content.add(binder.bind(getFormModel(), "field1", map).getControl(), new CellConstraints(3, 1));
+        content.add(new JLabel("Field 2"), new CellConstraints(1, 3));
+        content.add(binder.bind(getFormModel(), "field2", map).getControl(), new CellConstraints(3, 3));
+
+        return content;
+    }
+}</pre>
+      <p>
+        This will result in a panel with 2 text fields next to each other, that represent the 2 fields of the object.
+        This form can then be used to show in a view or a dialog. Currently, there is no default view descriptor for
+        forms, since these are mostly contained in views in which they only make up a part of the screen (for example,
+        in combination with a table).
+      </p>
+      <div class="mediaobject"><img src="./images/formsample.png"></div>
+    </div>
+    <div class="section" title="6.3.3.&nbsp;FormBuilders"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:builders"></a>6.3.3.&nbsp;FormBuilders</h3></div></div></div>
+      
+      <p>
+        As shown in the example above, forms can be created by using binders and bindings directly. However, for more
+        elaborate forms, this method is not really usable (or readable for that matter).
+      </p>
+      <p>
+        To tackle this problem, Valkyrie has created form builders. Form builders make form creation a lot
+        easier by providing simple addition of properties, labels and other component to forms. Form builders use the
+        binding factory facilities built into Valkyrie.
+      </p>
+      <p>
+        The binding factory system can set default binders for certain types, so that you don&#8217;t need to worry how
+        something should look. It can also provide aliases for binders defined in the context, so that you can use these
+        swiftly.
+      </p>
+      <p>
+        Building the same form with a form builder would result in
+      </p>
+      <pre class="programlisting">public class TestForm extends AbstractForm
+{
+    public TestForm()
+    {
+        super(FormModelHelper.createFormModel(new TestObject(), "testForm"));
+    }
+
+    protected JComponent createFormControl()
+    {
+        TableFormBuilder builder = new TableFormBuilder(getBindingFactory());
+        builder.add("field1");
+        builder.row();
+        builder.add("field2");
+        JPanel panel = (JPanel) builder.getForm();
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        return panel;
+    }
+}</pre>
+      <p>
+         Much simpler and easy to read, isn&#8217;t it?
+      </p>
+      <p>
+        An additional advantage in using a form builder is that internationalized labels are supported out of the box.
+        In the form builder example no labels are coded, but the form builder will add them automagically.
+      </p>
+      <p>
+        Currently there is a form builder that works with JGoodies FormLayout named TableFormBuilder, and there is also
+        one that supports Java&#8217;s GridbagLayout. You can always create your own form builder by extending
+        AbstractFormBuilder.
+      </p>
+      <p>
+        Starting from version 1.1.0, there is also an advanced form builder included, called FormLayoutFormBuilder. It
+        uses JGoodies' FormLayout and allows more customisation than the other formbuilders.
+      </p>
+    </div>
+    <div class="section" title="6.3.4.&nbsp;Binder selection"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:binder-selection"></a>6.3.4.&nbsp;Binder selection</h3></div></div></div>
+      
+      <p>
+        Valkyrie has a mechanism to automatically choose binders based on property names, types or even the
+        used Swing components. This is done through BinderSelectionStrategy implementations.
+      </p>
+      <p>
+        The standard implementation is the SwingBinderSelectionStrategy, which already has support for String and
+        Boolean type fields.
+      </p>
+      <p>
+        If you want to extend this automatic binder selection, you can register extra mappings for the binding selection.
+      </p>
+      <p>
+        For example, if you want to change support String, Boolean and Date fields, you just need to override
+        the <code class="literal">registerBinders</code> method in your configuration:
+      </p>                                                                           
+      <pre class="programlisting">@Override
+protected void registerBinders(BinderSelectionStrategy binderSelectionStrategy) {
+    binderSelectionStrategy.registerBinderForPropertyType(Integer.class, new NumberBinder(Integer.class));
+}</pre>
+    </div>
+    <div class="section" title="6.3.5.&nbsp;Internationalization"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:i18n"></a>6.3.5.&nbsp;Internationalization</h3></div></div></div>
+      
+      <p>
+        Remember the id you can give to your formmodel? This is the part where it&#8217;s needed. Valkyrie will use
+        the formmodel&#8217;s id to create the key it'll use to look up the label&#8217;s text.
+      </p>
+      <p>
+        Say your formmodel is named "personForm" and you have a field called "firstName". Then in your message bundle
+        you&#8217;ll have to provide something like this:
+      </p>
+      <pre class="programlisting">personForm.firstName.label = First name</pre>
+      <p>
+        If no value is found for a key, Valkyrie will show the key instead. This way you can easily spot
+        missing keys (and don&#8217;t need to guess how they are named).
+      </p>
+    </div>
+    <div class="section" title="6.3.6.&nbsp;Adding forms to forms, a.k.a. child forms"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:child-forms"></a>6.3.6.&nbsp;Adding forms to forms, a.k.a. child forms</h3></div></div></div>
+      
+      <p>
+        Forms are just plain components. They can be added to forms as any other component. However, when creating a
+        child form, you need to make sure the formmodel of the child form is also a child of the formmodel of that
+        form&#8217;s parent. That way, events are carried over correctly.
+      </p>
+      <p>
+        Child forms can also be added by using the addChildForm(&#8230;) method on a form. This way, the formmodels between
+        the two are automatically linked. Bear in mind though, a setFormObject on a parent form does not cause a
+        setFormObject on its children. This is something you&#8217;ll have to handle yourself.
+      </p>
+      <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/admons/warning.png"></td><th align="left">Warning</th></tr><tr><td align="left" valign="top">TODO: example</td></tr></table></div>
+    </div>
+    <div class="section" title="6.3.7.&nbsp;Form validation"><div class="titlepage"><div><div><h3 class="title"><a name="form-binding:forms:validation"></a>6.3.7.&nbsp;Form validation</h3></div></div></div>
+      
+      <p>
+        Form validation is done through the validation subsystem by validating the formmodel (and underlying
+        valuemodels). Form component interceptors such as the OverlayValidationInterceptorFactory can then show the
+        validation errors to the user. For more information on interceptors, read the next chapter. &#8195;
+      </p>
+    </div>
+  </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="views.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="validation.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;Views&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;7.&nbsp;Validation</td></tr></table></div></body></html>

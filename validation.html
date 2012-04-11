@@ -1,0 +1,203 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;7.&nbsp;Validation</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="form-binding.html" title="Chapter&nbsp;6.&nbsp;Forms and binding"><link rel="next" href="exception-handling.html" title="Chapter&nbsp;8.&nbsp;Exception handling"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;7.&nbsp;Validation"><div class="titlepage"><div><div><h2 class="title"><a name="validation"></a>Chapter&nbsp;7.&nbsp;Validation</h2></div></div></div>
+  
+
+  
+
+  <div class="section" title="7.1.&nbsp;Why validation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:why"></a>7.1.&nbsp;Why validation</h2></div></div></div>
+    
+    <p>
+      Users make mistakes. They won&#8217;t admit it, but they do. As GUI developers, our task is to make sure that their
+      mistakes don&#8217;t crash or cripple our system. Input validation can help a great deal with this. Valkyrie
+      supports validators for various input. These are all subclasses of RichValidator.
+    </p>
+  </div>
+  <div class="section" title="7.2.&nbsp;Validation choices"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:choices"></a>7.2.&nbsp;Validation choices</h2></div></div></div>
+    
+    <p>
+      Valkyrie has multiple validation strategies:
+    </p>
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        <p>
+          The built-in rules system
+        </p>
+      </li><li class="listitem">
+        <p>
+          Using a JSR303 Validator
+        </p>
+      </li><li class="listitem">
+        <p>
+          Your own validation framework
+        </p>
+      </li><li class="listitem">
+        <p>
+          A combination of any of the above
+        </p>
+      </li></ul></div>
+  </div>
+  <div class="section" title="7.3.&nbsp;Rule validation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:rule"></a>7.3.&nbsp;Rule validation</h2></div></div></div>
+    
+    <div class="section" title="7.3.1.&nbsp;Using the rules framework"><div class="titlepage"><div><div><h3 class="title"><a name="validation:rule:using"></a>7.3.1.&nbsp;Using the rules framework</h3></div></div></div>
+      
+      <p>
+        Valkyrie has created their own validation framework, which is rule based. A change to a value it put
+        through a number of checks, which are contained within a rule, and results in a success or a validation error.
+      </p>
+      <p>
+        The FormModelHelper can create formmodel with rule validation by providing a RulesSource in one of its factory
+        methods.
+      </p>
+      <p>
+        A rule source contains different rules for a certain object type. If, for example, we want to validate that the
+        field1 property of the TestObject class is never empty, we can create a RulesSource like this:
+      </p>
+      <pre class="programlisting">DefaultRulesSource source = new DefaultRulesSource();
+Rules rules = new Rules(TestObject.class);
+Constraints c = new Constraints();
+rules.add(c.required("field1"));
+source.addRules(rules);</pre>
+    </div>
+    <div class="section" title="7.3.2.&nbsp;Constraints"><div class="titlepage"><div><div><h3 class="title"><a name="validation:rule:contraints"></a>7.3.2.&nbsp;Constraints</h3></div></div></div>
+      
+      <p>
+        Constraints contain the actual logic that checks the values.
+      </p>
+      <p>
+        The Constraints class contains a lot of predefined constraints. Among these you can find
+      </p>
+      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+          <p>
+            Maximum length of string
+          </p>
+        </li><li class="listitem">
+          <p>
+            Maximum value
+          </p>
+        </li><li class="listitem">
+          <p>
+            Not null
+          </p>
+        </li><li class="listitem">
+          <p>
+            Minimum value
+          </p>
+        </li></ul></div>
+      <p>
+        Creating your own constraint is done by implementing the Constraint interface, which consists of one method
+      </p>
+        <pre class="programlisting">public interface Constraint
+{
+    boolean test(Object argument);
+}</pre>
+
+      <p>
+        This constraint will test any object. Most of the time, we&#8217;ll want to split up functionality to check individual
+        properties, so that we can reuse this logic elsewhere.
+      </p>
+      <p>
+        For this, you&#8217;ll need to subclass AbstractPropertyConstraint, which needs a property name. Also, in it&#8217;s test
+        method, it provides an easy way to get values of individual properties.
+      </p>
+      <p>
+        Say we want to create a constraint that checks whether a String property&#8217;s value equals &#8220;RCP&#8221; (silly, but a good
+        example). We&#8217;ll end up with something like this:
+      </p>
+      <pre class="programlisting">public class RcpConstraint extends AbstractPropertyConstraint
+{
+    protected boolean test(final PropertyAccessStrategy domainObjectAccessStrategy)
+    {
+        Object prop = domainObjectAccessStrategy.getPropertyValue(getPropertyName());
+        return !(prop instanceof String) || ((String) prop).equals("RCP");
+    }
+}</pre>
+      <p>
+        This constraint you can then add to your RulesSource for a specific property.
+      </p>
+    </div>
+    <div class="section" title="7.3.3.&nbsp;Validation triggers"><div class="titlepage"><div><div><h3 class="title"><a name="validation:rule:triggers"></a>7.3.3.&nbsp;Validation triggers</h3></div></div></div>
+      
+      <p>
+        Validation on a property is triggered when that property is changed in its valuemodel. Valkyrie will
+        search for rules for that property and execute them.
+      </p>
+    </div>
+    <div class="section" title="7.3.4.&nbsp;Dependent properties"><div class="titlepage"><div><div><h3 class="title"><a name="validation:rule:dependent"></a>7.3.4.&nbsp;Dependent properties</h3></div></div></div>
+      
+      <p>
+        Some rules that are registered for a certain property need to be triggered when another property is changed (for
+        example two dates, for which the first needs to be before the last). Valkyrie supports this by
+        overriding the isDependentOn(&#8230;) method. Out-of-the-box, this method returns true if the parameters equals the
+        property name for which the rule is defined. However, you can add additional properties to this method. Every
+        change in a property that returns true on this method will cause this rule to be checked.
+      </p>
+      <p>
+        An example of this type of rule is the RequiredIfTrue constraint. This constraint can accept a property and
+        another PropertyConstraint. For example, you want the driver&#8217;s license number required if the age of the person
+        is over 21. Creating a constraint for this would be something like this:
+      </p>
+        <pre class="programlisting">Rules rules = new Rules(Person.class);
+rules.add(new RequiredIfTrue("driverLicenseNumber", new PropertyValueConstraint("age",
+                new Constraint()
+                {
+                    public boolean test(final Object argument)
+                    {
+                        return ((Integer) argument).intValue() &gt;= 21;
+                    }
+                })));</pre>
+
+      <p>
+        This constraint will be fired if the value of driverLicenseNumber or age is fired. Mind you though, the
+        validation error will only be reported on the &#8216;main&#8217; property, which is driverLicenseNumber.
+      </p>
+    </div>
+    <div class="section" title="7.3.5.&nbsp;Setting i18n messages for custom rules"><div class="titlepage"><div><div><h3 class="title"><a name="validation:rule:custom-messages"></a>7.3.5.&nbsp;Setting i18n messages for custom rules</h3></div></div></div>
+      
+      <p>
+        Getting the message for a custom rule is done by implementing TypeResolvable in your constraint class. For
+        convenience, there&#8217;s already a constraint class with custom message support called TypeResolvableConstraint.
+        Valkyrie will then use that message in its validation results.
+      </p>
+      <p>
+        When you provide TypeResolvable support in a property constraint, Valkyrie will add the message to the
+        property message (which is also used for the label).
+      </p>
+    </div>
+  </div>
+  <div class="section" title="7.4.&nbsp;JSR validator integration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:hibernate"></a>7.4.&nbsp;JSR validator integration</h2></div></div></div>
+    
+    <p>
+      JSR303 Bean Validation is a well-known framework for validating JavaBeans, of which Hibernate Validator is the reference
+        implementation
+    </p>
+    <p>
+      Simply put, if the object behind a form has JSR303 annotations, by setting the validator to a
+      JSR303Validator, it will validate using those annotations. This validator will check all property-based
+      validations (no @AssertTrue support at the moment yet). You can even turn off validation for certain properties
+      (for example, a code is @NotNull, but in the GUI you&#8217;re allowed to leave it empty because you&#8217;ll generate one on
+      the fly when that&#8217;s the case before sending it to the business layer).
+    </p>
+  </div>
+  <div class="section" title="7.5.&nbsp;Combining validators"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:combining"></a>7.5.&nbsp;Combining validators</h2></div></div></div>
+    
+    <p>
+      Valkyrie also supports combining different validators. For example, AssertTrue validations are currently
+      not checked when using the JSR303 integration. To be able to check those validations, you can
+      transform these into rules in the Valkyrie&#8217;s rules system. By combining the two, you then have the
+      complete validation for your object.
+    </p>
+    <p>
+      Building a composite validator can be done by the following snippet
+    </p>
+    <pre class="programlisting">JSR303Validator jsrValidator = ...
+RulesValidator rulesValidator = ...
+CompositeRichValidator validator = new CompositeRichValidator(new RichValidator[] { jsrValidator, rulesValidator });</pre>
+  </div>
+  <div class="section" title="7.6.&nbsp;Integrating your own or another third-party validation framework"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="validation:own"></a>7.6.&nbsp;Integrating your own or another third-party validation framework</h2></div></div></div>
+    
+    <p>
+      If you want to integrate your own validation framework, you&#8217;ll need to subclass the RichValidator class and wire
+      your validator to produce validation results.&#8195;
+    </p>
+  </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="form-binding.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="exception-handling.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Forms and binding&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Exception handling</td></tr></table></div></body></html>

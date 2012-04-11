@@ -1,0 +1,66 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;12.&nbsp;Wizards</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="interceptors.html" title="Chapter&nbsp;11.&nbsp;Form component interceptors"><link rel="next" href="integration.html" title="Chapter&nbsp;13.&nbsp;Integration with other frameworks"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;12.&nbsp;Wizards"><div class="titlepage"><div><div><h2 class="title"><a name="wizards"></a>Chapter&nbsp;12.&nbsp;Wizards</h2></div></div></div>
+    
+
+    
+
+    <div class="section" title="12.1.&nbsp;Why use wizards"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wizards:why"></a>12.1.&nbsp;Why use wizards</h2></div></div></div>
+        
+        <p>
+            Wizards make flow-like form entry easy. If you have a flow of screens, with the input of the first screen
+            affecting the behavior and possibly layout of one or more the next screens, wizards are an ideal way to accomplish
+            this.
+        </p>
+        <p>
+            Valkyrie has built-in wizard functionality.
+        </p>
+    </div>
+    <div class="section" title="12.2.&nbsp;Creating a wizard"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wizards:create"></a>12.2.&nbsp;Creating a wizard</h2></div></div></div>
+        
+        <p>
+            In Valkyrie, a wizard consists of wizard pages. Every wizard page can determine which page is next or
+            previous and whether the wizard can stop at this page. Wizards are mostly form-based, which means validation is
+            included as well. The wizard framework will not allow a user to change to another screen as long as the current is
+            invalid.
+        </p>
+        <p>
+            Creating a wizard is quite straightforward. You create pages (or even just forms) and add them to a wizard.
+            Creating wizard will most of the time mean subclassing the AbstractWizard class and building a wizard as a
+            separate component.
+        </p>
+        <pre class="programlisting">public class MyWizard extends AbstractWizard
+{
+    private MyForm form1;
+    private MyOtherForm form2;
+
+    public MyWizard()
+    {
+        initializeForms();
+        addForm(form1);
+        addForm(form2);
+    }
+
+    protected boolean onFinish()
+    {
+        form1.commit();
+        form2.commit();
+        doSomeLogic();
+    }
+}</pre>
+        <p>
+            This wizard will make 2 forms and when the wizard completes (the user presses finish), it&#8217;ll do some logic.
+        </p>
+    </div>
+    <div class="section" title="12.3.&nbsp;Showing wizards"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="wizards:show"></a>12.3.&nbsp;Showing wizards</h2></div></div></div>
+        
+        <p>
+            There are various ways for showing a wizard. Out of the box, Valkyrie provides you with a dialog class that
+            can show a wizard (which most of the time is the way you&#8217;ll show a wizard).
+        </p>
+        <p>
+            You can off course create a view class for your wizard, so you can display your wizard as a view too. To implement
+            this, take a look at WizardDialog.
+        </p>
+    </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="interceptors.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="integration.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;11.&nbsp;Form component interceptors&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;13.&nbsp;Integration with other frameworks</td></tr></table></div></body></html>

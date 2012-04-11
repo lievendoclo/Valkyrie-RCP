@@ -1,0 +1,352 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;8.&nbsp;Exception handling</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="validation.html" title="Chapter&nbsp;7.&nbsp;Validation"><link rel="next" href="security.html" title="Chapter&nbsp;9.&nbsp;Security"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;8.&nbsp;Exception handling"><div class="titlepage"><div><div><h2 class="title"><a name="exception-handling"></a>Chapter&nbsp;8.&nbsp;Exception handling</h2></div></div></div>
+  
+
+  
+
+  <div class="section" title="8.1.&nbsp;Why not just use try and catch?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="exception-handling:why"></a>8.1.&nbsp;Why not just use try and catch?</h2></div></div></div>
+    
+
+    <p>Most exceptions that are thrown are unexpected: we don't expect them to happen (especially during production)
+      such as:
+    </p>
+
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        <p>
+          <code class="literal">NullPointerException</code>: Didn't I double checked all my source code to avoid NPE's?
+        </p>
+      </li><li class="listitem">
+        <p>
+          <code class="literal">CvsParserException</code>: Why did the user pick a html file when I asked him for a CVS file?
+        </p>
+      </li><li class="listitem">
+        <p>
+          <code class="literal">IDidNotKnowThisExistedRuntimeException</code>: What the ...?
+        </p>
+      </li></ul></div>
+
+    <p>And if you except some of them, you ussually can't really fix the problem, just deal with it:</p>
+
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        <p>Log the exception.</p>
+      </li><li class="listitem">
+        <p>Notify the user that whatever he tried didn't work, preferably with an not-technical, exception-specific
+          explanation.
+        </p>
+      </li><li class="listitem">
+        <p>Either shutdown the application or allow the user to continue (and try again).</p>
+      </li></ul></div>
+
+    <p>You could use try-catch during every user action:</p>
+
+    <pre class="programlisting">protected boolean onFinish() {
+    try {
+        form.getFormModel().commit();
+    // ...
+    getApplicationContext().publishEvent(new LifecycleApplicationEvent(eventType, getEditingContact()));
+    return true;
+    } catch (Throwable throwable) {
+        handleException(throwable);
+    }
+}</pre>
+
+    <p>But this is tedious and error prone:</p>
+
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        <p>It's easy to forget to try catch some code, which makes the exception escape to the top layer exception
+          handler.
+        </p>
+      </li><li class="listitem">
+        <p>You could unwillingly eat the exception, not logging it:</p>
+        <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+            <p>If you handle an exception, but forget to log it and/or show it to the user.</p>
+          </li><li class="listitem">
+            <p>If you throw an exception in the catch or finally part, only the last exception bubbles up,
+              effectively hiding the real exception.
+            </p>
+          </li></ul></div>
+
+        <p>In production, this leads to discussions where the user is sure
+          he pushed the button (which he did in this case) and the programmer is
+          sure the user didn't because the system didn't report anything and
+          nothing has changed. If you notice that while you are fixing a issue,
+          an exception is eaten (making it hard to identify the original issue),
+          create a new issue because exceptions are eaten and fix that
+          first.
+        </p>
+      </li><li class="listitem">
+        <p>You are in danger to handle the same exception on 2 different
+          layers, effectively logging it or notifing the user twice.
+        </p>
+      </li><li class="listitem">
+        <p>In some layers or parts of the application, it might not be
+          clear if you need to notify the user (and which user) through a swing
+          dialog or JSP or webservice response.
+        </p>
+      </li></ul></div>
+
+    <p>Valkyrie's exception handling system uses the top layer
+      exception handling. It expects that all other layers let the exception
+      bubble up.
+    </p>
+  </div>
+
+  <div class="section" title="8.2.&nbsp;Built-in exception handlers"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="exception-handling:builtin"></a>8.2.&nbsp;Built-in exception handlers</h2></div></div></div>
+    
+
+    <p>The standard exception handler in Valkyrie is a simple delegating handler which delegates exception handling
+        for all exception types to a handler that shows a <code class="classname">JXErrorDialog</code>.
+    </p>
+
+    <p>However, you can use any of the following built-in handlers:</p>
+
+    <div class="section" title="8.2.1.&nbsp;SilentExceptionHandler"><div class="titlepage"><div><div><h3 class="title"><a name="d4e625"></a>8.2.1.&nbsp;SilentExceptionHandler</h3></div></div></div>
+      
+
+      <p>Logs a throwable on an error level but does not notify the user in any way. Normally
+        it is a bad practice not to notify the user if something goes
+        wrong.
+      </p>
+    </div>
+
+    <div class="section" title="8.2.2.&nbsp;MessagesDialogExceptionHandler"><div class="titlepage"><div><div><h3 class="title"><a name="d4e628"></a>8.2.2.&nbsp;MessagesDialogExceptionHandler</h3></div></div></div>
+      
+
+      <p>Shows the exception in a dialog to the user (as well as logging
+        it). You can set a log level and the icon of the dialog depends on that
+        log level. The shown dialog has a caption (= dialog title) and
+        description (= dialog content), which are fetched from the i18n messages
+        files. There are 2 ways to resolve those messages: static or dynamic
+        (default).
+      </p>
+
+      <p>You can statically set the title and description by setting the
+        <code class="literal">messagesKey</code>
+        property. However, it's a lot more
+        powerfull to use the default dynamic behaviour based on the class of the
+        exception. For example if a
+        <code class="literal">NumberFormatException</code>
+        is
+        thrown, it will first look for these i18n keys:
+      </p>
+
+      <pre class="programlisting">java.lang.NumberFormatException.caption=Not a number
+java.lang.NumberFormatException.description=You did not enter a a valid number.\nPlease enter a valid number.</pre>
+
+      <p>If these messages keys don't exist, it will fall back to the
+        parent class of<code class="literal">NumberFormatException</code>, which is
+        <code class="literal">IllegalArgumentException</code>:
+      </p>
+
+      <pre class="programlisting">java.lang.IllegalArgumentException.caption=...
+java.lang.IllegalArgumentException.description=...</pre>
+
+      <p>It will continue to fall back up the chain, untill it reaches
+        <code class="literal">Throwable</code>. This allows you to direct all unexpected
+        exceptions (for example
+        <code class="literal">IDidNotKnowThisExistedRuntimeException</code>) to a
+        <code class="literal">MessagesDialogExceptionHandler</code>
+        that logs them as an
+        error and shows a generic message. You can even use
+        <code class="literal">{0}</code>
+        in your i18n message to show the
+        <code class="literal">exception.getMessage()</code>
+        in the description:
+      </p>
+
+      <pre class="programlisting"># Double quotes(") need to be escaped (\"), single quotes (') always seem to break the replacing
+of {0}.
+java.lang.RuntimeException.caption = Unexpected general bug
+java.lang.RuntimeException.description = \
+The application experienced an unexpected bug,\n\
+due to a programming error.\n\
+\n\
+The application is possibly in an inconsistent state.\n\
+It is recommended to reboot the application.\n\
+\n\
+The exact bug is:\n\
+{0}\n\
+\n\
+Please report this bug.
+
+java.lang.Error.caption = Unexpected serious system failure
+java.lang.Error.description = \
+A serious system failure occured.\n\
+\n\
+The application is possibly in an inconsistent state.\n\
+Reboot the application.\n\
+\n\
+The exact bug is:\n\
+{0}\n\
+\n\
+Please report this bug.</pre>
+
+      <p>Note that, although this dynamic system is pretty powerfull and
+        avoids a lot of boilerplate, it's usually not a replacement for
+        <code class="literal">DelegatingExceptionHandler</code>, because it doesn't allow
+        you to assign different log levels, etc.
+      </p>
+
+      <p>You can set a shutdown policy on a dialog exception
+        handler:
+      </p>
+
+     <pre class="programlisting">handler.setShutdownPolicy(ShutdownPolicy.ASK);</pre>
+
+      <p>This allows you to optionally enforce or propose a
+        <code class="literal">System.exit(1)</code>.
+      </p>
+    </div>
+
+    <div class="section" title="8.2.3.&nbsp;JSR303ValidatorDialogExceptionHandler"><div class="titlepage"><div><div><h3 class="title"><a name="d4e652"></a>8.2.3.&nbsp;JSR303ValidatorDialogExceptionHandler</h3></div></div></div>
+      
+
+      <p>A special exception handler which can only handle an
+        <code class="literal">InvalidStateException</code>
+        thrown by a JSR303 validator.
+        It shows the failed validations to a user in a list in a dialog. In most
+        cases it's inferiour to the
+        <code class="literal">JSR303alidator</code>
+        which validates before the user presses the commit button. But because
+        the latter forces you to hand code<code class="literal">@AssertTrue</code>'s and
+        it could be working on stale client-side data, it's actually a very nice
+        backup to also configure this exception handler as a delegate when encountering an <code class="classname">InvalidStateException</code>.
+      </p>
+
+    </div>
+
+    <div class="section" title="8.2.4.&nbsp;Custom exception handler"><div class="titlepage"><div><div><h3 class="title"><a name="d4e659"></a>8.2.4.&nbsp;Custom exception handler</h3></div></div></div>
+      
+
+      <p>You can also extend
+        <code class="literal">AbstractLoggingExceptionHandler</code>
+        and implement this
+        method:
+      </p>
+
+        <pre class="programlisting">public void notifyUserAboutException(Thread thread, Throwable throwable) {
+    // ...
+}</pre>
+
+    </div>
+  </div>
+
+  <div class="section" title="8.3.&nbsp;Picking the right exception handler for the right exception"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d4e664"></a>8.3.&nbsp;Picking the right exception handler for the right exception</h2></div></div></div>
+    
+
+    <p>There are bunch of build-in exception handlers, but ussually there
+      isn't one exception handler that fits alls exceptions. A
+      <code class="literal">DelegatingExceptionHandler</code>
+      allows you to delegate an
+      exception to the right exception handler. It accepts a delegate list and
+      traverses that list in order. The first delegate that can handle the
+      exception, has to handle the exception and the rest of the delegate list
+      is ignored.
+    </p>
+
+    <p>For example, here we configure authentication and authorization
+      exceptions to a WARN<code class="literal">MessagesDialogExceptionHandler</code>,
+      JSR303 validator exceptions to an INFO
+      <code class="literal">JSR303ValidatorDialogExceptionHandler</code>
+      and the rest
+      to an ERROR<code class="literal">JXErrorDialogExceptionHandler</code> which asks whether
+      a shutdown is wanted.
+    </p>
+
+    <pre class="programlisting">@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    securityHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.WARN);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.&lt;Class&lt;? extends Throwable&gt;&gt;newArrayList(AuthenticationException.class),
+                    securityHandler));
+    JSR303ValidatorDialogExceptionHandler validationHandler = new JSR303ValidatorDialogExceptionHandler();
+    validationHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.INFO);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.&lt;Class&lt;? extends Throwable&gt;&gt;newArrayList(ConstraintViolationException.class),
+                    validationHandler));
+    JXErrorDialogExceptionHandler generalHandler = new JXErrorDialogExceptionHandler();
+    generalHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.ERROR);
+    generalHandler.setShutdownPolicy(ShutdownPolicy.ASK);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.&lt;Class&lt;? extends Throwable&gt;&gt;newArrayList(Throwable.class),
+                    validationHandler));
+    return handler;
+}</pre>
+
+    <div class="section" title="8.3.1.&nbsp;SimpleExceptionHandlerDelegate"><div class="titlepage"><div><div><h3 class="title"><a name="d4e673"></a>8.3.1.&nbsp;SimpleExceptionHandlerDelegate</h3></div></div></div>
+      
+
+      <p>Processes the exception if it is an instance of throwableClass or
+        the throwableClassList.
+      </p>
+    </div>
+
+    <div class="section" title="8.3.2.&nbsp;ChainInspectingExceptionHandlerDelegate"><div class="titlepage"><div><div><h3 class="title"><a name="d4e676"></a>8.3.2.&nbsp;ChainInspectingExceptionHandlerDelegate</h3></div></div></div>
+      
+
+      <p>In most cases this class is overkill and
+        SimpleExceptionHandlerDelegate with a purger will suffice. However if
+        those don't suffice, read the javadoc of this class.
+      </p>
+    </div>
+
+    <div class="section" title="8.3.3.&nbsp;ExceptionPurger"><div class="titlepage"><div><div><h3 class="title"><a name="d4e679"></a>8.3.3.&nbsp;ExceptionPurger</h3></div></div></div>
+      
+
+      <p>An exception purger allows you to cream off wrapper exceptions.
+        This allows you to handle a chained exception in the chain of the
+        uncaught exception, instead of the uncaught exception itself. Almost all
+        exception handlers and delegate's support the use of a purger.
+        <code class="literal">DefaultExceptionPurger</code>
+        supports 2 ways to identify
+        the depth to cream off: include or exclude based.
+      </p>
+
+      <p>A chained exception of the type in the
+        <code class="literal">includeThrowableClassList</code>
+        is stripped from all it's
+        wrapper exceptions and handled by the exception handler or evaluated by
+        the delegate. For example, we want to handle every
+        <code class="literal">SQLException</code>
+        even if
+        it's wrapped:
+      </p>
+
+      <pre class="programlisting">@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    SimpleExceptionHandlerDelegate handlerDelegate = new SimpleExceptionHandlerDelegate(Lists.&lt;Class&lt;? extends Throwable&gt;&gt;newArrayList(SQLException.class),
+            securityHandler);
+    handlerDelegate.setExceptionPurger(new DefaultExceptionPurger(SQLException.class, null));
+    handler.getDelegateList().add(handlerDelegate);
+    return handler;
+}</pre>
+
+      <p>A chained exception of the type in the
+        <code class="literal">excludeThrowableClassList</code>
+        is stripped together with
+        all it's wrapper exceptions and it's cause is handled by the exception
+        handler or evaluated by the delegate. For example the server wraps all
+        exceptions in an annoying, useless
+        <code class="literal">WrappingServiceCallException</code>
+        and we want to get rid
+        of it:
+      </p>
+
+      <pre class="programlisting">@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    SimpleExceptionHandlerDelegate handlerDelegate = new SimpleExceptionHandlerDelegate(Lists.&lt;Class&lt;? extends Throwable&gt;&gt;newArrayList(Throwable.class),
+            securityHandler);
+    handlerDelegate.setExceptionPurger(new DefaultExceptionPurger(null, WrappingServiceException.class));
+    handler.getDelegateList().add(handlerDelegate);
+    return handler;
+}</pre>
+    </div>
+  </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="validation.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="security.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;7.&nbsp;Validation&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;9.&nbsp;Security</td></tr></table></div></body></html>

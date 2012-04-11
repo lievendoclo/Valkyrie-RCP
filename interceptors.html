@@ -1,0 +1,208 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;11.&nbsp;Form component interceptors</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="widgets.html" title="Chapter&nbsp;10.&nbsp;Widgets"><link rel="next" href="wizards.html" title="Chapter&nbsp;12.&nbsp;Wizards"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;11.&nbsp;Form component interceptors"><div class="titlepage"><div><div><h2 class="title"><a name="interceptors"></a>Chapter&nbsp;11.&nbsp;Form component interceptors</h2></div></div></div>
+    
+
+    
+
+    <div class="section" title="11.1.&nbsp;Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="interceptors:intro"></a>11.1.&nbsp;Introduction</h2></div></div></div>
+        
+        <p>
+            Form component interceptors provide a way to intercept and add extra functionality to input components on a form.
+        </p>
+        <p>
+            The application context specifies the list of interceptors to attach to controls constructed by the platform. This
+            allows for a declarative model for specifying "additional" functionality to be added to various components.
+        </p>
+        <p>
+            Examples are interceptors to overlay validation error images and background color changes, provide popup menus in
+            text fields, and autocompletion (as you type) for comboboxes.
+        </p>
+    </div>
+
+    <div class="section" title="11.2.&nbsp;Creating your own interceptor"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="interceptors:create"></a>11.2.&nbsp;Creating your own interceptor</h2></div></div></div>
+        
+        <p>
+            To create your own <code class="classname">FormComponentInterceptor</code>, you have to provide both a FormComponentInterceptor and a
+            <code class="classname">FormComponentInterceptorFactory</code> implementation.
+        </p>
+        <pre class="programlisting">public interface FormComponentInterceptor {
+    public void processLabel(String propertyName, JComponent label);
+
+    public void processComponent(String propertyName, JComponent component);
+}</pre>
+    </div>
+
+    <div class="section" title="11.3.&nbsp;Configuration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="interceptors:config"></a>11.3.&nbsp;Configuration</h2></div></div></div>
+        
+        <p>
+            The configuration of the interceptors in the application context is done by defining the
+            <code class="classname">FormComponentInterceptorFactory</code> in the <code class="literal">formComponentInterceptorFactory</code> method.
+        </p>
+        <p>
+            This is the standard configuration:
+        </p>
+        <pre class="programlisting">@Bean
+public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+    ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+    List&lt;FormComponentInterceptorFactory&gt; factories = Lists.newArrayList();
+    factories.add(new ColorValidationInterceptorFactory());
+    factories.add(new OverlayValidationInterceptorFactory());
+    factories.add(new ShowCaptionInStatusBarInterceptorFactory());
+    factories.add(new ShowDescriptionInStatusBarInterceptorFactory());
+    factory.setInterceptorFactories(factories);
+    return factory;
+}</pre>
+    </div>
+
+    <div class="section" title="11.4.&nbsp;Built-in interceptors"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="interceptors:builtin"></a>11.4.&nbsp;Built-in interceptors</h2></div></div></div>
+        
+        <p>
+            There are a number of built-in interceptors provided with the framework. We&#8217;ll quickly explain them.
+        </p>
+
+        <div class="section" title="11.4.1.&nbsp;Error overlay image"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:erroroverlay"></a>11.4.1.&nbsp;Error overlay image</h3></div></div></div>
+            
+            <p>
+                There are a number of built-in interceptors provided with the framework. We&#8217;ll quickly explain them.
+            </p>
+            --- IMAGE ---
+            <p>
+                This class has been specifically made to work with Valkyrie&#8217;s validation framework and will show the
+                errors coming from that framework
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new OverlayValidationInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.2.&nbsp;Error background color"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:errorbackground"></a>11.4.2.&nbsp;Error background color</h3></div></div></div>
+            
+            <p>
+                Changes the background color of the form component when an invalid value is entered. The color of the background
+                can be set through a property.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new ColorValidationInterceptorFactory()</pre>
+            --- IMAGE ---
+        </div>
+
+        <div class="section" title="11.4.3.&nbsp;Text editing popup (undo, copy, paste, ...)"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:textediting"></a>11.4.3.&nbsp;Text editing popup (undo, copy, paste, ...)</h3></div></div></div>
+            
+            <p>
+                Adds more advanced text editing functionality to text components. It adds a popup menu with
+                "undo/redo/cut/copy/paste/select all" items. It also adds the standard keyboard accelerators for these commands
+                to the component.
+            </p>
+            --- IMAGE ---
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new TextComponentPopupInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.4.&nbsp;Combobox auto completion"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:combobox"></a>11.4.4.&nbsp;Combobox auto completion</h3></div></div></div>
+            
+            <p>
+                Adds auto completion to a combobox.
+            </p>
+            --- IMAGE ---
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new ComboBoxAutoCompletionInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.5.&nbsp;Overlay image indicating dirty value"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:dirty"></a>11.4.5.&nbsp;Overlay image indicating dirty value</h3></div></div></div>
+            
+            <p>
+                Shows an image in the top left corner of the component if the contents of the component has been changed by the
+                user. The image also has a tooltip showing the original value. To the right of the image is a small revert
+                button. Pushing this button restores the original value in the component
+            </p>
+            --- IMAGE ---
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new DirtyIndicatorInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.6.&nbsp;Select all text on focus"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:selectall"></a>11.4.6.&nbsp;Select all text on focus</h3></div></div></div>
+            
+            <p>
+                Selects all the text in text fields and spinners when they receive focus.
+            </p>
+            --- IMAGE ---
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new SelectAllFormComponentInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.7.&nbsp;Setting the caret to the beginning of the field"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:caretbeginning"></a>11.4.7.&nbsp;Setting the caret to the beginning of the field</h3></div></div></div>
+            
+            <p>
+                If the text is set in a text component, the caret position is set to the end of the text. This means the
+                beginning of the text will not be visible if the text is too long to fit in the text component.
+            </p>
+            <p>
+                This FormComponentInterceptor "fixes" this behavior, and sets the caret to position 0.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new TextCaretFormComponentInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.8.&nbsp;Showing a tooltip"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:tooltip"></a>11.4.8.&nbsp;Showing a tooltip</h3></div></div></div>
+            
+            <p>
+                If a form property has a caption defined in the messages.properties file it will be used as the tooltip for the
+                form component.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new ToolTipInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.9.&nbsp;Changing the rendering of a checkbox"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:checkbox"></a>11.4.9.&nbsp;Changing the rendering of a checkbox</h3></div></div></div>
+            
+            <p>
+                Allows customization on how a CheckBox form property is rendered, for example whether the label needs to be
+                shown.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            new CheckBoxFormComponentInterceptorFactory()
+        </div>
+
+        <div class="section" title="11.4.10.&nbsp;Showing the caption of the currently focussed component in the statusbar"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:captionstatusbar"></a>11.4.10.&nbsp;Showing the caption of the currently focussed component in the statusbar</h3></div></div></div>
+            
+            <p>
+                Shows the caption of the form component in the statusbar when the component is focused.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new ShowCaptionInStatusBarInterceptorFactory()</pre>
+        </div>
+
+        <div class="section" title="11.4.11.&nbsp;Showing the description of the currently focussed component in the statusbar"><div class="titlepage"><div><div><h3 class="title"><a name="interceptors:builtin:descriptionstatusbar"></a>11.4.11.&nbsp;Showing the description of the currently focussed component in the statusbar</h3></div></div></div>
+            
+            <p>
+                Shows the description of the form component in the statusbar when the component is focused.
+            </p>
+            <p>
+                To configure this interceptor, you need to use this interceptor factory:
+            </p>
+            <pre class="programlisting">new ShowDescriptionInStatusBarInterceptorFactory()</pre>
+        </div>
+
+    </div>
+
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="widgets.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="wizards.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;10.&nbsp;Widgets&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;12.&nbsp;Wizards</td></tr></table></div></body></html>

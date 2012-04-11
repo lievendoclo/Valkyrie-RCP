@@ -1,0 +1,258 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;3.&nbsp;Applications</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="basics.html" title="Chapter&nbsp;2.&nbsp;Basics"><link rel="next" href="commands.html" title="Chapter&nbsp;4.&nbsp;Commands"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;3.&nbsp;Applications"><div class="titlepage"><div><div><h2 class="title"><a name="applications"></a>Chapter&nbsp;3.&nbsp;Applications</h2></div></div></div>
+    
+
+    
+
+    <div class="section" title="3.1.&nbsp;Application"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:application"></a>3.1.&nbsp;Application</h2></div></div></div>
+        
+        <p>
+            An application in Valkyrie is comprised of 2 things: a lifecycle advisor (how it should behave) and a
+            descriptor (what does it contain).
+        </p>
+        <p>
+            The
+            <code class="classname">Application</code>
+            class is also the class that starts the actual application: it calls the startup hooks, and shows
+            the initial window and view through the<code class="classname">ApplicationLifecycleAdvisor</code>.
+        </p>
+    </div>
+
+    <div class="section" title="3.2.&nbsp;Application lifecycle"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:lifecycle"></a>3.2.&nbsp;Application lifecycle</h2></div></div></div>
+        
+        <p>
+            The lifecycle in a Valkyrie application is what it says it is. It&#8217;s the behavior of the application
+            through the time when it is running. What the application should do at startup, what it needs to show, how it
+            should behave when it&#8217;s being closed&#8230; these are all aspects of the application lifecycle.
+        </p>
+        <p>
+            In Valkyrie, an ApplicationLifecycleAdvisor manages the lifecycle of the application. The default
+            <code class="classname">ApplicationLifecycleAdvisor</code>
+            handles the creation of the command context, what view should be showed initially, which command config class should be used for the menu, etc&#8230;
+            The default implementation is as follows:
+        </p>
+        <pre class="programlisting">@Bean
+public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
+    DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
+    advisor.setCommandConfigClass(getCommandConfigClass());
+    advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(emptyViewDescriptor()));
+    return advisor;
+}</pre>
+        <p>
+            If you want to create your own
+            <code class="classname">ApplicationLifeCycleAdvisor</code>, you need to subclass the default implementation or implement the entire
+            interface. Then you need to override the
+            <code class="literal">applicationLifecycleAdvisor</code>
+            method in your application config to return your implementation.
+        </p>
+    </div>
+
+    <div class="section" title="3.3.&nbsp;Hooking into a lifecycle"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:hooking"></a>3.3.&nbsp;Hooking into a lifecycle</h2></div></div></div>
+        
+        <p>
+            In the application lifecycle you can intervene on points within startup, shutdown or other events such as opening
+            a window. These hooks are present in the
+            <code class="classname">ApplicationLifecycleAdvisor</code>
+            and can for example be used to ask data
+            needed before startup.
+        </p>
+        <p>
+            You could also stop an application from exiting (by showing a confirmation dialog for example).
+        </p>
+    </div>
+
+    <div class="section" title="3.4.&nbsp;Example: adding login functionality"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:example-login"></a>3.4.&nbsp;Example: adding login functionality</h2></div></div></div>
+        
+        <p>
+            Logging into an application is quite common behavior. You&#8217;ll probably want to show the login dialog before showing
+            your application window (you might want to personalize the application window based on who has logged in).
+        </p>
+        <p>In Valkyrie, this means after the commands have been created (which is one step before the window
+            gets created and showed). In this example, we&#8217;ll let a imaginary
+            <code class="classname">LoginHandler</code>
+            class check whether we can login or
+            not. For the record, basic login functionality has been included into Valkyrie, but this would bring us
+            out of scope for this example. We&#8217;ll discuss the security features later.
+        </p>
+        <p>Assuming our handler will show a login screen and handle the login logic, we only need to hook it into the
+            custom application lifecycle advisor:
+        </p>
+        <pre class="programlisting">public class LoginLifecycleAdvisor extends DefaultApplicationLifecycleAdvisor
+{
+    private LoginHandler handler;
+
+    public void setHandler(final LoginHandler handler)
+    {
+        this.handler = handler;
+    }
+
+    public void onCommandsCreated(final ApplicationWindow window)
+    {
+        super.onCommandsCreated(window);
+        handler.doLogin();
+    }
+}</pre>
+        <p>
+            As you can see, this is quite easy. Of course you&#8217;d want to know when a user is already logged in and just creates
+            a new application window (which also triggers this method), so it doesn&#8217;t show this login window again, something
+            like holding a security context within your application.
+        </p>
+    </div>
+
+    <div class="section" title="3.5.&nbsp;Other possible uses"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:other-uses"></a>3.5.&nbsp;Other possible uses</h2></div></div></div>
+        
+        <p>
+            Lifecycle advisor subclassing can also be handy in other aspects. Any Valkyrie application knows which
+            lifecycle advisor is used for its execution. You can obtain this by autowiring the
+            <code class="classname">ApplicationLifecycleAdvisor</code>
+            in any
+            Spring managed class.
+        </p>
+        <p>
+            You could for example create an application window factory that delivers different application window applications
+            based on which lifecycle advisor was used:
+        </p>
+        <pre class="programlisting">public class DefaultApplicationWindowFactory implements ApplicationWindowFactory
+{
+    private static final Log logger = LogFactory.getLog(DefaultApplicationWindowFactory.class);
+
+    @Autowired
+    private ApplicationLifecycleAdvisor lifecycleAdvisor;
+
+    public ApplicationWindow createApplicationWindow()
+    {
+        if (lifecycleAdvisor instanceof OutlookNavigatorApplicationLifecycleAdvisor)
+        {
+             return OutlookNavigatorApplicationWindowFactory.create();
+        }
+        else if (lifecycleAdvisor instanceof TaskPaneNavigatorApplicationLifecycleAdvisor)
+        {
+             return TaskPaneNavigatorApplicationWindowFactory.create();
+        }
+        return new DefaultApplicationWindow();
+    }
+
+    static class TaskPaneNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create(boolean onlyOneExpanded)
+        {
+            ...
+        }
+    }
+
+    static class OutlookNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create()
+        {
+            ...
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="section" title="3.6.&nbsp;Playing with the status bar"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:statusbar"></a>3.6.&nbsp;Playing with the status bar</h2></div></div></div>
+        
+        <p>
+            Changing the status bar can be done by calling the statusbar through the lifecycle advisor:
+        </p>
+        <pre class="programlisting">lifecycleAdvisor.getStatusBar();</pre>
+        <p>
+            Again, if you&#8217;re creating your own lifecycle advisor, you&#8217;re able to override this method and perhaps supply your
+            own status bar implementation.
+        </p>
+        <p>
+            The standard status bar supports:
+        </p>
+        <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+                <p>
+                    Displaying messages, normal messages as well as errors
+                </p>
+            </li><li class="listitem">
+                <p>
+                    Containing a progress monitor to track long-running processing (and cancelling them)
+                </p>
+            </li></ul></div>
+        <p>
+            Your status bar may hold a clock, the current logged in user, the connected server, &#8230;
+        </p>
+        <p>
+            For example, if you&#8217;d want to add a clock to your status bar, you could create your own status bar implementation
+            like this:
+        </p>
+        <pre class="programlisting">public class DynamicStatusBar extends DefaultStatusBar
+{
+    protected JComponent createControl()
+    {
+        JPanel statusBar;
+
+        FormLayout layout = new FormLayout(
+                new ColumnSpec[]
+                        {
+                                FormFactory.GLUE_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                        },
+                new RowSpec[]
+                        {
+                                FormFactory.DEFAULT_ROWSPEC
+                        });
+
+        statusBar = new JPanel(layout);
+
+        StatusBarProgressMonitor progressMonitor = createStatusBarProgressMonitor();
+
+        statusBar.add(createMessageLabel(), new CellConstraints(1, 1));
+        statusBar.add(createClock(), new CellConstraints(3, 1));
+        statusBar.add(progressMonitor.getControl(), new CellConstraints(5, 1));
+
+        progressMonitor.getControl().setPreferredSize(new Dimension(200, 17));
+
+        statusBar.setBorder(new ShadowBorder());
+
+        return statusBar;
+    }
+
+    private JLabel createClock()
+    {
+        final JLabel label = new JLabel();
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while (true)
+                {
+                    DateFormatter formatter = new DateFormatter(DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                              DateFormat.MEDIUM));
+                    final String text = formatter.formatValue(new Date());
+                    label.setText(text);
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+        });
+        t.start();
+        return label;
+    }
+}</pre>
+        <p>
+            This will result in a status bar like this:
+        </p>
+        <div class="mediaobject"><img src="./images/statusbar.png"></div>
+    </div>
+
+    <div class="section" title="3.7.&nbsp;Application windows"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="applications:windows"></a>3.7.&nbsp;Application windows</h2></div></div></div>
+        
+        <p>
+            TODO (explain ApplicationWindowFactory, creating new ApplicationWindow implementations, ...)
+        </p>
+    </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="basics.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="commands.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;2.&nbsp;Basics&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;4.&nbsp;Commands</td></tr></table></div></body></html>

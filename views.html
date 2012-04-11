@@ -1,0 +1,126 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;Views</title><link rel="stylesheet" href="css/html.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="up" href="index.html" title="Valkyrie RCP Reference Guide"><link rel="prev" href="commands.html" title="Chapter&nbsp;4.&nbsp;Commands"><link rel="next" href="form-binding.html" title="Chapter&nbsp;6.&nbsp;Forms and binding"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div xmlns:fo="http://www.w3.org/1999/XSL/Format" id="top"><div id="header"><div class="projectlogo"><a href="./"><img class="logoImage" src="images/logo.png" alt="Springfuse" border="0"></a></div></div></div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="mhSpacer"></div><div class="chapter" title="Chapter&nbsp;5.&nbsp;Views"><div class="titlepage"><div><div><h2 class="title"><a name="views"></a>Chapter&nbsp;5.&nbsp;Views</h2></div></div></div>
+    
+
+    
+
+    <div class="section" title="5.1.&nbsp;What is a view"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:what"></a>5.1.&nbsp;What is a view</h2></div></div></div>
+        
+        <p>
+            A view is a visual representation of concepts within your application. Everything you show in the main application
+            window is contained within a view.
+        </p>
+        <p>
+            There can be multiple views on an application page, but only one view is active at a time. View instances
+            encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor,
+            which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an
+            application with multiple windows. In other words, a single view instance is never shared between windows.
+        </p>
+    </div>
+
+    <div class="section" title="5.2.&nbsp;View descriptors"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:descriptors"></a>5.2.&nbsp;View descriptors</h2></div></div></div>
+        
+        <p>
+            There can be multiple views on an application page, but only one view is active at a time. View instances
+            encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor,
+            which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an
+            application with multiple windows. In other words, a single view instance is never shared between windows.
+        </p>
+        <p>
+            View descriptors produce the page components (in this case views) that will be shown to the users.
+        </p>
+    </div>
+
+    <div class="section" title="5.3.&nbsp;Creating views"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:create"></a>5.3.&nbsp;Creating views</h2></div></div></div>
+        
+        <p>
+            Creating a new view is done through subclassing the AbstractView class. This class mandates you to implement one
+            method: createControl. In our example, the initial view class looks like this:
+        </p>
+        <pre class="programlisting">public class InitialView extends AbstractView
+{
+    // omitted for brevity
+
+	protected JComponent createControl()
+        {
+		// In this view, we're just going to use standard Swing to place a
+		// few controls.
+
+		// The location of the text to display has been set as a Resource in the
+		// property descriptionTextPath. So, use that resource to obtain a URL
+		// and set that as the page for the text pane.
+
+		JTextPane textPane = new JTextPane();
+		JScrollPane spDescription = getComponentFactory().createScrollPane(textPane);
+		try {
+			textPane.setPage(getDescriptionTextPath().getURL());
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Unable to load description URL", e);
+		}
+
+		JLabel lblMessage = getComponentFactory().createLabel(getFirstMessage());
+		lblMessage.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		JPanel panel = getComponentFactory().createPanel(new BorderLayout());
+		panel.add(spDescription);
+		panel.add(lblMessage, BorderLayout.SOUTH);
+
+		return panel;
+	}
+}</pre>
+    </div>
+
+    <div class="section" title="5.4.&nbsp;Creating a view descriptor for a view"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:create-descriptor"></a>5.4.&nbsp;Creating a view descriptor for a view</h2></div></div></div>
+        
+        <p>
+            To show a view on screen, you need to create a view descriptor. Creating a descriptor is easy based on the view. Every view can
+            gas a view descriptor, creating it if needed.
+        </p>
+        <pre class="programlisting">
+            <pre class="programlisting">view.getDescriptor();</pre>
+        </pre>
+    </div>
+
+    <div class="section" title="5.5.&nbsp;Showing the view in the application"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:show-view"></a>5.5.&nbsp;Showing the view in the application</h2></div></div></div>
+        
+        <p>
+            Setting the current view is done by using a ShowViewCommand. This command sets the view of the application window
+            in which the command is located.
+        </p>
+        <p>
+            To create such a command, use the following definition:
+        </p>
+        <pre class="programlisting">new ShowViewCommand("myId", myView.getDescriptor());</pre>
+        <p>
+            You can now use this command in your menu, or create a button in another view to switch to the defined view.
+        </p>
+    </div>
+
+    <div class="section" title="5.6.&nbsp;Changing the behavior of global commands in a view context"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views:global-commands"></a>5.6.&nbsp;Changing the behavior of global commands in a view context</h2></div></div></div>
+        
+        <p>
+            In the previous chapter, we explained how we can make shared commands, whose behavior is dependent on the context.
+        </p>
+        <p>
+            When creating a view, these shared commands&#8217; behavior can be changed to add context-specific behavior (such as a
+            &#8216;New&#8217; or &#8216;Delete&#8217; action). This is done by registering a command executor to the shared command&#8217;s id. The view
+            class supports this registration by overriding a method
+        </p>
+        <pre class="programlisting">
+            <pre class="programlisting">context.register("newContactCommand", newContactExecutor);</pre>
+        </pre>
+        <p>
+            This executor then handles the behavior of the command
+        </p>
+        <pre class="programlisting">
+            <pre class="programlisting">private class NewContactExecutor implements ActionCommandExecutor
+{
+    public void execute() {
+        // put logic here
+    }
+}</pre>
+        </pre>
+    </div>
+</div><div xmlns:fo="http://www.w3.org/1999/XSL/Format" class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="commands.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="form-binding.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;Commands&nbsp;</td><td width="20%" align="center"><span style="color:white;font-size:85%;"><a href="http://www.gitorious.com/valkyrie-rcp" title="Valkyrie framework">Valkyrie</a></span></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Forms and binding</td></tr></table></div></body></html>
