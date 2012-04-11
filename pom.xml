@@ -19,7 +19,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.version>3.1.1.RELEASE</spring.version>
+	<spring-security.version>3.1.0.RELEASE</spring-security.version>
     </properties>
 
     <build>
@@ -227,7 +228,7 @@
                     <linksource>true</linksource>
                     <links>
                         <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                        <link>http://static.springframework.org/spring/docs/3.0.5.RELEASE/api</link>
+                        <link>http://static.springframework.org/spring/docs/${spring.version}/api</link>
                     </links>
                 </configuration>
             </plugin>
@@ -306,12 +307,12 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring-security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring-security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -331,6 +332,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -356,7 +362,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aspects</artifactId>
-                <version>3.0.5.RELEASE</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
@@ -376,7 +382,7 @@
             <dependency>
                 <groupId>com.jidesoft</groupId>
                 <artifactId>jide-oss</artifactId>
-                <version>2.10.4</version>
+                <version>2.10.2</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
@@ -465,6 +471,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+            <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -16,7 +16,6 @@
     <modules>
         <module>valkyrie-rcp-vldocking</module>
         <module>valkyrie-rcp-jideoss</module>
-        <module>valkyrie-rcp-mydoggy</module>
     </modules>
 
     <dependencies>

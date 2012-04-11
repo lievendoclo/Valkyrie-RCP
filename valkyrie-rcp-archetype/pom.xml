@@ -51,6 +51,10 @@
             <artifactId>spring-orm</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

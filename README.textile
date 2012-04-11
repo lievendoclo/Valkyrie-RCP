@@ -1,0 +1,18 @@
+
+h1. Valkyrie RCP
+
+h2. What is it ?
+
+A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is an evolution of "Spring Rich Client":http://www.springsource.org/spring-rcp
+
+
+h2. Why ?
+
+Because the original project seems to be dead :(
+
+
+h2. And so, what's new ?
+
+Updated dependencies to Spring 3.1.1, and Spring Security 3.1.0.
+
+

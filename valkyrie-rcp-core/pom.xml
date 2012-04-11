@@ -96,6 +96,10 @@
             <artifactId>validation-api</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
 
         <!-- Needed by spring-aspects... -->
         <dependency>
