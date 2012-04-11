@@ -529,4 +529,16 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+    
+    <distributionManagement>
+	    <repository>
+	        <id>repo</id>
+	        <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>snapshot-repo</id>
+	        <url>https://raw.github.com/Ekito/maven-repo/master/snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
+    
 </project>
