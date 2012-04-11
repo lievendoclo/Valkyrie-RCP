@@ -1,9 +1,13 @@
-
 h1. Valkyrie RCP
+
+
+h2. DISCLAIMER
+
+I'm not the author of this framework, neither related to the author, so please thanks "lievendoclo":http://twitter.com/lievendoclo for his work.
 
 h2. What is it ?
 
-A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is an evolution of "Spring Rich Client":http://www.springsource.org/spring-rcp
+A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is itself an evolution of "Spring Rich Client":http://www.springsource.org/spring-rcp.
 
 
 h2. Why ?
@@ -16,7 +20,29 @@ h2. And so, what's new ?
 * Updated dependency to Spring 3.1.1
 * Updated dependency to Spring Security 3.1.0
 * Fixed broken build for the manual
-* Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken.
+* Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken
+* Released a 1.0 version available through a "Maven repository":https://github.com/Ekito/maven-repo
+
+
+h2. How to get the released versions ?
+
+Just add this to your @pom.xml@ file:
+
+bc. <repositories>
+    <repository>
+        <id>ekito-public-snapshots</id>
+        <url>https://raw.github.com/Ekito/maven-repo/master/snapshots</url>
+    </repository>
+    <repository>
+        <id>ekito-public-releases</id>
+        <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
+    </repository>
+</repositories>
+
+
+h2. I found a bug, what can I do ?
+
+Feel free to fork this repo, and make a "pull request":http://help.github.com/send-pull-requests/.
 
 
 h2. How to build
