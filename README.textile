@@ -13,6 +13,13 @@ Because the original project seems to be dead :(
 
 h2. And so, what's new ?
 
-Updated dependencies to Spring 3.1.1, and Spring Security 3.1.0.
+* Updated dependency to Spring 3.1.1
+* Updated dependency to Spring Security 3.1.0
+* Fixed broken build for the manual
+* Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken.
 
+
+h2. Greetings
+
+Big thanks to "lievendoclo":https://github.com/lievendoclo for his work on this !
 
