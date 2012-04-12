@@ -29,7 +29,19 @@ h2. And so, what's new ?
 
 h2. How to get the released versions ?
 
+h3. Maven
+
 Just add this to your @pom.xml@ file:
+
+The dependencies:
+
+bc. <dependency>
+    <groupId>org.valkyriercp</groupId>
+    <artifactId>valkyrie-rcp-core</artifactId>
+    <version>1.0</version>
+</dependency>
+
+The repositories:
 
 bc. <repositories>
     <repository>
@@ -41,6 +53,22 @@ bc. <repositories>
         <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
     </repository>
 </repositories>
+
+h3. Gradle
+
+The dependencies:
+
+bc. dependencies {
+        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'1.0'
+}
+
+The repository:
+
+bc. repositories {
+    maven {
+        url "https://raw.github.com/Ekito/maven-repo/master/releases/"
+    }
+}
 
 
 h2. I found a bug, what can I do ?
