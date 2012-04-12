@@ -73,7 +73,7 @@ bc. repositories {
 
 h2. I found a bug, what can I do ?
 
-Feel free to fork this repo, and make a "pull request":http://help.github.com/send-pull-requests/.
+Feel free to fork this repo, and make a "pull request":http://help.github.com/send-pull-requests/. Ideally, write a test !
 
 
 h2. How to build
