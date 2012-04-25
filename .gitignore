@@ -4,6 +4,7 @@
 .classpath
 .project
 .settings
+.idea
 target
 _*
 valkyrie-rcp-local

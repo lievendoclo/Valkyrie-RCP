@@ -14,10 +14,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -58,9 +55,27 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
     private String labelAttributes = ALIGN_LEFT_CENTER;
     private String componentAttributes = null;
 
+    private Map<String, Map<Object, Object>> bindingContexts = new HashMap<String, Map<Object, Object>>();
+
     private int row;
 
     private static final int DEFAULT_ROW_INCREMENT = 2;
+
+
+    public Map<String, Map<Object, Object>> getBindingContexts() {
+        return bindingContexts;
+    }
+
+    public void setBindingContexts(Map<String, Map<Object, Object>> bindingContexts) {
+        this.bindingContexts = bindingContexts;
+    }
+
+    public void addBindingContextParameter(String propertyPath, Object key, Object value) {
+        if(!getBindingContexts().containsKey(propertyPath))
+            getBindingContexts().put(propertyPath, new HashMap<Object, Object>());
+        Map<Object, Object> context = getBindingContexts().get(propertyPath);
+        context.put(key, value);
+    }
 
     /**
      * Constructor.
@@ -305,7 +320,11 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
 
     public JComponent addProperty(String property, int column, int row, int widthSpan, int heightSpan)
     {
-        JComponent propertyComponent = createDefaultBinding(property).getControl();
+        JComponent propertyComponent;
+        if(bindingContexts.get(property) != null)
+            propertyComponent = getBindingFactory().createBinding(property, bindingContexts.get(property)).getControl();
+        else
+            propertyComponent = getBindingFactory().createBinding(property).getControl();
         addComponent(propertyComponent, column, row, widthSpan, heightSpan);
         return propertyComponent;
     }
@@ -414,6 +433,11 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
         return addPropertyAndLabel(property, binderId, 1, row, this.labelAttributes);
     }
 
+    public JComponent[] addPropertyAndLabel(String property, String binderId, Map<?, ?> context)
+    {
+        return addPropertyAndLabel(property, binderId, context, 1, row, this.labelAttributes);
+    }
+
     public JComponent[] addPropertyAndLabel(String property, int column, String binderId)
     {
         return addPropertyAndLabel(property, binderId, column, row, this.labelAttributes);
@@ -440,6 +464,12 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
         return addPropertyAndLabel(property, binderId, column, row, 1, attributes);
     }
 
+    public JComponent[] addPropertyAndLabel(String property, String binderId, Map<?, ?> context, int column, int row,
+                                            String attributes)
+    {
+        return addPropertyAndLabel(property, binderId, context, column, row, 1, attributes);
+    }
+
     public JComponent[] addPropertyAndLabel(String property, int column, int row, int widthSpan)
     {
         return addPropertyAndLabel(property, column, row, widthSpan, this.labelAttributes);
@@ -455,6 +485,12 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
                                             int widthSpan, String attributes)
     {
         return addPropertyAndLabel(property, binderId, column, row, widthSpan, 1, attributes);
+    }
+
+    public JComponent[] addPropertyAndLabel(String property, String binderId, Map<?, ?> context,  int column, int row,
+                                            int widthSpan, String attributes)
+    {
+        return addPropertyAndLabel(property, binderId, context, column, row, widthSpan, 1, attributes);
     }
 
     public JComponent[] addPropertyAndLabel(String property, int column, int row, int widthSpan,
@@ -474,6 +510,14 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
                                             int heightSpan, String attributes)
     {
         JComponent component = addProperty(property, column + 2, row, widthSpan, heightSpan);
+        JLabel label = addLabel(property, component, column, row, 1, 1, attributes);
+        return new JComponent[]{label, component};
+    }
+
+    public JComponent[] addPropertyAndLabel(String property, String binderId, Map<?, ?> context, int column, int row,
+                                            int widthSpan, int heightSpan, String attributes)
+    {
+        JComponent component = addProperty(property, binderId, context, column + 2, row, widthSpan, heightSpan);
         JLabel label = addLabel(property, component, column, row, 1, 1, attributes);
         return new JComponent[]{label, component};
     }
@@ -687,7 +731,7 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
     }
 
     public JComponent addNestedPropertyReadOnly(String property, String nestedProperty, int column, int row,
-                                        int widthSpan, int heightSpan)
+                                                int widthSpan, int heightSpan)
     {
         final JTextField nestedPropertyField = new JTextField();
         nestedPropertyField.setEditable(false);
@@ -714,7 +758,7 @@ public class FormLayoutFormBuilder extends AbstractFormBuilder
     }
 
     public JComponent[] addNestedPropertyReadOnlyAndLabel(String property, String nestedProperty, int column, int row,
-                                        int widthSpan, int heightSpan)
+                                                          int widthSpan, int heightSpan)
     {
         final JTextField nestedPropertyField = new JTextField();
         nestedPropertyField.setEditable(false);
