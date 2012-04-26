@@ -19,6 +19,11 @@ import java.util.Map;
  * @author Oliver Hutchison
  */
 public class TextComponentBinder extends AbstractBinder {
+    public static final String CONVERT_EMPTY_STRING_TO_NULL_KEY = "convertEmptyStringToNull";
+    public static final String PROMPT_KEY_KEY = "promptKey";
+    public static final String READ_ONLY_KEY = "readOnly";
+    public static final String SELECT_ALL_ON_FOCUS_KEY = "selectAllOnFocus";
+    public static final String DOCUMENT_FACTORY_KEY = "documentFactory";
     private String promptKey;
     private boolean convertEmptyStringToNull;
     private DocumentFactory documentFactory;
@@ -33,20 +38,20 @@ public class TextComponentBinder extends AbstractBinder {
     protected Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context) {
         Assert.isTrue(control instanceof JTextComponent, "Control must be an instance of JTextComponent.");
         TextComponentBinding textComponentBinding = new TextComponentBinding((JTextComponent) control, formModel, formPropertyPath);
-        if (context.containsKey("convertEmptyStringToNull"))
-            textComponentBinding.setConvertEmptyStringToNull((Boolean) context.get("convertEmptyStringToNull"));
+        if (context.containsKey(CONVERT_EMPTY_STRING_TO_NULL_KEY))
+            textComponentBinding.setConvertEmptyStringToNull((Boolean) context.get(CONVERT_EMPTY_STRING_TO_NULL_KEY));
         else
             textComponentBinding.setConvertEmptyStringToNull(convertEmptyStringToNull);
-        if (context.containsKey("promptKey"))
-            textComponentBinding.setPromptKey((String) context.get("promptKey"));
+        if (context.containsKey(PROMPT_KEY_KEY))
+            textComponentBinding.setPromptKey((String) context.get(PROMPT_KEY_KEY));
         else
             textComponentBinding.setPromptKey(promptKey);
-        if (context.containsKey("readOnly"))
-            textComponentBinding.setReadOnly((Boolean) context.get("readOnly"));
+        if (context.containsKey(READ_ONLY_KEY))
+            textComponentBinding.setReadOnly((Boolean) context.get(READ_ONLY_KEY));
         else
             textComponentBinding.setReadOnly(readOnly);
-        if (context.containsKey("selectAllOnFocus"))
-            textComponentBinding.setSelectAllOnFocus((Boolean) context.get("selectAllOnFocus"));
+        if (context.containsKey(SELECT_ALL_ON_FOCUS_KEY))
+            textComponentBinding.setSelectAllOnFocus((Boolean) context.get(SELECT_ALL_ON_FOCUS_KEY));
         else
             textComponentBinding.setSelectAllOnFocus(selectAllOnFocus);
         return textComponentBinding;
@@ -58,7 +63,7 @@ public class TextComponentBinder extends AbstractBinder {
 
     protected JComponent createControl(Map context) {
         JTextComponent textComponent = createTextComponent();
-        DocumentFactory contextDocumentFactory = (DocumentFactory) context.get("documentFactory");
+        DocumentFactory contextDocumentFactory = (DocumentFactory) context.get(DOCUMENT_FACTORY_KEY);
         if (contextDocumentFactory != null) {
             textComponent.setDocument(contextDocumentFactory.createDocument());
         } else if (documentFactory != null) {

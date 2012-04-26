@@ -59,6 +59,17 @@ import java.util.Map;
 public class NumberBinder extends AbstractBinder
 {
 
+    public static final String FORMAT_KEY = "format";
+    public static final String UNFORMAT_KEY = "unformat";
+    public static final String SCALE_KEY = "scale";
+    public static final String NR_OF_NON_DECIMALS_KEY = "nrOfNonDecimals";
+    public static final String NR_OF_DECIMALS_KEY = "nrOfDecimals";
+    public static final String NEGATIVE_SIGN_KEY = "negativeSign";
+    public static final String ALIGNMENT_KEY = "alignment";
+    public static final String READ_ONLY_KEY = "readOnly";
+    public static final String LEFT_DECORATION_KEY = "leftDecoration";
+    public static final String RIGHT_DECORATION_KEY = "rightDecoration";
+    public static final String SHIFT_FACTOR_KEY = "shiftFactor";
     protected boolean readOnly = false;
 
     protected String format = null;
@@ -249,38 +260,38 @@ public class NumberBinder extends AbstractBinder
         Integer nrOfDecimals;
         Boolean negativeSign;
         Integer alignment;
-        if(context.containsKey("format")) {
-            format = (String) context.get("format");
+        if(context.containsKey(FORMAT_KEY)) {
+            format = (String) context.get(FORMAT_KEY);
         } else {
             format = this.format;
         }
-        if(context.containsKey("unformat")) {
-            unformat = (String) context.get("unformat");
+        if(context.containsKey(UNFORMAT_KEY)) {
+            unformat = (String) context.get(UNFORMAT_KEY);
         } else {
             unformat = this.unformat;
         }
-        if(context.containsKey("scale")) {
-            scale = (Integer) context.get("scale");
+        if(context.containsKey(SCALE_KEY)) {
+            scale = (Integer) context.get(SCALE_KEY);
         } else {
             scale = this.scale;
         }
-        if(context.containsKey("nrOfNonDecimals")) {
-            nrOfNonDecimals = (Integer) context.get("nrOfNonDecimals");
+        if(context.containsKey(NR_OF_NON_DECIMALS_KEY)) {
+            nrOfNonDecimals = (Integer) context.get(NR_OF_NON_DECIMALS_KEY);
         } else {
             nrOfNonDecimals = this.nrOfNonDecimals;
         }
-        if(context.containsKey("nrOfDecimals")) {
-            nrOfDecimals = (Integer) context.get("nrOfDecimals");
+        if(context.containsKey(NR_OF_DECIMALS_KEY)) {
+            nrOfDecimals = (Integer) context.get(NR_OF_DECIMALS_KEY);
         } else {
             nrOfDecimals = this.nrOfDecimals;
         }
-        if(context.containsKey("negativeSign")) {
-            negativeSign = (Boolean) context.get("negativeSign");
+        if(context.containsKey(NEGATIVE_SIGN_KEY)) {
+            negativeSign = (Boolean) context.get(NEGATIVE_SIGN_KEY);
         } else {
             negativeSign = this.negativeSign;
         }
-        if(context.containsKey("alignment")) {
-            alignment = (Integer) context.get("alignment");
+        if(context.containsKey(ALIGNMENT_KEY)) {
+            alignment = (Integer) context.get(ALIGNMENT_KEY);
         } else {
             alignment = this.alignment;
         }
@@ -324,33 +335,33 @@ public class NumberBinder extends AbstractBinder
         String rightDecoration;
         BigDecimal shiftFactor;
 
-        if(context.containsKey("nrOfNonDecimals")) {
-            nrOfNonDecimals = (Integer) context.get("nrOfNonDecimals");
+        if(context.containsKey(NR_OF_NON_DECIMALS_KEY)) {
+            nrOfNonDecimals = (Integer) context.get(NR_OF_NON_DECIMALS_KEY);
         } else {
             nrOfNonDecimals = this.nrOfNonDecimals;
         }
-        if(context.containsKey("nrOfDecimals")) {
-            nrOfDecimals = (Integer) context.get("nrOfDecimals");
+        if(context.containsKey(NR_OF_DECIMALS_KEY)) {
+            nrOfDecimals = (Integer) context.get(NR_OF_DECIMALS_KEY);
         } else {
             nrOfDecimals = this.nrOfDecimals;
         }
-        if(context.containsKey("readOnly")) {
-            readOnly = (Boolean) context.get("readOnly");
+        if(context.containsKey(READ_ONLY_KEY)) {
+            readOnly = (Boolean) context.get(READ_ONLY_KEY);
         } else {
             readOnly = this.readOnly;
         }
-        if(context.containsKey("leftDecoration")) {
-            leftDecoration = (String) context.get("leftDecoration");
+        if(context.containsKey(LEFT_DECORATION_KEY)) {
+            leftDecoration = (String) context.get(LEFT_DECORATION_KEY);
         } else {
             leftDecoration = this.leftDecoration;
         }
-        if(context.containsKey("rightDecoration")) {
-            rightDecoration = (String) context.get("rightDecoration");
+        if(context.containsKey(RIGHT_DECORATION_KEY)) {
+            rightDecoration = (String) context.get(RIGHT_DECORATION_KEY);
         } else {
             rightDecoration = this.rightDecoration;
         }
-        if(context.containsKey("shiftFactor")) {
-            shiftFactor = (BigDecimal) context.get("shiftFactor");
+        if(context.containsKey(SHIFT_FACTOR_KEY)) {
+            shiftFactor = (BigDecimal) context.get(SHIFT_FACTOR_KEY);
         } else {
             shiftFactor = this.shiftFactor;
         }

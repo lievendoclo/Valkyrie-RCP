@@ -30,6 +30,7 @@ import java.util.Map;
  */
 public class EnumRadioButtonBinder extends AbstractBinder {
 
+    public static final String NULLABLE_KEY = "nullable";
     private boolean nullable = false;
 
     /**
@@ -57,7 +58,7 @@ public class EnumRadioButtonBinder extends AbstractBinder {
     @Override
     protected Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context) {
         EnumRadioButtonBinding binding = new EnumRadioButtonBinding((JPanel) control, formModel, formPropertyPath,
-                getPropertyType(formModel, formPropertyPath), getSelectableEnumsList(formModel, formPropertyPath));
+                getPropertyType(formModel, formPropertyPath), getSelectableEnumsList(formModel, formPropertyPath, context));
         return binding;
 
     }
@@ -65,8 +66,14 @@ public class EnumRadioButtonBinder extends AbstractBinder {
     /**
      * Adds the <code>null</code> value if this binder is nullable.
      */
-    private List<Enum> getSelectableEnumsList(FormModel formModel, String formPropertyPath) {
+    private List<Enum> getSelectableEnumsList(FormModel formModel, String formPropertyPath, Map context) {
         List<Enum> out = new ArrayList<Enum>();
+        Boolean nullable;
+        if(context.containsKey(NULLABLE_KEY)) {
+            nullable = (Boolean) context.get(NULLABLE_KEY);
+        } else {
+            nullable = this.nullable;
+        }
         if (nullable) {
             out.add(null);
         }

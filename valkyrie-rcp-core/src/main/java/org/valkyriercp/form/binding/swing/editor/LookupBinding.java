@@ -1,8 +1,8 @@
 package org.valkyriercp.form.binding.swing.editor;
 
+import com.google.common.base.Function;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.command.support.ActionCommand;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public abstract class AbstractLookupBinding extends CustomBinding {
+public class LookupBinding<T> extends CustomBinding {
 
     public static final String ON_ABOUT_TO_CHANGE = "on-about-to-change";
 
@@ -150,8 +150,14 @@ public abstract class AbstractLookupBinding extends CustomBinding {
     private boolean loadDetailedObject = false;
 
     private Object filter;
+    
+    private Function<T, String> objectLabelFunction;
+    
+    private Function<String, ? extends Object> createFilterFromFieldFunction;
 
-    public AbstractLookupBinding(DefaultDataEditorWidget dataEditor, FormModel formModel, String formPropertyPath, Class<?> requiredClass) {
+    private Dimension dialogSize;
+    
+    public LookupBinding(DefaultDataEditorWidget dataEditor, FormModel formModel, String formPropertyPath, Class<?> requiredClass) {
         super(formModel, formPropertyPath, requiredClass);
         this.dataEditor = dataEditor;
         // a parameter hashMap with a key to not initialize the dataEditor anymore
@@ -173,6 +179,22 @@ public abstract class AbstractLookupBinding extends CustomBinding {
     @PostConstruct
     private void postConstruct() {
         getApplicationConfig().commandConfigurer().configure(referableDataEditorViewCommand);
+    }
+
+    public Function<T, String> getObjectLabelFunction() {
+        return objectLabelFunction;
+    }
+
+    public void setObjectLabelFunction(Function<T, String> objectLabelFunction) {
+        this.objectLabelFunction = objectLabelFunction;
+    }
+
+    public Function<String, ? extends Object> getCreateFilterFromFieldFunction() {
+        return createFilterFromFieldFunction;
+    }
+
+    public void setCreateFilterFromFieldFunction(Function<String, ? extends Object> createFilterFromFieldFunction) {
+        this.createFilterFromFieldFunction = createFilterFromFieldFunction;
     }
 
     /**
@@ -259,7 +281,9 @@ public abstract class AbstractLookupBinding extends CustomBinding {
         readOnlyChanged();
     }
 
-    public abstract String getObjectLabel(Object o);
+    public String getObjectLabel(Object o) {
+        return getObjectLabelFunction().apply((T) o);
+    }
 
     @Override
     protected JComponent doBindControl() {
@@ -297,7 +321,7 @@ public abstract class AbstractLookupBinding extends CustomBinding {
 
             @Override
             public synchronized void addVetoableChangeListener(VetoableChangeListener listener) {
-                AbstractLookupBinding.this.propertyChangeMonitor.addVetoableChangeListener(listener);
+                LookupBinding.this.propertyChangeMonitor.addVetoableChangeListener(listener);
             }
 
             @Override
@@ -387,7 +411,7 @@ public abstract class AbstractLookupBinding extends CustomBinding {
             public void onTabKey(Component component) {
                 String textFieldValue = getKeyComponentText();
                 boolean empty = "".equals(textFieldValue.trim());
-                Object ref = AbstractLookupBinding.this.getValue();
+                Object ref = LookupBinding.this.getValue();
                 // if something was filled in and it doesn't match the internal value
                 if (!empty && ((ref == null) || !textFieldValue.equals(getObjectLabel(ref)))) {
                     // call the dataEditor to fire the search
@@ -441,7 +465,7 @@ public abstract class AbstractLookupBinding extends CustomBinding {
             public void focusLost(FocusEvent e) {
                 String textFieldValue = getKeyComponentText();
                 boolean empty = "".equals(textFieldValue.trim());
-                Object ref = AbstractLookupBinding.this.getValue();
+                Object ref = LookupBinding.this.getValue();
 
                 if (evaluateFocusLost(e)) {
                     // Revert if value isn't empty
@@ -449,7 +473,7 @@ public abstract class AbstractLookupBinding extends CustomBinding {
                         if (empty)
                             getValueModel().setValue(null);
                         else
-                            valueModelChanged(AbstractLookupBinding.super.getValue());
+                            valueModelChanged(LookupBinding.super.getValue());
                     }
                     // Create new referable if value isn't empty
                     else {
@@ -506,7 +530,9 @@ public abstract class AbstractLookupBinding extends CustomBinding {
      * @param textFieldValue the value of the textComponent.
      * @return a Referable that represents the state of this binding when no real object is available.
      */
-    protected abstract Object createFilterFromString(final String textFieldValue);
+    protected Object createFilterFromString(final String textFieldValue) {
+        return createFilterFromFieldFunction.apply(textFieldValue);
+    }
 
     /**
      * Get/create the button to open the dataEditor in selection mode
@@ -540,14 +566,14 @@ public abstract class AbstractLookupBinding extends CustomBinding {
 
             @Override
             protected void doExecuteCommand() {
-                if (AbstractLookupBinding.this.propertyChangeMonitor.proceedOnChange()) {
+                if (LookupBinding.this.propertyChangeMonitor.proceedOnChange()) {
                     if (dataEditorDialog == null) {
                         dataEditorDialog = new TitledWidgetApplicationDialog(getDataEditor(),
                                 TitledWidgetApplicationDialog.SELECT_CANCEL_MODE) {
 
                             protected boolean onFinish() {
                                 if (getDataEditor().canClose())
-                                    return AbstractLookupBinding.this.onFinish();
+                                    return LookupBinding.this.onFinish();
                                 return false;
                             }
 
@@ -737,7 +763,11 @@ public abstract class AbstractLookupBinding extends CustomBinding {
     }
 
     public Dimension getDialogSize() {
-        return null;
+        return dialogSize;
+    }
+
+    public void setDialogSize(Dimension dialogSize) {
+        this.dialogSize = dialogSize;
     }
 }
 

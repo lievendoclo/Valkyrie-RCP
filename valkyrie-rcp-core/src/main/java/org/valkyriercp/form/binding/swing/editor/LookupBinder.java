@@ -1,5 +1,6 @@
 package org.valkyriercp.form.binding.swing.editor;
 
+import com.google.common.base.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
@@ -10,20 +11,58 @@ import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.widget.editor.DefaultDataEditorWidget;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
 
+// TODO: add configuration possibilities for context map based configuration
 @Configurable
-public abstract class AbstractLookupBinder implements Binder
+public class LookupBinder<T> implements Binder
 {
-    private int autoPopupDialog = AbstractLookupBinding.AUTOPOPUPDIALOG_NO_UNIQUE_MATCH;
+    private int autoPopupDialog = LookupBinding.AUTOPOPUPDIALOG_NO_UNIQUE_MATCH;
     private boolean revertValueOnFocusLost = true;
-    private String selectDialogId = AbstractLookupBinding.DEFAULT_SELECTDIALOG_ID;
-    private String selectDialogCommandId = AbstractLookupBinding.DEFAULT_SELECTDIALOG_COMMAND_ID;
-    private final String dataEditorId;
+    private String selectDialogId = LookupBinding.DEFAULT_SELECTDIALOG_ID;
+    private String selectDialogCommandId = LookupBinding.DEFAULT_SELECTDIALOG_COMMAND_ID;
+    private String dataEditorId;
     private String dataEditorViewCommandId;
     private Object filter;
     private boolean enableViewCommand;
     private boolean loadDetailedObject = false;
+    private Function<T, String> objectLabelFunction;
+    private Function<String, ? extends Object> createFilterFromFieldFunction;
+    private Class<T> requiredSourceClass;
+    private Dimension dialogSize;
+
+    public Dimension getDialogSize() {
+        return dialogSize;
+    }
+
+    public void setDialogSize(Dimension dialogSize) {
+        this.dialogSize = dialogSize;
+    }
+
+    public Class<T> getRequiredSourceClass() {
+        return requiredSourceClass;
+    }
+
+    public void setRequiredSourceClass(Class<T> requiredSourceClass) {
+        this.requiredSourceClass = requiredSourceClass;
+    }
+
+    public Function<String, ? extends Object> getCreateFilterFromFieldFunction() {
+        return createFilterFromFieldFunction;
+    }
+
+    public void setCreateFilterFromFieldFunction(Function<String, ? extends Object> createFilterFromFieldFunction) {
+        this.createFilterFromFieldFunction = createFilterFromFieldFunction;
+    }
+
+    public Function<T, String> getObjectLabelFunction() {
+        return objectLabelFunction;
+    }
+
+    public void setObjectLabelFunction(Function<T, String> objectLabelFunction) {
+        this.objectLabelFunction = objectLabelFunction;
+    }
 
     @Autowired
     private ApplicationConfig applicationConfig;
@@ -40,9 +79,8 @@ public abstract class AbstractLookupBinder implements Binder
         this.loadDetailedObject = loadDetailedObject;
     }
 
-    public AbstractLookupBinder(String dataEditorId)
+    public LookupBinder()
     {
-        this.dataEditorId = dataEditorId;
         enableViewCommand = false;
     }
 
@@ -68,7 +106,7 @@ public abstract class AbstractLookupBinder implements Binder
 
     public Binding bind(FormModel formModel, String formPropertyPath, Map context)
     {
-        AbstractLookupBinding referableBinding = getLookupBinding(formModel, formPropertyPath, context);
+        LookupBinding<T> referableBinding = getLookupBinding(formModel, formPropertyPath, context);
         referableBinding.setAutoPopupdialog(getAutoPopupDialog());
         referableBinding.setRevertValueOnFocusLost(isRevertValueOnFocusLost());
         referableBinding.setSelectDialogCommandId(getSelectDialogCommandId());
@@ -77,10 +115,15 @@ public abstract class AbstractLookupBinder implements Binder
         referableBinding.setEnableViewCommand(enableViewCommand);
         referableBinding.setFilter(filter);
         referableBinding.setLoadDetailedObject(loadDetailedObject);
+        referableBinding.setCreateFilterFromFieldFunction(createFilterFromFieldFunction);
+        referableBinding.setObjectLabelFunction(objectLabelFunction);
+        referableBinding.setDialogSize(dialogSize);
         return referableBinding;
     }
 
-    protected abstract AbstractLookupBinding getLookupBinding(FormModel formModel, String formPropertyPath, Map context);
+    protected LookupBinding<T> getLookupBinding(FormModel formModel, String formPropertyPath, Map context) {
+        return new LookupBinding<T>(getDataEditor(), formModel, formPropertyPath, requiredSourceClass);
+    }
 
     public Binding bind(JComponent control, FormModel formModel, String formPropertyPath, Map context)
     {
@@ -142,6 +185,17 @@ public abstract class AbstractLookupBinder implements Binder
     public boolean isEnableViewCommand()
     {
         return enableViewCommand;
+    }
+
+    public String getDataEditorId() {
+        if(dataEditorId == null) {
+            return "defaultDataEditor";
+        }
+        return dataEditorId;
+    }
+
+    public void setDataEditorId(String dataEditorId) {
+        this.dataEditorId = dataEditorId;
     }
 }
 

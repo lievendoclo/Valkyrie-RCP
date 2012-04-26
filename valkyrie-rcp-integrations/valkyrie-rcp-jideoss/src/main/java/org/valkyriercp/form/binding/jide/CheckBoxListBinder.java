@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CheckBoxListBinder<T> implements Binder {
+    public static final String SELECTABLE_VALUES_KEY = "selectableValues";
+    public static final String SCROLLPANE_NEEDED_KEY = "scrollPaneNeeded";
+    
     private List<T> selectableValues;
     private boolean scrollPaneNeeded;
 
@@ -18,7 +21,20 @@ public class CheckBoxListBinder<T> implements Binder {
 
     @Override
     public Binding bind(FormModel formModel, String formPropertyPath, Map context) {
+        Boolean scrollPaneNeeded;
+        if(context.containsKey(SCROLLPANE_NEEDED_KEY)) {
+            scrollPaneNeeded = (Boolean) context.get(SCROLLPANE_NEEDED_KEY);
+        } else {
+            scrollPaneNeeded = this.scrollPaneNeeded;
+        }
+        List<T> selectableValues;
+        if(context.containsKey(SELECTABLE_VALUES_KEY)) {
+            selectableValues = (List<T>) context.get(SELECTABLE_VALUES_KEY);
+        } else {
+            selectableValues = this.selectableValues;
+        }
         CheckBoxListBinding<T> tCheckBoxListBinding = new CheckBoxListBinding<T>(formModel, formPropertyPath, selectableValues);
+        
         tCheckBoxListBinding.setScrollPaneNeeded(scrollPaneNeeded);
         return tCheckBoxListBinding;
     }

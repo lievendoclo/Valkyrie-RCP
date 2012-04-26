@@ -2,6 +2,7 @@ package org.valkyriercp.sample.showcase.widget;
 
 import com.jgoodies.forms.layout.FormLayout;
 import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.form.binding.swing.TextComponentBinder;
 import org.valkyriercp.form.binding.swing.text.MaxLengthDocumentFactory;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.widget.AbstractWidgetForm;
@@ -27,7 +28,7 @@ public class BinderDemoWidget extends TitledWidgetForm {
         protected JComponent createFormControl() {
             FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow", "default");
             FormLayoutFormBuilder builder = new FormLayoutFormBuilder(getBindingFactory(), layout);
-            builder.addBindingContextParameter("textFieldBinder", "documentFactory", new MaxLengthDocumentFactory(10));
+            builder.addBindingContextParameter("textFieldBinder", TextComponentBinder.DOCUMENT_FACTORY_KEY, new MaxLengthDocumentFactory(10));
             builder.addPropertyAndLabel("textFieldBinder");
             builder.nextRow();
             builder.addPropertyAndLabel("integerBinder", "integerBinder");
