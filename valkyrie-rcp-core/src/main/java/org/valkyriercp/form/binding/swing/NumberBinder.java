@@ -322,6 +322,7 @@ public class NumberBinder extends AbstractBinder
         Boolean readOnly;
         String leftDecoration;
         String rightDecoration;
+        BigDecimal shiftFactor;
 
         if(context.containsKey("nrOfNonDecimals")) {
             nrOfNonDecimals = (Integer) context.get("nrOfNonDecimals");
@@ -347,6 +348,11 @@ public class NumberBinder extends AbstractBinder
             rightDecoration = (String) context.get("rightDecoration");
         } else {
             rightDecoration = this.rightDecoration;
+        }
+        if(context.containsKey("shiftFactor")) {
+            shiftFactor = (BigDecimal) context.get("shiftFactor");
+        } else {
+            shiftFactor = this.shiftFactor;
         }
 
         return new NumberBinding(getRequiredSourceClass(), (BigDecimalTextField) control, readOnly,
