@@ -242,28 +242,70 @@ public class NumberBinder extends AbstractBinder
      */
     protected JComponent createControl(Map context) {
         BigDecimalTextField component = null;
-        if (this.format == null) {
-            component = new BigDecimalTextField(this.nrOfNonDecimals,
-                    this.nrOfDecimals, negativeSign, getRequiredSourceClass());
+        String format;
+        String unformat;
+        Integer scale;
+        Integer nrOfNonDecimals;
+        Integer nrOfDecimals;
+        Boolean negativeSign;
+        Integer alignment;
+        if(context.containsKey("format")) {
+            format = (String) context.get("format");
+        } else {
+            format = this.format;
+        }
+        if(context.containsKey("unformat")) {
+            unformat = (String) context.get("unformat");
+        } else {
+            unformat = this.unformat;
+        }
+        if(context.containsKey("scale")) {
+            scale = (Integer) context.get("scale");
+        } else {
+            scale = this.scale;
+        }
+        if(context.containsKey("nrOfNonDecimals")) {
+            nrOfNonDecimals = (Integer) context.get("nrOfNonDecimals");
+        } else {
+            nrOfNonDecimals = this.nrOfNonDecimals;
+        }
+        if(context.containsKey("nrOfDecimals")) {
+            nrOfDecimals = (Integer) context.get("nrOfDecimals");
+        } else {
+            nrOfDecimals = this.nrOfDecimals;
+        }
+        if(context.containsKey("negativeSign")) {
+            negativeSign = (Boolean) context.get("negativeSign");
+        } else {
+            negativeSign = this.negativeSign;
+        }
+        if(context.containsKey("alignment")) {
+            alignment = (Integer) context.get("alignment");
+        } else {
+            alignment = this.alignment;
         }
 
-        if (component == null && this.unformat == null) {
-            component = new BigDecimalTextField(this.nrOfNonDecimals,
-                    this.nrOfDecimals, negativeSign, getRequiredSourceClass(),
-                    new DecimalFormat(this.format));
+        if (format == null) {
+            component = new BigDecimalTextField(nrOfNonDecimals,
+                    nrOfDecimals, negativeSign, getRequiredSourceClass());
+        }
+        if (component == null && unformat == null) {
+            component = new BigDecimalTextField(nrOfNonDecimals,
+                    nrOfDecimals, negativeSign, getRequiredSourceClass(),
+                    new DecimalFormat(format));
         }
 
         if (component == null) {
-            component = new BigDecimalTextField(this.nrOfNonDecimals,
-                    this.nrOfDecimals, negativeSign, getRequiredSourceClass(),
-                    new DecimalFormat(this.format), new DecimalFormat(this.unformat));
+            component = new BigDecimalTextField(nrOfNonDecimals,
+                    nrOfDecimals, negativeSign, getRequiredSourceClass(),
+                    new DecimalFormat(format), new DecimalFormat(unformat));
         }
 
         if (scale != null) {
             component.setScale(scale);
         }
 
-        component.setHorizontalAlignment(this.alignment);
+        component.setHorizontalAlignment(alignment);
 
         return component;
     }
@@ -272,12 +314,44 @@ public class NumberBinder extends AbstractBinder
      * @inheritDoc
      */
     protected Binding doBind(JComponent control, FormModel formModel,
-            String formPropertyPath, Map context) {
+                             String formPropertyPath, Map context) {
         Assert.isTrue(control instanceof BigDecimalTextField,
                 "Control must be an instance of BigDecimalTextField.");
+        Integer nrOfNonDecimals;
+        Integer nrOfDecimals;
+        Boolean readOnly;
+        String leftDecoration;
+        String rightDecoration;
+
+        if(context.containsKey("nrOfNonDecimals")) {
+            nrOfNonDecimals = (Integer) context.get("nrOfNonDecimals");
+        } else {
+            nrOfNonDecimals = this.nrOfNonDecimals;
+        }
+        if(context.containsKey("nrOfDecimals")) {
+            nrOfDecimals = (Integer) context.get("nrOfDecimals");
+        } else {
+            nrOfDecimals = this.nrOfDecimals;
+        }
+        if(context.containsKey("readOnly")) {
+            readOnly = (Boolean) context.get("readOnly");
+        } else {
+            readOnly = this.readOnly;
+        }
+        if(context.containsKey("leftDecoration")) {
+            leftDecoration = (String) context.get("leftDecoration");
+        } else {
+            leftDecoration = this.leftDecoration;
+        }
+        if(context.containsKey("rightDecoration")) {
+            rightDecoration = (String) context.get("rightDecoration");
+        } else {
+            rightDecoration = this.rightDecoration;
+        }
+
         return new NumberBinding(getRequiredSourceClass(), (BigDecimalTextField) control, readOnly,
-                this.leftDecoration, this.rightDecoration, this.shiftFactor, this.nrOfDecimals
-                        + this.nrOfNonDecimals, formModel, formPropertyPath);
+                leftDecoration, rightDecoration, shiftFactor, nrOfDecimals
+                + nrOfNonDecimals, formModel, formPropertyPath);
     }
 
 }
