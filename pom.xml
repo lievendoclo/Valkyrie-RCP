@@ -370,9 +370,9 @@
                 <version>1.0</version>
             </dependency>
             <dependency>
-                <groupId>org.java.net.substance</groupId>
+                <groupId>com.github.insubstantial</groupId>
                 <artifactId>substance</artifactId>
-                <version>6.0</version>
+                <version>6.2</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
