@@ -55,6 +55,7 @@ import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.config.DefaultBinderConfig;
 import org.valkyriercp.form.binding.swing.*;
 import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
+import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.*;
 import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
@@ -431,6 +432,11 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public Binder textAreaBinder() {
         return new TextAreaBinder();
+    }
+
+    @Bean
+    public Binder genericLookupBinder() {
+        return new LookupBinder();
     }
 
     @Bean

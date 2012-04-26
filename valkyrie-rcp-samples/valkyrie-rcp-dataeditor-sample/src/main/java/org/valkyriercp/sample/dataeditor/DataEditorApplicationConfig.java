@@ -12,6 +12,7 @@ import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.form.binding.Binder;
+import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.ChainedInterceptorFactory;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
 import org.valkyriercp.form.builder.ToolTipInterceptorFactory;
