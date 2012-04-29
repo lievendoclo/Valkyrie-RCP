@@ -32,7 +32,7 @@ public class TextComponentBinder extends AbstractBinder {
 
 
     public TextComponentBinder() {
-        super(String.class);
+        super(String.class, new String[] {CONVERT_EMPTY_STRING_TO_NULL_KEY, PROMPT_KEY_KEY, READ_ONLY_KEY, SELECT_ALL_ON_FOCUS_KEY, DOCUMENT_FACTORY_KEY});
     }
 
     protected Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context) {

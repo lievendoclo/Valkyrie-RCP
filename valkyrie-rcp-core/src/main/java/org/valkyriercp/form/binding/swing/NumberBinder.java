@@ -99,7 +99,7 @@ public class NumberBinder extends AbstractBinder
      * <p>Sets BigDecimal as requiredSourceClass.</p>
      */
     public NumberBinder() {
-        super(BigDecimal.class);
+        this(BigDecimal.class);
     }
 
     /**
@@ -110,7 +110,9 @@ public class NumberBinder extends AbstractBinder
      */
     public NumberBinder(Class requiredSourceClass)
     {
-        super(requiredSourceClass);
+        super(requiredSourceClass, new String[] {FORMAT_KEY, UNFORMAT_KEY, SCALE_KEY, NR_OF_DECIMALS_KEY, NR_OF_NON_DECIMALS_KEY,
+        NEGATIVE_SIGN_KEY, ALIGNMENT_KEY, READ_ONLY_KEY, LEFT_DECORATION_KEY, RIGHT_DECORATION_KEY,
+        SHIFT_FACTOR_KEY});
     }
 
     /**

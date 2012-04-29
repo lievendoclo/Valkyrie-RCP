@@ -343,7 +343,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         binderSelectionStrategy.registerBinderForControlType(JScrollPane.class, new ScrollPaneBinder(binderSelectionStrategy, JTextArea.class));
         binderSelectionStrategy.registerBinderForPropertyType(String.class, textComponentBinder());
         binderSelectionStrategy.registerBinderForPropertyType(boolean.class, checkBoxBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, checkBoxBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, trueFalseNullBinder());
         binderSelectionStrategy.registerBinderForPropertyType(Enum.class, enumComboBoxBinder());
     }
 
@@ -387,6 +387,13 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public Binder checkBoxBinder() {
         return new CheckBoxBinder();
+    }
+    
+    public Binder trueFalseNullBinder() {
+        StringSelectionListBinder binder = new StringSelectionListBinder();
+        binder.setKeys(StringSelectionListBinder.TRUE_FALSE_NULL);
+        binder.setLabelId("trueFalseNullBinder");
+        return binder;
     }
 
     @Bean

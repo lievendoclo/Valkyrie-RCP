@@ -9,6 +9,7 @@ import org.valkyriercp.widget.AbstractWidgetForm;
 import org.valkyriercp.widget.TitledWidgetForm;
 
 import javax.swing.*;
+import java.awt.*;
 import java.math.BigDecimal;
 
 public class BinderDemoWidget extends TitledWidgetForm {
@@ -28,42 +29,64 @@ public class BinderDemoWidget extends TitledWidgetForm {
         protected JComponent createFormControl() {
             FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow", "default");
             FormLayoutFormBuilder builder = new FormLayoutFormBuilder(getBindingFactory(), layout);
-            builder.addBindingContextParameter("textFieldBinder", TextComponentBinder.DOCUMENT_FACTORY_KEY, new MaxLengthDocumentFactory(10));
-            builder.addPropertyAndLabel("textFieldBinder");
+            builder.addBindingContextParameter("stringField", TextComponentBinder.DOCUMENT_FACTORY_KEY, new MaxLengthDocumentFactory(10));
+            builder.addPropertyAndLabel("stringField");
             builder.nextRow();
-            builder.addPropertyAndLabel("integerBinder", "integerBinder");
+            builder.addPropertyAndLabel("integerField", "integerBinder");
             builder.nextRow();
-            builder.addPropertyAndLabel("euroBinder", "euroBinder");
+            builder.addPropertyAndLabel("euroField", "euroBinder");
+            builder.nextRow();
+            builder.addPropertyAndLabel("booleanField");
+            builder.nextRow();
+            builder.addPropertyAndLabel("nullableBooleanField");
             return builder.getPanel();
         }
 
         public static class BinderDemo {
-            private String textFieldBinder;
-            private Integer integerBinder;
-            private BigDecimal euroBinder;
+            private String stringField;
+            private Integer integerField;
+            private BigDecimal euroField;
+            private boolean booleanField;
+            private Boolean nullableBooleanField;
 
-            public String getTextFieldBinder() {
-                return textFieldBinder;
+            public boolean isBooleanField() {
+                return booleanField;
             }
 
-            public void setTextFieldBinder(String textFieldBinder) {
-                this.textFieldBinder = textFieldBinder;
+            public void setBooleanField(boolean booleanField) {
+                this.booleanField = booleanField;
             }
 
-            public Integer getIntegerBinder() {
-                return integerBinder;
+            public Boolean getNullableBooleanField() {
+                return nullableBooleanField;
             }
 
-            public void setIntegerBinder(Integer integerBinder) {
-                this.integerBinder = integerBinder;
+            public void setNullableBooleanField(Boolean nullableBooleanField) {
+                this.nullableBooleanField = nullableBooleanField;
             }
 
-            public BigDecimal getEuroBinder() {
-                return euroBinder;
+            public String getStringField() {
+                return stringField;
             }
 
-            public void setEuroBinder(BigDecimal euroBinder) {
-                this.euroBinder = euroBinder;
+            public void setStringField(String stringField) {
+                this.stringField = stringField;
+            }
+
+            public Integer getIntegerField() {
+                return integerField;
+            }
+
+            public void setIntegerField(Integer integerField) {
+                this.integerField = integerField;
+            }
+
+            public BigDecimal getEuroField() {
+                return euroField;
+            }
+
+            public void setEuroField(BigDecimal euroField) {
+                this.euroField = euroField;
             }
         }
 

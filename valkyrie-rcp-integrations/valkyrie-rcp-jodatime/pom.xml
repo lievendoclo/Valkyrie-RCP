@@ -3,26 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>valkyrie-rcp</artifactId>
+        <artifactId>valkyrie-rcp-integrations</artifactId>
         <groupId>org.valkyriercp</groupId>
         <version>1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>valkyrie-rcp-integrations</artifactId>
-    <name>Valkyrie Integrations</name>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>valkyrie-rcp-vldocking</module>
-        <module>valkyrie-rcp-jideoss</module>
-        <module>valkyrie-rcp-jodatime</module>
-    </modules>
-
+    <artifactId>valkyrie-rcp-jodatime</artifactId>
+    <name>Valkyrie Joda-Time integration</name>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>org.valkyriercp</groupId>
             <artifactId>valkyrie-rcp-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
     </dependencies>
 

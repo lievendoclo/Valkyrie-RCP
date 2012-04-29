@@ -37,7 +37,7 @@ public class EnumRadioButtonBinder extends AbstractBinder {
      * Creates a new binder
      */
     public EnumRadioButtonBinder() {
-        super(Enum.class);
+        super(Enum.class, new String[] {NULLABLE_KEY});
     }
 
     @Override
