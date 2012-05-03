@@ -408,7 +408,7 @@ public class BigDecimalTextField extends JTextField {
 				if (sarr[i] == this.decimalSeparator) {
 					if (sep != -1) {// double decimalseparator??
 						log
-								.warn("Error while inserting string: " + s + "[pos=" + i + "]"
+								.debug("Error while inserting string: " + s + "[pos=" + i + "]"
 										+ " Double decimalseparator?");
 						return;
 					}
@@ -417,7 +417,7 @@ public class BigDecimalTextField extends JTextField {
 						// digits left
 						// of decimal
 						// separator
-						log.warn("Error while inserting string: " + s + "[pos=" + i + "]" + " Too many non decimals? ["
+						log.debug("Error while inserting string: " + s + "[pos=" + i + "]" + " Too many non decimals? ["
 								+ this.nrOfNonDecimals + "]");
 						return;
 					}
@@ -428,7 +428,7 @@ public class BigDecimalTextField extends JTextField {
 						// of
 						// decimal
 						// separator
-						log.warn("Error while inserting string: " + s + "[pos=" + i + "]" + " Too many decimals? ["
+						log.info("Error while inserting string: " + s + "[pos=" + i + "]" + " Too many decimals? ["
 								+ this.nrOfDecimals + "]");
 						return;
 					}
@@ -439,7 +439,7 @@ public class BigDecimalTextField extends JTextField {
 				else if (!Character.isDigit(sarr[i])) {// non digit, no
 					// grouping/decimal
 					// separator not allowed
-					log.warn("Error while inserting string: " + s + "[pos=" + i + "]"
+					log.debug("Error while inserting string: " + s + "[pos=" + i + "]"
 							+ " String contains character that is no digit or separator?");
 					return;
 				}
@@ -451,7 +451,7 @@ public class BigDecimalTextField extends JTextField {
 				// number
 				// too
 				// big
-				log.warn("Error while inserting string: " + s + " Too many non decimals? [" + this.nrOfNonDecimals
+				log.debug("Error while inserting string: " + s + " Too many non decimals? [" + this.nrOfNonDecimals
 						+ "]");
 				return;
 			}

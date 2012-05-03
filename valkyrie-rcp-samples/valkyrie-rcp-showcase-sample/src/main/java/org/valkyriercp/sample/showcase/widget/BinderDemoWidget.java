@@ -1,10 +1,12 @@
 package org.valkyriercp.sample.showcase.widget;
 
 import com.jgoodies.forms.layout.FormLayout;
+import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.swing.TextComponentBinder;
 import org.valkyriercp.form.binding.swing.text.MaxLengthDocumentFactory;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
+import org.valkyriercp.form.builder.MigLayoutFormBuilder;
 import org.valkyriercp.widget.AbstractWidgetForm;
 import org.valkyriercp.widget.TitledWidgetForm;
 
@@ -27,17 +29,12 @@ public class BinderDemoWidget extends TitledWidgetForm {
 
         @Override
         protected JComponent createFormControl() {
-            FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow", "default");
-            FormLayoutFormBuilder builder = new FormLayoutFormBuilder(getBindingFactory(), layout);
+            MigLayoutFormBuilder builder = new MigLayoutFormBuilder(getBindingFactory(), new MigLayout("wrap 2", "[][fill]", ""));
             builder.addBindingContextParameter("stringField", TextComponentBinder.DOCUMENT_FACTORY_KEY, new MaxLengthDocumentFactory(10));
             builder.addPropertyAndLabel("stringField");
-            builder.nextRow();
-            builder.addPropertyAndLabel("integerField", "integerBinder");
-            builder.nextRow();
-            builder.addPropertyAndLabel("euroField", "euroBinder");
-            builder.nextRow();
+            builder.addPropertyAndLabelWithBinder("integerField", "integerBinder");
+            builder.addPropertyAndLabelWithBinder("euroField", "euroBinder");
             builder.addPropertyAndLabel("booleanField");
-            builder.nextRow();
             builder.addPropertyAndLabel("nullableBooleanField");
             return builder.getPanel();
         }

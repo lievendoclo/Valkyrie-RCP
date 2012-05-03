@@ -2,6 +2,7 @@ package org.valkyriercp.form.binding.swing;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.component.BigDecimalTextField;
 import org.valkyriercp.component.UserInputListener;
@@ -127,30 +128,25 @@ public class NumberBinding extends CustomBinding implements UserInputListener
     {
         StringBuffer columnLayout = new StringBuffer();
         if (this.leftDecoration != null)
-            columnLayout.append("pref, 3dlu, ");
-        columnLayout.append("fill:pref:grow");
+            columnLayout.insert(0, "[]");
+        columnLayout.append("[grow]");
         if (this.rightDecoration != null)
-            columnLayout.append(", 3dlu, pref");
+            columnLayout.append("[]");
 
-        JPanel panel = new JPanel(new FormLayout(columnLayout.toString(),
-                "fill:pref:grow")) {
+        JPanel panel = new JPanel(new MigLayout("insets 0", columnLayout.toString(), "")) {
             public void requestFocus() {
                 NumberBinding.this.numberField.requestFocus();
             }
 
         };
-        CellConstraints cc = new CellConstraints();
-        int columnIndex = 1;
         if (this.leftDecoration != null)
         {
-            panel.add(new JLabel(this.leftDecoration), cc.xy(columnIndex, 1));
-            columnIndex += 2;
+            panel.add(new JLabel(this.leftDecoration));
         }
-        panel.add(this.numberField, cc.xy(columnIndex, 1));
+        panel.add(this.numberField, "grow");
         if (this.rightDecoration != null)
         {
-            columnIndex += 2;
-            panel.add(new JLabel(this.rightDecoration), cc.xy(columnIndex, 1));
+            panel.add(new JLabel(this.rightDecoration));
         }
         return panel;
     }
