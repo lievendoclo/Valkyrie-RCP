@@ -3,16 +3,14 @@ package org.valkyriercp.application.support;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupJComponentBuilder;
-import org.valkyriercp.command.support.JXTaskPaneBuilder;
+import org.valkyriercp.command.support.JOutlookBarBuilder;
 
 import javax.swing.*;
 
-public class JXTaskPaneNavigatorView extends AbstractNavigatorView
-{
-
+public class JOutlookBarNavigatorView extends AbstractNavigatorView {
     private CommandGroup navigation;
 
-    public JXTaskPaneNavigatorView(CommandGroup navigation)
+    public JOutlookBarNavigatorView(CommandGroup navigation)
     {
         super(navigation);
         this.navigation = navigation;
@@ -20,10 +18,10 @@ public class JXTaskPaneNavigatorView extends AbstractNavigatorView
 
     public CommandGroupJComponentBuilder getNavigationBuilder()
     {
-        return new JXTaskPaneBuilder();
+        return new JOutlookBarBuilder();
     }
 
-     protected JComponent createControl()
+    protected JComponent createControl()
     {
         JPanel navigationView = new JPanel(new MigLayout("fill"));
         navigationView.add(getNavigationBuilder().buildComponent(this.navigation), "grow,push");

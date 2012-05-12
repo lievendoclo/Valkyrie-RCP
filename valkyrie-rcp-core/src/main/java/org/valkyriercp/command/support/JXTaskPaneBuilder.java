@@ -1,4 +1,4 @@
-package org.valkyriercp.application.support;
+package org.valkyriercp.command.support;
 
 import com.l2fprod.common.swing.JLinkButton;
 import com.l2fprod.common.swing.JTaskPaneGroup;
