@@ -23,6 +23,12 @@ public class StringSelectionListBinder extends AbstractBinder
      */
     public static final Collection TRUE_FALSE_NULL = Arrays.asList(new Object[]{Boolean.TRUE, Boolean.FALSE,
             null});
+    
+    public static final String LABELS_KEY = "labels";
+    public static final String LABEL_ID_KEY = "labelId";
+    public static final String KEYS_KEY = "keys";
+    public static final String DEFAULT_KEY_INDEX_KEY = "defaultKeyIndex";
+    public static final String ADD_NULL_KEY = "addNull";
 
     private String labelId = null;
     private Collection keys = null;
@@ -54,7 +60,7 @@ public class StringSelectionListBinder extends AbstractBinder
 
     public StringSelectionListBinder()
     {
-        super(null);
+        super(null, new String[] {KEYS_KEY, LABELS_KEY, LABEL_ID_KEY, DEFAULT_KEY_INDEX_KEY, ADD_NULL_KEY});
     }
 
     public void setLabelId(String labelId)
@@ -150,18 +156,53 @@ public class StringSelectionListBinder extends AbstractBinder
     {
         this.defaultKeyIndex = defaultKeyIndex;
     }
+    
+    
 
     @Override
     protected Binding doBind(JComponent component, FormModel formModel, String formPropertyPath, Map context)
     {
+        String labelId = null;
+        Collection keys = null;
+        Collection labels = null;
+        int defaultKeyIndex = -1;
+        boolean addNull = false;
+        if(context.containsKey(LABEL_ID_KEY)) {
+            labelId = (String) context.get(LABEL_ID_KEY);
+        } else {
+            labelId = this.labelId;
+        }
+        if(context.containsKey(KEYS_KEY)) {
+            keys = (Collection) context.get(KEYS_KEY);
+            if(context.containsKey(ADD_NULL_KEY) || (Boolean) context.get(ADD_NULL_KEY))
+                keys.add(null);
+            else if(!context.containsKey(ADD_NULL_KEY) || addNull)
+                keys.add(null);
+        } else {
+            keys = this.keys;
+        }
+        if(context.containsKey(LABELS_KEY)) {
+            labels = (Collection) context.get(LABELS_KEY);
+            if(context.containsKey(ADD_NULL_KEY) || (Boolean) context.get(ADD_NULL_KEY))
+                labels.add(null);
+            else if(!context.containsKey(ADD_NULL_KEY) || addNull)
+                labels.add(null);
+        } else {
+            labels = this.labels;
+        }
+        if(context.containsKey(DEFAULT_KEY_INDEX_KEY)) {
+            defaultKeyIndex = (Integer) context.get(DEFAULT_KEY_INDEX_KEY);
+        } else {
+            defaultKeyIndex = this.defaultKeyIndex;
+        }
         StringSelectionListBinding stringSelectionListBinding = new StringSelectionListBinding(
                 (JComboBox) component, formModel, formPropertyPath, isReadOnly());
-        stringSelectionListBinding.setId(getLabelId());
+        stringSelectionListBinding.setId(labelId);
         stringSelectionListBinding.setDefaultKeyIndex(defaultKeyIndex);
-        if (getKeys() != null)
-            stringSelectionListBinding.setSelectionList(getKeys(), getLabels() == null
-                    ? getKeys()
-                    : getLabels());
+        if (keys != null)
+            stringSelectionListBinding.setSelectionList(keys, labels == null
+                    ? keys
+                    : labels);
         return stringSelectionListBinding;
     }
 
