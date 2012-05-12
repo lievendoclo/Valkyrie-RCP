@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -49,12 +50,11 @@ import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
 import org.valkyriercp.form.FormModelFactory;
-import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
-import org.valkyriercp.form.binding.config.DefaultBinderConfig;
-import org.valkyriercp.form.binding.swing.*;
-import org.valkyriercp.form.binding.swing.date.JXDatePickerDateFieldBinder;
+import org.valkyriercp.form.binding.swing.ScrollPaneBinder;
+import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
+import org.valkyriercp.form.binding.swing.SwingBindingFactoryProvider;
 import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.*;
 import org.valkyriercp.image.DefaultIconSource;
@@ -78,6 +78,7 @@ import org.valkyriercp.widget.WidgetViewDescriptor;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,10 +86,14 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@Import(org.valkyriercp.application.config.support.DefaultBinderConfig.class)
 @Lazy
 public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private org.valkyriercp.application.config.support.DefaultBinderConfig defaultBinderConfig;
 
     public ApplicationContext applicationContext() {
         return applicationContext;
@@ -119,7 +124,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
     @Bean
     public ViewDescriptor emptyViewDescriptor() {
-        return new WidgetViewDescriptor("empty", Widget.EMPTY_WIDGET);
+        return new WidgetViewDescriptor("empty", Widget.EMPTY_WIDGET_PROVIDER);
     }
 
     @Bean
@@ -320,10 +325,6 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         return factory;
     }
 
-    public DefaultBinderConfig defaultBinderConfig() {
-        return new DefaultBinderConfig();
-    }
-
     @Bean
     public BinderSelectionStrategy binderSelectionStrategy() {
         SwingBinderSelectionStrategy swingBinderSelectionStrategy = new SwingBinderSelectionStrategy();
@@ -332,19 +333,20 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     }
 
     protected void registerBinders(BinderSelectionStrategy binderSelectionStrategy) {
-        binderSelectionStrategy.registerBinderForControlType(JTextComponent.class, textComponentBinder());
-        binderSelectionStrategy.registerBinderForControlType(JFormattedTextField.class, formattedTextFieldBinder());
-        binderSelectionStrategy.registerBinderForControlType(JTextArea.class, textAreaBinder());
-        binderSelectionStrategy.registerBinderForControlType(JToggleButton.class, toggleButtonBinder());
-        binderSelectionStrategy.registerBinderForControlType(JCheckBox.class, checkBoxBinder());
-        binderSelectionStrategy.registerBinderForControlType(JComboBox.class, comboBoxBinder());
-        binderSelectionStrategy.registerBinderForControlType(JList.class, listBinder());
-        binderSelectionStrategy.registerBinderForControlType(JLabel.class, labelBinder());
+        binderSelectionStrategy.registerBinderForControlType(JTextComponent.class, defaultBinderConfig.textComponentBinder());
+        binderSelectionStrategy.registerBinderForControlType(JFormattedTextField.class, defaultBinderConfig.formattedTextFieldBinder());
+        binderSelectionStrategy.registerBinderForControlType(JTextArea.class, defaultBinderConfig.textAreaBinder());
+        binderSelectionStrategy.registerBinderForControlType(JToggleButton.class,  defaultBinderConfig.toggleButtonBinder());
+        binderSelectionStrategy.registerBinderForControlType(JCheckBox.class,  defaultBinderConfig.checkBoxBinder());
+        binderSelectionStrategy.registerBinderForControlType(JComboBox.class,  defaultBinderConfig.comboBoxBinder());
+        binderSelectionStrategy.registerBinderForControlType(JList.class,  defaultBinderConfig.listBinder());
+        binderSelectionStrategy.registerBinderForControlType(JLabel.class,  defaultBinderConfig.labelBinder());
         binderSelectionStrategy.registerBinderForControlType(JScrollPane.class, new ScrollPaneBinder(binderSelectionStrategy, JTextArea.class));
-        binderSelectionStrategy.registerBinderForPropertyType(String.class, textComponentBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(boolean.class, checkBoxBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, trueFalseNullBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Enum.class, enumComboBoxBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(String.class,  defaultBinderConfig.textComponentBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(boolean.class, defaultBinderConfig. checkBoxBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, defaultBinderConfig. checkBoxBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(Enum.class, defaultBinderConfig. enumComboBoxBinder());
+        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, defaultBinderConfig.trueFalseNullBinder());
     }
 
     @Bean
@@ -377,84 +379,6 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         return new DefaultApplicationSecurityManager(false);
     }
 
-    // Binders
-
-    @Bean
-    public Binder jxDatePickerDateFieldBinder() {
-        return new JXDatePickerDateFieldBinder();
-    }
-
-    @Bean
-    public Binder checkBoxBinder() {
-        return new CheckBoxBinder();
-    }
-    
-    public Binder trueFalseNullBinder() {
-        StringSelectionListBinder binder = new StringSelectionListBinder();
-        binder.setKeys(StringSelectionListBinder.TRUE_FALSE_NULL);
-        binder.setLabelId("trueFalseNullBinder");
-        return binder;
-    }
-
-    @Bean
-    public Binder formattedTextFieldBinder() {
-        return new FormattedTextFieldBinder(null);
-    }
-
-    @Bean
-    public Binder formattedTextFieldStringBinder() {
-        return new FormattedTextFieldBinder(String.class);
-    }
-
-    @Bean
-    public Binder comboBoxBinder() {
-        return new ComboBoxBinder();
-    }
-
-    @Bean
-    public Binder enumComboBoxBinder() {
-        return new EnumComboBoxBinder();
-    }
-
-    @Bean
-    public Binder labelBinder() {
-        return new LabelBinder();
-    }
-
-    @Bean
-    public Binder numberBinder() {
-        return new NumberBinder();
-    }
-
-    @Bean
-    public Binder textComponentBinder() {
-        return new TextComponentBinder();
-    }
-
-    @Bean
-    public Binder listBinder() {
-        return new ListBinder();
-    }
-
-    @Bean
-    public Binder textAreaBinder() {
-        return new TextAreaBinder();
-    }
-
-    @Bean
-    public Binder genericLookupBinder() {
-        return new LookupBinder();
-    }
-
-    @Bean
-    public Binder toggleButtonBinder() {
-        return new ToggleButtonBinder();
-    }
-
-    @Override
-    public ApplicationMode getApplicationMode() {
-        return ApplicationMode.PRODUCTION;
-    }
 
     @Bean
     public SecurityAwareConfigurer securityAwareConfigurer() {
@@ -464,5 +388,20 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public FormModelFactory formModelFactory() {
         return new FormModelFactory();
+    }
+
+    @Bean
+    public Color titlePaneBackgroundColor() {
+        return new Color(200, 200, 200);
+    }
+
+    @Bean
+    public Color titlePanePinstripeColor() {
+        return new Color(1f, 1f, 1f, 0.17f);
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        return ApplicationMode.DEVELOPMENT;
     }
 }

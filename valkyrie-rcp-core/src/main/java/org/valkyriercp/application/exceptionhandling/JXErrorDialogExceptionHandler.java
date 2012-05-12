@@ -4,6 +4,7 @@ import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.error.ErrorInfo;
 import org.jdesktop.swingx.error.ErrorReporter;
 
+import javax.swing.*;
 import java.util.logging.Level;
 
 /**
@@ -40,19 +41,23 @@ public class JXErrorDialogExceptionHandler<SELF extends JXErrorDialogExceptionHa
     /**
      * Shows the {@link org.jdesktop.swingx.JXErrorPane} to the user.
      */
-    public void notifyUserAboutException(Thread thread, Throwable throwable) {
-        ErrorInfo errorInfo = new ErrorInfo(
-                resolveExceptionCaption(throwable),
-                (String) createExceptionContent(throwable),
-                getDetailsAsHTML(throwable.getMessage(), throwable),
-                null, throwable, Level.SEVERE,  null);
-        JXErrorPane pane = new JXErrorPane();
-        pane.setErrorInfo(errorInfo);
-        if (errorReporter != null) {
-            pane.setErrorReporter(errorReporter);
-        }
-
-        JXErrorPane.showDialog(resolveParentFrame(), pane);
+    public void notifyUserAboutException(Thread thread, final Throwable throwable) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final ErrorInfo errorInfo = new ErrorInfo(
+                        resolveExceptionCaption(throwable),
+                        (String) createExceptionContent(throwable),
+                        getDetailsAsHTML(throwable.getMessage(), throwable),
+                        null, throwable, Level.SEVERE,  null);
+                JXErrorPane pane = new JXErrorPane();
+                pane.setErrorInfo(errorInfo);
+                if (errorReporter != null) {
+                    pane.setErrorReporter(errorReporter);
+                }
+                JXErrorPane.showDialog(resolveParentFrame(), pane);
+            }
+        });
     }
 
     /**

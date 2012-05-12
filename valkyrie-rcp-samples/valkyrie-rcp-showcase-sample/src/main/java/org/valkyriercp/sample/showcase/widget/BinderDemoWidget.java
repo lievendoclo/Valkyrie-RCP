@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.showcase.widget;
+      package org.valkyriercp.sample.showcase.widget;
 
 import com.jgoodies.forms.layout.FormLayout;
 import net.miginfocom.swing.MigLayout;
@@ -13,6 +13,8 @@ import org.valkyriercp.widget.TitledWidgetForm;
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BinderDemoWidget extends TitledWidgetForm {
 

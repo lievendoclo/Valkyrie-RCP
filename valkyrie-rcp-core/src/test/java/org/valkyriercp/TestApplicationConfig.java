@@ -1,6 +1,7 @@
 package org.valkyriercp;
 
 import org.springframework.context.annotation.Configuration;
+import org.valkyriercp.application.config.ApplicationMode;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 
 @Configuration

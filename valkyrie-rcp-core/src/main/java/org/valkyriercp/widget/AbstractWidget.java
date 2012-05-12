@@ -11,6 +11,7 @@ import org.valkyriercp.command.support.AbstractCommand;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Default behavior implementation of AbstractWidget
@@ -70,10 +71,6 @@ public abstract class AbstractWidget implements Widget
         if(view == null)
             view = new WidgetView(this);
         return view;
-    }
-
-    public WidgetViewDescriptor createViewDescriptor(String id) {
-        return new WidgetViewDescriptor(id, this);
     }
 
     @Override

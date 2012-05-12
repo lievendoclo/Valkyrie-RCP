@@ -3,6 +3,7 @@ package org.valkyriercp.form.binding.swing.editor;
 import com.google.common.base.Function;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
+import net.miginfocom.swing.MigLayout;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.command.support.ActionCommand;
@@ -287,22 +288,7 @@ public class LookupBinding<T> extends CustomBinding {
 
     @Override
     protected JComponent doBindControl() {
-        FormLayout layout;
-        if (isEnableViewCommand()) {
-            layout = new FormLayout(new ColumnSpec[]{
-                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
-                    FormFactory.RELATED_GAP_COLSPEC,
-                    new ColumnSpec(ColumnSpec.LEFT, Sizes.MINIMUM, FormSpec.NO_GROW),
-                    FormFactory.RELATED_GAP_COLSPEC,
-                    new ColumnSpec(ColumnSpec.LEFT, Sizes.MINIMUM, FormSpec.NO_GROW)},
-                    new RowSpec[]{new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)});
-        } else {
-            layout = new FormLayout(new ColumnSpec[]{
-                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
-                    FormFactory.RELATED_GAP_COLSPEC,
-                    new ColumnSpec(ColumnSpec.LEFT, Sizes.MINIMUM, FormSpec.NO_GROW)},
-                    new RowSpec[]{new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)});
-        }
+        MigLayout layout = new MigLayout("fill, insets 0");
         JPanel editor = new PanelWithValidationComponent(layout) {
 
             private static final long serialVersionUID = 534852878664152460L;
@@ -330,13 +316,12 @@ public class LookupBinding<T> extends CustomBinding {
             }
         };
 
-        CellConstraints cc = new CellConstraints();
-        editor.add(getKeyComponent(), cc.xy(1, 1));
-        editor.add(getDataEditorButton(), cc.xy(3, 1));
+        editor.add(getKeyComponent(), "push,grow");
+        editor.add(getDataEditorButton(), "w 40px!");
         if (isEnableViewCommand()) {
             AbstractButton viewButton = referableDataEditorViewCommand.createButton();
             viewButton.setFocusable(false);
-            editor.add(viewButton, cc.xy(5, 1));
+            editor.add(viewButton, "w 40px!");
         }
         valueModelChanged(getValue());
         return editor;

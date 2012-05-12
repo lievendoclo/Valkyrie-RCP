@@ -371,8 +371,13 @@
             </dependency>
             <dependency>
                 <groupId>com.github.insubstantial</groupId>
+                <artifactId>substance-swingx</artifactId>
+                <version>7.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.insubstantial</groupId>
                 <artifactId>substance</artifactId>
-                <version>6.2</version>
+                <version>7.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>

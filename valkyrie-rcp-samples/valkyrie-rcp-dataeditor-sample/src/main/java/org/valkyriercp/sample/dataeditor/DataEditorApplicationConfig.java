@@ -1,15 +1,24 @@
 package org.valkyriercp.sample.dataeditor;
 
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import com.jgoodies.looks.plastic.theme.ExperienceGreen;
+import com.jidesoft.swing.JideTabbedPane;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
+import org.pushingpixels.substance.api.skin.SubstanceChallengerDeepLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.ApplicationWindowFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
+import org.valkyriercp.application.support.DefaultApplicationWindowFactory;
+import org.valkyriercp.application.support.JXTaskPaneNavigatorApplicationWindowFactory;
+import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.swing.editor.LookupBinder;
@@ -21,6 +30,8 @@ import org.valkyriercp.sample.dataeditor.domain.SupplierService;
 import org.valkyriercp.sample.dataeditor.ui.*;
 import org.valkyriercp.taskpane.TaskPaneNavigatorApplicationWindowFactory;
 import org.valkyriercp.text.SelectAllFormComponentInterceptorFactory;
+import org.valkyriercp.widget.WidgetProvider;
+import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
 import java.util.List;
@@ -30,7 +41,7 @@ import java.util.Map;
 public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
-        ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
+        ApplicationLifecycleAdvisor lifecycleAdvisor = super.applicationLifecycleAdvisor();
         lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(itemView()));
         return lifecycleAdvisor;
     }
@@ -56,18 +67,14 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public UIManagerConfigurer uiManagerConfigurer() {
         UIManagerConfigurer configurer = new UIManagerConfigurer();
-        configurer.setLookAndFeel(PlasticXPLookAndFeel.class);
+        configurer.setLookAndFeel(SubstanceBusinessLookAndFeel.class);
         return configurer;
     }
 
-//    @Override
-//    public ApplicationPageFactory applicationPageFactory() {
-//        return new TabbedApplicationPageFactory();
-//    }
-
     @Override
     public ApplicationWindowFactory applicationWindowFactory() {
-        return new TaskPaneNavigatorApplicationWindowFactory();
+        JXTaskPaneNavigatorApplicationWindowFactory jxTaskPaneNavigatorApplicationWindowFactory = new JXTaskPaneNavigatorApplicationWindowFactory();
+        return jxTaskPaneNavigatorApplicationWindowFactory;
     }
 
     @Override
@@ -78,10 +85,19 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
         return formComponentInterceptorFactory;    //To change body of overridden methods use File | Settings | File Templates.
     }
 
+    @Override
+    public ApplicationPageFactory applicationPageFactory() {
+        JideTabbedApplicationPageFactory jideTabbedApplicationPageFactory = new JideTabbedApplicationPageFactory();
+        jideTabbedApplicationPageFactory.setShowCloseButton(true);
+        jideTabbedApplicationPageFactory.setTabShape(JideTabbedPane.SHAPE_ROUNDED_VSNET);
+        return jideTabbedApplicationPageFactory;
+    }
+
     // widgets
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    @Lazy
     public ItemDataEditor itemDataEditor() {
         return new ItemDataEditor(itemDataProvider());
     }
@@ -92,6 +108,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    @Lazy
     public SupplierDataEditor supplierDataEditor() {
         return new SupplierDataEditor(supplierDataProvider());
     }
@@ -103,24 +120,34 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     // views
 
     @Bean
-    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public WidgetViewDescriptor itemView() {
-        return itemDataEditor().createViewDescriptor("itemView");
+        return new WidgetViewDescriptor("itemView", new WidgetProvider<Widget>() {
+            @Override
+            public Widget getWidget() {
+                return itemDataEditor();
+            }
+        });
 
     }
 
     @Bean
-    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public WidgetViewDescriptor supplierView() {
-         return supplierDataEditor().createViewDescriptor("supplierView");
+        return new WidgetViewDescriptor("supplierView", new WidgetProvider<Widget>() {
+            @Override
+            public Widget getWidget() {
+                return supplierDataEditor();
+            }
+        });
     }
 
     // Services
 
+    @Bean
     public SupplierService supplierService() {
         return new SupplierService();
     }
 
+    @Bean
     public ItemService itemService() {
         return new ItemService();
     }

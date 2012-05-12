@@ -2,9 +2,11 @@ package org.valkyriercp.sample.dataeditor.ui;
 
 import com.google.common.base.Function;
 import com.jgoodies.forms.layout.FormLayout;
+import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
+import org.valkyriercp.form.builder.MigLayoutFormBuilder;
 import org.valkyriercp.sample.dataeditor.domain.Item;
 import org.valkyriercp.sample.dataeditor.domain.Supplier;
 import org.valkyriercp.sample.dataeditor.domain.SupplierFilter;
@@ -18,13 +20,10 @@ public class ItemForm extends TabbedForm
 {
     protected Tab[] getTabs()
     {
-        FormLayout layout = new FormLayout("default, 3dlu, fill:pref:nogrow, 3dlu, 100dlu", "default");
-        FormLayoutFormBuilder builder = new FormLayoutFormBuilder(getBindingFactory(), layout);
-        setFocusControl(builder.addPropertyAndLabel("name")[1]);
-        builder.nextRow();
-        builder.addPropertyAndLabel("description");
-        builder.nextRow();
-        builder.addPropertyAndLabel("supplier", "supplierBinder");
+        MigLayoutFormBuilder builder = new MigLayoutFormBuilder(getBindingFactory());
+        setFocusControl(builder.addPropertyAndLabel("name", "wrap")[1]);
+        builder.addPropertyAndLabel("description", "wrap");
+        builder.addPropertyAndLabelWithBinder("supplier", "supplierBinder", "grow");
 
         // or you could use the following block, which uses the generic lookupBinder
         // and configures it through context parameters

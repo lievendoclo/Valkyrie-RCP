@@ -6,6 +6,10 @@ import org.jdesktop.swingx.painter.CompoundPainter;
 import org.jdesktop.swingx.painter.GlossPainter;
 import org.jdesktop.swingx.painter.MattePainter;
 import org.jdesktop.swingx.painter.PinstripePainter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.factory.AbstractControlFactory;
@@ -21,6 +25,7 @@ import java.beans.PropertyChangeListener;
  * image as well as a common area for displaying a description, a message, or an
  * error message.
  */
+@Configurable
 public class TitlePane extends AbstractControlFactory implements MessagePane, TitleConfigurable, ImageConfigurable {
 
     /**
@@ -37,6 +42,15 @@ public class TitlePane extends AbstractControlFactory implements MessagePane, Ti
 //    private JLabel iconLabel;
 
     private MessagePane messagePane;
+    
+    @Autowired
+    @Qualifier("titlePaneBackgroundColor")
+    private Color titlePaneBackgroundColor;
+
+    @Autowired
+    @Qualifier("titlePanePinstripeColor")
+    private Color titlePanePinstripeColor;
+
 
     public TitlePane() {
         this(DefaultMessageAreaPane.DEFAULT_LINES_TO_DISPLAY);
@@ -76,10 +90,10 @@ public class TitlePane extends AbstractControlFactory implements MessagePane, Ti
 //        iconLabel.setIcon(getIcon());
 
         JXPanel panel = new JXPanel();
-
-        MattePainter matte = new MattePainter(new Color(200,200,200));
+                   ;
+        MattePainter matte = new MattePainter(titlePaneBackgroundColor);
         PinstripePainter pinstripe = new PinstripePainter();
-        pinstripe.setPaint(new Color(1f,1f,1f,0.17f));
+        pinstripe.setPaint(titlePanePinstripeColor);
         pinstripe.setSpacing(5.);
         GlossPainter gloss = new GlossPainter();
         CompoundPainter painter = new CompoundPainter(matte, pinstripe, gloss);

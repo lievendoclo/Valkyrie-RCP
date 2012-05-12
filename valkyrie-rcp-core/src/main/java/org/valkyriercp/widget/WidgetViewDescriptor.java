@@ -4,15 +4,13 @@ import org.valkyriercp.application.PageComponent;
 import org.valkyriercp.application.support.AbstractView;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 
-public final class WidgetViewDescriptor extends DefaultViewDescriptor
-{
+public final class WidgetViewDescriptor extends DefaultViewDescriptor {
     /**
      * Widget to create the view.
      */
-    private Widget widget;
+    private WidgetProvider<Widget> widget;
 
-    public WidgetViewDescriptor(String id, Widget widget)
-    {
+    public WidgetViewDescriptor(String id, WidgetProvider<Widget> widget) {
         setId(id);
         setViewClass(WidgetView.class);
         this.widget = widget;
@@ -21,14 +19,14 @@ public final class WidgetViewDescriptor extends DefaultViewDescriptor
     /**
      * {@inheritDoc}
      */
-    public PageComponent createPageComponent()
-    {
-        AbstractView sv = new WidgetView(this.widget);
+    public PageComponent createPageComponent() {
+        AbstractView sv;
+        sv = new WidgetView(getWidget());
         sv.setDescriptor(this);
         return sv;
     }
 
     public Widget getWidget() {
-        return widget;
+        return widget.getWidget();
     }
 }

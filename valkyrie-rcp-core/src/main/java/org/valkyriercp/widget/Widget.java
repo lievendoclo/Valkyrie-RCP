@@ -32,6 +32,14 @@ public interface Widget
         }
     };
 
+    static WidgetProvider<Widget> EMPTY_WIDGET_PROVIDER = new WidgetProvider<Widget>(){
+
+        @Override
+        public Widget getWidget() {
+            return EMPTY_WIDGET;
+        }
+    };
+
 
     /**
      * @return A not <code>null</code> graphical component built using the

@@ -170,7 +170,7 @@ public class DefaultCommandRegistry implements CommandRegistry, CommandRegistryL
         Object previousCommand = this.commandMap.put(command.getId(), command);
         
         if (previousCommand != null && logger.isWarnEnabled()) {
-            logger.warn("The command ["
+            logger.info("The command ["
                         + previousCommand
                         + "] was overwritten in the registry with the command ["
                         + command

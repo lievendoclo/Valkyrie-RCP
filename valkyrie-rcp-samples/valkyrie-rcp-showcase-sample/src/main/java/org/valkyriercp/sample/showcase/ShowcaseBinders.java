@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.swing.NumberBinder;
+import org.valkyriercp.form.binding.swing.TextComponentBinder;
 
 import java.math.BigDecimal;
 
