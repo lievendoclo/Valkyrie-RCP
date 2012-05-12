@@ -1,10 +1,7 @@
 package org.valkyriercp.sample.dataeditor;
 
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.looks.plastic.theme.ExperienceGreen;
 import com.jidesoft.swing.JideTabbedPane;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
-import org.pushingpixels.substance.api.skin.SubstanceChallengerDeepLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,19 +13,16 @@ import org.valkyriercp.application.ApplicationWindowFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
-import org.valkyriercp.application.support.DefaultApplicationWindowFactory;
 import org.valkyriercp.application.support.JXTaskPaneNavigatorApplicationWindowFactory;
 import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.form.binding.Binder;
-import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.ChainedInterceptorFactory;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
 import org.valkyriercp.form.builder.ToolTipInterceptorFactory;
 import org.valkyriercp.sample.dataeditor.domain.ItemService;
 import org.valkyriercp.sample.dataeditor.domain.SupplierService;
 import org.valkyriercp.sample.dataeditor.ui.*;
-import org.valkyriercp.taskpane.TaskPaneNavigatorApplicationWindowFactory;
 import org.valkyriercp.text.SelectAllFormComponentInterceptorFactory;
 import org.valkyriercp.widget.WidgetProvider;
 import org.valkyriercp.widget.Widget;
@@ -73,8 +67,8 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
 
     @Override
     public ApplicationWindowFactory applicationWindowFactory() {
-        JXTaskPaneNavigatorApplicationWindowFactory jxTaskPaneNavigatorApplicationWindowFactory = new JXTaskPaneNavigatorApplicationWindowFactory();
-        return jxTaskPaneNavigatorApplicationWindowFactory;
+        JXTaskPaneNavigatorApplicationWindowFactory navigatorApplicationWindowFactory = new JXTaskPaneNavigatorApplicationWindowFactory();
+        return navigatorApplicationWindowFactory;
     }
 
     @Override
