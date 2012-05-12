@@ -2,19 +2,12 @@ package org.valkyriercp.command.support;
 
 import com.l2fprod.common.swing.JOutlookBar;
 import com.l2fprod.common.swing.PercentLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.command.config.CommandButtonConfigurer;
-import org.valkyriercp.image.IconSource;
 
 import javax.swing.*;
 
-@Configurable
 public class JOutlookBarBuilder extends CommandGroupJComponentBuilder
 {
-
-    @Autowired
-    private IconSource iconSource;
     private CommandButtonConfigurer commandButtonConfigurer = new JOutlookBarCommandButtonConfigurer();
 
     protected JComponent buildRootComponent(AbstractCommand command)
@@ -47,17 +40,14 @@ public class JOutlookBarBuilder extends CommandGroupJComponentBuilder
         panel.setLayout(new PercentLayout(PercentLayout.VERTICAL, 0));
         panel.setOpaque(false);
 
-        Icon icon = iconSource.getIcon(command.getId() + ".icon");
-
         JOutlookBar outlookBar = (JOutlookBar) parentComponent;
-        outlookBar.addTab(command.getText(), icon, outlookBar.makeScrollPane(panel));
+        outlookBar.addTab(command.getText(), command.getIcon(), outlookBar.makeScrollPane(panel));
 
         return panel;
     }
 
     protected boolean continueDeeper(CommandGroup commandGroup, int level)
     {
-        // stop traversing below level 2
         return (level < 2);
     }
 
