@@ -15,7 +15,7 @@ public class ShowDescriptionInStatusBarInterceptorFactory implements FormCompone
 		return new AbstractFormComponentStatusBarInterceptor() {
 
 			protected String getStatusBarText(String propertyName) {
-				return formModel.getFieldFace(propertyName).getCaption();
+				return formModel.getFieldFace(propertyName).getDescription();
 			}
 		};
 	}
