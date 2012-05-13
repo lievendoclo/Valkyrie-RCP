@@ -29,7 +29,7 @@ import java.util.Vector;
  *
  * @author Oliver Hutchison
  */
-@Configurable
+@Configurable(preConstruction = true)
 public class TextComponentPopup extends MouseAdapter implements FocusListener, CaretListener, UndoableEditListener {
 
 	/**
