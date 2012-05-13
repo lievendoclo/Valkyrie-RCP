@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import org.valkyriercp.application.Application;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.util.HasInnerComponent;
 
 import javax.swing.*;
 
@@ -52,8 +53,10 @@ public abstract class AbstractFormComponentInterceptor implements FormComponentI
 	 */
 	protected JComponent getInnerComponent(JComponent component) {
 		if (component instanceof JScrollPane) {
-			return (JComponent) ((JScrollPane) component).getViewport().getView();
-		}
+			return getInnerComponent((JComponent) ((JScrollPane) component).getViewport().getView());
+		} if (component instanceof HasInnerComponent) {
+            return getInnerComponent(((HasInnerComponent) component).getInnerComponent());
+        }
 		return component;
 	}
 

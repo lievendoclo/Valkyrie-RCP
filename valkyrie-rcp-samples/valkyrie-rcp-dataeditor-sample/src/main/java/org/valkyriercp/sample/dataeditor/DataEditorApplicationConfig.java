@@ -16,6 +16,7 @@ import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.support.JXTaskPaneNavigatorApplicationWindowFactory;
 import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
+import org.valkyriercp.component.SearchableInterceptorFactory;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.builder.ChainedInterceptorFactory;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
@@ -24,6 +25,7 @@ import org.valkyriercp.sample.dataeditor.domain.ItemService;
 import org.valkyriercp.sample.dataeditor.domain.SupplierService;
 import org.valkyriercp.sample.dataeditor.ui.*;
 import org.valkyriercp.text.SelectAllFormComponentInterceptorFactory;
+import org.valkyriercp.text.TextComponentPopupInterceptorFactory;
 import org.valkyriercp.widget.WidgetProvider;
 import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
@@ -74,8 +76,10 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Override
     public FormComponentInterceptorFactory formComponentInterceptorFactory() {
         ChainedInterceptorFactory formComponentInterceptorFactory = (ChainedInterceptorFactory) super.formComponentInterceptorFactory();
-        formComponentInterceptorFactory.getInterceptorFactories().add(new SelectAllFormComponentInterceptorFactory());
+//        formComponentInterceptorFactory.getInterceptorFactories().add(new SelectAllFormComponentInterceptorFactory());
         formComponentInterceptorFactory.getInterceptorFactories().add(new ToolTipInterceptorFactory());
+        formComponentInterceptorFactory.getInterceptorFactories().add(new TextComponentPopupInterceptorFactory());
+        formComponentInterceptorFactory.getInterceptorFactories().add(new SearchableInterceptorFactory());
         return formComponentInterceptorFactory;    //To change body of overridden methods use File | Settings | File Templates.
     }
 

@@ -4,13 +4,16 @@ import com.google.common.base.Function;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import net.miginfocom.swing.MigLayout;
+import org.jdesktop.swingx.JXPanel;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.component.PanelWithValidationComponent;
 import org.valkyriercp.dialog.ApplicationDialog;
+import org.valkyriercp.form.HasValidationComponent;
 import org.valkyriercp.form.binding.support.CustomBinding;
 import org.valkyriercp.text.SelectAllFocusListener;
+import org.valkyriercp.util.HasInnerComponent;
 import org.valkyriercp.widget.TitledWidgetApplicationDialog;
 import org.valkyriercp.widget.editor.AbstractDataEditorWidget;
 import org.valkyriercp.widget.editor.DataEditorWidgetViewCommand;
@@ -157,6 +160,8 @@ public class LookupBinding<T> extends CustomBinding {
     private Function<String, ? extends Object> createFilterFromFieldFunction;
 
     private Dimension dialogSize;
+
+    private LookupBindingComponent editor;
     
     public LookupBinding(DefaultDataEditorWidget dataEditor, FormModel formModel, String formPropertyPath, Class<?> requiredClass) {
         super(formModel, formPropertyPath, requiredClass);
@@ -289,40 +294,18 @@ public class LookupBinding<T> extends CustomBinding {
     @Override
     protected JComponent doBindControl() {
         MigLayout layout = new MigLayout("fill, insets 0");
-        JPanel editor = new PanelWithValidationComponent(layout) {
-
-            private static final long serialVersionUID = 534852878664152460L;
-
-            @Override
-            public void setEnabled(boolean enabled) {
-                super.setEnabled(enabled);
-                getKeyComponent().setEnabled(enabled);
-                getDataEditorCommand().setEnabled(enabled);
-            }
-
-            @Override
-            public JComponent getValidationComponent() {
-                return getKeyComponent();
-            }
-
-            @Override
-            public synchronized void addVetoableChangeListener(VetoableChangeListener listener) {
-                LookupBinding.this.propertyChangeMonitor.addVetoableChangeListener(listener);
-            }
-
-            @Override
-            public boolean requestFocusInWindow() {
-                return getKeyComponent().requestFocusInWindow();
-            }
-        };
-
-        editor.add(getKeyComponent(), "push,grow");
-        editor.add(getDataEditorButton(), "w 40px!");
+        editor = new LookupBindingComponent(layout, this);
+        editor.setKeyComponent(getKeyComponent());
+        editor.setDataEditorButton(getDataEditorButton());
+        editor.add(editor.getKeyComponent(), "push,grow");
+        editor.add(editor.getDataEditorButton(), "w 40px!");
         if (isEnableViewCommand()) {
             AbstractButton viewButton = referableDataEditorViewCommand.createButton();
             viewButton.setFocusable(false);
-            editor.add(viewButton, "w 40px!");
+            editor.setViewButton(viewButton);
+            editor.add(editor.getViewButton(), "w 40px!");
         }
+        editor.setFocusable(true);
         valueModelChanged(getValue());
         return editor;
     }
@@ -346,16 +329,6 @@ public class LookupBinding<T> extends CustomBinding {
     }
 
     protected JComponent createKeyComponent() {
-        return createTextComponent();
-    }
-
-    /**
-     * Create the textComponent.
-     *
-     * @deprecated move implementation to {@link #createKeyComponent()} when removing this method.
-     */
-    @Deprecated
-    protected JTextField createTextComponent() {
         JTextField textField = new JTextField();
         // Focustraversal keys moeten afgezet worden, anders wordt de keylistener niet getriggered.
         textField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
@@ -525,7 +498,8 @@ public class LookupBinding<T> extends CustomBinding {
     protected AbstractButton getDataEditorButton() {
         if (dataEditorButton == null) {
             dataEditorButton = getDataEditorCommand().createButton();
-            dataEditorButton.addFocusListener(createFocusListener());
+            dataEditorButton.setFocusable(false);
+            //dataEditorButton.addFocusListener(createFocusListener());
         }
 
         return dataEditorButton;
@@ -753,6 +727,71 @@ public class LookupBinding<T> extends CustomBinding {
 
     public void setDialogSize(Dimension dialogSize) {
         this.dialogSize = dialogSize;
+    }
+    
+    public static class LookupBindingComponent extends JXPanel implements HasValidationComponent, HasInnerComponent {
+        private JComponent keyComponent;
+        private AbstractButton dataEditorButton;
+        private AbstractButton viewButton;
+        private LookupBinding parent;
+
+        public LookupBindingComponent(LayoutManager layout, LookupBinding parent) {
+            super(layout);
+            this.parent = parent;
+        }
+
+
+        public AbstractButton getDataEditorButton() {
+            return dataEditorButton;
+        }
+
+        public void setDataEditorButton(AbstractButton dataEditorButton) {
+            this.dataEditorButton = dataEditorButton;
+        }
+
+        public JComponent getKeyComponent() {
+            return keyComponent;
+        }
+
+        public void setKeyComponent(JComponent keyComponent) {
+            this.keyComponent = keyComponent;
+        }
+
+        public AbstractButton getViewButton() {
+            return viewButton;
+        }
+
+        public void setViewButton(AbstractButton viewButton) {
+            this.viewButton = viewButton;
+        }
+
+
+        @Override
+        public void setEnabled(boolean enabled) {
+            super.setEnabled(enabled);
+            getKeyComponent().setEnabled(enabled);
+            getDataEditorButton().setEnabled(enabled);
+        }
+
+        @Override
+        public JComponent getValidationComponent() {
+            return getKeyComponent();
+        }
+
+        @Override
+        public synchronized void addVetoableChangeListener(VetoableChangeListener listener) {
+            parent.propertyChangeMonitor.addVetoableChangeListener(listener);
+        }
+
+        @Override
+        public boolean requestFocusInWindow() {
+            return getKeyComponent().requestFocusInWindow();
+        }
+
+        @Override
+        public JComponent getInnerComponent() {
+            return getKeyComponent();
+        }
     }
 }
 

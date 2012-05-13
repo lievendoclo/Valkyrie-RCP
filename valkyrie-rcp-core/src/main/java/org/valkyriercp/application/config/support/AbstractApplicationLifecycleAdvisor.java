@@ -11,6 +11,7 @@ import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandle
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.DefaultStatusBar;
+import org.valkyriercp.application.support.SwingXStatusBar;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 
@@ -120,7 +121,7 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 	 * @return a statusBar.
 	 */
 	public StatusBar getStatusBar() {
-		return new DefaultStatusBar();
+		return new SwingXStatusBar();
 	}
 
     @Override

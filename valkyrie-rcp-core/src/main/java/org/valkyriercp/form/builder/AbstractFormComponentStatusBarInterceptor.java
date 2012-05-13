@@ -15,7 +15,8 @@ public abstract class AbstractFormComponentStatusBarInterceptor extends Abstract
 	protected abstract String getStatusBarText(String propertyName);
 
 	public void processComponent(final String propertyName, final JComponent component) {
-		component.addFocusListener(new FocusListener() {
+        JComponent innerComponent = getInnerComponent(component);
+        innerComponent.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
 				if (getApplicationConfig().windowManager().getActiveWindow() != null) {
 					String caption = getStatusBarText(propertyName);
