@@ -320,7 +320,6 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         factories.add(new ColorValidationInterceptorFactory());
         factories.add(new OverlayValidationInterceptorFactory());
         factories.add(new ShowCaptionInStatusBarInterceptorFactory());
-        factories.add(new ShowDescriptionInStatusBarInterceptorFactory());
         factory.setInterceptorFactories(factories);
         return factory;
     }
