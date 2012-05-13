@@ -147,6 +147,36 @@ public class MigLayoutFormBuilder extends AbstractFormBuilder {
         return new JComponent[]{label, component};
     }
 
+    public void addHorizontalSeparator()
+    {
+        addComponent(new JSeparator());
+    }
+
+    public void addHorizontalSeparator(String migLayoutProperties)
+    {
+        addComponent(new JSeparator(), migLayoutProperties);
+    }
+
+    public void addVerticalSeparator()
+    {
+        addComponent(new JSeparator());
+    }
+
+    public void addVerticalSeparator(String migLayoutProperties)
+    {
+        addComponent(new JSeparator(SwingConstants.VERTICAL), migLayoutProperties);
+    }
+
+    public void addTitledHorizontalSeparator(String titleKey)
+    {
+        addComponent(getComponentFactory().createLabeledSeparator(titleKey));
+    }
+
+    public void addTitledHorizontalSeparator(String titleKey, String migLayoutProperties)
+    {
+        addComponent(getComponentFactory().createLabeledSeparator(titleKey), migLayoutProperties);
+    }
+
     public JPanel getPanel() {
         getBindingFactory().getFormModel().revert();
         return this.panel;
