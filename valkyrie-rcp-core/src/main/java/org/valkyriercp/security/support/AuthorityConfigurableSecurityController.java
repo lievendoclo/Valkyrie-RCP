@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
+import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.core.AuthorityConfigurable;
 import org.valkyriercp.core.Authorizable;
 import org.valkyriercp.core.Secured;
@@ -22,7 +23,7 @@ import java.util.*;
  * {@link AbstractSecurityController}.
  *
  * Verschilt in opzet doordat deze elk controlledObject bevraagt op zijn
- * ActionClusters om daarna deze af te checken aan de
+ * Authorities om daarna deze af te checken aan de
  * {@link AccessDecisionManager}. Dit in tegenstelling tot
  * AbstractSecurityController die een set van regels afchecked voor alle
  * controlledObjects.
@@ -64,13 +65,13 @@ public class AuthorityConfigurableSecurityController implements SecurityControll
      * FallBack, this map can be used to configure commands that are
      * declared/used in code.
      *
-     * @param idActionClusterMap
+     * @param idAuthorityMap
      */
-    public void setIdAuthorityMap(Map<String, String> idActionClusterMap)
+    public void setIdAuthorityMap(Map<String, String> idAuthorityMap)
     {
-        idConfigAttributeDefinitionMap = new HashMap<String, List<ConfigAttribute>>(idActionClusterMap
+        idConfigAttributeDefinitionMap = new HashMap<String, List<ConfigAttribute>>(idAuthorityMap
                 .size());
-        for (Map.Entry<String, String> entry : idActionClusterMap.entrySet())
+        for (Map.Entry<String, String> entry : idAuthorityMap.entrySet())
         {
             idConfigAttributeDefinitionMap.put(entry.getKey(), SecurityConfig.createListFromCommaDelimitedString(entry.getValue()));
         }
@@ -188,7 +189,6 @@ public class AuthorityConfigurableSecurityController implements SecurityControll
         if (configAttributeDefinition != null)
             return configAttributeDefinition;
 
-        // second check on individual override (you gave a map entry <SCId, AC>)
         if (controlledObject instanceof Secured)
         {
             Secured securedObject = (Secured) controlledObject;
@@ -200,6 +200,14 @@ public class AuthorityConfigurableSecurityController implements SecurityControll
             }
             if(securedObject.getAuthorities() != null) {
                 return SecurityConfig.createList(((AuthorityConfigurable) controlledObject).getAuthorities());
+            }
+        } else if(controlledObject instanceof FormModel) {
+            FormModel formModel = (FormModel) controlledObject;
+            if(formModel.getId() != null) {
+                String securityControllerId = formModel.getId() + ".edit";
+                List<ConfigAttribute> cad = idConfigAttributeDefinitionMap.get(securityControllerId);
+                if (cad != null)
+                    return cad;
             }
         }
         return null;

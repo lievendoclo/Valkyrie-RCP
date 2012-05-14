@@ -9,6 +9,7 @@ import org.valkyriercp.binding.value.CommitTriggerListener;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.support.*;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -29,7 +30,7 @@ import java.util.Vector;
  *
  * @author Oliver Hutchison
  */
-@Configurable(preConstruction = true)
+@Configurable
 public class TextComponentPopup extends MouseAdapter implements FocusListener, CaretListener, UndoableEditListener {
 
 	/**
@@ -86,9 +87,14 @@ public class TextComponentPopup extends MouseAdapter implements FocusListener, C
 		updatePasteStatusTimer.setCoalesce(true);
 		updatePasteStatusTimer.setRepeats(false);
 		updatePasteStatusTimer.setInitialDelay(PAST_REFRESH_TIMER_DELAY);
-		registerListeners();
-		registerAccelerators();
+
 	}
+
+    @PostConstruct
+    private void postConstruct() {
+        registerListeners();
+        registerAccelerators();
+    }
 
 	private void registerListeners() {
 		textComponent.addMouseListener(this);

@@ -19,6 +19,7 @@ import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.core.Guarded;
 import org.valkyriercp.core.Messagable;
+import org.valkyriercp.core.Secured;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.form.binding.BindingFactory;
 
@@ -51,7 +52,7 @@ import java.util.Map;
  * @author Keith Donald
  */
 @Configurable
-public abstract class AbstractForm extends AbstractControlFactory implements Form, CommitListener {
+public abstract class AbstractForm extends AbstractControlFactory implements Form, CommitListener, Secured {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -698,5 +699,37 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 
     protected String getMessage(String key, Object... args) {
         return applicationConfig.messageResolver().getMessage(key, args);
+    }
+
+    private String securityControllerId;
+    private String[] authorities;
+
+    public String[] getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(String... authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getSecurityControllerId() {
+        if(securityControllerId == null)
+            return getId();
+        return securityControllerId;
+    }
+
+    public void setSecurityControllerId(String securityControllerId) {
+        this.securityControllerId = securityControllerId;
+    }
+
+    private boolean authorized;
+
+    public boolean isAuthorized() {
+        return authorized;
+    }
+
+    public void setAuthorized(boolean authorized) {
+        this.authorized = authorized;
+        getFormModel().setReadOnly(getFormModel().isReadOnly() || !authorized);
     }
 }

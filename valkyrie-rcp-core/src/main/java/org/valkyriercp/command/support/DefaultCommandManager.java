@@ -7,6 +7,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -24,6 +25,7 @@ import java.util.List;
  * @author Keith Donald
  */
 @Component
+@Configurable
 public class DefaultCommandManager implements CommandManager, BeanPostProcessor, BeanFactoryAware {
     private final Log logger = LogFactory.getLog(getClass());
 

@@ -1,6 +1,7 @@
 package org.valkyriercp.application.config.support;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
@@ -243,12 +244,18 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public SecurityController authorityConfigurableSecurityController() {
         AuthorityConfigurableSecurityController authorityConfigurableSecurityController = new AuthorityConfigurableSecurityController();
+        Map<String, String> idAuthorityMap = Maps.newHashMap();
+        configureAuthorityMap(idAuthorityMap);
+        authorityConfigurableSecurityController.setIdAuthorityMap(idAuthorityMap);
         AffirmativeBased accessDecisionManager = new AffirmativeBased();
         RoleVoter roleVoter = new RoleVoter();
         roleVoter.setRolePrefix("");
         accessDecisionManager.setDecisionVoters(Lists.<AccessDecisionVoter>newArrayList(roleVoter));
         authorityConfigurableSecurityController.setAccessDecisionManager(accessDecisionManager);
         return authorityConfigurableSecurityController;
+    }
+
+    protected void configureAuthorityMap(Map<String,String> idAuthorityMap) {
     }
 
     public Class<?> getCommandConfigClass() {

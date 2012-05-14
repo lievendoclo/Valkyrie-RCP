@@ -1428,6 +1428,10 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
         FormModel detailFormModel = getDetailForm().getFormModel();
 
+        if(detailFormModel.isDirty() && !(getCreateCommand().isAuthorized() && saveUpdatePanel.getComponents()[0].isVisible()) && !(getUpdateCommand().isAuthorized() && saveUpdatePanel.getComponents()[1].isVisible())) {
+            detailFormModel.revert();
+        }
+        
         if (detailFormModel.isEnabled() && detailFormModel.isDirty())
         {
             if (detailFormModel.isCommittable())

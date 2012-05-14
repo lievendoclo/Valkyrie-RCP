@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.jgoodies.forms.layout.FormLayout;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.core.Secured;
 import org.valkyriercp.form.binding.swing.editor.LookupBinder;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.form.builder.MigLayoutFormBuilder;

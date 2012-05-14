@@ -534,8 +534,9 @@ protected void valueModelChanged(Object newValue)
         AbstractFormBuilder.
       </para>
       <para>
-        Starting from version 1.1.0, there is also an advanced form builder included, called FormLayoutFormBuilder. It
-        uses JGoodies' FormLayout and allows more customisation than the other formbuilders.
+        There is also an advanced form builder included, called FormLayoutFormBuilder. It
+        uses JGoodies' FormLayout and allows more customisation than the other formbuilders. The same is true
+        for MigLayoutFormBuilder, which uses MigLayout and has about the same functionalities as the FormLayoutFormBuilder.
       </para>
     </section>
     <section id="form-binding:forms:binder-selection">

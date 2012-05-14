@@ -20,7 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.1.1.RELEASE</spring.version>
-	    <spring-security.version>3.1.0.RELEASE</spring-security.version>
+        <spring-security.version>3.1.0.RELEASE</spring-security.version>
     </properties>
 
     <build>
@@ -128,6 +128,18 @@
                             </aspectLibrary>
                         </aspectLibraries>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjtools</artifactId>
+                            <version>1.6.10</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjrt</artifactId>
+                            <version>1.6.10</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -156,6 +168,18 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>1.6.10</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>1.6.10</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -488,7 +512,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-            <dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
@@ -545,16 +569,16 @@
         </dependency>
 
     </dependencies>
-    
+
     <distributionManagement>
-	    <repository>
-	        <id>repo</id>
-	        <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
-	    </repository>
-	    <snapshotRepository>
-	        <id>snapshot-repo</id>
-	        <url>https://raw.github.com/Ekito/maven-repo/master/snapshots</url>
-	    </snapshotRepository>
-	</distributionManagement>
-    
+        <repository>
+            <id>repo</id>
+            <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshot-repo</id>
+            <url>https://raw.github.com/Ekito/maven-repo/master/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

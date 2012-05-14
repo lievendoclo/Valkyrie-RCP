@@ -1,5 +1,7 @@
 package org.valkyriercp.sample.dataeditor;
 
+import com.google.common.collect.Lists;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -13,6 +15,7 @@ import org.valkyriercp.application.ApplicationWindowFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
+import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.JXTaskPaneNavigatorApplicationWindowFactory;
 import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
@@ -56,6 +59,24 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     }
 
     @Override
+    public ApplicationSessionInitializer applicationSessionInitializer() {
+        ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
+        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+        return initializer;
+    }
+
+    @Override
+    protected void configureAuthorityMap(Map<String, String> idAuthorityMap) {
+        super.configureAuthorityMap(idAuthorityMap);
+        idAuthorityMap.put("itemDataEditor.addrow", "ADMIN");
+        idAuthorityMap.put("itemDataEditor.removerow", "ADMIN");
+        idAuthorityMap.put("itemDataEditor.update", "ADMIN");
+        idAuthorityMap.put("itemDataEditor.create", "ADMIN");
+        idAuthorityMap.put("itemForm.save", "ADMIN");
+        idAuthorityMap.put("itemForm", "ADMIN");
+    }
+
+    @Override
     public Class<?> getCommandConfigClass() {
         return DataEditorCommandConfig.class;
     }
@@ -63,7 +84,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public UIManagerConfigurer uiManagerConfigurer() {
         UIManagerConfigurer configurer = new UIManagerConfigurer();
-        configurer.setLookAndFeel(SubstanceBusinessLookAndFeel.class);
+        configurer.setLookAndFeel(PlasticXPLookAndFeel.class);
         return configurer;
     }
 
