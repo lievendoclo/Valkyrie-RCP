@@ -1,5 +1,13 @@
 package org.valkyriercp.application.splash;
 
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
@@ -7,19 +15,15 @@ import org.springframework.context.NoSuchMessageException;
 import org.valkyriercp.component.ShadowBorderFrame;
 import org.valkyriercp.util.WindowUtils;
 
-import javax.swing.*;
-import java.awt.*;
-import java.net.URL;
-
 /**
  * An abstract helper implementation of the {@link SplashScreen} interface.
- *
+ * 
  * <p>
  * The splash screen produced by this class will be an undecorated, centered
  * frame containing the component provided by {@link #createContentPane()},
  * which is the only method that subclasses need to implement.
  * </p>
- *
+ * 
  * @author Peter De Bruycker
  */
 public abstract class AbstractSplashScreen implements SplashScreen {
@@ -49,7 +53,7 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	 * root of the runtime classpath. Otherwise it is interpreted to be relative
 	 * to the subdirectory of the classpath root that corresponds to the package
 	 * of this class.
-	 *
+	 * 
 	 * @return The location of the icon resource.
 	 */
 	public String getIconResourcePath() {
@@ -64,8 +68,9 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	 * root of the runtime classpath. Otherwise it is interpreted to be relative
 	 * to the subdirectory of the classpath root that corresponds to the package
 	 * of this class.
-	 *
-	 * @param iconResourcePath The location of the icon resource.
+	 * 
+	 * @param iconResourcePath
+	 *            The location of the icon resource.
 	 */
 	public void setIconResourcePath(String iconResourcePath) {
 		this.iconResourcePath = iconResourcePath;
@@ -73,7 +78,7 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 
 	/**
 	 * Returns the message source used to resolve localized messages.
-	 *
+	 * 
 	 * @return The message source, or null.
 	 */
 	public MessageSource getMessageSource() {
@@ -82,8 +87,9 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 
 	/**
 	 * Sets the message source used to resolve localized messages.
-	 *
-	 * @param messageSource The message source.
+	 * 
+	 * @param messageSource
+	 *            The message source.
 	 */
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
@@ -105,7 +111,7 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	 * retrieve the splash screen's frame title under the key
 	 * {@value #SPLASH_TITLE_KEY}.
 	 */
-	public final void splash() {
+	public void splash() {
 		frame = shadowBorder ? new ShadowBorderFrame() : new JFrame();
 		if (isRootFrame())
 			JOptionPane.setRootFrame(frame);
@@ -128,15 +134,16 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	/**
 	 * Loads the message under the key {@value #SPLASH_TITLE_KEY} if a
 	 * {@link MessageSource} has been set on this instance.
-	 *
+	 * 
 	 * @return The message resource stored under the key
-	 * {@value #SPLASH_TITLE_KEY}, or null if no message source has been set.
+	 *         {@value #SPLASH_TITLE_KEY}, or null if no message source has been
+	 *         set.
 	 */
 	private String loadFrameTitle() {
 		try {
-			return messageSource == null ? null : messageSource.getMessage(SPLASH_TITLE_KEY, null, null);
-		}
-		catch (NoSuchMessageException e) {
+			return messageSource == null ? null : messageSource.getMessage(
+					SPLASH_TITLE_KEY, null, null);
+		} catch (NoSuchMessageException e) {
 			return null;
 		}
 	}
@@ -148,7 +155,8 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 
 		URL url = this.getClass().getResource(iconResourcePath);
 		if (url == null) {
-			logger.warn("Unable to locate splash screen in classpath at: " + iconResourcePath);
+			logger.warn("Unable to locate splash screen in classpath at: "
+					+ iconResourcePath);
 			return null;
 		}
 		return Toolkit.getDefaultToolkit().createImage(url);
@@ -158,7 +166,7 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	 * Returns the component to be displayed in the splash screen's main frame.
 	 * If the returned value is null the frame for the splash screen will still
 	 * be created but will not have any content
-	 *
+	 * 
 	 * @return The content pane component. Can be null.
 	 */
 	protected abstract Component createContentPane();
@@ -166,7 +174,7 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	/**
 	 * Returns whether the splash screen will be rendered with a shadow border.
 	 * The shadow border will let the background show through.
-	 *
+	 * 
 	 * @return whether to show a shadow border or not
 	 */
 	public boolean isShadowBorder() {
@@ -176,8 +184,9 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	/**
 	 * Sets whether the splash screen will be rendered with a shadow border. If
 	 * <code>true</code> a border will be shown.
-	 *
-	 * @param shadowBorder Show the shadow border or not
+	 * 
+	 * @param shadowBorder
+	 *            Show the shadow border or not
 	 */
 	public void setShadowBorder(boolean shadowBorder) {
 		this.shadowBorder = shadowBorder;
@@ -187,9 +196,10 @@ public abstract class AbstractSplashScreen implements SplashScreen {
 	 * The frame that is used to display this splashscreen can be used as
 	 * rootFrame for other dialogs/windows that need a Frame before the
 	 * applicationFrame is created. (eg login).
-	 *
-	 * @param rootFrame <code>true</code> if the created frame must be set as
-	 * rootFrame. Defaults to <code>true</code>.
+	 * 
+	 * @param rootFrame
+	 *            <code>true</code> if the created frame must be set as
+	 *            rootFrame. Defaults to <code>true</code>.
 	 * @see JOptionPane#setRootFrame(java.awt.Frame)
 	 */
 	public void setRootFrame(boolean rootFrame) {
