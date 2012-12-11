@@ -12,7 +12,7 @@ h2. What is it ?
 
 A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is itself an evolution of "Spring Rich Client":http://www.springsource.org/spring-rcp.
 
-The Valkyrie documentation is available "here":http://ndeverge.github.com/Valkyrie-RCP.
+The Valkyrie documentation is available "here":http://cmadsen.github.com/Valkyrie-RCP/.
 
 
 h2. Why ?
@@ -27,7 +27,7 @@ h2. And so, what's new ?
 * Fixed broken build for the manual
 * Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken
 * Released a 1.0 version available through a "Maven repository":https://github.com/Ekito/maven-repo
-* Publish the "Valkyrie documentation":http://ndeverge.github.com/Valkyrie-RCP
+* Publish the "Valkyrie documentation":http://cmadsen.github.com/Valkyrie-RCP/
 
 
 h2. How to get the released versions ?
@@ -83,10 +83,6 @@ h2. How to build
 
 Just clone the repository, and then use a @mvn install@ command.
 The build was tested with "Maven 3.0.3":http://archive.apache.org/dist/maven/binaries/. 
-
-h2. Continuous integration
-
-The project is automatically built by "BuildHive":https://buildhive.cloudbees.com/job/ndeverge/job/Valkyrie-RCP/.
 
 h2. Greetings
 
