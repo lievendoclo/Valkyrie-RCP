@@ -1,9 +1,5 @@
 h1. Valkyrie RCP
 
-h2. !! WARNING !!
-
-*This github project is not maintained anymore. If you believe you can maintain it, please raise an issue.*
-
 h2. DISCLAIMER
 
 I'm not the author of this framework, neither related to the author, so please thanks "lievendoclo":http://twitter.com/lievendoclo for his work.
