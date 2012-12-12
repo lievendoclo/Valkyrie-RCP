@@ -113,6 +113,9 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 		table.row(FormFactory.LINE_GAP_ROWSPEC);
 		table.gapCol();
 		table.cell(titleLabel);
+		table.gapCol();
+		table.cell(iconLabel, "rowspan=2 colspec=pref");
+		table.gapCol();
 		table.row(FormFactory.NARROW_LINE_GAP_ROWSPEC);
 		table.cell(messagePane.getControl());
 		table.row(FormFactory.NARROW_LINE_GAP_ROWSPEC);
