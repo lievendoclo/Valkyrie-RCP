@@ -1,7 +1,22 @@
 package org.valkyriercp.application.config.support;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.text.JTextComponent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
@@ -18,7 +33,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
-import org.valkyriercp.application.*;
+import org.valkyriercp.application.Application;
+import org.valkyriercp.application.ApplicationDescriptor;
+import org.valkyriercp.application.ApplicationPageFactory;
+import org.valkyriercp.application.ApplicationWindowFactory;
+import org.valkyriercp.application.PageComponentPaneFactory;
+import org.valkyriercp.application.ViewDescriptor;
+import org.valkyriercp.application.ViewDescriptorRegistry;
+import org.valkyriercp.application.WindowManager;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationMode;
@@ -29,7 +51,14 @@ import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandle
 import org.valkyriercp.application.exceptionhandling.SimpleExceptionHandlerDelegate;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
-import org.valkyriercp.application.support.*;
+import org.valkyriercp.application.support.BeanFactoryViewDescriptorRegistry;
+import org.valkyriercp.application.support.DefaultApplication;
+import org.valkyriercp.application.support.DefaultApplicationDescriptor;
+import org.valkyriercp.application.support.DefaultApplicationPageFactory;
+import org.valkyriercp.application.support.DefaultApplicationWindowFactory;
+import org.valkyriercp.application.support.MessageResolver;
+import org.valkyriercp.application.support.SimplePageComponentPaneFactory;
+import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FieldFaceSource;
 import org.valkyriercp.binding.form.support.DefaultBindingErrorMessageProvider;
@@ -49,15 +78,25 @@ import org.valkyriercp.component.DefaultOverlayService;
 import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
-import org.valkyriercp.factory.*;
+import org.valkyriercp.factory.ButtonFactory;
+import org.valkyriercp.factory.ComponentFactory;
+import org.valkyriercp.factory.DefaultButtonFactory;
+import org.valkyriercp.factory.DefaultComponentFactory;
+import org.valkyriercp.factory.DefaultMenuFactory;
+import org.valkyriercp.factory.DefaultTableFactory;
+import org.valkyriercp.factory.MenuFactory;
+import org.valkyriercp.factory.TableFactory;
 import org.valkyriercp.form.FormModelFactory;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.swing.ScrollPaneBinder;
 import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
 import org.valkyriercp.form.binding.swing.SwingBindingFactoryProvider;
-import org.valkyriercp.form.binding.swing.editor.LookupBinder;
-import org.valkyriercp.form.builder.*;
+import org.valkyriercp.form.builder.ChainedInterceptorFactory;
+import org.valkyriercp.form.builder.ColorValidationInterceptorFactory;
+import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
+import org.valkyriercp.form.builder.OverlayValidationInterceptorFactory;
+import org.valkyriercp.form.builder.ShowCaptionInStatusBarInterceptorFactory;
 import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
 import org.valkyriercp.image.IconSource;
@@ -77,337 +116,362 @@ import org.valkyriercp.util.DialogFactory;
 import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 @Configuration
 @Import(org.valkyriercp.application.config.support.DefaultBinderConfig.class)
 @Lazy
 public abstract class AbstractApplicationConfig implements ApplicationConfig {
-    @Autowired
-    private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    @Autowired
-    private org.valkyriercp.application.config.support.DefaultBinderConfig defaultBinderConfig;
+	@Autowired
+	private org.valkyriercp.application.config.support.DefaultBinderConfig defaultBinderConfig;
 
-    public ApplicationContext applicationContext() {
-        return applicationContext;
-    }
+	public ApplicationContext applicationContext() {
+		return applicationContext;
+	}
 
-    @Bean
-    public Application application() {
-        return new DefaultApplication();
-    }
+	@Bean(destroyMethod = "")
+	// @Bean
+	public Application application() {
+		return new DefaultApplication();
+	}
 
-    @Bean
-    public ApplicationPageFactory applicationPageFactory() {
-        return new DefaultApplicationPageFactory();
-    }
+	@Bean
+	public ApplicationPageFactory applicationPageFactory() {
+		return new DefaultApplicationPageFactory();
+	}
 
-    @Bean
-    public ApplicationWindowFactory applicationWindowFactory() {
-        return new DefaultApplicationWindowFactory();
-    }
+	@Bean
+	public ApplicationWindowFactory applicationWindowFactory() {
+		return new DefaultApplicationWindowFactory();
+	}
 
-    @Bean
-    public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
-        DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
-        advisor.setCommandConfigClass(getCommandConfigClass());
-        advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(emptyViewDescriptor()));
-        return advisor;
-    }
+	@Bean
+	public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
+		DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
+		advisor.setCommandConfigClass(getCommandConfigClass());
+		advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(
+				emptyViewDescriptor()));
+		return advisor;
+	}
 
-    @Bean
-    public ViewDescriptor emptyViewDescriptor() {
-        return new WidgetViewDescriptor("empty", Widget.EMPTY_WIDGET_PROVIDER);
-    }
+	@Bean
+	public ViewDescriptor emptyViewDescriptor() {
+		return new WidgetViewDescriptor("empty", Widget.EMPTY_WIDGET_PROVIDER);
+	}
 
-    @Bean
-    public ApplicationDescriptor applicationDescriptor() {
-        DefaultApplicationDescriptor defaultApplicationDescriptor = new DefaultApplicationDescriptor();
-        applicationObjectConfigurer().configure(defaultApplicationDescriptor, "applicationDescriptor");
-        return defaultApplicationDescriptor;
-    }
+	@Bean
+	public ApplicationDescriptor applicationDescriptor() {
+		DefaultApplicationDescriptor defaultApplicationDescriptor = new DefaultApplicationDescriptor();
+		applicationObjectConfigurer().configure(defaultApplicationDescriptor,
+				"applicationDescriptor");
+		return defaultApplicationDescriptor;
+	}
 
-    @Bean
-    public ImageSource imageSource() {
-        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-        propertiesFactoryBean.setLocations(getImageSourceResources().values().toArray(new Resource[getImageSourceResources().size()]));
-        DefaultImageSource imageSource = null;
-        try {
-            propertiesFactoryBean.afterPropertiesSet();
-            imageSource = new DefaultImageSource(propertiesFactoryBean.getObject());
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Error getting imagesource property file", e);
-        }
-        imageSource.setBrokenImageIndicator(applicationContext().getResource("classpath:/com/famfamfam/silk/error.png"));
-        return imageSource;
-    }
+	@Bean
+	public ImageSource imageSource() {
+		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+		propertiesFactoryBean.setLocations(getImageSourceResources().values()
+				.toArray(new Resource[getImageSourceResources().size()]));
+		DefaultImageSource imageSource = null;
+		try {
+			propertiesFactoryBean.afterPropertiesSet();
+			imageSource = new DefaultImageSource(
+					propertiesFactoryBean.getObject());
+		} catch (IOException e) {
+			throw new IllegalArgumentException(
+					"Error getting imagesource property file", e);
+		}
+		imageSource.setBrokenImageIndicator(applicationContext().getResource(
+				"classpath:/com/famfamfam/silk/error.png"));
+		return imageSource;
+	}
 
-    public Map<String, Resource> getImageSourceResources() {
-        Map<String, Resource> resources = new HashMap<String, Resource>();
-        resources.put("default", applicationContext().getResource("classpath:/org/valkyriercp/images/images.properties"));
-        return resources;
-    }
+	public Map<String, Resource> getImageSourceResources() {
+		Map<String, Resource> resources = new HashMap<String, Resource>();
+		resources.put(
+				"default",
+				applicationContext().getResource(
+						"classpath:/org/valkyriercp/images/images.properties"));
+		return resources;
+	}
 
-    @Bean
-    public WindowManager windowManager() {
-        return new WindowManager();
-    }
+	@Bean
+	public WindowManager windowManager() {
+		return new WindowManager();
+	}
 
-    @Bean
-    public CommandServices commandServices() {
-        return new DefaultCommandServices();
-    }
+	@Bean
+	public CommandServices commandServices() {
+		return new DefaultCommandServices();
+	}
 
-    @Bean
-    public CommandConfigurer commandConfigurer() {
-        return new DefaultCommandConfigurer();
-    }
+	@Bean
+	public CommandConfigurer commandConfigurer() {
+		return new DefaultCommandConfigurer();
+	}
 
-    @Bean
-    public CommandRegistry commandRegistry() {
-        return new DefaultCommandRegistry();
-    }
+	@Bean
+	public CommandRegistry commandRegistry() {
+		return new DefaultCommandRegistry();
+	}
 
-    @Bean
-    public PageComponentPaneFactory pageComponentPaneFactory() {
-        return new SimplePageComponentPaneFactory();
-    }
+	@Bean
+	public PageComponentPaneFactory pageComponentPaneFactory() {
+		return new SimplePageComponentPaneFactory();
+	}
 
-    @Bean
-    public ViewDescriptorRegistry viewDescriptorRegistry() {
-        return new BeanFactoryViewDescriptorRegistry();
-    }
+	@Bean
+	public ViewDescriptorRegistry viewDescriptorRegistry() {
+		return new BeanFactoryViewDescriptorRegistry();
+	}
 
-    @Bean
-    public IconSource iconSource() {
-        return new DefaultIconSource();
-    }
+	@Bean
+	public IconSource iconSource() {
+		return new DefaultIconSource();
+	}
 
-    @Bean
-    public ComponentFactory componentFactory() {
-        return new DefaultComponentFactory();
-    }
+	@Bean
+	public ComponentFactory componentFactory() {
+		return new DefaultComponentFactory();
+	}
 
-    @Bean
-    public ButtonFactory buttonFactory() {
-        return new DefaultButtonFactory();
-    }
+	@Bean
+	public ButtonFactory buttonFactory() {
+		return new DefaultButtonFactory();
+	}
 
-    @Bean
-    public MenuFactory menuFactory() {
-        return new DefaultMenuFactory();
-    }
+	@Bean
+	public MenuFactory menuFactory() {
+		return new DefaultMenuFactory();
+	}
 
-    @Bean
-    public ButtonFactory toolbarButtonFactory() {
-        return new DefaultButtonFactory();
-    }
+	@Bean
+	public ButtonFactory toolbarButtonFactory() {
+		return new DefaultButtonFactory();
+	}
 
-    @Bean
-    public MessageSourceAccessor messageSourceAccessor() {
-        return new MessageSourceAccessor(messageSource());
-    }
+	@Bean
+	public MessageSourceAccessor messageSourceAccessor() {
+		return new MessageSourceAccessor(messageSource());
+	}
 
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames(getResourceBundleLocations().toArray(new String[getResourceBundleLocations().size()]));
-        return messageSource;
-    }
+	@Bean
+	public MessageSource messageSource() {
+		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasenames(getResourceBundleLocations().toArray(
+				new String[getResourceBundleLocations().size()]));
+		return messageSource;
+	}
 
-    public List<String> getResourceBundleLocations() {
-        ArrayList<String> list =  new ArrayList<String>();
-        list.add("org.valkyriercp.messages.default");
-        return list;
-    }
+	public List<String> getResourceBundleLocations() {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("org.valkyriercp.messages.default");
+		return list;
+	}
 
-    @Bean
-    public ApplicationObjectConfigurer applicationObjectConfigurer() {
-        return new DefaultApplicationObjectConfigurer();
-    }
+	@Bean
+	public ApplicationObjectConfigurer applicationObjectConfigurer() {
+		return new DefaultApplicationObjectConfigurer();
+	}
 
-    @Bean
-    public SecurityControllerManager securityControllerManager() {
-        DefaultSecurityControllerManager defaultSecurityControllerManager = new DefaultSecurityControllerManager();
-        defaultSecurityControllerManager.setFallbackSecurityController(authorityConfigurableSecurityController());
-        return defaultSecurityControllerManager;
-    }
+	@Bean
+	public SecurityControllerManager securityControllerManager() {
+		DefaultSecurityControllerManager defaultSecurityControllerManager = new DefaultSecurityControllerManager();
+		defaultSecurityControllerManager
+				.setFallbackSecurityController(authorityConfigurableSecurityController());
+		return defaultSecurityControllerManager;
+	}
 
-    @Bean
-    public SecurityController authorityConfigurableSecurityController() {
-        AuthorityConfigurableSecurityController authorityConfigurableSecurityController = new AuthorityConfigurableSecurityController();
-        Map<String, String> idAuthorityMap = Maps.newHashMap();
-        configureAuthorityMap(idAuthorityMap);
-        authorityConfigurableSecurityController.setIdAuthorityMap(idAuthorityMap);
-        AffirmativeBased accessDecisionManager = new AffirmativeBased();
-        RoleVoter roleVoter = new RoleVoter();
-        roleVoter.setRolePrefix("");
-        accessDecisionManager.setDecisionVoters(Lists.<AccessDecisionVoter>newArrayList(roleVoter));
-        authorityConfigurableSecurityController.setAccessDecisionManager(accessDecisionManager);
-        return authorityConfigurableSecurityController;
-    }
+	@Bean
+	public SecurityController authorityConfigurableSecurityController() {
+		AuthorityConfigurableSecurityController authorityConfigurableSecurityController = new AuthorityConfigurableSecurityController();
+		Map<String, String> idAuthorityMap = Maps.newHashMap();
+		configureAuthorityMap(idAuthorityMap);
+		authorityConfigurableSecurityController
+				.setIdAuthorityMap(idAuthorityMap);
+		AffirmativeBased accessDecisionManager = new AffirmativeBased();
+		RoleVoter roleVoter = new RoleVoter();
+		roleVoter.setRolePrefix("");
+		accessDecisionManager.setDecisionVoters(Lists
+				.<AccessDecisionVoter> newArrayList(roleVoter));
+		authorityConfigurableSecurityController
+				.setAccessDecisionManager(accessDecisionManager);
+		return authorityConfigurableSecurityController;
+	}
 
-    protected void configureAuthorityMap(Map<String,String> idAuthorityMap) {
-    }
+	protected void configureAuthorityMap(Map<String, String> idAuthorityMap) {
+	}
 
-    public Class<?> getCommandConfigClass() {
-        return DefaultCommandConfig.class;
-    }
+	public Class<?> getCommandConfigClass() {
+		return DefaultCommandConfig.class;
+	}
 
-    @Bean
-    public RegisterableExceptionHandler registerableExceptionHandler() {
-        JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
-        DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
-        handler.addDelegateToList(new SimpleExceptionHandlerDelegate()
-                .forThrowable(Throwable.class)
-                .handledBy(errorDialogExceptionHandler));
-        return handler;
-    }
+	@Bean
+	public RegisterableExceptionHandler registerableExceptionHandler() {
+		JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
+		DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+		handler.addDelegateToList(new SimpleExceptionHandlerDelegate()
+				.forThrowable(Throwable.class).handledBy(
+						errorDialogExceptionHandler));
+		return handler;
+	}
 
-    @Bean
-    public ApplicationSession applicationSession() {
-        return new ApplicationSession();
-    }
+	@Bean
+	public ApplicationSession applicationSession() {
+		return new ApplicationSession();
+	}
 
-    @Bean
-    public ApplicationSessionInitializer applicationSessionInitializer() {
-        return new ApplicationSessionInitializer();
-    }
+	@Bean
+	public ApplicationSessionInitializer applicationSessionInitializer() {
+		return new ApplicationSessionInitializer();
+	}
 
-    @Bean
-    public MessageResolver messageResolver() {
-        return new MessageResolver();
-    }
+	@Bean
+	public MessageResolver messageResolver() {
+		return new MessageResolver();
+	}
 
-    @Bean
-    public CommandManager commandManager() {
-        return new DefaultCommandManager();
-    }
+	@Bean
+	public CommandManager commandManager() {
+		return new DefaultCommandManager();
+	}
 
-    @Bean
-    public ValueChangeDetector valueChangeDetector() {
-        return new DefaultValueChangeDetector();
-    }
+	@Bean
+	public ValueChangeDetector valueChangeDetector() {
+		return new DefaultValueChangeDetector();
+	}
 
-    @Bean
-    public MessageTranslatorFactory messageTranslatorFactory() {
-        return new DefaultMessageTranslatorFactory();
-    }
+	@Bean
+	public MessageTranslatorFactory messageTranslatorFactory() {
+		return new DefaultMessageTranslatorFactory();
+	}
 
-    @Bean
-    public RulesSource rulesSource() {
-        return new DefaultRulesSource();
-    }
+	@Bean
+	public RulesSource rulesSource() {
+		return new DefaultRulesSource();
+	}
 
-    @Bean
-    public FieldFaceSource fieldFaceSource() {
-        return new MessageSourceFieldFaceSource();
-    }
+	@Bean
+	public FieldFaceSource fieldFaceSource() {
+		return new MessageSourceFieldFaceSource();
+	}
 
-    @Bean
-    public ConversionService conversionService() {
-        DefaultConversionService conversionService =  new DefaultConversionService();
-        conversionService.addConverter(new ListToListModelConverter());
-        conversionService.addConverter(new CollectionToListModelConverter());
-        return conversionService;
-    }
+	@Bean
+	public ConversionService conversionService() {
+		DefaultConversionService conversionService = new DefaultConversionService();
+		conversionService.addConverter(new ListToListModelConverter());
+		conversionService.addConverter(new CollectionToListModelConverter());
+		return conversionService;
+	}
 
-    @Bean
-    public FormComponentInterceptorFactory formComponentInterceptorFactory() {
-        ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
-        List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
-        factories.add(new ColorValidationInterceptorFactory());
-        factories.add(new OverlayValidationInterceptorFactory());
-        factories.add(new ShowCaptionInStatusBarInterceptorFactory());
-        factory.setInterceptorFactories(factories);
-        return factory;
-    }
+	@Bean
+	public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+		ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+		List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+		factories.add(new ColorValidationInterceptorFactory());
+		factories.add(new OverlayValidationInterceptorFactory());
+		factories.add(new ShowCaptionInStatusBarInterceptorFactory());
+		factory.setInterceptorFactories(factories);
+		return factory;
+	}
 
-    @Bean
-    public BinderSelectionStrategy binderSelectionStrategy() {
-        SwingBinderSelectionStrategy swingBinderSelectionStrategy = new SwingBinderSelectionStrategy();
-        registerBinders(swingBinderSelectionStrategy);
-        return swingBinderSelectionStrategy;
-    }
+	@Bean
+	public BinderSelectionStrategy binderSelectionStrategy() {
+		SwingBinderSelectionStrategy swingBinderSelectionStrategy = new SwingBinderSelectionStrategy();
+		registerBinders(swingBinderSelectionStrategy);
+		return swingBinderSelectionStrategy;
+	}
 
-    protected void registerBinders(BinderSelectionStrategy binderSelectionStrategy) {
-        binderSelectionStrategy.registerBinderForControlType(JTextComponent.class, defaultBinderConfig.textComponentBinder());
-        binderSelectionStrategy.registerBinderForControlType(JFormattedTextField.class, defaultBinderConfig.formattedTextFieldBinder());
-        binderSelectionStrategy.registerBinderForControlType(JTextArea.class, defaultBinderConfig.textAreaBinder());
-        binderSelectionStrategy.registerBinderForControlType(JToggleButton.class,  defaultBinderConfig.toggleButtonBinder());
-        binderSelectionStrategy.registerBinderForControlType(JCheckBox.class,  defaultBinderConfig.checkBoxBinder());
-        binderSelectionStrategy.registerBinderForControlType(JComboBox.class,  defaultBinderConfig.comboBoxBinder());
-        binderSelectionStrategy.registerBinderForControlType(JList.class,  defaultBinderConfig.listBinder());
-        binderSelectionStrategy.registerBinderForControlType(JLabel.class,  defaultBinderConfig.labelBinder());
-        binderSelectionStrategy.registerBinderForControlType(JScrollPane.class, new ScrollPaneBinder(binderSelectionStrategy, JTextArea.class));
-        binderSelectionStrategy.registerBinderForPropertyType(String.class,  defaultBinderConfig.textComponentBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(boolean.class, defaultBinderConfig. checkBoxBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, defaultBinderConfig. checkBoxBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Enum.class, defaultBinderConfig. enumComboBoxBinder());
-        binderSelectionStrategy.registerBinderForPropertyType(Boolean.class, defaultBinderConfig.trueFalseNullBinder());
-    }
+	protected void registerBinders(
+			BinderSelectionStrategy binderSelectionStrategy) {
+		binderSelectionStrategy
+				.registerBinderForControlType(JTextComponent.class,
+						defaultBinderConfig.textComponentBinder());
+		binderSelectionStrategy.registerBinderForControlType(
+				JFormattedTextField.class,
+				defaultBinderConfig.formattedTextFieldBinder());
+		binderSelectionStrategy.registerBinderForControlType(JTextArea.class,
+				defaultBinderConfig.textAreaBinder());
+		binderSelectionStrategy.registerBinderForControlType(
+				JToggleButton.class, defaultBinderConfig.toggleButtonBinder());
+		binderSelectionStrategy.registerBinderForControlType(JCheckBox.class,
+				defaultBinderConfig.checkBoxBinder());
+		binderSelectionStrategy.registerBinderForControlType(JComboBox.class,
+				defaultBinderConfig.comboBoxBinder());
+		binderSelectionStrategy.registerBinderForControlType(JList.class,
+				defaultBinderConfig.listBinder());
+		binderSelectionStrategy.registerBinderForControlType(JLabel.class,
+				defaultBinderConfig.labelBinder());
+		binderSelectionStrategy.registerBinderForControlType(JScrollPane.class,
+				new ScrollPaneBinder(binderSelectionStrategy, JTextArea.class));
+		binderSelectionStrategy.registerBinderForPropertyType(String.class,
+				defaultBinderConfig.textComponentBinder());
+		binderSelectionStrategy.registerBinderForPropertyType(boolean.class,
+				defaultBinderConfig.checkBoxBinder());
+		binderSelectionStrategy.registerBinderForPropertyType(Boolean.class,
+				defaultBinderConfig.checkBoxBinder());
+		binderSelectionStrategy.registerBinderForPropertyType(Enum.class,
+				defaultBinderConfig.enumComboBoxBinder());
+		binderSelectionStrategy.registerBinderForPropertyType(Boolean.class,
+				defaultBinderConfig.trueFalseNullBinder());
+	}
 
-    @Bean
-    public BindingFactoryProvider bindingFactoryProvider() {
-        return new SwingBindingFactoryProvider();
-    }
+	@Bean
+	public BindingFactoryProvider bindingFactoryProvider() {
+		return new SwingBindingFactoryProvider();
+	}
 
-    @Bean
-    public BindingErrorMessageProvider bindingErrorMessageProvider() {
-        return new DefaultBindingErrorMessageProvider();
-    }
+	@Bean
+	public BindingErrorMessageProvider bindingErrorMessageProvider() {
+		return new DefaultBindingErrorMessageProvider();
+	}
 
-    @Bean
-    public DialogFactory dialogFactory() {
-        return new DialogFactory();
-    }
+	@Bean
+	public DialogFactory dialogFactory() {
+		return new DialogFactory();
+	}
 
-    @Bean
-    public OverlayService overlayService() {
-        return new DefaultOverlayService();
-    }
+	@Bean
+	public OverlayService overlayService() {
+		return new DefaultOverlayService();
+	}
 
-    @Bean
-    public TableFactory tableFactory() {
-        return new DefaultTableFactory();
-    }
+	@Bean
+	public TableFactory tableFactory() {
+		return new DefaultTableFactory();
+	}
 
-    @Bean
-    public ApplicationSecurityManager applicationSecurityManager() {
-        return new DefaultApplicationSecurityManager(false);
-    }
+	@Bean
+	public ApplicationSecurityManager applicationSecurityManager() {
+		return new DefaultApplicationSecurityManager(false);
+	}
 
+	@Bean
+	public SecurityAwareConfigurer securityAwareConfigurer() {
+		return new SecurityAwareConfigurer();
+	}
 
-    @Bean
-    public SecurityAwareConfigurer securityAwareConfigurer() {
-         return new SecurityAwareConfigurer();
-    }
+	@Bean
+	public FormModelFactory formModelFactory() {
+		return new FormModelFactory();
+	}
 
-    @Bean
-    public FormModelFactory formModelFactory() {
-        return new FormModelFactory();
-    }
+	@Bean
+	public Color titlePaneBackgroundColor() {
+		return new Color(200, 200, 200);
+	}
 
-    @Bean
-    public Color titlePaneBackgroundColor() {
-        return new Color(200, 200, 200);
-    }
+	@Bean
+	public Color titlePanePinstripeColor() {
+		return new Color(1f, 1f, 1f, 0.17f);
+	}
 
-    @Bean
-    public Color titlePanePinstripeColor() {
-        return new Color(1f, 1f, 1f, 0.17f);
-    }
-
-    @Override
-    public ApplicationMode getApplicationMode() {
-        return ApplicationMode.DEVELOPMENT;
-    }
+	@Override
+	public ApplicationMode getApplicationMode() {
+		return ApplicationMode.DEVELOPMENT;
+	}
 }
