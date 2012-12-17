@@ -100,7 +100,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
         return applicationContext;
     }
 
-    @Bean
+    @Bean(destroyMethod="")
     public Application application() {
         return new DefaultApplication();
     }
