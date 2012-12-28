@@ -111,4 +111,9 @@ public class ListSelectionDialog extends AbstractSelectionDialog {
 	protected final JList getList() {
 		return list;
 	}
+
+	public EventList getItems() {
+		return items;
+	}
+
 }
