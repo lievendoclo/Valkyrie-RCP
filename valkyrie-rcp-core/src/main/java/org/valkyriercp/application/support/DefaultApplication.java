@@ -1,6 +1,10 @@
 package org.valkyriercp.application.support;
 
 import java.awt.Image;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -40,6 +44,11 @@ public class DefaultApplication implements Application {
 	private WindowManager windowManager;
 
 	boolean forceShutdown;
+
+	@PostConstruct
+	private void postConstruct() {
+		windowManager.addObserver(new CloseApplicationObserver());
+	}
 
 	@Override
 	public void start() {
@@ -122,4 +131,25 @@ public class DefaultApplication implements Application {
 			}
 		}
 	}
+
+	/*
+	 * Closes the application once all windows have been closed.
+	 */
+	private class CloseApplicationObserver implements Observer {
+
+		private boolean firstWindowCreated = false;
+
+		@Override
+		public void update(Observable o, Object arg) {
+			int numOpenWidows = windowManager.getWindows().length;
+			// make sure we only close the application after at least 1 window
+			// has been added
+			if (!firstWindowCreated && numOpenWidows > 0) {
+				firstWindowCreated = true;
+			} else if (firstWindowCreated && numOpenWidows == 0) {
+				close();
+			}
+		}
+	}
+
 }
