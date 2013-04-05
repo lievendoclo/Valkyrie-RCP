@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>valkyrie-rcp</artifactId>
         <groupId>org.valkyriercp</groupId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <groupId>org.valkyriercp</groupId>
     <artifactId>valkyrie-rcp-manual</artifactId>
@@ -126,7 +128,7 @@ mvn install:install-file -Dfile=jai-1_1_3/lib/jai_codec.jar -DgroupId=javax.medi
 					<!-- use extensions -->
 					<useExtensions>1</useExtensions>
 					<highlightSource>1</highlightSource>
-					<highlightDefaultLanguage />
+					<highlightDefaultLanguage></highlightDefaultLanguage>
 					<!-- callouts -->
 					<calloutsExtension>1</calloutsExtension>
 				</configuration>
