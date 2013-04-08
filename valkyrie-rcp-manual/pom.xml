@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>valkyrie-rcp</artifactId>
-        <groupId>org.valkyriercp</groupId>
+        <groupId>dk.navicon</groupId>
         <version>1.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.valkyriercp</groupId>
+    <groupId>dk.navicon</groupId>
     <artifactId>valkyrie-rcp-manual</artifactId>
     <packaging>pom</packaging>
     <name>Valkyrie Manual</name>

@@ -111,12 +111,12 @@
     <dependencies>
         <!-- Valkyrie -->
         <dependency>
-            <groupId>org.valkyriercp</groupId>
+            <groupId>dk.navicon</groupId>
             <artifactId>valkyrie-rcp-core</artifactId>
             <version>${valkyrie.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.valkyriercp</groupId>
+            <groupId>dk.navicon</groupId>
             <artifactId>valkyrie-rcp-resources</artifactId>
             <version>${valkyrie.version}</version>
         </dependency>
