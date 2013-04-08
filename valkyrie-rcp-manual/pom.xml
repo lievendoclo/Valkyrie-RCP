@@ -4,7 +4,7 @@
     <parent>
         <artifactId>valkyrie-rcp</artifactId>
         <groupId>dk.navicon</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1</version>
     </parent>
     <groupId>dk.navicon</groupId>
     <artifactId>valkyrie-rcp-manual</artifactId>
