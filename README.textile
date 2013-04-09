@@ -1,4 +1,8 @@
 h1. Valkyrie RCP
+ 
+Valkyrie-RCP's mission is to provide an elegant way to build highly-configurable, GUI-standards-following rich-client applications faster by leveraging the Spring Framework, and a rich library of UI factories and support classes. Initial focus is on providing support for Swing applications but a goal of Valkyrie-RCP is to be view agnostic as much as possible.
+
+The goal of Valkyrie-RPC is to provide a viable option for developers that need a platform and a best-practices guide for constructing Swing applications quickly.
 
 h2. DISCLAIMER
 
@@ -18,11 +22,10 @@ Because the original project seems to be dead :(
 
 h2. And so, what's new ?
 
-* Updated dependency to Spring 3.2.0
+* Updated dependency to Spring 3.2.2
 * Updated dependency to Spring Security 3.1.1
 * Fixed broken build for the manual
-* Removed "valkyrie-rcp-mydoggy" module because the dependencies were broken
-* Released a 1.0 version available through a "Maven repository":https://github.com/Ekito/maven-repo
+* Released a 1.1 version available through maven central
 * Publish the "Valkyrie documentation":http://cmadsen.github.com/Valkyrie-RCP/
 
 
@@ -35,38 +38,18 @@ Just add this to your @pom.xml@ file:
 The dependencies:
 
 bc. <dependency>
-    <groupId>org.valkyriercp</groupId>
+    <groupId>dk.navicon</groupId>
     <artifactId>valkyrie-rcp-core</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 
-The repositories:
-
-bc. <repositories>
-    <repository>
-        <id>ekito-public-snapshots</id>
-        <url>https://raw.github.com/Ekito/maven-repo/master/snapshots</url>
-    </repository>
-    <repository>
-        <id>ekito-public-releases</id>
-        <url>https://raw.github.com/Ekito/maven-repo/master/releases</url>
-    </repository>
-</repositories>
 
 h3. Gradle
 
 The dependencies:
 
 bc. dependencies {
-        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'1.0'
-}
-
-The repository:
-
-bc. repositories {
-    maven {
-        url "https://raw.github.com/Ekito/maven-repo/master/releases/"
-    }
+        compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.1'
 }
 
 
