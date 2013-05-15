@@ -3,7 +3,9 @@ package org.valkyriercp.sample.simple;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
+import org.valkyriercp.application.support.HelpContentsCommand;
 import org.valkyriercp.command.config.AbstractCommandConfig;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupFactoryBean;
@@ -63,7 +65,9 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
 	public CommandGroup helpMenu() {
 		CommandGroupFactoryBean factory = new CommandGroupFactoryBean();
 		factory.setGroupId("helpMenu");
-		factory.setMembers(aboutCommand());
+		HelpContentsCommand helpContentsCommand = helpContentsCommand();
+		helpContentsCommand.setHelpSetPath(new ClassPathResource("help/simple.hs"));
+		factory.setMembers(aboutCommand(), helpContentsCommand);
 		return factory.getCommandGroup();
 	}
 
