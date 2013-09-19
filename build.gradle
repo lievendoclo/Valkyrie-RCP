@@ -1,6 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo.springsource.org/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.4'
+    }
+}
+
+
+allprojects {
+	apply plugin: "idea"
+    apply plugin: "eclipse"
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+}
+
 configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rcp-integrations")) { subproject ->
 	apply plugin: "java"
-	apply plugin: "idea"
+    apply plugin: "findbugs"
+	apply plugin: "jacoco"
 
         configurations {
 		ajc
@@ -86,21 +106,44 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
 		archives sourcesJar
 	}
 
-        dependencies {
+	findbugs {
+		ignoreFailures = true
+	}
+
+	tasks.withType(FindBugs) {
+	    reports {
+	        xml.enabled = false
+	        html.enabled = true
+	    }
+ 	}
+
+	jacocoTestReport {
+	    group = "Reporting"
+	    description = "Generate Jacoco coverage reports after running tests."
+	    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+	}
+
+    dependencies {
 		testCompile       "junit:junit:4.11"
 		testCompile       "org.mockito:mockito-core:1.9.5"
 		testCompile	  "org.easymock:easymock:3.0"
 		testCompile       "org.springframework:spring-test:${springVersion}"
 		compile           "org.slf4j:slf4j-api:1.6.1"
 		compile           "org.slf4j:jcl-over-slf4j:1.6.1"
-		runtime           "ch.qos.logback:logback-classic:0.9.26"  
+		runtime           "ch.qos.logback:logback-classic:0.9.26"
 
-                ajc               "org.aspectj:aspectjtools:1.6.10"
-		compile           "org.aspectj:aspectjrt:1.6.10"
-		aspects           "org.springframework:spring-aspects:${springVersion}"
+        ajc               "org.aspectj:aspectjtools:1.7.2"
+		compile           "org.aspectj:aspectjrt:1.7.2"
+        compile           "org.aspectj:aspectjweaver:1.7.2"
+		aspects           ("org.springframework:spring-aspects:${springVersion}") {
+            exclude module: "aspectjweaver"
+        }
 		aspectCompile     "javax.persistence:persistence-api:1.0"
 		aspectCompile     "org.springframework:spring-tx:${springVersion}"
-  		aspectCompile     "org.springframework:spring-orm:${springVersion}"    
+  		aspectCompile     "org.springframework:spring-orm:${springVersion}"
+        provided     "org.springframework:spring-tx:${springVersion}"
+        provided     "org.springframework:spring-orm:${springVersion}"
+        provided     "javax:javaee-api:6.0"
 	}
 }
 
@@ -165,6 +208,11 @@ project("valkyrie-rcp-samples:valkyrie-rcp-simple-sample") {
 		compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
 		compile "com.jgoodies:jgoodies-looks:2.5.2"
 	}
+
+    task(runSample, dependsOn: 'classes', type: JavaExec) {
+        main = 'org.valkyriercp.sample.simple.SimpleSampleRunner'
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
 project("valkyrie-rcp-samples:valkyrie-rcp-showcase-sample") {
@@ -174,6 +222,11 @@ project("valkyrie-rcp-samples:valkyrie-rcp-showcase-sample") {
 		compile "com.jgoodies:jgoodies-looks:2.5.2"
 		compile "org.jodd:jodd:3.2.5"
 	}
+
+    task(runSample, dependsOn: 'classes', type: JavaExec) {
+        main = 'org.valkyriercp.sample.showcase.ShowcaseRunner'
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
 
@@ -185,6 +238,11 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dataeditor-sample") {
 		compile "com.github.insubstantial:substance:7.2.1"
 		compile "com.github.insubstantial:substance-swingx:7.2.1"
 	}
+
+    task(runSample, dependsOn: 'classes', type: JavaExec) {
+        main = 'org.valkyriercp.sample.dataeditor.DataEditorApp'
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
 
@@ -194,6 +252,11 @@ project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
 		compile project (":valkyrie-rcp-integrations:valkyrie-rcp-vldocking")
 		compile "com.jgoodies:jgoodies-looks:2.5.2"
 	}
+
+    task(runSample, dependsOn: 'classes', type: JavaExec) {
+        main = 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
 
