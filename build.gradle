@@ -7,14 +7,32 @@ buildscript {
     }
 }
 
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+configurations {
+    ajc
+}
+
+idea {
+    project {
+        ipr {
+            withXml {
+                IdeaEnricher.enableAjcCompiler(this.project, it.asNode())
+            }
+        }
+    }
+}
 
 allprojects {
-	apply plugin: "idea"
-    apply plugin: "eclipse"
     apply plugin: 'propdeps'
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+
+    dependencies {
+        provided gradleApi()
+    }
 }
 
 configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rcp-integrations")) { subproject ->
@@ -29,7 +47,7 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
 		compile {
 		      extendsFrom aspects
   		}
-		all*.exclude group: 'commons-logging', module: 'commons-logging'	
+		all*.exclude group: 'commons-logging', module: 'commons-logging'
         }
 
 	group = "dk.navicon"

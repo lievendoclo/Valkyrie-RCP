@@ -56,8 +56,7 @@ h2. How do I get my IDE to work and run samples
 
 h3. IntelliJ IDEA 12+
 
-Just run @gradle idea@ and import the project in IntelliJ. The only thing you have to do then is change the Java
-compiler to @ajc@ and enter the location of an aspectjtools jar (you can find it in your gradle cache).
+Just run @gradle idea@ and import the project in IntelliJ.
 
 h2. I found a bug, what can I do ?
 
