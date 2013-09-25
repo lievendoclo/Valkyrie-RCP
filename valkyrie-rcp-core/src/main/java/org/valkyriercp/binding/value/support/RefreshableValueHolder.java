@@ -13,11 +13,13 @@ import org.valkyriercp.rules.closure.Closure;
  * 
  * @author Keith Donald
  */
-@Configurable(preConstruction = true)
+@Configurable
 public class RefreshableValueHolder extends ValueHolder {
 	private final Closure refreshFunction;
 
 	private boolean alwaysRefresh;
+
+    private boolean initialized = false;
 
 	/**
 	 * Constructor supplying a refresh <code>Closure</code>. Refresh has to be
@@ -39,16 +41,16 @@ public class RefreshableValueHolder extends ValueHolder {
 	 * Constructor supplying a refresh <code>Closure</code> that allways has to
 	 * be triggered when reading the value. Additionally a refresh is triggered
 	 * on construction.
+     *
+     * @deprecated lazy initialization is always done
 	 */
+    @Deprecated
 	public RefreshableValueHolder(Closure refreshFunction,
 			boolean alwaysRefresh, boolean lazyInit) {
 		super();
 		Assert.notNull(refreshFunction, "The refresh callback cannot be null");
 		this.refreshFunction = refreshFunction;
 		this.alwaysRefresh = alwaysRefresh;
-		if (!lazyInit) {
-			refresh();
-		}
 	}
 
 	/**
@@ -58,8 +60,9 @@ public class RefreshableValueHolder extends ValueHolder {
 	 * is executed.
 	 */
 	public Object getValue() {
-		if (alwaysRefresh) {
+		if (alwaysRefresh || !initialized) {
 			refresh();
+            initialized = true;
 		}
 		return super.getValue();
 	}
