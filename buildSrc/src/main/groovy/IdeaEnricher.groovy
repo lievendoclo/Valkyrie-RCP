@@ -52,12 +52,24 @@ public class IdeaEnricher {
             ajcSettings = project.appendNode('component', [name: 'AjcSettings']);
         }
         def path
-        gradleProject.project("valkyrie-rcp-core").configurations.ajc.each {
+        gradleProject.configurations.ajc.each {
             path = it
         }
         def builder = new NodeBuilder()
         def ajcPath = builder.option(name: 'ajcPath', value: path)
         ajcSettings.append(ajcPath)
+    }
+
+    def static enableGitScm(Project gradleProject, Node project) {
+        def vcsDirectoryMappings = project.component.find { it.@name == 'VcsDirectoryMappings' } as Node
+        if (vcsDirectoryMappings) {
+            project.component.remove vcsDirectoryMappings
+
+        }
+        vcsDirectoryMappings = project.appendNode('component', [name: 'VcsDirectoryMappings']);
+        def builder = new NodeBuilder();
+        def mapping = builder.mapping(directory:'$PROJECT_DIR$', vcs:'Git')
+        vcsDirectoryMappings.append mapping
     }
 
     def static updateWebFacet(Project gradleProject, Node module) {
