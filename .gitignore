@@ -8,3 +8,5 @@
 target
 _*
 valkyrie-rcp-local
+build
+.gradle

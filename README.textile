@@ -52,6 +52,11 @@ bc. dependencies {
         compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.1'
 }
 
+h2. How do I get my IDE to work and run samples
+
+h3. IntelliJ IDEA 12+
+
+Just run @gradle idea@ and import the project in IntelliJ.
 
 h2. I found a bug, what can I do ?
 
