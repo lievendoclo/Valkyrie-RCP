@@ -6,7 +6,7 @@
     <parent>
         <groupId>dk.navicon</groupId>
         <artifactId>valkyrie-rcp</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>valkyrie-rcp-archetype</artifactId>
