@@ -5,6 +5,6 @@ import org.valkyriercp.application.support.ApplicationLauncher;
 
 public class ShowcaseRunner {
     public static void main(String[] args) {
-        new ApplicationLauncher(DefaultSplashScreenConfig.class, "/META-INF/valkyrie/context.xml");
+        new ApplicationLauncher(DefaultSplashScreenConfig.class, ShowcaseApplicationConfig.class);
     }
 }

@@ -6,6 +6,14 @@ import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -21,6 +29,7 @@ import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
 import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,5 +110,15 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
         viewProperties.put("contactDataStore", new ContactDataStore());
         contactView.setViewProperties(viewProperties);
         return contactView;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        List<UserDetails> userDetailsList = new ArrayList<>();
+        userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
+        userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
+        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
     }
 }

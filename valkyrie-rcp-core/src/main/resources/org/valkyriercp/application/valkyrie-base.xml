@@ -7,6 +7,4 @@
 
     <context:annotation-config/>
 
-    <bean class="org.valkyriercp.application.config.support.ApplicationObjectConfigurerBeanPostProcessor"/>
-
 </beans>

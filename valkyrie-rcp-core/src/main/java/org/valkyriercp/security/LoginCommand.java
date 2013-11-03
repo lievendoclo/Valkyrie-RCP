@@ -7,6 +7,7 @@ import org.valkyriercp.dialog.ApplicationDialog;
 import org.valkyriercp.dialog.CompositeDialogPage;
 import org.valkyriercp.dialog.TabbedDialogPage;
 import org.valkyriercp.dialog.TitledPageApplicationDialog;
+import org.valkyriercp.util.ValkyrieRepository;
 
 public class LoginCommand extends ApplicationWindowAwareCommand {
     private static final String ID = "loginCommand";
@@ -43,6 +44,9 @@ public class LoginCommand extends ApplicationWindowAwareCommand {
      * Execute the login command. Display the dialog and attempt authentication.
      */
     protected void doExecuteCommand() {
+        if(!ValkyrieRepository.getInstance().getApplicationConfig().applicationSecurityManager().isSecuritySupported()) {
+            return ;
+        }
         CompositeDialogPage tabbedPage = new TabbedDialogPage( "loginForm" );
 
         final LoginForm loginForm = createLoginForm();

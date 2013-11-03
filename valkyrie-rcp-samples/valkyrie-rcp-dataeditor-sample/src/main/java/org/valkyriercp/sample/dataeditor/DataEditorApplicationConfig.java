@@ -9,6 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.TestingAuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.authentication.AuthenticationManagerFactoryBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.ApplicationWindowFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -31,6 +41,7 @@ import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetProvider;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -174,5 +185,15 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public Binder supplierBinder() {
         return new SupplierBinder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        List<UserDetails> userDetailsList = new ArrayList<>();
+        userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
+        userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
+        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
     }
 }
