@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo.springsource.org/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.7'
+    }
+}
+
+apply plugin: 'docbook-reference'
+apply plugin: 'groovy'
+
+reference {
+    sourceDir = file('src/reference/docbook')
+    pdfFilename = 'valkyrie-rcp-reference.pdf'
+}
+
+task docsZip(type: Zip) {
+    group = 'Distribution'
+    baseName = 'valkyrie-rcp'
+    classifier = 'docs'
+
+    from (reference) {
+        into 'reference'
+    }
+}
+
+artifacts {
+    archives docsZip
+}

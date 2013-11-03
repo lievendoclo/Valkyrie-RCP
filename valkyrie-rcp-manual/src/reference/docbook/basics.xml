@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xml:id="basics"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+                http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+                http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+    <title>Basics</title>
+    <para>
+        This chapters covers some of the basic concepts of the Valkyrie framework. Most of them will be explained in more
+        detail in later chapters, but this should give the framework user a quick overview.
+    </para>
+    <section id="basics:starting">
+        <title>Getting started using the archetype</title>
+        <para>
+            Starting development of a Valkyrie RCP application is very easy. There is an archetype
+            which provides a basic skeleton application from which you can start.
+        </para>
+        <para>
+            To create a project, making use of the archetype, you need to execute
+        </para>
+        <programlisting><![CDATA[mvn archetype:generate
+   -DarchetypeGroupId=org.valkyriercp
+   -DarchetypeArtifactId=valkyrie-rcp-archetype
+   -DarchetypeVersion=]]>${version}</programlisting>
+        <para>
+            This creates a basic Valkyrie application consisting of the 4 basic elements needed to run a
+            Valkyrie application:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <classname>ApplicationConfig</classname> implementation
+                </para>
+                <para>
+                    This contains the basic elements of the Valkyrie application, such as
+                    the <classname>ApplicationWindowFactory</classname>, <classname>ApplicationPageFactory</classname>, ... The implementation provided
+                    by the archetype uses all the default implementations of these factories. It also references the
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <classname>CommandConfig</classname> implementation
+                </para>
+                <para>
+                    This contains all the commands that will make up the navigation in the application.
+                    These can be the commands contained in the menubar, toolbar or any other navigation component.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <filename>context.xml</filename>
+                </para>
+                <para>
+                    Valkyrie has only a small XML Spring config file, basically defining the <classname>ApplicationConfig</classname>
+                    bean. Valkyrie can work without the XML file, but since some Spring features are still more
+                    simple to define in XML than they are in Java configuration, it is included.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <classname>ApplicationRunner</classname> class
+                </para>
+                <para>
+                    This is the executable class that runs the Valkyrie application.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section id="basics:factories">
+        <title>The factories</title>
+        <para>
+            Valkyrie uses the factory pattern extensively to create its objects. Most of these factories are discussed in
+            other chapters, but the following list show a small overview of the essential factories:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <classname>ApplicationWindowFactory</classname>
+                </para>
+                <para>
+                    This factory creates the window in which components are shown. The standard implementation
+                    creates a <classname>JXFrame</classname> and defines a menubar, toolbar and statusbar by default.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <classname>ApplicationPageFactory</classname>
+                </para>
+                <para>
+                    This factory creates the 'pages' in Valkyrie. A page is the main contentpane in which components
+                    are shown. The default implementation shows a single panel in which components are shown, but
+                    there are implementations that show multiple tabbed or docked content panes.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <classname>PageComponentPaneFactory</classname>
+                </para>
+                <para>
+                    This factory the actual content pane in which the content of a page is shown. The basic implementation
+                    shows a simple internal frame. There is also a simple implementation that wraps the content
+                    in a panel without decoration.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <classname>ComponentFactory</classname>, <classname>ButtonFactory</classname>, <classname>MenuFactory</classname>
+                </para>
+                <para>
+                    These factories create basic Swing components. The default implementations create the standard Swing components
+                    in the JDK (<classname>JLabel</classname>, <classname>JTextField</classname>, ...), but other implementations may provide other implementations. When creating
+                    components in Valkyrie, these factories should be utilised wherever possible in order to maintain a standardized
+                    way of creating components
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section id="basics:lifecycle">
+        <title>Lifecycle</title>
+        <para>
+            Valkyrie applications have the concept of a lifecycle. The lifecycle can be used to hook in functionality at certain points
+            of execution. The lifecycle dictates when the application window should be created, what should happen before and
+            after creating, when commands should be creating, ...
+        </para>
+        <para>
+            Lifecycles enable the developer to add functionality to these extension points. For example, a developer
+            could add a login window before the displaying of the application window to enforce security, or to show a confirmation
+            dialog before closing an application window.
+        </para>
+    </section>
+    <section id="basics:view">
+        <title>Views</title>
+        <para>
+            Views are the abstraction of a component shown in a page. A view also has a descriptor that describes the content of the view,
+            such as a title, description or icon.
+        </para>
+    </section>
+    <section id="basics:widgets">
+        <title>Widgets</title>
+        <para>
+            Sometimes a bunch of components make a logical group and share functionality (say, for example, a CRUD component that takes
+            a list as input and consists of a table, detail form and filtering fields). Widgets provide a way to create such groups of components.
+        </para>
+    </section>
+</chapter>

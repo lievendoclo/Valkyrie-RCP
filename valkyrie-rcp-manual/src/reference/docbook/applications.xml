@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xml:id="applications"
+         xmlns="http://docbook.org/ns/docbook" version="5.0"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+                http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+                http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+    <title>Applications</title>
+
+    <toc/>
+
+    <section id="applications:application">
+        <title>Application</title>
+        <para>
+            An application in Valkyrie is comprised of 2 things: a lifecycle advisor (how it should behave) and a
+            descriptor (what does it contain).
+        </para>
+        <para>
+            The
+            <classname>Application</classname>
+            class is also the class that starts the actual application: it calls the startup hooks, and shows
+            the initial window and view through the<classname>ApplicationLifecycleAdvisor</classname>.
+        </para>
+    </section>
+
+    <section id="applications:lifecycle">
+        <title>Application lifecycle</title>
+        <para>
+            The lifecycle in a Valkyrie application is what it says it is. It’s the behavior of the application
+            through the time when it is running. What the application should do at startup, what it needs to show, how it
+            should behave when it’s being closed… these are all aspects of the application lifecycle.
+        </para>
+        <para>
+            In Valkyrie, an ApplicationLifecycleAdvisor manages the lifecycle of the application. The default
+            <classname>ApplicationLifecycleAdvisor</classname>
+            handles the creation of the command context, what view should be showed initially, which command config class should be used for the menu, etc…
+            The default implementation is as follows:
+        </para>
+        <programlisting language="java"><![CDATA[@Bean
+public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
+    DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
+    advisor.setCommandConfigClass(getCommandConfigClass());
+    advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(emptyViewDescriptor()));
+    return advisor;
+}]]></programlisting>
+        <para>
+            If you want to create your own
+            <classname>ApplicationLifeCycleAdvisor</classname>, you need to subclass the default implementation or implement the entire
+            interface. Then you need to override the
+            <literal>applicationLifecycleAdvisor</literal>
+            method in your application config to return your implementation.
+        </para>
+    </section>
+
+    <section id="applications:hooking">
+        <title>Hooking into a lifecycle</title>
+        <para>
+            In the application lifecycle you can intervene on points within startup, shutdown or other events such as opening
+            a window. These hooks are present in the
+            <classname>ApplicationLifecycleAdvisor</classname>
+            and can for example be used to ask data
+            needed before startup.
+        </para>
+        <para>
+            You could also stop an application from exiting (by showing a confirmation dialog for example).
+        </para>
+    </section>
+
+    <section id="applications:example-login">
+        <title>Example: adding login functionality</title>
+        <para>
+            Logging into an application is quite common behavior. You’ll probably want to show the login dialog before showing
+            your application window (you might want to personalize the application window based on who has logged in).
+        </para>
+        <para>In Valkyrie, this means after the commands have been created (which is one step before the window
+            gets created and showed). In this example, we’ll let a imaginary
+            <classname>LoginHandler</classname>
+            class check whether we can login or
+            not. For the record, basic login functionality has been included into Valkyrie, but this would bring us
+            out of scope for this example. We’ll discuss the security features later.
+        </para>
+        <para>Assuming our handler will show a login screen and handle the login logic, we only need to hook it into the
+            custom application lifecycle advisor:
+        </para>
+        <programlisting language="java"><![CDATA[public class LoginLifecycleAdvisor extends DefaultApplicationLifecycleAdvisor
+{
+    private LoginHandler handler;
+
+    public void setHandler(final LoginHandler handler)
+    {
+        this.handler = handler;
+    }
+
+    public void onCommandsCreated(final ApplicationWindow window)
+    {
+        super.onCommandsCreated(window);
+        handler.doLogin();
+    }
+}]]></programlisting>
+        <para>
+            As you can see, this is quite easy. Of course you’d want to know when a user is already logged in and just creates
+            a new application window (which also triggers this method), so it doesn’t show this login window again, something
+            like holding a security context within your application.
+        </para>
+    </section>
+
+    <section id="applications:other-uses">
+        <title>Other possible uses</title>
+        <para>
+            Lifecycle advisor subclassing can also be handy in other aspects. Any Valkyrie application knows which
+            lifecycle advisor is used for its execution. You can obtain this by autowiring the
+            <classname>ApplicationLifecycleAdvisor</classname>
+            in any
+            Spring managed class.
+        </para>
+        <para>
+            You could for example create an application window factory that delivers different application window applications
+            based on which lifecycle advisor was used:
+        </para>
+        <programlisting language="java"><![CDATA[public class DefaultApplicationWindowFactory implements ApplicationWindowFactory
+{
+    private static final Log logger = LogFactory.getLog(DefaultApplicationWindowFactory.class);
+
+    @Autowired
+    private ApplicationLifecycleAdvisor lifecycleAdvisor;
+
+    public ApplicationWindow createApplicationWindow()
+    {
+        if (lifecycleAdvisor instanceof OutlookNavigatorApplicationLifecycleAdvisor)
+        {
+             return OutlookNavigatorApplicationWindowFactory.create();
+        }
+        else if (lifecycleAdvisor instanceof TaskPaneNavigatorApplicationLifecycleAdvisor)
+        {
+             return TaskPaneNavigatorApplicationWindowFactory.create();
+        }
+        return new DefaultApplicationWindow();
+    }
+
+    static class TaskPaneNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create(boolean onlyOneExpanded)
+        {
+            ...
+        }
+    }
+
+    static class OutlookNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create()
+        {
+            ...
+        }
+    }
+}]]></programlisting>
+    </section>
+
+    <section id="applications:statusbar">
+        <title>Playing with the status bar</title>
+        <para>
+            Changing the status bar can be done by calling the statusbar through the lifecycle advisor:
+        </para>
+        <programlisting language="java"><![CDATA[lifecycleAdvisor.getStatusBar();]]></programlisting>
+        <para>
+            Again, if you’re creating your own lifecycle advisor, you’re able to override this method and perhaps supply your
+            own status bar implementation.
+        </para>
+        <para>
+            The standard status bar supports:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    Displaying messages, normal messages as well as errors
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Containing a progress monitor to track long-running processing (and cancelling them)
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Your status bar may hold a clock, the current logged in user, the connected server, …
+        </para>
+        <para>
+            For example, if you’d want to add a clock to your status bar, you could create your own status bar implementation
+            like this:
+        </para>
+        <programlisting language="java"><![CDATA[public class DynamicStatusBar extends DefaultStatusBar
+{
+    protected JComponent createControl()
+    {
+        JPanel statusBar;
+
+        FormLayout layout = new FormLayout(
+                new ColumnSpec[]
+                        {
+                                FormFactory.GLUE_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                        },
+                new RowSpec[]
+                        {
+                                FormFactory.DEFAULT_ROWSPEC
+                        });
+
+        statusBar = new JPanel(layout);
+
+        StatusBarProgressMonitor progressMonitor = createStatusBarProgressMonitor();
+
+        statusBar.add(createMessageLabel(), new CellConstraints(1, 1));
+        statusBar.add(createClock(), new CellConstraints(3, 1));
+        statusBar.add(progressMonitor.getControl(), new CellConstraints(5, 1));
+
+        progressMonitor.getControl().setPreferredSize(new Dimension(200, 17));
+
+        statusBar.setBorder(new ShadowBorder());
+
+        return statusBar;
+    }
+
+    private JLabel createClock()
+    {
+        final JLabel label = new JLabel();
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while (true)
+                {
+                    DateFormatter formatter = new DateFormatter(DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                              DateFormat.MEDIUM));
+                    final String text = formatter.formatValue(new Date());
+                    label.setText(text);
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+        });
+        t.start();
+        return label;
+    }
+}]]></programlisting>
+        <para>
+            This will result in a status bar like this:
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/statusbar.png"/>
+            </imageobject>
+        </mediaobject>
+    </section>
+
+    <section id="applications:windows">
+        <title>Application windows</title>
+        <para>
+            TODO (explain ApplicationWindowFactory, creating new ApplicationWindow implementations, ...)
+        </para>
+    </section>
+</chapter>
