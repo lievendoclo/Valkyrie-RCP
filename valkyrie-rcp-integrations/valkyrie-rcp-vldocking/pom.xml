@@ -12,28 +12,8 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>dk.navicon</groupId>
-            <artifactId>valkyrie-rcp-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.vlsolutions</groupId>
             <artifactId>vldocking</artifactId>
-        </dependency>
-        <!-- Needed by spring-aspects... -->
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 

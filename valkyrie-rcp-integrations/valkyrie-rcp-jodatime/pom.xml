@@ -12,10 +12,6 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>dk.navicon</groupId>
-            <artifactId>valkyrie-rcp-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
