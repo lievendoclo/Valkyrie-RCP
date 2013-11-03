@@ -3,8 +3,7 @@ package org.valkyriercp.form.binding.swing;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.support.CustomBinding;
 
-import javax.swing.JComponent;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 

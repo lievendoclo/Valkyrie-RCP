@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.valkyriercp.sample.showcase.widget.BinderDemoWidget;
-import org.valkyriercp.widget.*;
+import org.valkyriercp.widget.HTMLViewWidget;
+import org.valkyriercp.widget.Widget;
+import org.valkyriercp.widget.WidgetProvider;
+import org.valkyriercp.widget.WidgetViewDescriptor;
 
 @Configuration
 public class ShowcaseViews {

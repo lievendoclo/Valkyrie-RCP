@@ -1,52 +1,18 @@
 package org.valkyriercp.widget.table.glazedlists;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Observer;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-
+import ca.odell.glazedlists.*;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
+import ca.odell.glazedlists.gui.TableFormat;
+import ca.odell.glazedlists.gui.WritableTableFormat;
+import ca.odell.glazedlists.swing.*;
+import com.google.common.collect.Lists;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Size;
+import com.jgoodies.forms.layout.Sizes;
 import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.ColorHighlighter;
-import org.jdesktop.swingx.decorator.ComponentAdapter;
-import org.jdesktop.swingx.decorator.HighlightPredicate;
-import org.jdesktop.swingx.decorator.Highlighter;
-import org.jdesktop.swingx.decorator.HighlighterFactory;
+import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.table.TableColumnExt;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.ActionCommand;
@@ -57,26 +23,22 @@ import org.valkyriercp.widget.table.TableCellRenderers;
 import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.FilterList;
-import ca.odell.glazedlists.GlazedLists;
-import ca.odell.glazedlists.SortedList;
-import ca.odell.glazedlists.event.ListEvent;
-import ca.odell.glazedlists.event.ListEventListener;
-import ca.odell.glazedlists.gui.TableFormat;
-import ca.odell.glazedlists.gui.WritableTableFormat;
-import ca.odell.glazedlists.swing.EventJXTableModel;
-import ca.odell.glazedlists.swing.EventSelectionModel;
-import ca.odell.glazedlists.swing.EventTableModel;
-import ca.odell.glazedlists.swing.TableComparatorChooser;
-import ca.odell.glazedlists.swing.TextComponentMatcherEditor;
-
-import com.google.common.collect.Lists;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.Size;
-import com.jgoodies.forms.layout.Sizes;
+import javax.annotation.PostConstruct;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+import java.util.List;
 
 public final class GlazedListTableWidget extends AbstractWidget implements
 		TableWidget {
@@ -217,9 +179,9 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 		mFilterProperties = filterProperties;
 		mComparator = comparator;
 		mAddHighlightSelectColumn = addHighlightSelectColumn;
+        postConstruct();
 	}
 
-	@PostConstruct
 	private void postConstruct() {
 		theTable.setColumnControlVisible(true);
 		dataList = mRows == null ? new BasicEventList<Object>() : GlazedLists
@@ -229,7 +191,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 		this.shownList = sortedList;
 
 		if (mFilterProperties != null) {
-			textFilterField = new JTextField(applicationConfig
+			textFilterField = new JTextField(getApplicationConfig()
 					.messageResolver().getMessage(
 							"glazedListTableWidget.textFilterField.prompt"));
 			textFilterField.addFocusListener(new FocusAdapter() {
@@ -453,11 +415,11 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 		});
 
 		for (AbstractCommand navigationCommand : navigationCommands) {
-			this.applicationConfig.commandConfigurer().configure(
+			this.getApplicationConfig().commandConfigurer().configure(
 					navigationCommand);
 			navigationCommand.setEnabled(false);
 		}
-		this.navigationCommandGroup = applicationConfig.commandManager()
+		this.navigationCommandGroup = getApplicationConfig().commandManager()
 				.createCommandGroup(this.navigationCommands);
 	}
 
@@ -498,7 +460,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 				fireUserSelectionChangedEvent();
 			}
 		};
-		this.applicationConfig.commandConfigurer().configure(selectAll);
+		this.getApplicationConfig().commandConfigurer().configure(selectAll);
 		AbstractCommand selectNone = new ActionCommand(SELECT_NONE_ID) {
 
 			@Override
@@ -514,7 +476,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 				fireUserSelectionChangedEvent();
 			}
 		};
-		this.applicationConfig.commandConfigurer().configure(selectNone);
+		this.getApplicationConfig().commandConfigurer().configure(selectNone);
 		AbstractCommand selectInverse = new ActionCommand(SELECT_INVERSE_ID) {
 
 			@Override
@@ -534,8 +496,8 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 				fireUserSelectionChangedEvent();
 			}
 		};
-		this.applicationConfig.commandConfigurer().configure(selectInverse);
-		this.selectColumnCommandGroup = applicationConfig
+		this.getApplicationConfig().commandConfigurer().configure(selectInverse);
+		this.selectColumnCommandGroup = getApplicationConfig()
 				.commandManager()
 				.createCommandGroup(
 						Lists.newArrayList(selectAll, selectNone, selectInverse));
@@ -875,7 +837,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 					selectedCount = getSelectedRows().length;
 				}
 
-				label.setText(applicationConfig.messageResolver().getMessage(
+				label.setText(getApplicationConfig().messageResolver().getMessage(
 						"glazedListTableWidget", "listSummary", "label",
 						new Object[] { index, selectedCount, totalCount }));
 			}

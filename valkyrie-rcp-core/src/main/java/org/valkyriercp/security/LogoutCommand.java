@@ -1,10 +1,8 @@
 package org.valkyriercp.security;
 
-import org.jdesktop.swingx.JXPanel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.Authentication;
 import org.valkyriercp.command.support.ApplicationWindowAwareCommand;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
@@ -20,12 +18,8 @@ import javax.swing.*;
  * @author Ben Alex
  * @author Larry Streepy
  */
-@Configurable
 public class LogoutCommand extends ApplicationWindowAwareCommand {
     private static final String ID = "logoutCommand";
-
-    @Autowired
-    private ApplicationSecurityManager sm;
 
     private LoginCommand loginCommand;
 
@@ -35,6 +29,10 @@ public class LogoutCommand extends ApplicationWindowAwareCommand {
     }
 
     private boolean displaySuccess = true;
+
+    public ApplicationSecurityManager getApplicationSecurityManager() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().applicationSecurityManager();
+    }
 
     /**
      * Indicates whether an information message is displayed to the user upon
@@ -49,7 +47,7 @@ public class LogoutCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        Authentication loggedOutAuth = sm.doLogout();
+        Authentication loggedOutAuth = getApplicationSecurityManager().doLogout();
         if (displaySuccess) {
             JOptionPane.showMessageDialog(getParentWindowControl(), "You have been logged out.", "Logout Successful",
                     JOptionPane.INFORMATION_MESSAGE);

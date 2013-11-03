@@ -1,7 +1,5 @@
 package org.valkyriercp.form.builder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.factory.ComponentFactory;
@@ -9,6 +7,7 @@ import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.BindingFactory;
 import org.valkyriercp.form.binding.swing.ComboBoxBinder;
 import org.valkyriercp.rules.constraint.Constraint;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -20,19 +19,11 @@ import java.util.Map;
  * @author oliverh
  * @author Mathias Broekelmann
  */
-@Configurable
 public abstract class AbstractFormBuilder {
 
 	private final BindingFactory bindingFactory;
 
-    @Autowired
-	private ComponentFactory componentFactory;
-
 	private FormComponentInterceptor interceptor;
-
-    @Autowired
-	private FormComponentInterceptorFactory interceptorFactory;
-
 	/**
 	 * Default constructor providing the {@link BindingFactory}.
 	 *
@@ -43,24 +34,20 @@ public abstract class AbstractFormBuilder {
 		this.bindingFactory = bindingFactory;
 	}
 
-	/**
+    public FormComponentInterceptorFactory getInterceptorFactory() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().formComponentInterceptorFactory();
+    }
+
+    /**
 	 * Returns the {@link FormComponentInterceptor} that will be used when
 	 * creating a component with this builder.
 	 */
 	protected FormComponentInterceptor getFormComponentInterceptor() {
 		if (interceptor == null) {
-			interceptor = interceptorFactory.getInterceptor(getFormModel());
+			interceptor = getInterceptorFactory().getInterceptor(getFormModel());
 		}
 
 		return interceptor;
-	}
-
-	/**
-	 * Set the factory that delivers the {@link FormComponentInterceptor}.
-	 */
-	public void setFormComponentInterceptorFactory(FormComponentInterceptorFactory interceptorFactory) {
-		this.interceptorFactory = interceptorFactory;
-		this.interceptor = null;
 	}
 
 	/**
@@ -68,14 +55,7 @@ public abstract class AbstractFormBuilder {
 	 * components.
 	 */
 	protected ComponentFactory getComponentFactory() {
-		return componentFactory;
-	}
-
-	/**
-	 * Set the {@link ComponentFactory}.
-	 */
-	public void setComponentFactory(ComponentFactory componentFactory) {
-		this.componentFactory = componentFactory;
+		return ValkyrieRepository.getInstance().getApplicationConfig().componentFactory();
 	}
 
 	/**

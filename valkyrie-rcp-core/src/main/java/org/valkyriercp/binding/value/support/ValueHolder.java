@@ -2,8 +2,6 @@ package org.valkyriercp.binding.value.support;
 
 import org.springframework.core.style.ToStringCreator;
 
-import java.util.concurrent.Executors;
-
 /**
  * A simple value model that contains a single value. Notifies listeners when
  * the contained value changes.

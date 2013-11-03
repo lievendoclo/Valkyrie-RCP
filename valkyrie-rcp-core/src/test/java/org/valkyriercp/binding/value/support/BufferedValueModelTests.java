@@ -2,7 +2,6 @@ package org.valkyriercp.binding.value.support;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.binding.support.BeanPropertyAccessStrategy;
 import org.valkyriercp.binding.value.CommitTrigger;

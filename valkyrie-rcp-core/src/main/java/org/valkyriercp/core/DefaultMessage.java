@@ -1,13 +1,11 @@
 package org.valkyriercp.core;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.ObjectUtils;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.image.IconSource;
 import org.valkyriercp.image.NoSuchImageResourceException;
 import org.valkyriercp.util.LabelUtils;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -22,7 +20,6 @@ import java.io.Serializable;
  * @see #getIcon()
  *
  */
-@Configurable
 public class DefaultMessage implements Message, Serializable {
 
     private static final long serialVersionUID = -6524078363891514995L;
@@ -32,9 +29,6 @@ public class DefaultMessage implements Message, Serializable {
     private final String message;
 
     private final Severity severity;
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
 
     /**
      * A convenience instance representing an empty message. i.e. The message text
@@ -115,7 +109,7 @@ public class DefaultMessage implements Message, Serializable {
             return null;
         }
         try {
-            IconSource iconSource = applicationConfig.iconSource();
+            IconSource iconSource = ValkyrieRepository.getInstance().getApplicationConfig().iconSource();
             return iconSource.getIcon("severity." + severity.getLabel());
         }
         catch (NoSuchImageResourceException e) {

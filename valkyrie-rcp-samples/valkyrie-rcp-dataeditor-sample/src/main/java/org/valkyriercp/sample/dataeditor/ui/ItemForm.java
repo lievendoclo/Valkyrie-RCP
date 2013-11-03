@@ -1,21 +1,9 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
-import com.google.common.base.Function;
-import com.jgoodies.forms.layout.FormLayout;
-import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.core.Secured;
-import org.valkyriercp.form.binding.swing.editor.LookupBinder;
-import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.form.builder.MigLayoutFormBuilder;
 import org.valkyriercp.sample.dataeditor.domain.Item;
-import org.valkyriercp.sample.dataeditor.domain.Supplier;
-import org.valkyriercp.sample.dataeditor.domain.SupplierFilter;
 import org.valkyriercp.widget.TabbedForm;
-
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ItemForm extends TabbedForm
 {
@@ -57,6 +45,6 @@ public class ItemForm extends TabbedForm
 
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createFormModel(new Item(),"itemForm");
+        return getApplicationConfig().formModelFactory().createFormModel(new Item(),"itemForm");
     }
 }

@@ -2,29 +2,23 @@ package org.valkyriercp.widget;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.PageComponentContext;
 import org.valkyriercp.application.View;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.command.support.AbstractCommand;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Default behavior implementation of AbstractWidget
  */
-@Configurable
 public abstract class AbstractWidget implements Widget
 {
     protected boolean showing = false;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    protected ApplicationConfig applicationConfig;
 
     private View view;
 
@@ -76,5 +70,9 @@ public abstract class AbstractWidget implements Widget
     @Override
     public void registerLocalCommandExecutors(PageComponentContext context) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    protected ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 }

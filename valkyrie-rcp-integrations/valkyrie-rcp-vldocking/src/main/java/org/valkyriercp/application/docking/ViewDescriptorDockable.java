@@ -15,15 +15,14 @@
  */
 package org.valkyriercp.application.docking;
 
-import java.awt.Component;
-
-import org.springframework.core.style.ToStringCreator;
-
 import com.vlsolutions.swing.docking.DockKey;
 import com.vlsolutions.swing.docking.Dockable;
 import com.vlsolutions.swing.docking.DockingConstants.Hide;
+import org.springframework.core.style.ToStringCreator;
 import org.valkyriercp.application.PageComponent;
 import org.valkyriercp.application.ViewDescriptor;
+
+import java.awt.*;
 
 /**
  * @author Rogan Dawes

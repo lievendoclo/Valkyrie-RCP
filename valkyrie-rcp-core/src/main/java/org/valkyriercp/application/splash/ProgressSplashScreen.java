@@ -1,10 +1,9 @@
 package org.valkyriercp.application.splash;
 
 import org.springframework.util.Assert;
-import org.valkyriercp.progress.*;
+import org.valkyriercp.progress.ProgressBarProgressMonitor;
 
 import javax.swing.*;
-import javax.swing.ProgressMonitor;
 import java.awt.*;
 
 /**

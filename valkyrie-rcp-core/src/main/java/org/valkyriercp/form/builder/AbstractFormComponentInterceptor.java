@@ -1,12 +1,10 @@
 package org.valkyriercp.form.builder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.Application;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.util.HasInnerComponent;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
@@ -17,13 +15,9 @@ import javax.swing.*;
  *
  * @author oliverh
  */
-@Configurable
 public abstract class AbstractFormComponentInterceptor implements FormComponentInterceptor {
 
 	private final FormModel formModel;
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
 
 	protected AbstractFormComponentInterceptor() {
 		formModel = null;
@@ -61,7 +55,7 @@ public abstract class AbstractFormComponentInterceptor implements FormComponentI
 	}
 
     protected ApplicationConfig getApplicationConfig() {
-        return applicationConfig;
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 }
 

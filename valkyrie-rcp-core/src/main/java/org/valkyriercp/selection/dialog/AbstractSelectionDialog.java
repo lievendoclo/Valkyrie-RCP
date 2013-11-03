@@ -1,14 +1,13 @@
 package org.valkyriercp.selection.dialog;
 
-import java.awt.Window;
-
-import javax.swing.JComponent;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.dialog.ApplicationDialog;
 import org.valkyriercp.layout.TableLayoutBuilder;
 import org.valkyriercp.rules.closure.Closure;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Base class for selection dialogs.

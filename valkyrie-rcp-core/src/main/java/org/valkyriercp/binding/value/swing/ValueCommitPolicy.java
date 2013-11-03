@@ -1,7 +1,5 @@
 package org.valkyriercp.binding.value.swing;
 
-import org.springframework.core.enums.ShortCodedLabeledEnum;
-
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 

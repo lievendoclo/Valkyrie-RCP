@@ -2,14 +2,13 @@ package org.valkyriercp.form.binding.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.util.*;
@@ -17,7 +16,6 @@ import java.util.*;
 /**
  * @author Oliver Hutchison
  */
-@Configurable
 public abstract class AbstractBinder implements Binder {
 
     /**
@@ -35,12 +33,6 @@ public abstract class AbstractBinder implements Binder {
     private final Set supportedContextKeys;
 
     private boolean readOnly;
-
-    @Autowired
-    private ComponentFactory componentFactory;
-
-    @Autowired
-    protected ApplicationConfig applicationConfig;
 
     protected AbstractBinder(Class requiredSourceClass) {
         this.requiredSourceClass = requiredSourceClass;
@@ -103,6 +95,10 @@ public abstract class AbstractBinder implements Binder {
     }
 
     protected ComponentFactory getComponentFactory() {
-        return componentFactory;
+        return ValkyrieRepository.getInstance().getApplicationConfig().componentFactory();
+    }
+
+    protected ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 }

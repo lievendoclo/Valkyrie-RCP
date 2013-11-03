@@ -1,14 +1,11 @@
 package org.valkyriercp.form.binding.swing.editor;
 
 import com.google.common.base.Function;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.*;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXPanel;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.command.support.ActionCommand;
-import org.valkyriercp.component.PanelWithValidationComponent;
 import org.valkyriercp.dialog.ApplicationDialog;
 import org.valkyriercp.form.HasValidationComponent;
 import org.valkyriercp.form.binding.support.CustomBinding;
@@ -180,10 +177,6 @@ public class LookupBinding<T> extends CustomBinding {
                     referableDataEditorViewCommand.setSelectedObject(evt.getNewValue());
             }
         });
-    }
-
-    @PostConstruct
-    private void postConstruct() {
         getApplicationConfig().commandConfigurer().configure(referableDataEditorViewCommand);
     }
 

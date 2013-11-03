@@ -1,11 +1,9 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.core.enums.LabeledEnum;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.support.AbstractBinderSelectionStrategy;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.util.HashMap;
 import java.util.Map;
 

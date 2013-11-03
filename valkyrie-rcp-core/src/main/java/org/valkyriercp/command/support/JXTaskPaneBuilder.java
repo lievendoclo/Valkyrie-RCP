@@ -1,18 +1,11 @@
 package org.valkyriercp.command.support;
 
 import com.l2fprod.common.swing.JLinkButton;
-import com.l2fprod.common.swing.JTaskPaneGroup;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
-import org.valkyriercp.command.support.AbstractCommand;
-import org.valkyriercp.command.support.CommandGroup;
-import org.valkyriercp.command.support.CommandGroupJComponentBuilder;
 import org.valkyriercp.taskpane.JTaskPaneCommandButtonConfigurer;
 
 import javax.swing.*;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class JXTaskPaneBuilder extends CommandGroupJComponentBuilder
 {

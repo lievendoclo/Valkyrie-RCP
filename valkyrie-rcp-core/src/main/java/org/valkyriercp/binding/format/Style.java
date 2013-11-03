@@ -1,7 +1,5 @@
 package org.valkyriercp.binding.format;
 
-import org.springframework.core.enums.StaticLabeledEnum;
-
 import java.text.DateFormat;
 
 public enum Style {

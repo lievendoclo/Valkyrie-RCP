@@ -1,13 +1,8 @@
 package org.valkyriercp.security.support;
 
-import java.util.Collection;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,13 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.valkyriercp.security.ApplicationSecurityManager;
-import org.valkyriercp.security.AuthenticationEvent;
-import org.valkyriercp.security.AuthenticationFailedEvent;
-import org.valkyriercp.security.LoginEvent;
-import org.valkyriercp.security.LogoutEvent;
+import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.security.*;
+import org.valkyriercp.util.ValkyrieRepository;
 
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Default implementation of ApplicationSecurityManager. It provides basic
@@ -78,21 +72,15 @@ import com.google.common.collect.Lists;
  * @author Larry Streepy
  * 
  */
-@Configurable
 public class DefaultApplicationSecurityManager implements
 		ApplicationSecurityManager {
 
 	private final Log logger = LogFactory.getLog(getClass());
 
-	@Autowired(required = false)
-	private AuthenticationManager authenticationManager = null;
-
 	private Authentication currentAuthentication = null;
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private ApplicationContext applicationContext;
-
-	/**
+    /**
 	 * Default constructor.
 	 */
 	public DefaultApplicationSecurityManager() {
@@ -142,7 +130,20 @@ public class DefaultApplicationSecurityManager implements
 	 */
 	@Override
 	public AuthenticationManager getAuthenticationManager() {
-		return authenticationManager;
+        if(ValkyrieRepository.getInstance().getBean(AuthenticationManager.class) != null)
+		    return ValkyrieRepository.getInstance().getBean(AuthenticationManager.class);
+        else {
+            return new AuthenticationManager() {
+
+                @Override
+                public Authentication authenticate(Authentication authentication)
+                        throws AuthenticationException {
+                    return new AnonymousAuthenticationToken("anon", "anon",
+                            Lists.<GrantedAuthority> newArrayList());
+                }
+            };
+        }
+
 	}
 
 	/**
@@ -171,8 +172,8 @@ public class DefaultApplicationSecurityManager implements
 			logger.info("authentication failed: " + e.getMessage());
 
 			// Fire application event to advise of failed login
-			applicationContext.publishEvent(new AuthenticationFailedEvent(
-					authentication, e));
+			getApplicationConfig().applicationContext().publishEvent(new AuthenticationFailedEvent(
+                    authentication, e));
 
 			// rethrow the exception
 			throw e;
@@ -189,8 +190,8 @@ public class DefaultApplicationSecurityManager implements
 		setAuthentication(result);
 
 		// Fire application events to advise of new login
-		applicationContext.publishEvent(new AuthenticationEvent(result));
-		applicationContext.publishEvent(new LoginEvent(result));
+		getApplicationConfig().applicationContext().publishEvent(new AuthenticationEvent(result));
+		getApplicationConfig().applicationContext().publishEvent(new LoginEvent(result));
 
 		return result;
 	}
@@ -268,8 +269,8 @@ public class DefaultApplicationSecurityManager implements
 		SecurityContextHolder.getContext().setAuthentication(null);
 		setAuthentication(null);
 
-		applicationContext.publishEvent(new AuthenticationEvent(null));
-		applicationContext.publishEvent(new LogoutEvent(existing));
+		getApplicationConfig().applicationContext().publishEvent(new AuthenticationEvent(null));
+		getApplicationConfig().applicationContext().publishEvent(new LogoutEvent(existing));
 
 		return existing;
 	}
@@ -285,7 +286,7 @@ public class DefaultApplicationSecurityManager implements
 	 */
 	public void afterPropertiesSet() {
 		// Ensure that we have our authentication manager
-		if (authenticationManager == null) {
+		if (getAuthenticationManager() == null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No AuthenticationManager defined, look for one");
 			}
@@ -300,21 +301,6 @@ public class DefaultApplicationSecurityManager implements
 				}
 			}
 		}
-
-		// there's no config in the context, so security should be disabled
-		if (authenticationManager == null) {
-			authenticationManager = new AuthenticationManager() {
-
-				@Override
-				public Authentication authenticate(Authentication authentication)
-						throws AuthenticationException {
-					return new AnonymousAuthenticationToken("anon", "anon",
-							Lists.<GrantedAuthority> newArrayList());
-				}
-			};
-			// throw new IllegalArgumentException(
-			// "authenticationManager must be defined" );
-		}
 	}
 
 	/**
@@ -327,7 +313,7 @@ public class DefaultApplicationSecurityManager implements
 	protected <T> boolean tryToWire(Class<T> type) {
 		boolean success = false;
 		String className = type.getName();
-		Map<String, T> map = applicationContext.getBeansOfType(type);
+		Map<String, T> map = getApplicationConfig().applicationContext().getBeansOfType(type);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Search for '" + className + "' found: " + map);
 		}
@@ -360,4 +346,8 @@ public class DefaultApplicationSecurityManager implements
 
 		return success;
 	}
+
+    protected ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
+    }
 }

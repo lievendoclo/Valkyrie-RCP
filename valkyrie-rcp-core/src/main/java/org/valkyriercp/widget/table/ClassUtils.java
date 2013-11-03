@@ -1,8 +1,8 @@
 package org.valkyriercp.widget.table;
 
-import java.lang.reflect.Method;
-
 import org.apache.commons.beanutils.MethodUtils;
+
+import java.lang.reflect.Method;
 
 /**
  * A number of helper classes to retrieve getter and setter methods.

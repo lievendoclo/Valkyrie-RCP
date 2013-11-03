@@ -1,8 +1,5 @@
 package org.valkyriercp.widget;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.component.TitlePane;
 import org.valkyriercp.core.DefaultMessage;
 import org.valkyriercp.core.Message;
@@ -14,11 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
-@Configurable
 public abstract class AbstractTitledWidget extends AbstractWidget implements TitledWidget
 {
-    @Autowired
-    private MessageResolver messageResolver;
 
     private Message description;
 
@@ -28,10 +22,9 @@ public abstract class AbstractTitledWidget extends AbstractWidget implements Tit
 
     private String id;
 
-    @PostConstruct
-    private void initDescription() {
-        description = new DefaultMessage(applicationConfig.messageResolver().getMessage(
-            "titledWidget", "defaultMessage", "description"), Severity.INFO);
+    protected AbstractTitledWidget() {
+        description = new DefaultMessage(getApplicationConfig().messageResolver().getMessage(
+                "titledWidget", "defaultMessage", "description"), Severity.INFO);
     }
 
     public void setId(String id)

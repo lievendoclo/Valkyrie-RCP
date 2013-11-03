@@ -16,9 +16,9 @@
 package org.valkyriercp.sample.simple.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * This class provides a trivial domain object for the sample application. It represents a simple Contact entry in a

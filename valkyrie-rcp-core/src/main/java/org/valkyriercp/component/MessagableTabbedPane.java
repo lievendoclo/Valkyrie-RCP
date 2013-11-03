@@ -1,10 +1,9 @@
 package org.valkyriercp.component;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.Severity;
 import org.valkyriercp.image.IconSource;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +14,9 @@ import java.util.List;
  * @author Jan Hoskens
  * @author Geoffrey De Smet
  */
-@Configurable
 public class MessagableTabbedPane extends JTabbedPane implements MessagableTab {
 
     private List<TabMetaData> tabMetaDatas = new ArrayList<TabMetaData>();
-
-    @Autowired
-    private IconSource iconSource;
 
     public MessagableTabbedPane() {
         super();
@@ -76,7 +71,7 @@ public class MessagableTabbedPane extends JTabbedPane implements MessagableTab {
     }
 
     private Icon loadIcon(String severityLabel) {
-        return iconSource.getIcon("severity." + severityLabel + ".overlay");
+        return getIconSource().getIcon("severity." + severityLabel + ".overlay");
     }
 
     private static class TabMetaData {
@@ -138,5 +133,8 @@ public class MessagableTabbedPane extends JTabbedPane implements MessagableTab {
         }
     }
 
+    public IconSource getIconSource() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().iconSource();
+    }
 }
 

@@ -1,7 +1,6 @@
 package org.valkyriercp.form.binding.swing;
 
 import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.CustomBinding;
 
 import javax.swing.*;

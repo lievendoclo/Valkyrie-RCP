@@ -1,11 +1,9 @@
 package org.valkyriercp.command.support;
 
 import org.jdesktop.swingx.JXFrame;
-import org.valkyriercp.application.Application;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.config.support.ApplicationWindowAware;
-
-import javax.swing.*;
+import org.valkyriercp.util.ValkyrieRepository;
 
 /**
  * A skeleton implementation of an action command that needs to be aware of the
@@ -59,7 +57,7 @@ public abstract class ApplicationWindowAwareCommand extends ActionCommand implem
         // allow subclasses to derive where the application window comes from
         final ApplicationWindow applicationWindow = getApplicationWindow();
         if (applicationWindow == null) {
-            return applicationConfig.windowManager().getActiveWindow().getControl();
+            return ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getActiveWindow().getControl();
         }
         return applicationWindow.getControl();
     }

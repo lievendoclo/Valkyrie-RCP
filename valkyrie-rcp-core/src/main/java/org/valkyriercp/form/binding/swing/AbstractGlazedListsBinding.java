@@ -247,7 +247,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
             }
         };
         addRow.setSecurityControllerId(getAddCommandSecurityControllerId());
-        applicationConfig.commandConfigurer().configure(addRow);
+        getApplicationConfig().commandConfigurer().configure(addRow);
         return addRow;
     }
 
@@ -273,7 +273,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
             }
         };
         removeRow.setSecurityControllerId(getRemoveCommandSecurityControllerId());
-        applicationConfig.commandConfigurer().configure(removeRow);
+        getApplicationConfig().commandConfigurer().configure(removeRow);
         return removeRow;
     }
 
@@ -300,7 +300,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
                     showDetail(selection);
             }
         };
-        applicationConfig.commandConfigurer().configure(detail);
+        getApplicationConfig().commandConfigurer().configure(detail);
         return detail;
     }
 
@@ -317,7 +317,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
             }
         };
         editRow.setSecurityControllerId(getEditCommandSecurityControllerId());
-        applicationConfig.commandConfigurer().configure(editRow);
+        getApplicationConfig().commandConfigurer().configure(editRow);
         return editRow;
     }
 
@@ -443,7 +443,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
         {
             this.formDialog = createFormDialog();
             this.formDialog.setParentComponent(table.getComponent());
-            applicationConfig.applicationObjectConfigurer().configure(this.formDialog, getDialogId());
+            getApplicationConfig().applicationObjectConfigurer().configure(this.formDialog, getDialogId());
         }
         return this.formDialog;
     }
@@ -454,7 +454,7 @@ public abstract class AbstractGlazedListsBinding extends AbstractCRUDBinding
         {
             this.detailFormDialog = createDetailFormDialog();
             this.detailFormDialog.setParentComponent(table.getComponent());
-            applicationConfig.applicationObjectConfigurer().configure(this.detailFormDialog, getDialogId());
+            getApplicationConfig().applicationObjectConfigurer().configure(this.detailFormDialog, getDialogId());
         }
         return this.detailFormDialog;
     }

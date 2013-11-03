@@ -1,7 +1,5 @@
 package org.valkyriercp.application.splash;
 
-import org.valkyriercp.progress.*;
-
 import javax.swing.*;
 import java.awt.*;
 

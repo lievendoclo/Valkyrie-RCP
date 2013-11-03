@@ -35,7 +35,7 @@ public class FileChooserBinding extends CustomBinding {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isEnabled()) {
-                    String lastDirectory = (String) applicationConfig.applicationSession().getAttribute("filechooser_" + getFormModel().getId() + "_" + getProperty());
+                    String lastDirectory = (String) getApplicationConfig().applicationSession().getAttribute("filechooser_" + getFormModel().getId() + "_" + getProperty());
                     JFileChooser chooser;
                     if(lastDirectory == null)
                     {
@@ -49,7 +49,7 @@ public class FileChooserBinding extends CustomBinding {
                     int result = chooser.showOpenDialog(null);
                     if (result == JFileChooser.CANCEL_OPTION)
                         return;
-                    applicationConfig.applicationSession().setSessionAttribute("filechooser_" + getFormModel().getId() + "_" + getProperty(), chooser.getSelectedFile().getParent());
+                    getApplicationConfig().applicationSession().setSessionAttribute("filechooser_" + getFormModel().getId() + "_" + getProperty(), chooser.getSelectedFile().getParent());
                     field.setText(chooser.getSelectedFile().getAbsolutePath());
                     updateValue();
                 }

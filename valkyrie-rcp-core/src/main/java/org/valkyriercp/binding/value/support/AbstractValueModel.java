@@ -2,11 +2,10 @@ package org.valkyriercp.binding.value.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,14 +23,12 @@ import java.beans.PropertyChangeListener;
  * @author Keith Donald
  * @author Oliver Hutchison
  */
-@Configurable
 public abstract class AbstractValueModel extends AbstractPropertyChangePublisher implements ValueModel {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
     private final ThreadLocal listenerToSkipHolder = new ThreadLocal();
 
-    @Autowired
     private ValueChangeDetector valueChangeDetector;
 
     public final void setValueSilently(Object newValue, PropertyChangeListener listenerToSkip) {
@@ -178,7 +175,10 @@ public abstract class AbstractValueModel extends AbstractPropertyChangePublisher
      * @return value change detector to use
      */
     protected ValueChangeDetector getValueChangeDetector() {
-        return valueChangeDetector;
+        if(valueChangeDetector == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().valueChangeDetector();
+        else
+            return valueChangeDetector;
     }
 
 }

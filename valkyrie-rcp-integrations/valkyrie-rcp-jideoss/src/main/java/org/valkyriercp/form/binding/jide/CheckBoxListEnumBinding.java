@@ -31,7 +31,7 @@ public class CheckBoxListEnumBinding extends CheckBoxListBinding<Enum> {
     public List<Enum> getPossibleValues() {
         List<Enum> out = new ArrayList<Enum>();
         for (Enum e : enumClass.getEnumConstants()) {
-            String desc = applicationConfig.messageResolver().getMessage(enumClass.getName() + "." + e.name());
+            String desc = getApplicationConfig().messageResolver().getMessage(enumClass.getName() + "." + e.name());
             if (!StringUtils.isEmpty(desc)) {
                 out.add(e);
             } else {

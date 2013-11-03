@@ -2,17 +2,13 @@ package org.valkyriercp.command.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.valkyriercp.application.PropertyNotSetException;
 import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandRegistry;
 import org.valkyriercp.core.Secured;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.awt.*;
 
@@ -38,7 +34,6 @@ import java.awt.*;
  *
  * @author Keith Donald
  */
-@Configurable
 public class CommandGroupFactoryBean implements FactoryBean, Secured {
 
 	/**
@@ -70,10 +65,8 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
 
 	private String groupId;
 
-    @Autowired
 	private CommandRegistry commandRegistry;
 
-    @Autowired
 	private CommandConfigurer commandConfigurer;
 
 	private Object[] members = new Object[0];
@@ -183,6 +176,8 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
 	 * @return commandRegistry containing commands for this command group.
 	 */
 	protected CommandRegistry getCommandRegistry() {
+        if(commandRegistry == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().commandManager();
 		return this.commandRegistry;
 	}
 
@@ -196,7 +191,13 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
 		this.commandConfigurer = configurer;
 	}
 
-	/**
+    public CommandConfigurer getCommandConfigurer() {
+        if(commandConfigurer == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer();
+        return commandConfigurer;
+    }
+
+    /**
 	 * Sets the collection of objects that specify the members of the command
 	 * group produced by this factory. The objects in {@code members} are
 	 * expected to be either instances of {@link AbstractCommand} or strings.
@@ -395,8 +396,8 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
 
 		AbstractCommand command = null;
 
-		if (commandRegistry != null) {
-			command = (AbstractCommand) commandRegistry.getCommand(commandId);
+		if (getCommandRegistry() != null) {
+			command = (AbstractCommand) getCommandRegistry().getCommand(commandId);
 			if (command != null) {
 				group.addInternal(command);
 			}
@@ -419,9 +420,9 @@ public class CommandGroupFactoryBean implements FactoryBean, Secured {
 
 		Assert.notNull(command, "command");
 
-		if (commandConfigurer != null) {
+		if (getCommandConfigurer() != null) {
 			if (!command.isFaceConfigured()) {
-				commandConfigurer.configure(command);
+                getCommandConfigurer().configure(command);
 			}
 		}
 

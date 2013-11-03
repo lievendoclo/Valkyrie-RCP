@@ -1,15 +1,13 @@
 package org.valkyriercp.form.binding.swing;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.AbstractBinder;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Radio button binder for enum values.

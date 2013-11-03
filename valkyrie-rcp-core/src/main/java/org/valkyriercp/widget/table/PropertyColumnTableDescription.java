@@ -2,11 +2,10 @@ package org.valkyriercp.widget.table;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.comparator.ComparableComparator;
 import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.util.MessageConstants;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -54,7 +53,6 @@ import java.util.List;
  * exclusive to the addXXX methods.
  *
  */
-@Configurable
 public class PropertyColumnTableDescription implements TableDescription
 {
 
@@ -81,9 +79,6 @@ public class PropertyColumnTableDescription implements TableDescription
      * implementation is responsible of filtering the table rows and checking which rows are selected.
      */
     private boolean hasSelectColumn = false;
-
-    @Autowired
-    private MessageResolver messageResolver;
 
     /**
      * @see #PropertyColumnTableDescription(String, Class, int, Comparator)
@@ -149,6 +144,10 @@ public class PropertyColumnTableDescription implements TableDescription
         this.columns = new ArrayList<PropertyColumn>(numberOfColumns);
     }
 
+    private MessageResolver getMessageResolver() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().messageResolver();
+    }
+
     /**
      * @see #addPropertyColumn(String, Class)
      */
@@ -170,7 +169,7 @@ public class PropertyColumnTableDescription implements TableDescription
      */
     public PropertyColumn addPropertyColumn(String propertyName, Class<?> propertyType)
     {
-        String[] headerKeys = messageResolver.getMessageKeys(this.id, propertyName, MessageConstants.HEADER);
+        String[] headerKeys = getMessageResolver().getMessageKeys(this.id, propertyName, MessageConstants.HEADER);
         Accessor accessor = ClassUtils.getAccessorForProperty(entityClass, propertyName);
         if (propertyType == null)
             propertyType = accessor.getPropertyType();
@@ -191,7 +190,7 @@ public class PropertyColumnTableDescription implements TableDescription
             propertyColumn.setAccessor(accessorForProperty);
             if(propertyColumn.getComparator() == null)
                 propertyColumn.setComparator(getDefaultComparator());
-            propertyColumn.setHeaderKeys(messageResolver.getMessageKeys(this.id, propertyColumn.getPropertyName(), MessageConstants.HEADER));
+            propertyColumn.setHeaderKeys(getMessageResolver().getMessageKeys(this.id, propertyColumn.getPropertyName(), MessageConstants.HEADER));
         }
     }
 
@@ -465,7 +464,7 @@ public class PropertyColumnTableDescription implements TableDescription
 
     public void addSelectPropertyColumn(String propertyName, int minWidth, int maxWidth, Comparator comparator)
     {
-        addSelectPropertyColumn(propertyName, messageResolver.getMessageKeys(this.id, propertyName,
+        addSelectPropertyColumn(propertyName, getMessageResolver().getMessageKeys(this.id, propertyName,
                 MessageConstants.HEADER), minWidth, maxWidth, true, comparator);
     }
 

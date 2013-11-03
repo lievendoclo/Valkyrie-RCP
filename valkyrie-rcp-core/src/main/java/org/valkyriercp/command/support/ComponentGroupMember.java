@@ -6,7 +6,6 @@ import org.valkyriercp.command.config.CommandButtonConfigurer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 
 /**
  * A implementation of the {@link GroupMember} interface that can be associated

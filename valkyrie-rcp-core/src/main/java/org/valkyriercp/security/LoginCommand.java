@@ -59,7 +59,7 @@ public class LoginCommand extends ApplicationWindowAwareCommand {
                 Authentication authentication = loginForm.getAuthentication();
 
                 // Hand this token to the security manager to actually attempt the login
-                ApplicationSecurityManager sm = applicationConfig.applicationSecurityManager();
+                ApplicationSecurityManager sm = getApplicationConfig().applicationSecurityManager();
                 try {
                     sm.doLogin( authentication );
                     postLogin();
@@ -77,11 +77,11 @@ public class LoginCommand extends ApplicationWindowAwareCommand {
 
                 // Now exit if configured
                 if( isCloseOnCancel() ) {
-                    ApplicationSecurityManager sm = applicationConfig.applicationSecurityManager();
+                    ApplicationSecurityManager sm = getApplicationConfig().applicationSecurityManager();
                     Authentication authentication = sm.getAuthentication();
                     if( authentication == null ) {
                         LoginCommand.this.logger.info( "User canceled login; close the application." );
-                        applicationConfig.application().close();
+                        getApplicationConfig().application().close();
                     }
                 }
             }

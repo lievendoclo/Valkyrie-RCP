@@ -1,13 +1,5 @@
 package org.valkyriercp.dialog.support;
 
-import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-
 import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupFactoryBean;
@@ -17,6 +9,11 @@ import org.valkyriercp.core.Messagable;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.dialog.DialogPage;
 import org.valkyriercp.util.GuiStandardUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class DialogPageUtils {
 

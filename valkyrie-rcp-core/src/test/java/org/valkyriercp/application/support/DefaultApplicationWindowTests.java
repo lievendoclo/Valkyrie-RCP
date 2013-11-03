@@ -9,7 +9,7 @@ import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.DefaultApplicationLifecycleAdvisor;
 import org.valkyriercp.command.support.CommandGroup;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 /**

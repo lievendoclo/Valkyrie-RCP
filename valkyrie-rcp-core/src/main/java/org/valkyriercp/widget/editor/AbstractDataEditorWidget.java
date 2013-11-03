@@ -465,7 +465,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
             }
         };
         command.setSecurityControllerId(getId() + "." + UPDATE_COMMAND_ID);
-        applicationConfig.commandConfigurer().configure(command);
+        getApplicationConfig().commandConfigurer().configure(command);
         getDetailForm().addGuarded(command, FormGuard.LIKE_COMMITCOMMAND);
         return command;
     }
@@ -531,7 +531,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
             }
         };
         command.setSecurityControllerId(getId() + "." + CREATE_COMMAND_ID);
-        applicationConfig.commandConfigurer().configure(command);
+        getApplicationConfig().commandConfigurer().configure(command);
         getDetailForm().addGuarded(command, FormGuard.LIKE_COMMITCOMMAND);
         return command;
     }
@@ -592,7 +592,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
     protected JComponent createQuickAddCheckBox()
     {
-        quickAddCheckBox = new JCheckBox(applicationConfig.messageResolver().getMessage(getId(), QUICKADD, MessageConstants.TITLE));
+        quickAddCheckBox = new JCheckBox(getApplicationConfig().messageResolver().getMessage(getId(), QUICKADD, MessageConstants.TITLE));
         quickAddCheckBox.setFocusable(false);
 
         getCreateCommand().addCommandInterceptor(new ActionCommandInterceptor()
@@ -640,7 +640,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
         final JTable table = getTableWidget().getTable();
         if (isUpdateRowSupported())
         {
-            String tooltip = applicationConfig.messageResolver().getMessage(getId(), DBLCLICKSELECTS, MessageConstants.CAPTION);
+            String tooltip = getApplicationConfig().messageResolver().getMessage(getId(), DBLCLICKSELECTS, MessageConstants.CAPTION);
             table.setToolTipText(tooltip);
         }
 
@@ -687,7 +687,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
      */
     protected CommandGroup getTablePopupMenuCommandGroup()
     {
-        return applicationConfig.commandManager().createCommandGroup(Lists.newArrayList(getEditRowCommand(), "separator",
+        return getApplicationConfig().commandManager().createCommandGroup(Lists.newArrayList(getEditRowCommand(), "separator",
                 getAddRowCommand(), getCloneRowCommand(), getRemoveRowsCommand(), "separator",
                 getRefreshCommand(), "separator", getCopySelectedRowsToClipboardCommand()));
     }
@@ -745,7 +745,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
     private JComponent getFilterControlPanel()
     {
-        CommandGroup controlCommands = applicationConfig.commandManager().createCommandGroup(Lists.newArrayList(
+        CommandGroup controlCommands = getApplicationConfig().commandManager().createCommandGroup(Lists.newArrayList(
                 getExecuteFilterCommand(), getEmptyFilterCommand()));
 
         return controlCommands.createButtonBar((Size) null, (Border) null);
@@ -976,7 +976,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
             return;
         }
 
-        int answer = applicationConfig.dialogFactory().showWarningDialog(getComponent(), REMOVE_CONFIRMATION_ID,
+        int answer = getApplicationConfig().dialogFactory().showWarningDialog(getComponent(), REMOVE_CONFIRMATION_ID,
                 new Object[]{Integer.valueOf(selectedRows.length)}, JOptionPane.YES_NO_OPTION);
         int nextSelectionIndex = getTableWidget().getTable().getSelectionModel().getMinSelectionIndex();
 
@@ -992,14 +992,14 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
             {
                 log.error("Error removing row in DataEditor of type " + this.getClass().getName(), e);
 
-                applicationConfig.registerableExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                getApplicationConfig().registerableExceptionHandler().uncaughtException(Thread.currentThread(), e);
 
                 int remaining = selectedRows.length - i - 1;
                 if (remaining > 0)
                 {
-                    String ttl = applicationConfig.messageResolver()
+                    String ttl = getApplicationConfig().messageResolver()
                             .getMessage(getId(), REMOVE_CONTINUE_AFTER_ERROR, MessageConstants.TITLE);
-                    String errMsg = applicationConfig.messageResolver().getMessage(getId(), REMOVE_CONTINUE_AFTER_ERROR,
+                    String errMsg = getApplicationConfig().messageResolver().getMessage(getId(), REMOVE_CONTINUE_AFTER_ERROR,
                             MessageConstants.TEXT, new Object[]{Integer.valueOf(remaining)});
                     answer = JOptionPane.showConfirmDialog(getComponent(), errMsg, ttl,
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -1221,7 +1221,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
                 else if (component instanceof JToggleButton)
                 {
                     JToggleButton button = (JToggleButton) component;
-                    return applicationConfig.messageResolver().getMessage("boolean.yesno." + button.isSelected());
+                    return getApplicationConfig().messageResolver().getMessage("boolean.yesno." + button.isSelected());
                 }
                 else
                 {
@@ -1336,12 +1336,12 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
     protected AbstractCommand getHelpCommand()
     {
-        return applicationConfig.commandManager().createDummyCommand("help", "Behulpzaam");
+        return getApplicationConfig().commandManager().createDummyCommand("help", "Behulpzaam");
     }
 
     private AbstractCommand getCloseCommand()
     {
-        return applicationConfig.commandManager().createDummyCommand("exit", "deuren toe.");
+        return getApplicationConfig().commandManager().createDummyCommand("exit", "deuren toe.");
     }
 
     protected Object[] getFilterCriteria()
@@ -1354,7 +1354,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
     protected ActionCommand getSelectCommand()
     {
-        return applicationConfig.commandManager().createDummyCommand("select", "Chosen!");
+        return getApplicationConfig().commandManager().createDummyCommand("select", "Chosen!");
     }
 
     protected AbstractCommand[] getControlCommands()
@@ -1436,12 +1436,12 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
         {
             if (detailFormModel.isCommittable())
             {
-                answer = applicationConfig.dialogFactory().showWarningDialog(getComponent(), UNSAVEDCHANGES_WARNING_ID,
+                answer = getApplicationConfig().dialogFactory().showWarningDialog(getComponent(), UNSAVEDCHANGES_WARNING_ID,
                         JOptionPane.YES_NO_CANCEL_OPTION);
             }
             else // form is uncomittable, change it or revert it
             {
-                answer = applicationConfig.dialogFactory().showWarningDialog(getComponent(),
+                answer = getApplicationConfig().dialogFactory().showWarningDialog(getComponent(),
                         UNSAVEDCHANGES_UNCOMMITTABLE_WARNING_ID, JOptionPane.YES_NO_OPTION);
                 // the following might seem strange, but it aligns the answer with the other part of this if construction
                 // if we said 'yes keep editing': don't discard changes, continue editing to save it later on == CANCEL in previous if

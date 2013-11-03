@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import org.valkyriercp.application.PageLayoutBuilder;
 import org.valkyriercp.application.ViewDescriptor;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MultiViewPageDescriptor  extends AbstractPageDescriptor {

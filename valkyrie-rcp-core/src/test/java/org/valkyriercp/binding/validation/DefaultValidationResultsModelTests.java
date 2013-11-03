@@ -1,17 +1,15 @@
 package org.valkyriercp.binding.validation;
 
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
-import org.valkyriercp.test.TestPropertyChangeListener;
 import org.valkyriercp.binding.validation.support.DefaultValidationMessage;
 import org.valkyriercp.binding.validation.support.DefaultValidationResults;
 import org.valkyriercp.binding.validation.support.DefaultValidationResultsModel;
 import org.valkyriercp.core.Severity;
 import org.valkyriercp.test.TestPropertyChangeListener;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for @link DefaultValidationResultsModel

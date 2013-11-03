@@ -6,7 +6,6 @@ import org.valkyriercp.application.StatusBar;
 import org.valkyriercp.component.ShadowBorder;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.factory.AbstractControlFactory;
-import org.valkyriercp.progress.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

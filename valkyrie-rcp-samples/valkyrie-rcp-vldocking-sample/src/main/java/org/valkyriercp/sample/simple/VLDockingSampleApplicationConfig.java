@@ -1,8 +1,5 @@
 package org.valkyriercp.sample.simple;
 
-import org.valkyriercp.application.docking.VLDockingApplicationPageFactory;
-import org.valkyriercp.application.docking.VLDockingPageDescriptor;
-import org.valkyriercp.application.docking.VLDockingViewDescriptor;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
@@ -14,9 +11,10 @@ import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
+import org.valkyriercp.application.docking.VLDockingApplicationPageFactory;
+import org.valkyriercp.application.docking.VLDockingPageDescriptor;
+import org.valkyriercp.application.docking.VLDockingViewDescriptor;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
-import org.valkyriercp.application.support.DefaultViewDescriptor;
-import org.valkyriercp.application.support.SingleViewPageDescriptor;
 import org.valkyriercp.rules.RulesSource;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
 import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;

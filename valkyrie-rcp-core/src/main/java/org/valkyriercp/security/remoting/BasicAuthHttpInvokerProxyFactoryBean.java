@@ -17,8 +17,8 @@ package org.valkyriercp.security.remoting;
 
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 import org.springframework.remoting.httpinvoker.HttpInvokerRequestExecutor;
-import org.valkyriercp.security.AuthenticationAware;
 import org.springframework.security.core.Authentication;
+import org.valkyriercp.security.AuthenticationAware;
 
 /**
  * Extension of <code>HttpInvokerProxyFactoryBean</code> that supports the use of BASIC

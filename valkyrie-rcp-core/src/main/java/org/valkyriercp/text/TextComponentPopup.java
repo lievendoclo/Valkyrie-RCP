@@ -1,13 +1,11 @@
 package org.valkyriercp.text;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.ApplicationWindow;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.value.CommitTrigger;
 import org.valkyriercp.binding.value.CommitTriggerListener;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.support.*;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -30,7 +28,6 @@ import java.util.Vector;
  *
  * @author Oliver Hutchison
  */
-@Configurable
 public class TextComponentPopup extends MouseAdapter implements FocusListener, CaretListener, UndoableEditListener {
 
 	/**
@@ -73,9 +70,6 @@ public class TextComponentPopup extends MouseAdapter implements FocusListener, C
 
 	private final SelectAllCommandExecutor selectAll = new SelectAllCommandExecutor();
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
 	protected TextComponentPopup(JTextComponent textComponent, CommitTrigger resetUndoHistoryTrigger) {
 		this.textComponent = textComponent;
 		this.resetUndoHistoryTrigger = resetUndoHistoryTrigger;
@@ -87,14 +81,10 @@ public class TextComponentPopup extends MouseAdapter implements FocusListener, C
 		updatePasteStatusTimer.setCoalesce(true);
 		updatePasteStatusTimer.setRepeats(false);
 		updatePasteStatusTimer.setInitialDelay(PAST_REFRESH_TIMER_DELAY);
-
-	}
-
-    @PostConstruct
-    private void postConstruct() {
         registerListeners();
         registerAccelerators();
-    }
+
+	}
 
 	private void registerListeners() {
 		textComponent.addMouseListener(this);
@@ -117,7 +107,7 @@ public class TextComponentPopup extends MouseAdapter implements FocusListener, C
 
 	protected CommandManager getCommandManager() {
 		CommandManager commandManager;
-		ApplicationWindow appWindow = applicationConfig.windowManager().getActiveWindow();
+		ApplicationWindow appWindow = ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getActiveWindow();
 		if (appWindow == null || appWindow.getCommandManager() == null) {
 			if (localCommandManager == null) {
 				localCommandManager = new DefaultCommandManager();

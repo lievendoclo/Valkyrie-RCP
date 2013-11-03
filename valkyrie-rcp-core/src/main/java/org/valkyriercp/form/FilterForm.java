@@ -2,6 +2,7 @@ package org.valkyriercp.form;
 
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.core.TitleConfigurable;
+import org.valkyriercp.util.ValkyrieRepository;
 
 public abstract class FilterForm extends AbstractForm implements TitleConfigurable
 {
@@ -14,12 +15,12 @@ public abstract class FilterForm extends AbstractForm implements TitleConfigurab
 
     protected FilterForm(String id)
     {
-        setId(id);
+        super(id);
     }
 
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createFormModel(newFormObject(), getId());
+        return ValkyrieRepository.getInstance().getApplicationConfig().formModelFactory().createFormModel(newFormObject(), getId());
     }
 
     public Object getFilterCriteria()

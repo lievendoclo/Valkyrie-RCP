@@ -15,13 +15,13 @@
  */
 package org.valkyriercp.security.remoting;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.remoting.httpinvoker.SimpleHttpInvokerRequestExecutor;
 import org.springframework.security.core.Authentication;
 import org.valkyriercp.security.AuthenticationAware;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 /**
  * Adds BASIC authentication support to

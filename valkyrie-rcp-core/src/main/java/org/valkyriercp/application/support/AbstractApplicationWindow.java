@@ -1,14 +1,11 @@
 package org.valkyriercp.application.support;
 
 import org.jdesktop.swingx.JXFrame;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.*;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
-import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.util.EventListenerListHelper;
 import org.valkyriercp.util.WindowUtils;

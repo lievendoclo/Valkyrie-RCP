@@ -3,13 +3,13 @@ package org.valkyriercp.binding.form.support;
 import org.junit.Before;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
-import org.valkyriercp.test.TestPropertyChangeListener;
 import org.valkyriercp.binding.value.DirtyTrackingValueModel;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.ValueHolder;
 import org.valkyriercp.test.TestPropertyChangeListener;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for @link FormModelMediatingValueModel

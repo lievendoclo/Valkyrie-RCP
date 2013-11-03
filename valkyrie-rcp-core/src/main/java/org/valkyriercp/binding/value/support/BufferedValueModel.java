@@ -7,7 +7,6 @@ import org.valkyriercp.binding.value.CommitTriggerListener;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.ValueModelWrapper;
 
-import javax.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -61,10 +60,6 @@ public class BufferedValueModel extends AbstractValueModel implements ValueModel
         this.wrappedModel = wrappedModel;
         this.bufferedValue = wrappedModel.getValue();
         setCommitTrigger(commitTrigger);
-    }
-
-    @PostConstruct
-    public void postConstruct() {
         this.wrappedModelChangeHandler = new WrappedModelValueChangeHandler();
         this.wrappedModel.addValueChangeListener(wrappedModelChangeHandler);
     }

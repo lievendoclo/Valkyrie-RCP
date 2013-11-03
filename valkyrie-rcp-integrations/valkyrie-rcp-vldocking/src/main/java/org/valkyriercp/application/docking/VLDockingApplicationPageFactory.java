@@ -18,10 +18,8 @@ package org.valkyriercp.application.docking;
 import com.vlsolutions.swing.docking.DockingContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 import org.valkyriercp.application.*;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,17 +33,12 @@ import java.util.Map;
  * 
  * @author Rogan Dawes
  */
-@Configurable
 public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
 
     private static final Log logger = LogFactory.getLog(VLDockingApplicationPageFactory.class);
 
     private boolean reusePages;
     private Map pageCache = new HashMap();
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
     /*
      * (non-Javadoc)
      * 
@@ -88,7 +81,7 @@ public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
         DockingContext dockingContext = dockingPage.getDockingContext();
 
         // Page descriptor needed for config path
-        VLDockingPageDescriptor vlDockingPageDescriptor = applicationContext.getBean(dockingPage.getId(), VLDockingPageDescriptor.class);
+        VLDockingPageDescriptor vlDockingPageDescriptor = ValkyrieRepository.getInstance().getBean(dockingPage.getId(), VLDockingPageDescriptor.class);
 
         // Write docking context to file
         BufferedOutputStream buffOs = null;

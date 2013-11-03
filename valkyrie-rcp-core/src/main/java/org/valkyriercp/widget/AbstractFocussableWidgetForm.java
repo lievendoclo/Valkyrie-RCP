@@ -1,10 +1,7 @@
 package org.valkyriercp.widget;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.valkyriercp.application.config.ApplicationObjectConfigurer;
 import org.valkyriercp.component.Focussable;
-import org.valkyriercp.util.DialogFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +12,6 @@ import java.awt.*;
  * @author Jan Hoskens
  *
  */
-@Configurable
 public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm implements Focussable//, SecurityControllable
 {
 
@@ -24,12 +20,6 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
     public static final String UNSAVEDCHANGES_HASERRORS_WARNING_ID = "unsavedchanges.haserrors.warning";
 
     private JComponent focusControl;
-
-    @Autowired
-    private ApplicationObjectConfigurer applicationObjectConfigurer;
-
-    @Autowired
-    private DialogFactory dialogFactory;
 
     private final Runnable focusRequestRunnable = new Runnable()
     {
@@ -40,6 +30,13 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
                 focusControl.requestFocusInWindow();
         }
     };
+
+    protected AbstractFocussableWidgetForm() {
+    }
+
+    protected AbstractFocussableWidgetForm(String id) {
+        super(id);
+    }
 
     /**
      * Override to do nothing. Superclass registers a default command, but we are using a different system to
@@ -75,7 +72,7 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
         if (this.getFormModel().isEnabled() && this.getFormModel().isDirty()
                 && this.getCommitCommand().isAuthorized())
         { // then we ask the user to save the mess first: yes/no/cancel
-            answer = dialogFactory.showWarningDialog(this.getControl(), UNSAVEDCHANGES_WARNING_ID,
+            answer = ValkyrieRepository.getInstance().getApplicationConfig().dialogFactory().showWarningDialog(this.getControl(), UNSAVEDCHANGES_WARNING_ID,
                     JOptionPane.YES_NO_CANCEL_OPTION);
 
             switch (answer)
@@ -88,7 +85,7 @@ public abstract class AbstractFocussableWidgetForm extends AbstractWidgetForm im
                 case JOptionPane.YES_OPTION :
                     if (this.getFormModel().getHasErrors() == true)
                     {
-                        dialogFactory.showWarningDialog(this.getControl(), UNSAVEDCHANGES_HASERRORS_WARNING_ID);
+                        ValkyrieRepository.getInstance().getApplicationConfig().dialogFactory().showWarningDialog(this.getControl(), UNSAVEDCHANGES_HASERRORS_WARNING_ID);
                         userBreak = true;
                         break;
                     }

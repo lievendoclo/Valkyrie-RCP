@@ -2,8 +2,6 @@ package org.valkyriercp.binding.validation.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.form.support.FormModelPropertyAccessStrategy;
@@ -18,8 +16,8 @@ import org.valkyriercp.rules.reporting.BeanValidationResultsCollector;
 import org.valkyriercp.rules.reporting.MessageTranslator;
 import org.valkyriercp.rules.reporting.ObjectNameResolver;
 import org.valkyriercp.rules.reporting.PropertyResults;
+import org.valkyriercp.util.ValkyrieRepository;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,7 +41,6 @@ import java.util.Map;
  * @author Keith Donald
  * @author Jan Hoskens
  */
-@Configurable
 public class RulesValidator implements RichValidator, ObjectNameResolver {
 
 	private static final Log logger = LogFactory.getLog(RulesValidator.class);
@@ -64,9 +61,6 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 
 	private Class objectClass;
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
 	/**
 	 * Creates a RulesValidator for the given formModel. When no RulesSource is
 	 * given, a default/global RulesSource is retrieved by the
@@ -84,13 +78,9 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 		this.formModel = formModel;
 		this.rulesSource = rulesSource;
 		validationResultsCollector = new BeanValidationResultsCollector(new FormModelPropertyAccessStrategy(formModel));
+        messageTranslator = getApplicationConfig().messageTranslatorFactory().createTranslator(this);
 
 	}
-
-    @PostConstruct
-    private void postConstruct() {
-        messageTranslator = applicationConfig.messageTranslatorFactory().createTranslator(this);
-    }
 
 	/**
 	 * {@inheritDoc}
@@ -186,7 +176,7 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 
 	private RulesSource getRulesSource() {
 		if (rulesSource == null) {
-			rulesSource = applicationConfig.rulesSource();
+			rulesSource = getApplicationConfig().rulesSource();
 		}
 		return rulesSource;
 	}
@@ -239,4 +229,8 @@ public class RulesValidator implements RichValidator, ObjectNameResolver {
 		this.results.clearMessages();
 		this.validationErrors.clear();
 	}
+
+    public ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
+    }
 }

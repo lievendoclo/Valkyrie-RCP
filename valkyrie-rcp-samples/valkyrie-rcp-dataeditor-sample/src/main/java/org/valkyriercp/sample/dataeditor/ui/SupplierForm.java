@@ -21,6 +21,6 @@ public class SupplierForm extends TabbedForm
 
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createFormModel(new Supplier(), "supplierForm");
+        return getApplicationConfig().formModelFactory().createFormModel(new Supplier(), "supplierForm");
     }
 }

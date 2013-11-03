@@ -1,7 +1,5 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.util.Assert;
@@ -13,6 +11,7 @@ import org.valkyriercp.list.DefaultFilteredListModel;
 import org.valkyriercp.list.SortedListModel;
 import org.valkyriercp.rules.constraint.Constraint;
 import org.valkyriercp.util.ReflectiveVisitorHelper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -25,7 +24,6 @@ import java.util.Observer;
  * @author Mathias Broekelmann
  *
  */
-@Configurable
 public abstract class AbstractListBinding extends AbstractBinding {
 
     private JComponent component;
@@ -43,9 +41,6 @@ public abstract class AbstractListBinding extends AbstractBinding {
     private ListModel bindingModel;
 
     private AbstractFilteredListModel filteredModel;
-
-    @Autowired
-    private ConversionService conversionService;
 
     public AbstractListBinding(JComponent component, FormModel formModel, String formPropertyPath,
             Class requiredSourceClass) {
@@ -78,7 +73,7 @@ public abstract class AbstractListBinding extends AbstractBinding {
     }
 
     protected ConversionService getConversionService() {
-        return conversionService;
+        return ValkyrieRepository.getInstance().getApplicationConfig().conversionService();
     }
 
     public final void setComparator(Comparator comparator) {
@@ -147,7 +142,7 @@ public abstract class AbstractListBinding extends AbstractBinding {
     protected Object convertValue(Object value, Class targetClass) throws ConversionException {
         Assert.notNull(value);
         Assert.notNull(targetClass);
-        return conversionService.getConversionExecutor(value.getClass(), targetClass).execute(value);
+        return getConversionService().getConversionExecutor(value.getClass(), targetClass).execute(value);
     }
 
     protected abstract ListModel getDefaultModel();

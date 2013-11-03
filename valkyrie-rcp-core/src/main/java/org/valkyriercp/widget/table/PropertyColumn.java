@@ -1,12 +1,7 @@
 package org.valkyriercp.widget.table;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.valkyriercp.application.support.MessageResolver;
-import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.form.binding.BindingFactory;
-import org.valkyriercp.form.binding.swing.SwingBindingFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -21,7 +16,6 @@ import java.util.Comparator;
  * @author Jan Hoskens
  * @since 0.5.0
  */
-@Configurable
 public class PropertyColumn
 {
 
@@ -69,9 +63,6 @@ public class PropertyColumn
 
     /** Header title fetched from header keys or manually set. */
     private String header = null;
-
-    @Autowired
-    private MessageResolver messageResolver;
 
     public PropertyColumn(final String propertyName)
     {
@@ -151,7 +142,7 @@ public class PropertyColumn
                 this.headerKeys[0] = getPropertyName() + ".header";
                 this.headerKeys[1] = getPropertyName();
             }
-            this.header = messageResolver.getMessage(new DefaultMessageSourceResolvable(this.headerKeys, null,
+            this.header = ValkyrieRepository.getInstance().getApplicationConfig().messageResolver().getMessage(new DefaultMessageSourceResolvable(this.headerKeys, null,
                     this.headerKeys[this.headerKeys.length - 1]));
         }
         // JTableHeader has a reusable defaultHeaderRenderer on which the default height must be correct.

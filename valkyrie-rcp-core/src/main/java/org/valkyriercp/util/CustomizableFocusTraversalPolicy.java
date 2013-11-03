@@ -2,7 +2,6 @@ package org.valkyriercp.util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 /**

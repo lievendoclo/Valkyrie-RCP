@@ -1,6 +1,5 @@
 package org.valkyriercp.rules.constraint;
 
-import org.springframework.core.enums.StringCodedLabeledEnum;
 import org.springframework.util.StringUtils;
 
 /**

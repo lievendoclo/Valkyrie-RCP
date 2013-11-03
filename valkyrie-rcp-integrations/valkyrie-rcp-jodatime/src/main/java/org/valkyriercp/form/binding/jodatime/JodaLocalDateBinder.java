@@ -29,7 +29,7 @@ public class JodaLocalDateBinder extends AbstractBinder
     protected JComponent createControl(Map context)
     {
         JXDatePicker datePicker = new JXDatePicker();
-        datePicker.setToolTipText(applicationConfig.messageResolver().getMessage("datePicker", "tooltip", "text"));
+        datePicker.setToolTipText(getApplicationConfig().messageResolver().getMessage("datePicker", "tooltip", "text"));
         return datePicker;
     }
 

@@ -1,12 +1,12 @@
 package org.valkyriercp.binding.validation;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.binding.validation.support.DefaultValidationMessage;
 import org.valkyriercp.core.Severity;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultValidationMessageTests extends AbstractValkyrieTest {
 

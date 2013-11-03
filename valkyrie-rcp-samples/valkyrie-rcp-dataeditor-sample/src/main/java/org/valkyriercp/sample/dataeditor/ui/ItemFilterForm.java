@@ -1,9 +1,7 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
-import com.jgoodies.forms.layout.FormLayout;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.form.FilterForm;
-import org.valkyriercp.form.builder.FormLayoutFormBuilder;
 import org.valkyriercp.form.builder.MigLayoutFormBuilder;
 import org.valkyriercp.sample.dataeditor.domain.ItemFilter;
 

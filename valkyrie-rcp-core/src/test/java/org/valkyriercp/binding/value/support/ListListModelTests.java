@@ -1,11 +1,8 @@
 package org.valkyriercp.binding.value.support;
 
 import junit.framework.TestCase;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;

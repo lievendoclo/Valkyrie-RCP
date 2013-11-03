@@ -1,6 +1,5 @@
 package org.valkyriercp.binding.value.support;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.util.Assert;
 import org.valkyriercp.rules.closure.Closure;
@@ -13,7 +12,6 @@ import org.valkyriercp.rules.closure.Closure;
  * 
  * @author Keith Donald
  */
-@Configurable
 public class RefreshableValueHolder extends ValueHolder {
 	private final Closure refreshFunction;
 

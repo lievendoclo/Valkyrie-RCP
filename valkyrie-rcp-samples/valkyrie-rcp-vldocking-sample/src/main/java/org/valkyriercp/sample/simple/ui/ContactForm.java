@@ -36,7 +36,7 @@ public class ContactForm extends AbstractFocussableWidgetForm
 
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createFormModel(contact, "contactForm");
+        return getApplicationConfig().formModelFactory().createFormModel(contact, "contactForm");
     }
 
     protected JComponent createFormControl()

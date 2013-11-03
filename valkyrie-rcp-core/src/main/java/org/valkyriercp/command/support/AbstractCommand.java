@@ -1,23 +1,18 @@
 package org.valkyriercp.command.support;
 
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.StringUtils;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.command.CommandServices;
-import org.valkyriercp.command.GuardedActionCommandExecutor;
 import org.valkyriercp.command.SecuredActionCommandExecutor;
 import org.valkyriercp.command.config.*;
-import org.valkyriercp.core.Secured;
 import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -50,7 +45,6 @@ import java.util.NoSuchElementException;
  * @author Jan Hoskens
  *
  */
-@Configurable
 public abstract class AbstractCommand extends AbstractPropertyChangePublisher implements
         BeanNameAware, SecuredActionCommandExecutor {
 
@@ -86,8 +80,6 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	private Boolean oldVisibleState;
 
-    @Autowired
-    protected ApplicationConfig applicationConfig;
 
 	/**
 	 * Default constructor. Id can be set by context.
@@ -110,6 +102,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		addEnabledListener(new ButtonEnablingListener());
 		// keep track of visible state for buttons
 		addPropertyChangeListener(VISIBLE_PROPERTY_NAME, new ButtonVisibleListener());
+        afterPropertiesSet();
 	}
 
 	/**
@@ -148,6 +141,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		if (faceDescriptor != null) {
 			setFaceDescriptor(faceDescriptor);
 		}
+        afterPropertiesSet();
 	}
 
 	/**
@@ -161,6 +155,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	protected AbstractCommand(String id, Map faceDescriptors) {
 		this(id);
 		setFaceDescriptors(faceDescriptors);
+        afterPropertiesSet();
 	}
 
 	/**
@@ -325,7 +320,6 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * dependencies have been set. If subclasses override this method, they
 	 * should begin by calling {@code super.afterPropertiesSet()}.
 	 */
-    @PostConstruct
 	public void afterPropertiesSet() {
 		if (getId() == null) {
 			logger.info("Command " + this + " has no set id; note: anonymous commands cannot be used in registries.");
@@ -333,7 +327,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		if (this instanceof ActionCommand && !isFaceConfigured()) {
 			logger.info("The face descriptor property is not yet set for action command '" + getId()
 					+ "'; configuring");
-            applicationConfig.commandConfigurer().configure(this);
+            ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer().configure(this);
 
 		}
 	}
@@ -447,7 +441,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 */
 	protected CommandServices getCommandServices() {
 		if (commandServices == null) {
-			commandServices = applicationConfig.commandServices();
+			commandServices = ValkyrieRepository.getInstance().getApplicationConfig().commandServices();
 		}
 		return this.commandServices;
 	}

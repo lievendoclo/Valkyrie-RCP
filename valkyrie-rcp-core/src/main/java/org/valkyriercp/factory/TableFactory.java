@@ -2,7 +2,6 @@ package org.valkyriercp.factory;
 
 import org.jdesktop.swingx.JXTable;
 
-import javax.swing.*;
 import javax.swing.table.TableModel;
 
 /**

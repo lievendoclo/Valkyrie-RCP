@@ -5,7 +5,6 @@ import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.Map;
 
 /**

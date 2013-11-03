@@ -15,11 +15,11 @@
  */
 package org.valkyriercp.sample.simple.domain;
 
-import java.util.Date;
-
 import org.valkyriercp.rules.Rules;
 import org.valkyriercp.rules.constraint.Constraint;
 import org.valkyriercp.rules.support.DefaultRulesSource;
+
+import java.util.Date;
 
 /**
  * This class is a source for validation rules associated with the domain objects in this application. This clas is

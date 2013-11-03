@@ -1,12 +1,11 @@
 package org.valkyriercp.binding.value.support;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.valkyriercp.binding.value.DerivedValueModel;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.rules.closure.Closure;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeListener;
 
@@ -17,15 +16,11 @@ import java.beans.PropertyChangeListener;
  * @author Keith Donald
  * @author Oliver Hutchison
  */
-@Configurable
 public class TypeConverter extends AbstractValueModelWrapper implements DerivedValueModel {
 
 	private final Closure convertTo;
 
 	private final Closure convertFrom;
-
-    @Autowired
-	private ValueChangeDetector valueChangeDetector;
 
 	/**
 	 * Convenience constructor using conversionExecutors.
@@ -77,12 +72,8 @@ public class TypeConverter extends AbstractValueModelWrapper implements DerivedV
 		return false;
 	}
 
-	public void setValueChangeDetector(ValueChangeDetector valueChangeDetector) {
-		this.valueChangeDetector = valueChangeDetector;
-	}
-
 	protected ValueChangeDetector getValueChangeDetector() {
-		return valueChangeDetector;
+		return ValkyrieRepository.getInstance().getApplicationConfig().valueChangeDetector();
 	}
 
 	/**

@@ -1,9 +1,7 @@
 package org.valkyriercp.factory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.application.config.ApplicationConfig;
-import org.valkyriercp.application.config.ApplicationMode;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
@@ -21,12 +19,8 @@ import javax.swing.*;
  *
  * @author Keith Donald
  */
-@Configurable
 public abstract class AbstractControlFactory implements ControlFactory {
     private boolean singleton = true;
-
-    @Autowired
-    protected ApplicationConfig applicationConfig;
 
 	private JComponent control;
 
@@ -114,6 +108,6 @@ public abstract class AbstractControlFactory implements ControlFactory {
 	protected abstract JComponent createControl();
 
     protected ApplicationConfig getApplicationConfig() {
-        return applicationConfig;
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 }

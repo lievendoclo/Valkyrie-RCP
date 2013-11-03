@@ -3,8 +3,6 @@ package org.valkyriercp.dialog;
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.application.config.ApplicationConfig;
@@ -15,6 +13,7 @@ import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.core.Guarded;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.util.GuiStandardUtils;
+import org.valkyriercp.util.ValkyrieRepository;
 import org.valkyriercp.util.WindowUtils;
 
 import javax.swing.*;
@@ -23,7 +22,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.util.ArrayList;
 
 /**
  * <p>
@@ -63,7 +61,6 @@ import java.util.ArrayList;
  * @author Keith Donald
  * @author Jan Hoskens
  */
-@Configurable
 public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 
 	private static final String DEFAULT_DIALOG_TITLE = "Application Dialog";
@@ -116,12 +113,6 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 
 	private ActionCommand callingCommand;
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
-    @Autowired
-    private CommandManager commandManager;
-
 	/**
 	 * Create dialog with default closeAction {@link CloseAction#DISPOSE}. No
 	 * parent or title set.
@@ -165,7 +156,11 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 		init();
 	}
 
-	/**
+    public CommandManager getCommandManager() {
+        return getApplicationConfig().commandManager();
+    }
+
+    /**
 	 * Hook called in constructor. Add specific initialization code here.
 	 */
 	protected void init() {
@@ -554,9 +549,9 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 		if (callingCommand != null) {
 			String[] successMessageKeys = new String[] { callingCommand.getId() + "." + SUCCESS_FINISH_MESSAGE_KEY,
 					DEFAULT_FINISH_SUCCESS_MESSAGE_KEY };
-			return applicationConfig.messageResolver().getMessage(successMessageKeys, getFinishSuccessMessageArguments());
+			return getApplicationConfig().messageResolver().getMessage(successMessageKeys, getFinishSuccessMessageArguments());
 		}
-		return applicationConfig.messageResolver().getMessage(DEFAULT_FINISH_SUCCESS_MESSAGE_KEY);
+		return getApplicationConfig().messageResolver().getMessage(DEFAULT_FINISH_SUCCESS_MESSAGE_KEY);
 	}
 
 	/**
@@ -581,9 +576,9 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 		if (callingCommand != null) {
 			String[] successTitleKeys = new String[] { callingCommand.getId() + "." + SUCCESS_FINISH_TITLE_KEY,
 					DEFAULT_FINISH_SUCCESS_TITLE_KEY };
-			return applicationConfig.messageResolver().getMessage(successTitleKeys, getFinishSuccessTitleArguments());
+			return getApplicationConfig().messageResolver().getMessage(successTitleKeys, getFinishSuccessTitleArguments());
 		}
-		return applicationConfig.messageResolver().getMessage(DEFAULT_FINISH_SUCCESS_TITLE_KEY);
+		return getApplicationConfig().messageResolver().getMessage(DEFAULT_FINISH_SUCCESS_TITLE_KEY);
 	}
 
 	/**
@@ -754,7 +749,7 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 	 * per the Java Look and Feel guidelines.
 	 */
 	protected JComponent createButtonBar() {
-		this.dialogCommandGroup = commandManager.createCommandGroup(null, getCommandGroupMembers());
+		this.dialogCommandGroup = getCommandManager().createCommandGroup(null, getCommandGroupMembers());
 		JComponent buttonBar = this.dialogCommandGroup.createButtonBar();
 		GuiStandardUtils.attachDialogBorder(buttonBar);
 		return buttonBar;
@@ -790,7 +785,7 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 	}
 
     protected ApplicationConfig getApplicationConfig() {
-        return applicationConfig;
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 
     /**
@@ -914,8 +909,8 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 	 */
 	public Window getParentWindow() {
 		if (parentWindow == null) {
-			if ((parentComponent == null) && (applicationConfig.windowManager().getActiveWindow() != null)) {
-				parentWindow = applicationConfig.windowManager().getActiveWindow().getControl();
+			if ((parentComponent == null) && (getApplicationConfig().windowManager().getActiveWindow() != null)) {
+				parentWindow = getApplicationConfig().windowManager().getActiveWindow().getControl();
 			}
 			else {
 				parentWindow = getWindowForComponent(parentComponent);

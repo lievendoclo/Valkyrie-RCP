@@ -1,9 +1,6 @@
 package org.valkyriercp.command.support;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.PropertyNotSetException;
@@ -13,7 +10,6 @@ import org.valkyriercp.application.ViewDescriptor;
  * An action command for displaying a {@link org.valkyriercp.application.View}
  * based on a provided {@link ViewDescriptor}.
  */
-@Configurable
 public class ShowViewCommand extends ApplicationWindowAwareCommand implements
 		InitializingBean {
 
@@ -37,6 +33,8 @@ public class ShowViewCommand extends ApplicationWindowAwareCommand implements
 		setViewDescriptor(descriptor);
 		setId(id);
 		setEnabled(true);
+        PropertyNotSetException.throwIfNull(this.viewDescriptor,
+                "viewDescriptor", getClass());
 	}
 
 	/**
@@ -60,18 +58,8 @@ public class ShowViewCommand extends ApplicationWindowAwareCommand implements
 		setViewDescriptor(viewDescriptor);
 		setApplicationWindow(applicationWindow);
 		setEnabled(true);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@PostConstruct
-	public void afterPropertiesSet() {
-		// PropertyNotSetException.throwIfNull(getApplicationWindow(),
-		// "applicationWindow", getClass());
-		PropertyNotSetException.throwIfNull(this.viewDescriptor,
-				"viewDescriptor", getClass());
+        PropertyNotSetException.throwIfNull(this.viewDescriptor,
+                "viewDescriptor", getClass());
 	}
 
 	/**

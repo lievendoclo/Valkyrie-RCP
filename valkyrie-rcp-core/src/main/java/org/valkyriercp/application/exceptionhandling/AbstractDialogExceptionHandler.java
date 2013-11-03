@@ -1,11 +1,10 @@
 package org.valkyriercp.application.exceptionhandling;
 
 import org.jdesktop.swingx.JXFrame;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
@@ -15,22 +14,19 @@ import javax.swing.*;
  * @author Geoffrey De Smet
  * @since 0.3
  */
-@Configurable
 public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialogExceptionHandler<SELF>> extends AbstractLoggingExceptionHandler<SELF> {
 
     private static final String DIALOG_EXCEPTION_HANDLER_KEY = "dialogExceptionHandler";
 
-    @Autowired
-    protected MessageSourceAccessor messageSourceAccessor;
-
-    @Autowired
-    protected ApplicationConfig applicationConfig;
-
     protected boolean modalDialog = true;
     protected ShutdownPolicy shutdownPolicy = ShutdownPolicy.ASK;
 
-    public void setMessageSourceAccessor(MessageSourceAccessor messageSourceAccessor) {
-        this.messageSourceAccessor = messageSourceAccessor;
+    public MessageSourceAccessor getMessageSourceAccessor() {
+        return getApplicationConfig().messageSourceAccessor();
+    }
+
+    public ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 
     /**
@@ -68,16 +64,16 @@ public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialog
         switch (shutdownPolicy) {
             case NONE:
                 options = new String[]{
-                        messageSourceAccessor.getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".none.ok")};
+                        getMessageSourceAccessor().getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".none.ok")};
                 break;
             case ASK:
                 options = new String[]{
-                        messageSourceAccessor.getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".ask.shutdown"),
-                        messageSourceAccessor.getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".ask.continue")};
+                        getMessageSourceAccessor().getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".ask.shutdown"),
+                        getMessageSourceAccessor().getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".ask.continue")};
                 break;
             case OBLIGATE:
                 options = new String[]{
-                        messageSourceAccessor.getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".obligate.shutdown")};
+                        getMessageSourceAccessor().getMessage(DIALOG_EXCEPTION_HANDLER_KEY + ".obligate.shutdown")};
                 break;
             default:
                 // Can not occur and if it does it will crash the event thread
@@ -94,7 +90,7 @@ public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialog
                 || shutdownPolicy == ShutdownPolicy.OBLIGATE) {
             logger.info("Shutting down due to uncaught exception.");
             try {
-                applicationConfig.application().close(true, 1);
+                getApplicationConfig().application().close(true, 1);
             } finally {
                 // In case the instance() method throws an exception and an exit didn't occur
                 System.exit(2);
@@ -103,7 +99,7 @@ public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialog
     }
 
     protected JXFrame resolveParentFrame() {
-        ApplicationWindow activeWindow = applicationConfig.windowManager().getActiveWindow();
+        ApplicationWindow activeWindow = getApplicationConfig().windowManager().getActiveWindow();
         if(activeWindow == null)
             return null;
         return activeWindow.getControl();

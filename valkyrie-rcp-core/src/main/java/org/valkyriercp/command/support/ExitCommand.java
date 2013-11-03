@@ -1,6 +1,7 @@
 package org.valkyriercp.command.support;
 
 import org.valkyriercp.application.Application;
+import org.valkyriercp.util.ValkyrieRepository;
 
 /**
  * An action command that causes the application to exit.
@@ -25,7 +26,7 @@ public class ExitCommand extends ApplicationWindowAwareCommand {
      * @see Application#close()
      */
     protected void doExecuteCommand() {
-        applicationConfig.application().close();
+        ValkyrieRepository.getInstance().getApplicationConfig().application().close();
     }
 
 }

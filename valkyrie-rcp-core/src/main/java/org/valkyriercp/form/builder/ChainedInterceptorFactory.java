@@ -6,8 +6,6 @@ import org.valkyriercp.binding.form.FormModel;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**

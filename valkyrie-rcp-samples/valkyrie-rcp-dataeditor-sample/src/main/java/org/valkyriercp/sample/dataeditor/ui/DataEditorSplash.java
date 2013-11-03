@@ -1,24 +1,8 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import org.jdesktop.swingx.JXBusyLabel;
-import org.jdesktop.swingx.JXFrame;
-import org.jdesktop.swingx.JXLabel;
-import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.JXRootPane;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.icon.EmptyIcon;
 import org.jdesktop.swingx.painter.BusyPainter;
 import org.jdesktop.swingx.painter.ImagePainter;
@@ -27,8 +11,12 @@ import org.valkyriercp.application.splash.MonitoringSplashScreen;
 import org.valkyriercp.progress.ProgressMonitor;
 import org.valkyriercp.util.WindowUtils;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 
 public class DataEditorSplash implements MonitoringSplashScreen {
 	private JXBusyLabel busyLabel = new JXBusyLabel(new Dimension(180, 180));

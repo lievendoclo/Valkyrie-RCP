@@ -3,6 +3,7 @@ package org.valkyriercp.application.config;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.application.*;
@@ -32,6 +33,8 @@ import org.valkyriercp.rules.reporting.MessageTranslatorFactory;
 import org.valkyriercp.security.ApplicationSecurityManager;
 import org.valkyriercp.security.SecurityControllerManager;
 import org.valkyriercp.util.DialogFactory;
+
+import java.awt.*;
 
 @Configuration
 public interface ApplicationConfig {
@@ -76,4 +79,10 @@ public interface ApplicationConfig {
     TableFactory tableFactory();
     ApplicationSecurityManager applicationSecurityManager();
     FormModelFactory formModelFactory();
+
+    @Bean
+    Color titlePaneBackgroundColor();
+
+    @Bean
+    Color titlePanePinstripeColor();
 }

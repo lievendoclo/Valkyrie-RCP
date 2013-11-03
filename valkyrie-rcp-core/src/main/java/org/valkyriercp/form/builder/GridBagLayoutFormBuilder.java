@@ -30,11 +30,6 @@ public class GridBagLayoutFormBuilder extends AbstractFormBuilder implements Lay
         return builder;
     }
 
-    public void setComponentFactory(ComponentFactory componentFactory) {
-        super.setComponentFactory(componentFactory);
-        builder.setComponentFactory(componentFactory);
-    }
-
     /**
      * Appends a label and field to the end of the current line.
      * <p />
@@ -182,7 +177,7 @@ public class GridBagLayoutFormBuilder extends AbstractFormBuilder implements Lay
     /**
      * Appends a separator (usually a horizontal line) using the provided string
      * as the key to look in the
-     * {@link #setComponentFactory(ComponentFactory) ComponentFactory's}message
+     * {@link ComponentFactory's}message
      * bundle for the text to put along with the separator. Has an implicit
      * {@link #nextLine()}before and after it.
      *

@@ -25,13 +25,8 @@ allprojects {
         mavenCentral()
     }
 
-    configurations {
-        ajc
-    }
-
     dependencies {
         provided gradleApi()
-        ajc "org.aspectj:aspectjtools:1.7.2"
     }
 }
 
@@ -39,7 +34,6 @@ idea {
     project {
         ipr {
             withXml {
-                IdeaEnricher.enableAjcCompiler(this.project, it.asNode())
                 IdeaEnricher.enableGitScm(this.project, it.asNode())
             }
         }
@@ -48,50 +42,18 @@ idea {
 
 configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rcp-integrations")) { subproject ->
     apply plugin: "java"
-    apply plugin: "findbugs"
-    apply plugin: "jacoco"
 
     configurations {
-        aspects
-        aspectCompile
-        compile {
-            extendsFrom aspects
-        }
         all*.exclude group: 'commons-logging', module: 'commons-logging'
     }
 
     compileJava {
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
-
-        doLast {
-            ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", classpath: configurations.ajc.asPath)
-            ant.iajc(source: "1.6", target: "1.6", destDir: sourceSets.main.output.classesDir.absolutePath, maxmem: "512m", fork: "true",
-                    aspectPath: configurations.aspects.asPath, sourceRootCopyFilter: "**/.svn/*,**/*.java", classpath: "${configurations.compile.asPath};${configurations.aspectCompile.asPath}") {
-                sourceroots {
-                    sourceSets.main.java.srcDirs.each {
-                        pathelement(location: it.absolutePath)
-                    }
-                }
-            }
-        }
     }
     compileTestJava {
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
-
-        doLast {
-            ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", classpath: configurations.ajc.asPath)
-            ant.iajc(source: "1.6", target: "1.6", destDir: sourceSets.test.output.classesDir.absolutePath, maxmem: "512m", fork: "true",
-                    aspectPath: configurations.aspects.asPath, sourceRootCopyFilter: "**/.svn/*,**/*.java", classpath: "${configurations.compile.asPath};${configurations.aspectCompile.asPath};${configurations.testCompile.asPath};${sourceSets.main.output.classesDir.absolutePath}") {
-                sourceroots {
-                    sourceSets.test.java.srcDirs.each {
-                        pathelement(location: it.absolutePath)
-                    }
-                }
-            }
-        }
-
     }
 
     test {
@@ -122,23 +84,6 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
         archives sourcesJar
     }
 
-    findbugs {
-        ignoreFailures = true
-    }
-
-    tasks.withType(FindBugs) {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
-
-    jacocoTestReport {
-        group = "Reporting"
-        description = "Generate Jacoco coverage reports after running tests."
-        additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-    }
-
     dependencies {
         testCompile "junit:junit:4.11"
         testCompile "org.mockito:mockito-core:1.9.5"
@@ -147,18 +92,6 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
         compile "org.slf4j:slf4j-api:1.6.1"
         compile "org.slf4j:jcl-over-slf4j:1.6.1"
         runtime "ch.qos.logback:logback-classic:0.9.26"
-
-        compile "org.aspectj:aspectjrt:1.7.2"
-        compile "org.aspectj:aspectjweaver:1.7.2"
-        aspects("org.springframework:spring-aspects:${springVersion}") {
-            exclude module: "aspectjweaver"
-        }
-        aspectCompile "javax.persistence:persistence-api:1.0"
-        aspectCompile "org.springframework:spring-tx:${springVersion}"
-        aspectCompile "org.springframework:spring-orm:${springVersion}"
-        provided "org.springframework:spring-tx:${springVersion}"
-        provided "org.springframework:spring-orm:${springVersion}"
-        provided "javax:javaee-api:6.0"
     }
 }
 

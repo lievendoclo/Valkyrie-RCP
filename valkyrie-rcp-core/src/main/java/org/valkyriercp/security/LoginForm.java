@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.AbstractForm;
 import org.valkyriercp.form.builder.TableFormBuilder;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
@@ -27,8 +28,7 @@ public class LoginForm extends AbstractForm {
      * Constructor.
      */
     public LoginForm() {
-        setId(FORM_ID);
-        loginDetails = createLoginDetails();
+        super(FORM_ID);
     }
 
     /**
@@ -70,12 +70,13 @@ public class LoginForm extends AbstractForm {
      * @return constructed form object
      */
     protected LoginDetails createLoginDetails() {
-        return new LoginDetails();
+        loginDetails =  new LoginDetails();
+        return loginDetails;
     }
 
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createUnbufferedFormModel(loginDetails);
+        return ValkyrieRepository.getInstance().getApplicationConfig().formModelFactory().createUnbufferedFormModel(createLoginDetails());
     }
 
     /**

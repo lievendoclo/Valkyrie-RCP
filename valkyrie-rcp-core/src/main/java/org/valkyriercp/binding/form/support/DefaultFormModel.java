@@ -1,8 +1,6 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.PropertyAccessException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -19,6 +17,7 @@ import org.valkyriercp.binding.validation.support.DefaultValidationResultsModel;
 import org.valkyriercp.binding.validation.support.RulesValidator;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.AbstractValueModelWrapper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -41,7 +40,6 @@ import java.util.Map;
  * @author Keith Donald
  * @author Oliver Hutchison
  */
-@Configurable
 public class DefaultFormModel extends AbstractFormModel implements ValidatingFormModel {
 
 	private final DefaultValidationResultsModel validationResultsModel = new DefaultValidationResultsModel();
@@ -57,11 +55,9 @@ public class DefaultFormModel extends AbstractFormModel implements ValidatingFor
 	private boolean oldHasErrors = false;
 
 	private Validator validator;
+    private BindingErrorMessageProvider bindingErrorMessageProvider;
 
-    @Autowired
-	private BindingErrorMessageProvider bindingErrorMessageProvider;
-
-	public DefaultFormModel() {
+    public DefaultFormModel() {
 		init();
 	}
 
@@ -344,13 +340,14 @@ public class DefaultFormModel extends AbstractFormModel implements ValidatingFor
 		}
 	}
 
-	protected ValidationMessage getBindingErrorMessage(String propertyName, Object valueBeingSet, Exception e) {
-		return bindingErrorMessageProvider.getErrorMessage(this, propertyName, valueBeingSet, e);
-	}
+    public BindingErrorMessageProvider getBindingErrorMessageProvider() {
+        if(bindingErrorMessageProvider == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().bindingErrorMessageProvider();
+        return bindingErrorMessageProvider;
+    }
 
-	public void setBindingErrorMessageProvider(BindingErrorMessageProvider bindingErrorMessageProvider) {
-		Assert.notNull(bindingErrorMessageProvider, "bindingErrorMessageProvider");
-		this.bindingErrorMessageProvider = bindingErrorMessageProvider;
+	protected ValidationMessage getBindingErrorMessage(String propertyName, Object valueBeingSet, Exception e) {
+		return getBindingErrorMessageProvider().getErrorMessage(this, propertyName, valueBeingSet, e);
 	}
 
 	public String toString() {
@@ -359,7 +356,11 @@ public class DefaultFormModel extends AbstractFormModel implements ValidatingFor
 				"validationResults", getValidationResults()).toString();
 	}
 
-	protected class ValidatingFormValueModel extends AbstractValueModelWrapper {
+    public void setBindingErrorMessageProvider(BindingErrorMessageProvider bindingErrorMessageProvider) {
+        this.bindingErrorMessageProvider = bindingErrorMessageProvider;
+    }
+
+    protected class ValidatingFormValueModel extends AbstractValueModelWrapper {
 		private final String formProperty;
 
 		private final ValueChangeHandler valueChangeHander;

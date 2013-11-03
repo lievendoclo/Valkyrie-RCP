@@ -1,7 +1,5 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.DecoratedControlBinding;

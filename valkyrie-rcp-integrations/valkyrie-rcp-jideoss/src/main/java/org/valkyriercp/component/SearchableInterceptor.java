@@ -1,14 +1,11 @@
 package org.valkyriercp.component;
 
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.text.JTextComponent;
-
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.swing.TableSearchable;
 import org.valkyriercp.form.builder.AbstractFormComponentInterceptor;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
 
 /**
  * Interceptor that installs the <code>Searchable</code> functionality provided by Jide OSS.

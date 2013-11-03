@@ -1,22 +1,7 @@
 package org.valkyriercp.application.config.support;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.text.JTextComponent;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
@@ -33,14 +18,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
-import org.valkyriercp.application.Application;
-import org.valkyriercp.application.ApplicationDescriptor;
-import org.valkyriercp.application.ApplicationPageFactory;
-import org.valkyriercp.application.ApplicationWindowFactory;
-import org.valkyriercp.application.PageComponentPaneFactory;
-import org.valkyriercp.application.ViewDescriptor;
-import org.valkyriercp.application.ViewDescriptorRegistry;
-import org.valkyriercp.application.WindowManager;
+import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.ApplicationMode;
@@ -51,14 +29,7 @@ import org.valkyriercp.application.exceptionhandling.RegisterableExceptionHandle
 import org.valkyriercp.application.exceptionhandling.SimpleExceptionHandlerDelegate;
 import org.valkyriercp.application.session.ApplicationSession;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
-import org.valkyriercp.application.support.BeanFactoryViewDescriptorRegistry;
-import org.valkyriercp.application.support.DefaultApplication;
-import org.valkyriercp.application.support.DefaultApplicationDescriptor;
-import org.valkyriercp.application.support.DefaultApplicationPageFactory;
-import org.valkyriercp.application.support.DefaultApplicationWindowFactory;
-import org.valkyriercp.application.support.MessageResolver;
-import org.valkyriercp.application.support.SimplePageComponentPaneFactory;
-import org.valkyriercp.application.support.SingleViewPageDescriptor;
+import org.valkyriercp.application.support.*;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FieldFaceSource;
 import org.valkyriercp.binding.form.support.DefaultBindingErrorMessageProvider;
@@ -78,25 +49,14 @@ import org.valkyriercp.component.DefaultOverlayService;
 import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
-import org.valkyriercp.factory.ButtonFactory;
-import org.valkyriercp.factory.ComponentFactory;
-import org.valkyriercp.factory.DefaultButtonFactory;
-import org.valkyriercp.factory.DefaultComponentFactory;
-import org.valkyriercp.factory.DefaultMenuFactory;
-import org.valkyriercp.factory.DefaultTableFactory;
-import org.valkyriercp.factory.MenuFactory;
-import org.valkyriercp.factory.TableFactory;
+import org.valkyriercp.factory.*;
 import org.valkyriercp.form.FormModelFactory;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
 import org.valkyriercp.form.binding.BindingFactoryProvider;
 import org.valkyriercp.form.binding.swing.ScrollPaneBinder;
 import org.valkyriercp.form.binding.swing.SwingBinderSelectionStrategy;
 import org.valkyriercp.form.binding.swing.SwingBindingFactoryProvider;
-import org.valkyriercp.form.builder.ChainedInterceptorFactory;
-import org.valkyriercp.form.builder.ColorValidationInterceptorFactory;
-import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
-import org.valkyriercp.form.builder.OverlayValidationInterceptorFactory;
-import org.valkyriercp.form.builder.ShowCaptionInStatusBarInterceptorFactory;
+import org.valkyriercp.form.builder.*;
 import org.valkyriercp.image.DefaultIconSource;
 import org.valkyriercp.image.DefaultImageSource;
 import org.valkyriercp.image.IconSource;
@@ -113,11 +73,18 @@ import org.valkyriercp.security.support.AuthorityConfigurableSecurityController;
 import org.valkyriercp.security.support.DefaultApplicationSecurityManager;
 import org.valkyriercp.security.support.DefaultSecurityControllerManager;
 import org.valkyriercp.util.DialogFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 @Import(org.valkyriercp.application.config.support.DefaultBinderConfig.class)
@@ -128,6 +95,11 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
 	@Autowired
 	private org.valkyriercp.application.config.support.DefaultBinderConfig defaultBinderConfig;
+
+    @Bean
+    public ValkyrieRepository valkyrieRepository() {
+        return new ValkyrieRepository();
+    }
 
 	public ApplicationContext applicationContext() {
 		return applicationContext;
@@ -460,12 +432,14 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 		return new FormModelFactory();
 	}
 
-	@Bean
+	@Override
+    @Bean
 	public Color titlePaneBackgroundColor() {
 		return new Color(200, 200, 200);
 	}
 
-	@Bean
+	@Override
+    @Bean
 	public Color titlePanePinstripeColor() {
 		return new Color(1f, 1f, 1f, 0.17f);
 	}
