@@ -6,6 +6,5 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config/>
-    <context:spring-configured/>
 
 </beans>

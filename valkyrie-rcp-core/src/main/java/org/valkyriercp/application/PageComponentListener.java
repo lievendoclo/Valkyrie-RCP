@@ -1,7 +1,5 @@
 package org.valkyriercp.application;
 
-import org.valkyriercp.application.PageComponent;
-
 public interface PageComponentListener {
 
     /**

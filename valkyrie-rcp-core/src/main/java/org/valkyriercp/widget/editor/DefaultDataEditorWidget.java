@@ -1,18 +1,5 @@
 package org.valkyriercp.widget.editor;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.concurrent.ExecutionException;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JComponent;
-import javax.swing.SwingWorker;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -37,6 +24,13 @@ import org.valkyriercp.widget.editor.provider.MaximumRowsExceededException;
 import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 import org.valkyriercp.widget.table.glazedlists.GlazedListTableWidget;
+
+import javax.annotation.PostConstruct;
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 //import org.jdesktop.swingworker.SwingWorker;
 
 /**
@@ -116,7 +110,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 	}
 
 	/**
-	 * {@link org.jdesktop.swingworker.SwingWorker} which retrieves list from
+	 * {@link SwingWorker} which retrieves list from
 	 * back-end and fills table with result.
 	 * <p/>
 	 * Remember to set criteria and launch this class in a synchronised block.
@@ -155,7 +149,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 					setRows(Collections.EMPTY_LIST);
 					validationResultsModel
 							.removeMessage(maximumRowsExceededMessage);
-					maximumRowsExceededMessage.setMessage(applicationConfig
+					maximumRowsExceededMessage.setMessage(getApplicationConfig()
 							.messageResolver().getMessage(
 									"MaximumRowsExceededException.notice",
 									new Object[] { mre.getNumberOfRows(),
@@ -169,7 +163,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 					throw new RuntimeException(e);
 				}
 			} finally {
-				applicationConfig.windowManager().getActiveWindow()
+				getApplicationConfig().windowManager().getActiveWindow()
 						.getStatusBar().getProgressMonitor().done();
 				// getFilterForm().getCommitCommand().setEnabled(true);
 				// getRefreshCommand().setEnabled(true);
@@ -222,12 +216,6 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 	 */
 	public DefaultDataEditorWidget(String id) {
 		setId(id);
-	}
-
-	@PostConstruct
-	private void configureDataEditorObject() {
-		applicationConfig.applicationObjectConfigurer()
-				.configure(this, getId());
 	}
 
 	// /**
@@ -414,7 +402,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 	protected void setDataProvider(DataProvider provider) {
 		if ((this.dataProvider != null)
 				&& (this.dataProvider.getRefreshPolicy() == DataProvider.RefreshPolicy.ON_USER_SWITCH)) {
-			applicationConfig
+			getApplicationConfig()
 					.applicationSession()
 					.removePropertyChangeListener(ApplicationSession.USER, this);
 		}
@@ -423,7 +411,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 
 		if ((this.dataProvider != null)
 				&& (this.dataProvider.getRefreshPolicy() == DataProvider.RefreshPolicy.ON_USER_SWITCH)) {
-			applicationConfig.applicationSession().addPropertyChangeListener(
+			getApplicationConfig().applicationSession().addPropertyChangeListener(
 					ApplicationSession.USER, this);
 		}
 	}
@@ -482,10 +470,10 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 				dataProvider.setBaseCriteria(getBaseCriteria());
 			}
 
-			StatusBar statusBar = applicationConfig.windowManager()
+			StatusBar statusBar = getApplicationConfig().windowManager()
 					.getActiveWindow().getStatusBar();
 			statusBar.getProgressMonitor().taskStarted(
-					applicationConfig.messageResolver().getMessage("statusBar",
+					getApplicationConfig().messageResolver().getMessage("statusBar",
 							"loadTable", MessageConstants.LABEL),
 					StatusBarProgressMonitor.UNKNOWN);
 			// getFilterForm().getCommitCommand().setEnabled(false);
@@ -539,7 +527,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 			return dataSet;
 		} catch (MaximumRowsExceededException mre) {
 			setRows(Collections.EMPTY_LIST);
-			setMessage(new DefaultMessage(applicationConfig.messageResolver()
+			setMessage(new DefaultMessage(getApplicationConfig().messageResolver()
 					.getMessage(
 							"MaximumRowsExceededException.notice",
 							new Object[] { mre.getNumberOfRows(),

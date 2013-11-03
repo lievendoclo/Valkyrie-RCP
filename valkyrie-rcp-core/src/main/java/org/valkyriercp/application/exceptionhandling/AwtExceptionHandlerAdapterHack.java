@@ -1,6 +1,5 @@
 package org.valkyriercp.application.exceptionhandling;
 
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.LoggerFactory;
 
 /**

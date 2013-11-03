@@ -1,14 +1,12 @@
 package org.valkyriercp.dialog;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.core.Messagable;
 import org.valkyriercp.form.Form;
 import org.valkyriercp.util.GuiStandardUtils;
 import org.valkyriercp.util.LabelUtils;
 import org.valkyriercp.util.UIConstants;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +36,6 @@ import java.util.List;
  *
  * @author oliverh
  */
-@Configurable
 public abstract class CompositeDialogPage extends AbstractDialogPage {
 
 	private final ChildChangeHandler childChangeHandler = new ChildChangeHandler();
@@ -53,8 +50,6 @@ public abstract class CompositeDialogPage extends AbstractDialogPage {
 
 	private DialogPage activePage;
 
-    @Autowired
-    protected ApplicationConfig applicationConfig;
 
 	public CompositeDialogPage(String pageId) {
 		super(pageId, true);
@@ -78,7 +73,7 @@ public abstract class CompositeDialogPage extends AbstractDialogPage {
 		pages.add(page);
 		if (autoConfigureChildPages) {
 			String id = getId() + "." + page.getId();
-			applicationConfig.applicationObjectConfigurer().configure(page, id);
+			ValkyrieRepository.getInstance().getApplicationConfig().applicationObjectConfigurer().configure(page, id);
 		}
 	}
 

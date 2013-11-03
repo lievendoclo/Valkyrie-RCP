@@ -80,7 +80,7 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
 
     public String resolveExceptionCaption(Throwable throwable) {
         String[] messagesKeys = getMessagesKeys(throwable, ".caption");
-        return messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(
+        return getApplicationConfig().messageSourceAccessor().getMessage(new DefaultMessageSourceResolvable(
                 messagesKeys, messagesKeys[0]));
     }
 
@@ -89,7 +89,7 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
         String[] parameters = new String[]{
             formatMessage(throwable.getMessage())
         };
-        return messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(
+        return getApplicationConfig().messageSourceAccessor().getMessage(new DefaultMessageSourceResolvable(
                 messagesKeys, parameters, messagesKeys[0]));
     }
 

@@ -7,7 +7,9 @@ import org.valkyriercp.command.config.CommandButtonConfigurer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 class GroupMemberContainerManager {
     private static final Log logger = LogFactory.getLog(GroupMemberContainerManager.class);

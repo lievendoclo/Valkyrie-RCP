@@ -1,6 +1,7 @@
 package org.valkyriercp.command;
 
 import org.valkyriercp.command.support.ApplicationWindowAwareCommand;
+import org.valkyriercp.util.ValkyrieRepository;
 
 public class NewWindowCommand extends ApplicationWindowAwareCommand {
 
@@ -11,7 +12,7 @@ public class NewWindowCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        applicationConfig.application().openWindow(getApplicationWindow().getPage().getId());
+        ValkyrieRepository.getInstance().getApplicationConfig().application().openWindow(getApplicationWindow().getPage().getId());
     }
 
 }

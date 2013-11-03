@@ -1,25 +1,21 @@
 package org.valkyriercp.rules.reporting;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
 import org.valkyriercp.core.Severity;
 import org.valkyriercp.rules.constraint.Constraint;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.util.Locale;
 
 /**
  * @author Keith Donald
  */
-@Configurable
 public class PropertyResults implements ValidationResults {
 
     private String propertyName;
     private Object rejectedValue;
     private Constraint violatedConstraint;
     private Severity severity = Severity.ERROR;
-    @Autowired
-    private MessageTranslatorFactory messageTranslatorFactory;
 
     public PropertyResults(String propertyName, Object rejectedValue,
             Constraint violatedConstraint) {
@@ -37,7 +33,7 @@ public class PropertyResults implements ValidationResults {
     }
 
     public String buildMessage(Locale locale) {
-    	MessageTranslator messageTranslator = messageTranslatorFactory.createTranslator(null, locale);
+    	MessageTranslator messageTranslator = ValkyrieRepository.getInstance().getApplicationConfig().messageTranslatorFactory().createTranslator(null, locale);
         return messageTranslator.getMessage(this);
     }
 

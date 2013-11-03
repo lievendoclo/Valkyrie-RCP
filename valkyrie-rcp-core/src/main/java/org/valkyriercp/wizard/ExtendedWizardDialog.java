@@ -3,7 +3,6 @@ package org.valkyriercp.wizard;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import org.valkyriercp.application.config.ApplicationObjectConfigurer;
 import org.valkyriercp.util.GuiStandardUtils;
 
 import javax.swing.*;

@@ -4,6 +4,7 @@ import org.valkyriercp.core.support.LabeledObjectSupport;
 import org.valkyriercp.dialog.control.ExtTabbedPane;
 import org.valkyriercp.dialog.control.Tab;
 import org.valkyriercp.dialog.control.VetoableSingleSelectionModel;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -46,7 +47,7 @@ public class TabbedDialogPage extends CompositeDialogPage {
 
 	protected JComponent createControl() {
 		createPageControls();
-		final JTabbedPane tabbedPane = applicationConfig.componentFactory().createTabbedPane();
+		final JTabbedPane tabbedPane = ValkyrieRepository.getInstance().getApplicationConfig().componentFactory().createTabbedPane();
 		tabbedPaneView = new ExtTabbedPane(tabbedPane);
 
 		List pages = getPages();

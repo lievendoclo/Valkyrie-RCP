@@ -25,8 +25,6 @@ import org.valkyriercp.form.Form;
 import org.valkyriercp.sample.simple.domain.Contact;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
 
-import javax.annotation.PostConstruct;
-
 /**
  * This is a dialog for editing the properties of a Contact object. It is a simple "form backed" dialog, meaning that
  * the body of the dialog is provided from a "form backed" dialog page. The Ok (finish) button will be wired into the

@@ -1,16 +1,12 @@
 package org.valkyriercp.binding.beans;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.InvalidPropertyException;
-import org.springframework.beans.NullValueInNestedPathException;
-import org.springframework.beans.PropertyAccessor;
+import org.springframework.beans.*;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.CachingMapDecorator;
+
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 
 /**
  * This implementation extends {@link AbstractMemberPropertyAccessor} with the

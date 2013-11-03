@@ -1,7 +1,5 @@
 package org.valkyriercp.rules.closure.support;
 
-import org.springframework.core.enums.ShortCodedLabeledEnum;
-
 /**
  * Enumeration of possible process statuses.
  *

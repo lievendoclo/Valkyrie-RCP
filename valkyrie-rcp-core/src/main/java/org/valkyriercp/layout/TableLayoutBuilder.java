@@ -6,12 +6,11 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.util.CustomizableFocusTraversalPolicy;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +70,6 @@ import java.util.List;
  *
  * @author oliverh
  */
-@Configurable
 public class TableLayoutBuilder implements LayoutBuilder {
 
     public static final String DEFAULT_LABEL_ATTRIBUTES = "colGrId=label colSpec=left:pref";
@@ -130,9 +128,6 @@ public class TableLayoutBuilder implements LayoutBuilder {
 
     private List focusOrder = null;
 
-    @Autowired
-    private ComponentFactory componentFactory;
-
     /**
      * Creates a new TableLayoutBuilder.
      */
@@ -158,15 +153,7 @@ public class TableLayoutBuilder implements LayoutBuilder {
      * labels.
      */
     public ComponentFactory getComponentFactory() {
-        return componentFactory;
-    }
-
-    /**
-     * Sets the {@link ComponentFactory}that this uses to create things like
-     * labels.
-     */
-    public void setComponentFactory(ComponentFactory componentFactory) {
-        this.componentFactory = componentFactory;
+        return ValkyrieRepository.getInstance().getApplicationConfig().componentFactory();
     }
 
     /**

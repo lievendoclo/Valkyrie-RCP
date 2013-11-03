@@ -3,6 +3,7 @@ package org.valkyriercp.command.support;
 import org.jdesktop.swingx.JXFrame;
 import org.valkyriercp.application.ApplicationException;
 import org.valkyriercp.application.ApplicationWindow;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class ChangeLookAndFeelCommand extends ActionCommand {
     protected void doExecuteCommand() {
         try {
             UIManager.setLookAndFeel(lookAndFeelClass);
-            for(ApplicationWindow appWindow : applicationConfig.windowManager().getWindows()) {
+            for(ApplicationWindow appWindow : ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getWindows()) {
                 JXFrame control = appWindow.getControl();
                 SwingUtilities.updateComponentTreeUI(control);
                 for(Window window : control.getOwnedWindows()) {

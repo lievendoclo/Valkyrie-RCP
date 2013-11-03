@@ -2,6 +2,7 @@ package org.valkyriercp.application.exceptionhandling;
 
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.command.support.ApplicationWindowAwareCommand;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -70,7 +71,7 @@ public class ThrowExceptionCommand extends ApplicationWindowAwareCommand
     }
 
     private JFrame resolveParentFrame() {
-        ApplicationWindow activeWindow = applicationConfig.windowManager().getActiveWindow();
+        ApplicationWindow activeWindow = ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getActiveWindow();
         return (activeWindow == null) ? null : activeWindow.getControl();
     }
 

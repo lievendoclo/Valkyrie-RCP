@@ -1,25 +1,18 @@
 package org.valkyriercp.application.support;
 
-import java.awt.Image;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.StringUtils;
-import org.valkyriercp.application.Application;
-import org.valkyriercp.application.ApplicationDescriptor;
-import org.valkyriercp.application.ApplicationPageFactory;
-import org.valkyriercp.application.ApplicationWindow;
-import org.valkyriercp.application.ApplicationWindowFactory;
-import org.valkyriercp.application.PageDescriptor;
-import org.valkyriercp.application.WindowManager;
+import org.valkyriercp.application.*;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.image.ImageSource;
 import org.valkyriercp.image.NoSuchImageResourceException;
+
+import javax.annotation.PostConstruct;
+import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 //@Component
 public class DefaultApplication implements Application {

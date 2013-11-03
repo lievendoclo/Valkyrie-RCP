@@ -9,11 +9,10 @@ import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.EventTableModel;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.valkyriercp.binding.form.FieldFaceSource;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import java.util.HashMap;
  * @author Larry Streepy
  * @author Mathias Broekelmann
  */
-@Configurable
 public class GlazedTableModel extends EventTableModel {
 
     private static final EventList EMPTY_LIST = new BasicEventList();
@@ -48,8 +46,6 @@ public class GlazedTableModel extends EventTableModel {
 
     private final String modelId;
 
-    @Autowired
-    private FieldFaceSource fieldFaceSource;;
 
     public GlazedTableModel(String[] columnPropertyNames) {
         this(EMPTY_LIST, columnPropertyNames);
@@ -97,12 +93,8 @@ public class GlazedTableModel extends EventTableModel {
         setTableFormat(createTableFormat());
     }
 
-    public void setFieldFaceSource(FieldFaceSource fieldFaceSource) {
-        this.fieldFaceSource = fieldFaceSource;
-    }
-
     protected FieldFaceSource getFieldFaceSource() {
-        return fieldFaceSource;
+        return ValkyrieRepository.getInstance().getApplicationConfig().fieldFaceSource();
     }
 
     protected Object getColumnValue(Object row, int column) {

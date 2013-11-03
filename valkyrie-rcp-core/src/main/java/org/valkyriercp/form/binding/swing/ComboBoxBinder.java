@@ -2,7 +2,6 @@ package org.valkyriercp.form.binding.swing;
 
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.rules.closure.Closure;
 
 import javax.swing.*;

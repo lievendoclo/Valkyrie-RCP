@@ -1,6 +1,5 @@
 package org.valkyriercp.factory;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
 import org.valkyriercp.binding.value.ValueModel;

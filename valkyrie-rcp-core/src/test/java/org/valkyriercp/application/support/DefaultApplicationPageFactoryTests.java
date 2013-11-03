@@ -4,8 +4,9 @@ import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.application.ApplicationWindow;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for <code>DefaultApplicationPageFactory</code>

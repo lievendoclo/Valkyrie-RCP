@@ -5,8 +5,8 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
-import org.valkyriercp.security.AuthenticationAware;
 import org.springframework.security.core.Authentication;
+import org.valkyriercp.security.AuthenticationAware;
 
 /**
  * Extension of <code>HttpInvokerProxyFactoryBean</code> that supports the use of BASIC

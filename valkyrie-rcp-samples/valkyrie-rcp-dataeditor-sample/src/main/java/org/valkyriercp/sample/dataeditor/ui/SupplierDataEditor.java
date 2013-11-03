@@ -1,7 +1,6 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
 
-import org.valkyriercp.sample.dataeditor.domain.Item;
 import org.valkyriercp.sample.dataeditor.domain.Supplier;
 import org.valkyriercp.widget.editor.DefaultDataEditorWidget;
 import org.valkyriercp.widget.table.PropertyColumnTableDescription;
@@ -17,10 +16,10 @@ public class SupplierDataEditor extends DefaultDataEditorWidget
         super("supplierDataEditor");
         this.supplierDataProvider = supplierDataProvider;
 
+        init();
     }
 
-    @PostConstruct
-    public void postConstruct() {
+    public void init() {
         setDataProvider(supplierDataProvider);
         setDetailForm(new SupplierForm());
         setFilterForm(new SupplierFilterForm());

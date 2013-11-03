@@ -1,20 +1,15 @@
       package org.valkyriercp.sample.showcase.widget;
 
-import com.jgoodies.forms.layout.FormLayout;
-import net.miginfocom.swing.MigLayout;
-import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.form.binding.swing.TextComponentBinder;
-import org.valkyriercp.form.binding.swing.text.MaxLengthDocumentFactory;
-import org.valkyriercp.form.builder.FormLayoutFormBuilder;
-import org.valkyriercp.form.builder.MigLayoutFormBuilder;
-import org.valkyriercp.widget.AbstractWidgetForm;
-import org.valkyriercp.widget.TitledWidgetForm;
+      import net.miginfocom.swing.MigLayout;
+      import org.valkyriercp.binding.form.FormModel;
+      import org.valkyriercp.form.binding.swing.TextComponentBinder;
+      import org.valkyriercp.form.binding.swing.text.MaxLengthDocumentFactory;
+      import org.valkyriercp.form.builder.MigLayoutFormBuilder;
+      import org.valkyriercp.widget.AbstractWidgetForm;
+      import org.valkyriercp.widget.TitledWidgetForm;
 
-import javax.swing.*;
-import java.awt.*;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+      import javax.swing.*;
+      import java.math.BigDecimal;
 
 public class BinderDemoWidget extends TitledWidgetForm {
 
@@ -26,7 +21,7 @@ public class BinderDemoWidget extends TitledWidgetForm {
 
         @Override
         public FormModel createFormModel() {
-            return formModelFactory.createFormModel(new BinderDemo(), "binderDemoForm");
+            return getApplicationConfig().formModelFactory().createFormModel(new BinderDemo(), "binderDemoForm");
         }
 
         @Override

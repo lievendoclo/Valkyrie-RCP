@@ -1,6 +1,7 @@
 package org.valkyriercp.command.support;
 
 import org.valkyriercp.dialog.ApplicationDialog;
+import org.valkyriercp.util.ValkyrieRepository;
 import org.valkyriercp.widget.TitledWidgetApplicationDialog;
 
 import java.awt.*;
@@ -30,7 +31,7 @@ public class WidgetDialogCommand extends AbstractWidgetCommand
     protected ApplicationDialog createDialog()
     {
         ApplicationDialog newlyCreatedDialog = new TitledWidgetApplicationDialog(getWidget());
-        applicationConfig.applicationObjectConfigurer().configure(newlyCreatedDialog, getId());
+        ValkyrieRepository.getInstance().getApplicationConfig().applicationObjectConfigurer().configure(newlyCreatedDialog, getId());
         return newlyCreatedDialog;
     }
 

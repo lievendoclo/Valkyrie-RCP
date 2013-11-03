@@ -12,7 +12,7 @@ public class TodoForm  extends AbstractFocussableWidgetForm
 {
     @Override
     public FormModel createFormModel() {
-        return formModelFactory.createFormModel(new TodoItem(), "todoItemForm");
+        return getApplicationConfig().formModelFactory().createFormModel(new TodoItem(), "todoItemForm");
     }
 
     protected JComponent createFormControl()

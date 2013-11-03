@@ -1,13 +1,10 @@
 package org.valkyriercp.sample.dataeditor.ui;
 
 import com.google.common.base.Function;
-import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.swing.editor.LookupBinder;
-import org.valkyriercp.form.binding.swing.editor.LookupBinding;
 import org.valkyriercp.sample.dataeditor.domain.Supplier;
 import org.valkyriercp.sample.dataeditor.domain.SupplierFilter;
 
-import java.util.Map;
 import java.awt.*;
 
 public class SupplierBinder extends LookupBinder<Supplier>

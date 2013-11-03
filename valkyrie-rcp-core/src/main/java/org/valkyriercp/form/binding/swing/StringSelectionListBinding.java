@@ -68,7 +68,7 @@ public class StringSelectionListBinding extends CustomBinding
         String[] messages = new String[keys.length];
         for (int i = 0; i < messages.length; ++i)
         {
-            messages[i] = applicationConfig.messageResolver().getMessage(id, keys[i] == null ? "null" : keys[i].toString(),
+            messages[i] = getApplicationConfig().messageResolver().getMessage(id, keys[i] == null ? "null" : keys[i].toString(),
                     "label");
         }
         return messages;

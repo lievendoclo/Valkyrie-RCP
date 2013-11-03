@@ -7,7 +7,6 @@ import org.springframework.util.ClassUtils;
 import org.valkyriercp.binding.value.ObservableList;
 import org.valkyriercp.binding.value.ValueModel;
 
-import javax.annotation.PostConstruct;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.lang.reflect.Array;
@@ -59,10 +58,6 @@ public class BufferedCollectionValueModel extends BufferedValueModel {
         Assert.notNull(wrappedType);
         this.wrappedType = wrappedType;
         this.wrappedConcreteType = getConcreteCollectionType(wrappedType);
-    }
-
-    @PostConstruct
-    private void postConstructBufferedValueModel() {
         updateBufferedListModel(getWrappedValue());
         if (getValue() != bufferedListModel) {
             super.setValue(bufferedListModel);

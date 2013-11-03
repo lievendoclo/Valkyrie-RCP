@@ -1,7 +1,6 @@
 package org.valkyriercp.rules.constraint.property;
 
 import org.springframework.context.MessageSourceResolvable;
-import org.valkyriercp.rules.constraint.property.AbstractPropertyConstraint;
 import org.valkyriercp.rules.reporting.TypeResolvable;
 
 public abstract class AbstractTypeResolvablePropertyConstraint extends AbstractPropertyConstraint

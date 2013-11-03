@@ -7,7 +7,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -18,6 +17,7 @@ import org.valkyriercp.command.config.CommandFaceDescriptor;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.util.List;
 
@@ -25,7 +25,6 @@ import java.util.List;
  * @author Keith Donald
  */
 @Component
-@Configurable
 public class DefaultCommandManager implements CommandManager, BeanPostProcessor, BeanFactoryAware {
     private final Log logger = LogFactory.getLog(getClass());
 
@@ -60,9 +59,15 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
 
     public CommandServices getCommandServices() {
         if(commandServices == null) {
-            commandServices = applicationConfig.commandServices();
+            commandServices = getApplicationConfig().commandServices();
         }
         return commandServices;
+    }
+
+    public ApplicationConfig getApplicationConfig() {
+        if(applicationConfig == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig();
+        return applicationConfig;
     }
 
     public void setParent(CommandRegistry parent) {
@@ -70,6 +75,8 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
     }
 
     public CommandConfigurer getCommandConfigurer() {
+        if(commandConfigurer == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer();
         return commandConfigurer;
     }
 
@@ -310,7 +317,7 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
     @Override
     public CommandGroup createCommandGroup(final String groupId, final Object[] members,
                                            final boolean exclusive, final CommandConfigurer configurer) {
-		final CommandGroupFactoryBean groupFactory = new CommandGroupFactoryBean(groupId, null, commandConfigurer, members);
+		final CommandGroupFactoryBean groupFactory = new CommandGroupFactoryBean(groupId, null, getCommandConfigurer(), members);
 		groupFactory.setExclusive(exclusive);
 		return groupFactory.getCommandGroup();
 	}
@@ -325,7 +332,7 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
                 System.out.println(msg);
             }
         };
-        commandConfigurer.configure(newCommand);
+        getCommandConfigurer().configure(newCommand);
         return newCommand;
     }
 

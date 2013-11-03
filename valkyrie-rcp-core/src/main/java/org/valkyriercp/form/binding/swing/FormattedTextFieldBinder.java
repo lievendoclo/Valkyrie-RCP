@@ -3,7 +3,6 @@ package org.valkyriercp.form.binding.swing;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
-import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.AbstractBinder;
 

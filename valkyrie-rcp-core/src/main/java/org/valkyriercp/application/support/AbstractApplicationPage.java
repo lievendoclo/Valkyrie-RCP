@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 import org.valkyriercp.application.*;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.util.EventListenerListHelper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -404,6 +405,8 @@ public abstract class AbstractApplicationPage extends AbstractControlFactory imp
     }
 
     public PageComponentPaneFactory getPageComponentPaneFactory() {
+        if(pageComponentPaneFactory == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().pageComponentPaneFactory();
         return pageComponentPaneFactory;
     }
 }

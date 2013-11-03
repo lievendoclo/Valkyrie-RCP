@@ -1,17 +1,17 @@
 package org.valkyriercp.sample.simple.ui;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.springframework.util.StringUtils;
 import org.valkyriercp.binding.format.Formatter;
 import org.valkyriercp.binding.format.InvalidFormatException;
 import org.valkyriercp.binding.format.support.AbstractFormatter;
 import org.valkyriercp.binding.format.support.DateFormatter;
 import org.valkyriercp.binding.format.support.SimpleFormatterFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple formatter factory that returns a custom date/time formatter.  By default, this 

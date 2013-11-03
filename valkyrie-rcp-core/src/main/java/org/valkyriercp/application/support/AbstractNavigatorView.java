@@ -1,7 +1,5 @@
 package org.valkyriercp.application.support;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupJComponentBuilder;

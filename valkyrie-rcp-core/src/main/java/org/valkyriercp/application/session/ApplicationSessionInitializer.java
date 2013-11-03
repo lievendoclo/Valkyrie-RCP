@@ -1,7 +1,5 @@
 package org.valkyriercp.application.session;
 
-import org.valkyriercp.command.support.AbstractCommand;
-
 import java.util.List;
 import java.util.Map;
 

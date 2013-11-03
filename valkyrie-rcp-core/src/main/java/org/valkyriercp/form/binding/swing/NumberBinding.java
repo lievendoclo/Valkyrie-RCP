@@ -1,7 +1,5 @@
 package org.valkyriercp.form.binding.swing;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.component.BigDecimalTextField;

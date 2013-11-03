@@ -1,17 +1,13 @@
 package org.valkyriercp.binding.form.support;
 
 import org.junit.Test;
-import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.service.StaticConversionExecutor;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.form.ValidatingFormModel;
 import org.valkyriercp.binding.support.BeanPropertyAccessStrategy;
-import org.valkyriercp.test.TestBean;
-import org.valkyriercp.test.TestPropertyChangeListener;
 import org.valkyriercp.binding.validation.ValidationMessage;
 import org.valkyriercp.binding.validation.ValidationResults;
 import org.valkyriercp.binding.validation.ValidationResultsModel;
@@ -26,7 +22,8 @@ import org.valkyriercp.test.TestPropertyChangeListener;
 
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for @link DefaultFormModel

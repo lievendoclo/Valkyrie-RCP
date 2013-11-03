@@ -1,7 +1,5 @@
 package org.valkyriercp.form.builder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.component.DefaultMessageAreaModel;
@@ -11,14 +9,11 @@ import org.valkyriercp.core.Guarded;
 import org.valkyriercp.core.Messagable;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.Severity;
-import org.valkyriercp.image.IconSource;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 
-@Configurable
-public class OverlayValidationInterceptorFactory implements FormComponentInterceptorFactory {
-    @Autowired
-    private IconSource iconSource;
+public class OverlayValidationInterceptorFactory implements FormComponentInterceptorFactory {;
 
     public FormComponentInterceptor getInterceptor(FormModel formModel) {
         return new OverlayValidationInterceptor(formModel);
@@ -216,7 +211,7 @@ public class OverlayValidationInterceptorFactory implements FormComponentInterce
             setToolTipText(message.getMessage());
             Severity severity = message.getSeverity();
             if (severity != null)
-                setIcon(iconSource.getIcon("severity." + severity.getLabel() + ".overlay"));
+                setIcon(ValkyrieRepository.getInstance().getApplicationConfig().iconSource().getIcon("severity." + severity.getLabel() + ".overlay"));
             else
                 setIcon(null);
         }

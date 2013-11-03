@@ -1,9 +1,6 @@
 package org.valkyriercp.dialog;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.config.ApplicationObjectConfigurer;
 import org.valkyriercp.component.DefaultMessageAreaModel;
 import org.valkyriercp.core.Guarded;
 import org.valkyriercp.core.Message;
@@ -11,6 +8,7 @@ import org.valkyriercp.core.support.LabeledObjectSupport;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.factory.ControlFactory;
 import org.valkyriercp.image.config.IconConfigurable;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -25,7 +23,6 @@ import java.beans.PropertyChangeListener;
  * @author Keith Donald
  * @see DialogPage
  */
-@Configurable
 public abstract class AbstractDialogPage extends LabeledObjectSupport implements DialogPage, ControlFactory, Guarded,
         IconConfigurable {
 
@@ -40,9 +37,6 @@ public abstract class AbstractDialogPage extends LabeledObjectSupport implements
 	private DefaultMessageAreaModel messageBuffer;
 
 	private boolean visible = true;
-
-    @Autowired
-    private ApplicationObjectConfigurer applicationObjectConfigurer;
 
 	private AbstractControlFactory factory = new AbstractControlFactory() {
 		public JComponent createControl() {
@@ -73,6 +67,7 @@ public abstract class AbstractDialogPage extends LabeledObjectSupport implements
 		this.messageBuffer = new DefaultMessageAreaModel(this);
 		this.messageBuffer.addPropertyChangeListener(messageChangeHandler);
 		setId(pageId, autoConfigure);
+        configure();
 	}
 
 	/**
@@ -121,13 +116,12 @@ public abstract class AbstractDialogPage extends LabeledObjectSupport implements
 		firePropertyChange("id", oldValue, pageId);
 	}
 
-    @PostConstruct
     private void configure() {
         if (autoConfigure) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Auto configuring dialog page with id " + pageId);
 			}
-			applicationObjectConfigurer.configure(this, pageId);
+			ValkyrieRepository.getInstance().getApplicationConfig().applicationObjectConfigurer().configure(this, pageId);
 		}
     }
 

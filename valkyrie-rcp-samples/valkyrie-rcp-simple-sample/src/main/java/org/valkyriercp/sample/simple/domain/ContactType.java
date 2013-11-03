@@ -15,8 +15,6 @@
  */
 package org.valkyriercp.sample.simple.domain;
 
-import org.springframework.core.enums.ShortCodedLabeledEnum;
-
 /**
  * This class provides the Enums to indicate the type of contact, personal or business.
  * @author Larry Streepy

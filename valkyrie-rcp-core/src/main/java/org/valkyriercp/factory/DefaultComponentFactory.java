@@ -2,19 +2,11 @@ package org.valkyriercp.factory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdesktop.swingx.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.core.enums.LabeledEnum;
-import org.springframework.core.enums.LabeledEnumResolver;
-import org.springframework.util.comparator.ComparableComparator;
-import org.springframework.util.comparator.CompoundComparator;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.config.CommandButtonLabelInfo;
@@ -24,14 +16,13 @@ import org.valkyriercp.image.IconSource;
 import org.valkyriercp.util.Alignment;
 import org.valkyriercp.util.GuiStandardUtils;
 import org.valkyriercp.util.UIConstants;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Default component factory implementation that delegates to JGoodies component
@@ -39,61 +30,25 @@ import java.util.Collection;
  *
  * @author Keith Donald
  */
-@Configurable
 public class DefaultComponentFactory implements ComponentFactory, MessageSourceAware {
 
 	private final Log logger = LogFactory.getLog(getClass());
 
-    @Autowired
-	private MessageSourceAccessor messages;
-
-    @Autowired
-	private IconSource iconSource;
-
-    @Autowired
-	private ButtonFactory buttonFactory;
-
-    @Autowired
-	private MenuFactory menuFactory;
-
-    @Autowired
-	private MessageSource messageSource;
-
-    @Autowired
-	private TableFactory tableFactory;
-
 	private int textFieldColumns = 25;
+    private MessageSource messageSource;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-		this.messages = new MessageSourceAccessor(messageSource);
-	}
 
-	/**
-	 * Set the source for retrieving icons.
-	 */
-	public void setIconSource(IconSource iconSource) {
-		this.iconSource = iconSource;
-	}
+    public TableFactory getTableFactory() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().tableFactory();
+    }
 
-	/**
-	 * Set the button factory.
-	 */
-	public void setButtonFactory(ButtonFactory buttonFactory) {
-		this.buttonFactory = buttonFactory;
-	}
+    public MessageSource getMessageSource() {
+        if(messageSource == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().messageSource();
+        return messageSource;
+    }
 
-	/**
-	 * Set the menu factory.
-	 */
-	public void setMenuFactory(MenuFactory menuFactory) {
-		this.menuFactory = menuFactory;
-	}
-
-	/**
+    /**
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey) {
@@ -174,7 +129,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * Returns the messageSourceAccessor.
 	 */
 	private MessageSourceAccessor getMessages() {
-		return messages;
+		return ValkyrieRepository.getInstance().getApplicationConfig().messageSourceAccessor();
 	}
 
 	/**
@@ -184,7 +139,12 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		return new LabelTextRefresher(labelKey, argumentValueHolders).getLabel();
 	}
 
-	private class LabelTextRefresher implements PropertyChangeListener {
+    @Override
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    private class LabelTextRefresher implements PropertyChangeListener {
 
 		private String labelKey;
 
@@ -272,7 +232,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	protected ButtonFactory getButtonFactory() {
-		return buttonFactory;
+		return ValkyrieRepository.getInstance().getApplicationConfig().buttonFactory();
 	}
 
 	public JComponent createLabeledSeparator(String labelKey) {
@@ -325,7 +285,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	protected MenuFactory getMenuFactory() {
-		return menuFactory;
+		return ValkyrieRepository.getInstance().getApplicationConfig().menuFactory();
 	}
 
 	public JComponent createLabeledSeparator(String labelKey, Alignment alignment) {
@@ -462,7 +422,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * Returns the icon source.
 	 */
 	private IconSource getIconSource() {
-		return iconSource;
+		return ValkyrieRepository.getInstance().getApplicationConfig().iconSource();
 	}
 
 	/**
@@ -472,7 +432,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable() {
-		return (tableFactory != null) ? tableFactory.createTable() : new JTable();
+		return (getTableFactory() != null) ? getTableFactory().createTable() : new JTable();
 	}
 
 	/**
@@ -483,19 +443,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * @return The new table.
 	 */
 	public JTable createTable(TableModel model) {
-		return (tableFactory != null) ? tableFactory.createTable(model) : new JTable(model);
-	}
-
-	/**
-	 * Allow configuration via XML of a table factory. A simple interface for
-	 * creating JTable object, this allows the developer to create an
-	 * application specific table factory where, say, each tables have a set of
-	 * renderers installed, are sortable, etc.
-	 *
-	 * @param tableFactory the table factory to use
-	 */
-	public void setTableFactory(TableFactory tableFactory) {
-		this.tableFactory = tableFactory;
+		return (getTableFactory() != null) ? getTableFactory().createTable(model) : new JTable(model);
 	}
 
 	/**

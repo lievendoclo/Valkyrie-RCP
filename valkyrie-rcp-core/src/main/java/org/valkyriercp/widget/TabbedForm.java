@@ -21,6 +21,13 @@ public abstract class TabbedForm extends AbstractFocussableWidgetForm implements
 
     private JTabbedPane tabbedPane = null;
 
+    protected TabbedForm() {
+    }
+
+    protected TabbedForm(String id) {
+        super(id);
+    }
+
     protected JTabbedPane getTabbedPane()
     {
         return tabbedPane;

@@ -2,24 +2,12 @@ package org.valkyriercp.dialog;
 
 //package org.springframework.richclient.dialog;
 
-import java.awt.Window;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
-
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.ValidatingFormModel;
 import org.valkyriercp.component.DefaultMessageAreaPane;
 import org.valkyriercp.component.MessagePane;
 import org.valkyriercp.core.Messagable;
 import org.valkyriercp.core.Message;
-import org.valkyriercp.dialog.ApplicationDialog;
-import org.valkyriercp.dialog.CloseAction;
 import org.valkyriercp.form.FormGuard;
 import org.valkyriercp.form.FormModelFactory;
 import org.valkyriercp.form.SimpleValidationResultsReporter;
@@ -27,6 +15,13 @@ import org.valkyriercp.form.binding.swing.SwingBindingFactory;
 import org.valkyriercp.layout.TableLayoutBuilder;
 import org.valkyriercp.rules.closure.Closure;
 import org.valkyriercp.rules.constraint.Constraint;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeListener;
 //import org.springframework.binding.form.ValidatingFormModel;
 //import org.springframework.rules.closure.Closure;
 //import org.springframework.rules.constraint.Constraint;

@@ -2,10 +2,8 @@ package org.valkyriercp.application.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.factory.AbstractControlFactory;
-import org.valkyriercp.progress.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -110,7 +108,7 @@ public class StatusBarProgressMonitor extends AbstractControlFactory implements
 
 	public Icon getCancelIcon() {
 		if (cancelIcon == null) {
-			cancelIcon = applicationConfig.iconSource().getIcon("cancel.icon");
+			cancelIcon = getApplicationConfig().iconSource().getIcon("cancel.icon");
 		}
 
 		return cancelIcon;

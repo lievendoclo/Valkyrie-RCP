@@ -1,7 +1,6 @@
 package org.valkyriercp.command.support;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import javax.swing.*;

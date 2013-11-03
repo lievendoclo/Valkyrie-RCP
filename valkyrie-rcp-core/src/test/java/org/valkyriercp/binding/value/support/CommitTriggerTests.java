@@ -1,11 +1,10 @@
 package org.valkyriercp.binding.value.support;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.valkyriercp.binding.value.CommitTrigger;
 import org.valkyriercp.binding.value.CommitTriggerListener;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Tests class {@link CommitTrigger}.

@@ -1,11 +1,8 @@
 package org.valkyriercp.form.binding.support;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;

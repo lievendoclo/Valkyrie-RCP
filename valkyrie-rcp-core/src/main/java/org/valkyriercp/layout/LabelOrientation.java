@@ -1,7 +1,5 @@
 package org.valkyriercp.layout;
 
-import org.springframework.core.enums.ShortCodedLabeledEnum;
-
 import javax.swing.*;
 
 public enum LabelOrientation {

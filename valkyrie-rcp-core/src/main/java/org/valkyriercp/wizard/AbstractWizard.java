@@ -2,13 +2,11 @@ package org.valkyriercp.wizard;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.form.Form;
 import org.valkyriercp.util.EventListenerListHelper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import java.util.List;
  *
  * @author Keith Donald
  */
-@Configurable
 public abstract class AbstractWizard implements Wizard, TitleConfigurable {
 
     /** The key that will be used to retrieve the default page image icon for the wizard. */
@@ -50,10 +47,6 @@ public abstract class AbstractWizard implements Wizard, TitleConfigurable {
     private EventListenerListHelper listeners = new EventListenerListHelper(WizardListener.class);
 
     private boolean autoConfigureChildPages = true;
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
     /**
      * Creates a new uninitialized {@code AbstractWizard}.
      */
@@ -170,7 +163,7 @@ public abstract class AbstractWizard implements Wizard, TitleConfigurable {
         page.setWizard(this);
         if (autoConfigureChildPages) {
             String key = ((wizardConfigurationKey != null) ? wizardConfigurationKey + "." : "") + page.getId();
-            applicationConfig.applicationObjectConfigurer().configure(page, key);
+            ValkyrieRepository.getInstance().getApplicationConfig().applicationObjectConfigurer().configure(page, key);
         }
     }
 
@@ -227,7 +220,7 @@ public abstract class AbstractWizard implements Wizard, TitleConfigurable {
      * Returns the image stored under the key {@value #DEFAULT_IMAGE_KEY}.
      */
     public Image getDefaultPageImage() {
-        return applicationConfig.imageSource().getImage(DEFAULT_IMAGE_KEY);
+        return ValkyrieRepository.getInstance().getApplicationConfig().imageSource().getImage(DEFAULT_IMAGE_KEY);
     }
 
     /**

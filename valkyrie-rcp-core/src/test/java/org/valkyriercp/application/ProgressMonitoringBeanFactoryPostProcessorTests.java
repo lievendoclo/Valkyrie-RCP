@@ -1,16 +1,12 @@
 package org.valkyriercp.application;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.context.support.StaticMessageSource;
 import org.valkyriercp.application.support.ProgressMonitoringBeanFactoryPostProcessor;
 import org.valkyriercp.progress.NullProgressMonitor;
 import org.valkyriercp.progress.ProgressMonitor;
-
-import java.util.Locale;
 
 /**
  * This class provides a suite of unit tests for the

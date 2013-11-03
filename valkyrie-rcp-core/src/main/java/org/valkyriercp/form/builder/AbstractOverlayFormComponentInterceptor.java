@@ -6,6 +6,7 @@ import org.valkyriercp.binding.form.FieldMetadata;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.component.OverlayService;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -41,6 +42,8 @@ public abstract class AbstractOverlayFormComponentInterceptor extends AbstractFo
      * @return the overlay service.
      */
     public final OverlayService getOverlayService() {
+        if(overlayService == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().overlayService();
         return this.overlayService;
     }
 

@@ -2,6 +2,7 @@ package org.valkyriercp.command.support;
 
 import org.valkyriercp.command.config.CommandButtonConfigurer;
 import org.valkyriercp.factory.ButtonFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -19,13 +20,8 @@ public class SplitPaneExpansionToggleCommand extends ActionCommand
     {
         super(commandId);
         this.model = new SplitPaneExpansionButtonModel(splitPane, switchedAway);
+        ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer().configure(this);
     }
-
-    @PostConstruct
-    private void postConstruct() {
-        applicationConfig.commandConfigurer().configure(this);
-    }
-
 
     protected void doExecuteCommand()
     {

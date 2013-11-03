@@ -1,16 +1,11 @@
 package org.valkyriercp.form.builder;
 
-import java.util.Locale;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.valkyriercp.binding.form.FormModel;
+
+import javax.swing.*;
+import java.util.Locale;
 
 /**
  * <code>FormComponentInterceptor</code> that allows customization on how a
@@ -21,7 +16,6 @@ import org.valkyriercp.binding.form.FormModel;
  * 
  * @author Peter De Bruycker
  */
-@Configurable
 public class CheckBoxFormComponentInterceptor extends
 		AbstractFormComponentInterceptor {
 
@@ -30,7 +24,6 @@ public class CheckBoxFormComponentInterceptor extends
 
 	private String textKey = "text";
 
-	@Autowired
 	private MessageSource messageSource;
 
 	public CheckBoxFormComponentInterceptor(FormModel formModel,

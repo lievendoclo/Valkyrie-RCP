@@ -4,7 +4,6 @@ import org.jdesktop.swingx.JXDatePicker;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binding;
-import org.valkyriercp.form.binding.support.AbstractBinder;
 
 import javax.swing.*;
 import java.util.Map;

@@ -1,7 +1,5 @@
 package org.valkyriercp.application;
 
-import org.valkyriercp.application.ViewDescriptor;
-
 /**
  * A registry for {@link ViewDescriptor} definitions.
  *

@@ -1,6 +1,5 @@
 package org.valkyriercp.binding.validation;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.binding.validation.support.DefaultValidationMessage;

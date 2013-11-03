@@ -1,13 +1,12 @@
 package org.valkyriercp.binding.form.support;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.valkyriercp.binding.PropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
 import org.valkyriercp.test.TestBean;
-import org.valkyriercp.test.TestBean;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class FormModelPropertyAccessStrategyTests
 {

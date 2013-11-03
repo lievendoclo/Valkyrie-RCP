@@ -7,7 +7,6 @@ import org.springframework.security.access.ConfigAttributeEditor;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

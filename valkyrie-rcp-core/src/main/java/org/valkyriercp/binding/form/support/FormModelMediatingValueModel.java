@@ -1,13 +1,12 @@
 package org.valkyriercp.binding.form.support;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.binding.value.DirtyTrackingValueModel;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.AbstractValueModelWrapper;
 import org.valkyriercp.binding.value.support.ValueHolder;
 import org.valkyriercp.util.EventListenerListHelper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -58,7 +57,6 @@ import java.util.Iterator;
  *
  * @author Oliver Hutchison
  */
-@Configurable
 public class FormModelMediatingValueModel extends AbstractValueModelWrapper implements DirtyTrackingValueModel,
         PropertyChangeListener {
 
@@ -80,9 +78,6 @@ public class FormModelMediatingValueModel extends AbstractValueModelWrapper impl
 
 	/** Dirty tracking can be disabled. */
 	private final boolean trackDirty;
-
-	@Autowired
-	private ValueChangeDetector valueChangeDetector;
 
 	/**
 	 * Constructor which defaults <code>trackDirty=true</code>.
@@ -182,19 +177,11 @@ public class FormModelMediatingValueModel extends AbstractValueModelWrapper impl
 	}
 
 	/**
-	 * @param valueChangeDetector set the {@link ValueChangeDetector} to use
-	 * when checking the dirty state.
-	 */
-	public void setValueChangeDetector(ValueChangeDetector valueChangeDetector) {
-		this.valueChangeDetector = valueChangeDetector;
-	}
-
-	/**
 	 * @return a {@link ValueChangeDetector} to use when checking the dirty
 	 * state.
 	 */
 	protected ValueChangeDetector getValueChangeDetector() {
-		return valueChangeDetector;
+		return ValkyrieRepository.getInstance().getApplicationConfig().valueChangeDetector();
 	}
 
 	public void addValueChangeListener(PropertyChangeListener listener) {

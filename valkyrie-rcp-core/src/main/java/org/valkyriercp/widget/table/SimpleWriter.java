@@ -1,5 +1,4 @@
 package org.valkyriercp.widget.table;
-import org.valkyriercp.widget.table.SimpleAccessor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -19,7 +19,7 @@ import org.valkyriercp.sample.simple.domain.Contact;
 import org.valkyriercp.sample.simple.domain.ContactDataStore;
 import org.valkyriercp.table.support.AbstractObjectTable;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 /**
  * This class provides a concrete implementation of a table showing {@link Contact} objects.

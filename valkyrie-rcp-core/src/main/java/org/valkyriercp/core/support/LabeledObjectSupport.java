@@ -2,12 +2,9 @@ package org.valkyriercp.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.command.config.CommandButtonLabelInfo;
 import org.valkyriercp.command.config.CommandLabelConfigurable;
 import org.valkyriercp.core.DescribedElement;

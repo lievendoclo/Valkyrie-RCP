@@ -15,10 +15,11 @@ public class ItemDataEditor extends DefaultDataEditorWidget
     {
         super("itemDataEditor");
         this.itemDataProvider = itemDataProvider;
+
+        init();
     }
 
-    @PostConstruct
-    public void postConstruct() {
+    public void init() {
         setDataProvider(itemDataProvider);
         setDetailForm(new ItemForm());
         setFilterForm(new ItemFilterForm());

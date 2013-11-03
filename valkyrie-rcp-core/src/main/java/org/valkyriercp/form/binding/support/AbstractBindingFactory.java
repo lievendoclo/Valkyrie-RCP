@@ -1,9 +1,6 @@
 package org.valkyriercp.form.binding.support;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.BinderSelectionStrategy;
@@ -11,8 +8,8 @@ import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.BindingFactory;
 import org.valkyriercp.form.builder.FormComponentInterceptor;
 import org.valkyriercp.form.builder.FormComponentInterceptorFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,27 +20,16 @@ import java.util.Map;
  *
  * @author Oliver Hutchison
  */
-@Configurable
 public abstract class AbstractBindingFactory implements BindingFactory {
-
-    @Autowired
-    private BinderSelectionStrategy binderSelectionStrategy;
 
     private FormModel formModel;
 
     private FormComponentInterceptor interceptor;
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
     protected AbstractBindingFactory(FormModel formModel) {
         Assert.notNull(formModel, "formModel can not be null.");
         this.formModel = formModel;
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        FormComponentInterceptorFactory factory = applicationConfig.formComponentInterceptorFactory();
+        FormComponentInterceptorFactory factory = ValkyrieRepository.getInstance().getApplicationConfig().formComponentInterceptorFactory();
         interceptor = factory.getInterceptor(formModel);
     }
 
@@ -94,11 +80,7 @@ public abstract class AbstractBindingFactory implements BindingFactory {
     }
 
     protected BinderSelectionStrategy getBinderSelectionStrategy() {
-        return binderSelectionStrategy;
-    }
-
-    public void setBinderSelectionStrategy(BinderSelectionStrategy binderSelectionStrategy) {
-        this.binderSelectionStrategy = binderSelectionStrategy;
+        return ValkyrieRepository.getInstance().getApplicationConfig().binderSelectionStrategy();
     }
 
     protected Map createContext(String key, Object value) {

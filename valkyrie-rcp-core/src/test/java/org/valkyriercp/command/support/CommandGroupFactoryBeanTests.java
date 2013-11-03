@@ -1,12 +1,8 @@
 package org.valkyriercp.command.support;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
 import org.junit.Test;
 import org.valkyriercp.AbstractValkyrieTest;
-import org.valkyriercp.application.PropertyNotSetException;
-import org.valkyriercp.command.CommandConfigurer;
 
 /**
  * Provides a suite of unit tests for the {@link CommandGroupFactoryBean} class.

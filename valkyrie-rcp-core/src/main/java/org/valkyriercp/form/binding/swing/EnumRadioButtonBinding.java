@@ -1,30 +1,21 @@
 package org.valkyriercp.form.binding.swing;
 
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import org.springframework.util.Assert;
+import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.form.binding.support.CustomBinding;
+import org.valkyriercp.util.ValkyrieRepository;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.util.Assert;
-import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.form.binding.support.CustomBinding;
-
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Radiobutton binding for Enum values.
@@ -39,7 +30,6 @@ import com.jgoodies.forms.layout.RowSpec;
  * @author Lieven Doclo
  * 
  */
-@Configurable(preConstruction = true)
 public class EnumRadioButtonBinding extends CustomBinding {
 
 	private JPanel contentPanel;
@@ -53,9 +43,6 @@ public class EnumRadioButtonBinding extends CustomBinding {
 	private ButtonGroup group;
 
 	private boolean horizontalLayout = false;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
 
 	public EnumRadioButtonBinding(JPanel contentPanel, FormModel formModel,
 			String formPropertyPath, Class<?> propertyType,
@@ -157,13 +144,13 @@ public class EnumRadioButtonBinding extends CustomBinding {
 			ContainerJRadioButton<Enum> button = new ContainerJRadioButton<Enum>();
 			String text;
 			if (enumValue == null) {
-				text = messageSourceAccessor.getMessage(propertyType.getName()
-						+ ".null", "null");
+				text = ValkyrieRepository.getInstance().getApplicationConfig().messageSourceAccessor().getMessage(propertyType.getName()
+                        + ".null", "null");
 				button.setText(text == null ? propertyType.getName() + ".null"
 						: text);
 			} else {
-				text = messageSourceAccessor.getMessage(propertyType.getName()
-						+ "." + enumValue.name(), enumValue.name());
+				text = ValkyrieRepository.getInstance().getApplicationConfig().messageSourceAccessor().getMessage(propertyType.getName()
+                        + "." + enumValue.name(), enumValue.name());
 				button.setText(text == null ? propertyType.getName() + "."
 						+ enumValue.name() : text);
 			}

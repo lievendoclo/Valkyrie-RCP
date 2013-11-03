@@ -1,19 +1,15 @@
 package org.valkyriercp.application.splash;
 
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.net.URL;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.valkyriercp.component.ShadowBorderFrame;
 import org.valkyriercp.util.WindowUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 /**
  * An abstract helper implementation of the {@link SplashScreen} interface.

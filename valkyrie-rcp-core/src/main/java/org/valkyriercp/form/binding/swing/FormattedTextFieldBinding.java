@@ -4,7 +4,6 @@ import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.swing.FormattedTextFieldAdapter;
 import org.valkyriercp.binding.value.swing.ValueCommitPolicy;
-import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.AbstractBinding;
 
 import javax.swing.*;

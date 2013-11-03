@@ -6,7 +6,6 @@ import com.jgoodies.forms.layout.Size;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandGroupListener;
 import org.valkyriercp.command.CommandRegistry;
 import org.valkyriercp.command.GroupContainerPopulator;
@@ -23,7 +22,6 @@ import javax.swing.event.EventListenerList;
 import java.awt.*;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Implementation of an {@link AbstractCommand} that groups a collection of

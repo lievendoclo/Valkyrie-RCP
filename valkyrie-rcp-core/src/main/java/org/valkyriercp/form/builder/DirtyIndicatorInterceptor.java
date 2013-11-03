@@ -1,7 +1,5 @@
 package org.valkyriercp.form.builder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueChangeDetector;
@@ -152,7 +150,7 @@ public class DirtyIndicatorInterceptor extends AbstractFormComponentInterceptor 
 			getControl().setSize(getControl().getPreferredSize());
 
 			if (visible) {
-				MessageSource messageSource = applicationConfig.messageSource();
+				MessageSource messageSource = getApplicationConfig().messageSource();
 				String dirtyTooltip = messageSource.getMessage(DIRTY_MESSAGE_KEY, new Object[] {
 						formModel.getFieldFace(propertyName).getDisplayName(), originalValueHolder.getValue() }, Locale
 						.getDefault());

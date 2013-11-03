@@ -1,27 +1,18 @@
 package org.valkyriercp.form.binding.swing;
 
-import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.ComboBoxEditor;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.image.IconSource;
+import org.valkyriercp.util.ValkyrieRepository;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -48,13 +39,7 @@ import org.valkyriercp.image.IconSource;
  * @author Lieven Doclo
  * 
  */
-@Configurable
 public class EnumComboBoxBinder extends ComboBoxBinder {
-	@Autowired
-	private MessageResolver messageResolver;
-
-	@Autowired
-	private IconSource iconSource;
 
 	public enum NullEnum {
 		NULL {
@@ -115,7 +100,7 @@ public class EnumComboBoxBinder extends ComboBoxBinder {
 
 		for (Enum e : enumPropertyType.getEnumConstants()) {
 			String messageKey = enumPropertyType.getName() + "." + e.name();
-			String desc = messageResolver.getMessage(messageKey);
+			String desc = getMessageResolver().getMessage(messageKey);
 			if (!StringUtils.isEmpty(desc)) {
 				out.add(e);
 			} else {
@@ -164,14 +149,14 @@ public class EnumComboBoxBinder extends ComboBoxBinder {
 			String label = "";
 			Icon icon;
 			if (value == null || value == NullEnum.NULL) {
-				label = messageResolver
+				label = getMessageResolver()
 						.getMessage(enumType.getName() + ".null");
-				icon = iconSource.getIcon(enumType.getName() + ".null");
+				icon = getIconSource().getIcon(enumType.getName() + ".null");
 			} else {
-				label = messageResolver.getMessage(enumType.getName() + "."
-						+ valueEnum.name());
-				icon = iconSource.getIcon(enumType.getName() + "."
-						+ valueEnum.name());
+				label = getMessageResolver().getMessage(enumType.getName() + "."
+                        + valueEnum.name());
+				icon = getIconSource().getIcon(enumType.getName() + "."
+                        + valueEnum.name());
 			}
 			setText(label);
 			setIcon(icon);
@@ -244,11 +229,19 @@ public class EnumComboBoxBinder extends ComboBoxBinder {
 			if (value != null && value != NullEnum.NULL) {
 				Enum valueEnum = (Enum) value;
 				Class<? extends Enum> valueClass = valueEnum.getClass();
-				inner.setItem(messageResolver.getMessage(valueClass.getName()
-						+ "." + valueEnum.name()));
+				inner.setItem(getMessageResolver().getMessage(valueClass.getName()
+                        + "." + valueEnum.name()));
 			} else {
 				inner.setItem(NullEnum.NULL);
 			}
 		}
 	}
+
+    public MessageResolver getMessageResolver() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().messageResolver();
+    }
+
+    public IconSource getIconSource() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().iconSource();
+    }
 }

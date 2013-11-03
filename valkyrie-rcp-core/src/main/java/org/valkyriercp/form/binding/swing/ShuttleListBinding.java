@@ -1,15 +1,11 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.MessageSource;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.BufferedCollectionValueModel;
 import org.valkyriercp.binding.value.support.ListListModel;
 import org.valkyriercp.component.ShuttleList;
 import org.valkyriercp.form.binding.support.AbstractBinding;
-import org.valkyriercp.image.IconSource;
 import org.valkyriercp.list.DynamicListModel;
 
 import javax.swing.*;
@@ -27,14 +23,7 @@ import java.util.Iterator;
  *
  * @author lstreepy
  */
-@Configurable
 public class ShuttleListBinding extends AbstractBinding {
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private IconSource iconSource;
 
 	private ShuttleList list;
 
@@ -141,16 +130,16 @@ public class ShuttleListBinding extends AbstractBinding {
 
 		if (getFormId() != null) {
 			if (getProperty() != null) {
-				text = messageSource.getMessage(getFormId() + "." + getProperty() + "." + key, null, null, null);
+				text = getApplicationConfig().messageSource().getMessage(getFormId() + "." + getProperty() + "." + key, null, null, null);
 			}
 
 			if (text == null) {
-				text = messageSource.getMessage(getFormId() + "." + key, null, null, null);
+				text = getApplicationConfig().messageSource().getMessage(getFormId() + "." + key, null, null, null);
 			}
 		}
 
 		if (text == null) {
-			text = messageSource.getMessage(key, null, defaultMsg, null);
+			text = getApplicationConfig().messageSource().getMessage(key, null, defaultMsg, null);
 		}
 
 		return text;
@@ -166,11 +155,11 @@ public class ShuttleListBinding extends AbstractBinding {
 		Icon icon = null;
 
 		if (getFormId() != null) {
-			icon = iconSource.getIcon(getFormId() + ".shuttleList.edit");
+			icon = getApplicationConfig().iconSource().getIcon(getFormId() + ".shuttleList.edit");
 		}
 
 		if (icon == null) {
-			icon = iconSource.getIcon("shuttleList.edit");
+			icon = getApplicationConfig().iconSource().getIcon("shuttleList.edit");
 		}
 		return icon;
 	}
@@ -419,7 +408,7 @@ public class ShuttleListBinding extends AbstractBinding {
 		this.formId = formId;
 	}
 
-	/**
+    /**
 	 * Inner class to mediate the list selection events into calls to
 	 * {@link #updateSelectionHolderFromList}.
 	 */

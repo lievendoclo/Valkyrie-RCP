@@ -3,27 +3,17 @@ package org.valkyriercp.taskpane;
 import com.l2fprod.common.swing.JLinkButton;
 import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
-import org.jdesktop.swingx.JXHyperlink;
-import org.jdesktop.swingx.JXTaskPane;
-import org.jdesktop.swingx.JXTaskPaneContainer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupJComponentBuilder;
-import org.valkyriercp.image.IconSource;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-@Configurable
 public class JTaskPaneBuilder extends CommandGroupJComponentBuilder
 {
-    @Autowired
-    private IconSource iconSource = null;
-
     private boolean onlyOneExpanded = true;
     private JTaskPaneCommandButtonConfigurer configurer = new JTaskPaneCommandButtonConfigurer();
 

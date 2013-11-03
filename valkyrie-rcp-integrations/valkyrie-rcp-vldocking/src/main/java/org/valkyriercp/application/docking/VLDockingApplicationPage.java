@@ -15,15 +15,8 @@
  */
 package org.valkyriercp.application.docking;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.swing.JComponent;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.vlsolutions.swing.docking.*;
+import com.vlsolutions.swing.docking.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -31,18 +24,9 @@ import org.valkyriercp.application.*;
 import org.valkyriercp.application.support.AbstractApplicationPage;
 import org.xml.sax.SAXException;
 
-import com.vlsolutions.swing.docking.DockKey;
-import com.vlsolutions.swing.docking.Dockable;
-import com.vlsolutions.swing.docking.DockableResolver;
-import com.vlsolutions.swing.docking.DockableState;
-import com.vlsolutions.swing.docking.DockingContext;
-import com.vlsolutions.swing.docking.DockingDesktop;
-import com.vlsolutions.swing.docking.event.DockableSelectionEvent;
-import com.vlsolutions.swing.docking.event.DockableSelectionListener;
-import com.vlsolutions.swing.docking.event.DockableStateChangeEvent;
-import com.vlsolutions.swing.docking.event.DockableStateChangeListener;
-import com.vlsolutions.swing.docking.event.DockableStateWillChangeEvent;
-import com.vlsolutions.swing.docking.event.DockableStateWillChangeListener;
+import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 
 /**
  * @author Rogan Dawes

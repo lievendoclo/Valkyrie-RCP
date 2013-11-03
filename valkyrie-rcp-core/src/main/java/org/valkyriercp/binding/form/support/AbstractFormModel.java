@@ -1,8 +1,6 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.Converter;
@@ -25,6 +23,7 @@ import org.valkyriercp.binding.value.support.ValueHolder;
 import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
 import org.valkyriercp.util.ClassUtils;
 import org.valkyriercp.util.EventListenerListHelper;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -37,7 +36,6 @@ import java.util.*;
  * @author Keith Donald
  * @author Oliver Hutchison
  */
-@Configurable
 public abstract class AbstractFormModel extends AbstractPropertyChangePublisher implements HierarchicalFormModel,
         ConfigurableFormModel {
 
@@ -67,9 +65,6 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	private boolean oldCommittable = true;
 
-    @Autowired
-	private ConversionService conversionService;
-
 	private final CommitTrigger commitTrigger = new CommitTrigger();
 
 	private final Map mediatingValueModels = new HashMap();
@@ -91,9 +86,6 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		}
 	};
 
-    @Autowired
-	private FieldFaceSource fieldFaceSource;
-
 	protected final PropertyChangeListener parentStateChangeHandler = new ParentStateChangeHandler();
 
 	protected final PropertyChangeListener childStateChangeHandler = new ChildStateChangeHandler();
@@ -101,8 +93,9 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	private final EventListenerListHelper commitListeners = new EventListenerListHelper(CommitListener.class);
 
 	private Class defaultInstanceClass;
+    private ConversionService conversionService;
 
-	protected AbstractFormModel() {
+    protected AbstractFormModel() {
 		this(new ValueHolder());
 	}
 
@@ -475,22 +468,8 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		return Collections.unmodifiableSet(propertyValueModels.keySet());
 	}
 
-	/**
-	 * Sets the FieldFaceSource that will be used to obtain FieldFace instances.
-	 * <p>
-	 * If this value is <code>null</code> the default FieldFaceSource from
-	 * <code>ApplicationServices</code> instance will be used.
-	 */
-	public void setFieldFaceSource(FieldFaceSource fieldFaceSource) {
-		this.fieldFaceSource = fieldFaceSource;
-	}
-
-	/**
-	 * Returns the FieldFaceSource that should be used to obtain FieldFace
-	 * instances for this form model.
-	 */
 	protected FieldFaceSource getFieldFaceSource() {
-		return fieldFaceSource;
+		return ValkyrieRepository.getInstance().getApplicationConfig().fieldFaceSource();
 	}
 
 	public FieldFace getFieldFace(String field) {
@@ -511,11 +490,9 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	}
 
 	public ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
+        if(conversionService == null)
+		    return ValkyrieRepository.getInstance().getApplicationConfig().conversionService();
+        return conversionService;
 	}
 
 	public MutablePropertyAccessStrategy getFormObjectPropertyAccessStrategy() {
@@ -725,7 +702,11 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		commitListeners.remove(listener);
 	}
 
-	/**
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
+
+    /**
 	 * Listener to be registered on properties of the parent form model. Calls
 	 * are delegated to
 	 * {@link AbstractFormModel#parentStateChanged(java.beans.PropertyChangeEvent)}. This

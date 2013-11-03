@@ -39,7 +39,7 @@ public class ScreenSimulationWidget extends AbstractWidget
         JComponent imageArea = createImagePanel(imagePath);
         if (imageArea != null)
         {
-            String screenLabel = applicationConfig.messageResolver().getMessage("simulation", "screen", MessageConstants.LABEL);
+            String screenLabel = getApplicationConfig().messageResolver().getMessage("simulation", "screen", MessageConstants.LABEL);
             this.mainComponent.addTab(screenLabel, imageArea);
         }
         else
@@ -49,7 +49,7 @@ public class ScreenSimulationWidget extends AbstractWidget
         if (explanationArea != null)
         {
 
-            String explanationLabel = applicationConfig.messageResolver().getMessage("simulation", "explanation", MessageConstants.LABEL);
+            String explanationLabel = getApplicationConfig().messageResolver().getMessage("simulation", "explanation", MessageConstants.LABEL);
             this.mainComponent.addTab(explanationLabel, explanationArea);
         }
         else

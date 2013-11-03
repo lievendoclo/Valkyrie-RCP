@@ -1,8 +1,6 @@
 package org.valkyriercp.application.support;
 
 import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -12,6 +10,7 @@ import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.component.HtmlPane;
 import org.valkyriercp.dialog.ApplicationDialog;
 import org.valkyriercp.dialog.CloseAction;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -22,7 +21,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 /**
  * An implementation of an about box in a dialog.  The dialog contents contain
@@ -37,14 +35,14 @@ import java.util.ArrayList;
  * @see org.valkyriercp.application.ApplicationDescriptor
  * @see org.valkyriercp.component.HtmlPane
  */
-@Configurable
 public class AboutBox {
     private Resource aboutTextPath;
 
-    @Autowired
-    private ApplicationConfig applicationConfig;
-
     public AboutBox() {
+    }
+
+    public ApplicationConfig getApplicationConfig() {
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 
     /**
@@ -72,7 +70,7 @@ public class AboutBox {
         private HtmlScroller scroller;
 
         public AboutDialog() {
-            setTitle("About " + applicationConfig.application().getName());
+            setTitle("About " + getApplicationConfig().application().getName());
             setResizable(false);
             setCloseAction(CloseAction.DISPOSE);
         }
@@ -91,9 +89,9 @@ public class AboutBox {
          */
         protected JComponent createApplicationDescriptorComponent() {
             // Build the application descriptor data, if available
-            JTextArea txtDescriptor = applicationConfig.componentFactory().createTextAreaAsLabel();
+            JTextArea txtDescriptor = getApplicationConfig().componentFactory().createTextAreaAsLabel();
             txtDescriptor.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
-            ApplicationDescriptor appDesc = applicationConfig.applicationDescriptor();
+            ApplicationDescriptor appDesc = getApplicationConfig().applicationDescriptor();
             if( appDesc != null ) {
                 String displayName = appDesc.getDisplayName();
                 String caption = appDesc.getCaption();
@@ -112,10 +110,10 @@ public class AboutBox {
                     sb.append(description).append("\n\n");
                 }
                 if( StringUtils.hasText(version) ) {
-                    sb.append(applicationConfig.messageResolver().getMessage("aboutBox.version.label")).append(": ").append(version).append("\n");
+                    sb.append(getApplicationConfig().messageResolver().getMessage("aboutBox.version.label")).append(": ").append(version).append("\n");
                 }
                 if( StringUtils.hasText(buildId) ) {
-                    sb.append(applicationConfig.messageResolver().getMessage("aboutBox.buildId.label")).append(": ").append(buildId).append("\n");
+                    sb.append(getApplicationConfig().messageResolver().getMessage("aboutBox.buildId.label")).append(": ").append(buildId).append("\n");
                 }
                 txtDescriptor.setText(sb.toString());
             }

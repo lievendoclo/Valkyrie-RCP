@@ -2,8 +2,6 @@ package org.valkyriercp.form;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -22,6 +20,7 @@ import org.valkyriercp.core.Messagable;
 import org.valkyriercp.core.Secured;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.form.binding.BindingFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -51,7 +50,6 @@ import java.util.Map;
  *
  * @author Keith Donald
  */
-@Configurable
 public abstract class AbstractForm extends AbstractControlFactory implements Form, CommitListener, Secured {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -86,12 +84,6 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 
 	private PropertyChangeListener editingFormObjectSetter;
 
-    @Autowired
-	private ApplicationConfig applicationConfig;
-
-    @Autowired
-    protected FormModelFactory formModelFactory;
-
 	private BindingFactory bindingFactory;
 
 	private Map childForms = new HashMap();
@@ -100,14 +92,22 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 
     public abstract FormModel createFormModel();
 
-	/**
+    protected AbstractForm(String id) {
+        this.formId = id;
+        init();
+    }
+
+    protected AbstractForm() {
+        init();
+    }
+
+    /**
 	 * Hook called when constructing the Form.
 	 */
-    @PostConstruct
 	protected void init() {
         FormModel model = createFormModel();
         if(getId() == null)
-            setId(model.getId());
+            formId = model.getId();
         if (model instanceof ValidatingFormModel) {
             ValidatingFormModel validatingFormModel = (ValidatingFormModel) model;
             setFormModel(validatingFormModel);
@@ -121,13 +121,6 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 		return formId;
 	}
 
-	/**
-	 * Set the id used to configure this Form.
-	 */
-	protected void setId(String formId) {
-		this.formId = formId;
-	}
-
 	public ValidatingFormModel getFormModel() {
 		return formModel;
 	}
@@ -138,7 +131,7 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 	 */
 	public BindingFactory getBindingFactory() {
 		if (bindingFactory == null) {
-			bindingFactory = applicationConfig.bindingFactoryProvider().getBindingFactory(formModel);
+			bindingFactory = getApplicationConfig().bindingFactoryProvider().getBindingFactory(formModel);
 		}
 		return bindingFactory;
 	}
@@ -418,7 +411,7 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 		};
 		newFormObjectCmd.setSecurityControllerId(getNewFormObjectSecurityControllerId());
 		attachFormGuard(newFormObjectCmd, FormGuard.LIKE_NEWFORMOBJCOMMAND);
-		return (ActionCommand) applicationConfig.commandConfigurer().configure(newFormObjectCmd);
+		return (ActionCommand) getApplicationConfig().commandConfigurer().configure(newFormObjectCmd);
 	}
 
 	/**
@@ -463,7 +456,7 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 		};
 		commitCmd.setSecurityControllerId(getCommitSecurityControllerId());
 		attachFormGuard(commitCmd, FormGuard.LIKE_COMMITCOMMAND);
-		return (ActionCommand) applicationConfig.commandConfigurer().configure(commitCmd);
+		return (ActionCommand) getApplicationConfig().commandConfigurer().configure(commitCmd);
 	}
 
 	public void preCommit(FormModel formModel) {
@@ -503,7 +496,7 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 			}
 		};
 		attachFormGuard(revertCmd, FormGuard.LIKE_REVERTCOMMAND);
-		return (ActionCommand) applicationConfig.commandConfigurer().configure(revertCmd);
+		return (ActionCommand) getApplicationConfig().commandConfigurer().configure(revertCmd);
 	}
 
 	protected final JButton createNewFormObjectButton() {
@@ -694,11 +687,11 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 	}
 
     protected ApplicationConfig getApplicationConfig() {
-        return applicationConfig;
+        return ValkyrieRepository.getInstance().getApplicationConfig();
     }
 
     protected String getMessage(String key, Object... args) {
-        return applicationConfig.messageResolver().getMessage(key, args);
+        return getApplicationConfig().messageResolver().getMessage(key, args);
     }
 
     private String securityControllerId;

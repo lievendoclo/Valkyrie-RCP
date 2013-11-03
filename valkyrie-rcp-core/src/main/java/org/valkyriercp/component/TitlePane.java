@@ -1,38 +1,27 @@
 package org.valkyriercp.component;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.UIManager;
-
+import com.jgoodies.forms.factories.FormFactory;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.painter.CompoundPainter;
 import org.jdesktop.swingx.painter.GlossPainter;
 import org.jdesktop.swingx.painter.MattePainter;
 import org.jdesktop.swingx.painter.PinstripePainter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.image.config.ImageConfigurable;
 import org.valkyriercp.layout.TableLayoutBuilder;
+import org.valkyriercp.util.ValkyrieRepository;
 
-import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
 
 /**
  * A container class that that has a title area for displaying a title and an
  * image as well as a common area for displaying a description, a message, or an
  * error message.
  */
-@Configurable
 public class TitlePane extends AbstractControlFactory implements MessagePane,
 		TitleConfigurable, ImageConfigurable {
 
@@ -51,14 +40,6 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 	private JLabel iconLabel;
 
 	private MessagePane messagePane;
-
-	@Autowired
-	@Qualifier("titlePaneBackgroundColor")
-	private Color titlePaneBackgroundColor;
-
-	@Autowired
-	@Qualifier("titlePanePinstripeColor")
-	private Color titlePanePinstripeColor;
 
 	public TitlePane() {
 		this(DefaultMessageAreaPane.DEFAULT_LINES_TO_DISPLAY);
@@ -85,7 +66,15 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 		}
 	}
 
-	protected JComponent createControl() {
+    public Color getTitlePaneBackgroundColor() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().titlePaneBackgroundColor();
+    }
+
+    public Color getTitlePanePinstripeColor() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().titlePanePinstripeColor();
+    }
+
+    protected JComponent createControl() {
 		titleLabel = new JLabel();
 		titleLabel.setName("title");
 		titleLabel.setOpaque(false);
@@ -99,9 +88,9 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 
 		JXPanel panel = new JXPanel();
 
-		MattePainter matte = new MattePainter(titlePaneBackgroundColor);
+		MattePainter matte = new MattePainter(getTitlePaneBackgroundColor());
 		PinstripePainter pinstripe = new PinstripePainter();
-		pinstripe.setPaint(titlePanePinstripeColor);
+		pinstripe.setPaint(getTitlePanePinstripeColor());
 		pinstripe.setSpacing(5.);
 		GlossPainter gloss = new GlossPainter();
 		CompoundPainter painter = new CompoundPainter(matte, pinstripe, gloss);

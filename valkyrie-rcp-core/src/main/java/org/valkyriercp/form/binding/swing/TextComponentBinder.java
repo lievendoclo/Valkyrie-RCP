@@ -1,15 +1,10 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
-import org.valkyriercp.factory.ComponentFactory;
-import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.support.AbstractBinder;
 import org.valkyriercp.form.binding.swing.text.DocumentFactory;
-import org.valkyriercp.form.binding.swing.text.RegExDocumentFactory;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;

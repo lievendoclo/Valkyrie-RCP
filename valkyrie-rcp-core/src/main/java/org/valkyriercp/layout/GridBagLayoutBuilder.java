@@ -2,15 +2,13 @@ package org.valkyriercp.layout;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.valkyriercp.component.GridBagLayoutDebugPanel;
 import org.valkyriercp.factory.ComponentFactory;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * This provides an easy way to create panels using a {@link java.awt.GridBagLayout}.
@@ -40,7 +38,6 @@ import java.util.*;
  * @see #setShowGuidelines(boolean)
  * @see #setComponentFactory(ComponentFactory)
  */
-@Configurable
 public class GridBagLayoutBuilder implements LayoutBuilder {
     private static final Log LOG = LogFactory.getLog(GridBagLayoutBuilder.class);
 
@@ -59,9 +56,6 @@ public class GridBagLayoutBuilder implements LayoutBuilder {
     private java.util.List currentRowList;
 
     private int maxCol = 0;
-
-    @Autowired
-    private ComponentFactory componentFactory;
 
     private static final Item NULL_ITEM = new Item(null, null);
 
@@ -108,11 +102,7 @@ public class GridBagLayoutBuilder implements LayoutBuilder {
     }
 
     public ComponentFactory getComponentFactory() {
-        return componentFactory;
-    }
-
-    public void setComponentFactory(ComponentFactory componentFactory) {
-        this.componentFactory = componentFactory;
+        return ValkyrieRepository.getInstance().getApplicationConfig().componentFactory();
     }
 
     /**

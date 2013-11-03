@@ -1,20 +1,17 @@
 package org.valkyriercp.form.binding.swing.editor;
 
 import com.google.common.base.Function;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binder;
 import org.valkyriercp.form.binding.Binding;
+import org.valkyriercp.util.ValkyrieRepository;
 import org.valkyriercp.widget.editor.DefaultDataEditorWidget;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
-@Configurable
 public class LookupBinder<T> implements Binder
 {
     public static final String REQUIRED_SOURCE_CLASS_KEY = "requiredSourceClass";
@@ -88,9 +85,6 @@ public class LookupBinder<T> implements Binder
     public void setObjectLabelFunction(Function<T, String> objectLabelFunction) {
         this.objectLabelFunction = objectLabelFunction;
     }
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
 
 
     public boolean isLoadDetailedObject()
@@ -235,7 +229,7 @@ public class LookupBinder<T> implements Binder
         if(dataEditorId == null)  {
             throw new IllegalStateException("dataEditorId should not be null");
         }
-        Object dataEditor = applicationConfig.applicationContext().getBean(dataEditorId);
+        Object dataEditor = ValkyrieRepository.getInstance().getApplicationConfig().applicationContext().getBean(dataEditorId);
         Assert.isInstanceOf(DefaultDataEditorWidget.class, dataEditor);
         return (DefaultDataEditorWidget) dataEditor;
     }

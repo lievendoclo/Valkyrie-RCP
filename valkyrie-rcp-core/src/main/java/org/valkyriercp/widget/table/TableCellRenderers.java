@@ -4,10 +4,7 @@ import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.renderer.FormatStringValue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.valkyriercp.application.support.MessageResolver;
-import org.valkyriercp.image.IconSource;
+import org.valkyriercp.util.ValkyrieRepository;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -214,14 +211,8 @@ public class TableCellRenderers
         }
     }
 
-    @Configurable
     public static class EnumTableCellRenderer extends DefaultTableCellRenderer
     {
-        @Autowired
-        private MessageResolver messageResolver;
-
-        @Autowired
-        private IconSource iconSource;
 
         public EnumTableCellRenderer()
         {
@@ -246,8 +237,8 @@ public class TableCellRenderers
                 {
                     Enum valueEnum = (Enum) value;
                     Class<? extends Enum> valueClass = valueEnum.getClass();
-                    setValue(messageResolver.getMessage(valueClass.getName() + "." + valueEnum.name()));
-                    setIcon(iconSource.getIcon(valueClass.getName() + "." + valueEnum.name()));
+                    setValue(ValkyrieRepository.getInstance().getApplicationConfig().messageResolver().getMessage(valueClass.getName() + "." + valueEnum.name()));
+                    setIcon(ValkyrieRepository.getInstance().getApplicationConfig().iconSource().getIcon(valueClass.getName() + "." + valueEnum.name()));
                 }
                 else
                 {

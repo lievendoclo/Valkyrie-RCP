@@ -1,14 +1,11 @@
 package org.valkyriercp.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.Authentication;
 import org.valkyriercp.rules.PropertyConstraintProvider;
 import org.valkyriercp.rules.Rules;
 import org.valkyriercp.rules.constraint.Constraint;
 import org.valkyriercp.rules.constraint.property.PropertyConstraint;
-
-import javax.annotation.PostConstruct;
+import org.valkyriercp.util.ValkyrieRepository;
 
 /**
  * This class provides a bean suitable for use in a login form, providing properties for
@@ -22,7 +19,6 @@ import javax.annotation.PostConstruct;
  * @author Ben Alex
  *
  */
-@Configurable
 public class LoginDetails implements PropertyConstraintProvider {
 
     public static final String PROPERTY_USERNAME = "username";
@@ -35,16 +31,20 @@ public class LoginDetails implements PropertyConstraintProvider {
 
     private Rules validationRules;
 
-    @Autowired
-    private ApplicationSecurityManager applicationSecurityManager;
+    public LoginDetails() {
+        init();
+    }
 
-    @PostConstruct
     public void init() {
-        Authentication authentication = applicationSecurityManager.getAuthentication();
+        Authentication authentication = getApplicationSecurityManager().getAuthentication();
         if( authentication != null ) {
             setUsername( authentication.getName() );
         }
         initRules();
+    }
+
+    public ApplicationSecurityManager getApplicationSecurityManager() {
+        return ValkyrieRepository.getInstance().getApplicationConfig().applicationSecurityManager();
     }
 
     /**

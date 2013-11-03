@@ -21,6 +21,13 @@ public abstract class AbstractWidgetForm extends AbstractForm implements Widget
 
     protected boolean showing = false;
 
+    protected AbstractWidgetForm() {
+    }
+
+    protected AbstractWidgetForm(String id) {
+        super(id);
+    }
+
     public boolean canClose()
     {
         return true;

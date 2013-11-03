@@ -1,13 +1,9 @@
 package org.valkyriercp.application.session;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-import org.valkyriercp.application.Application;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.security.LoginEvent;
 import org.valkyriercp.security.LogoutEvent;

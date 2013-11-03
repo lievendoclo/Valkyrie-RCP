@@ -206,9 +206,9 @@ public class ContactView extends AbstractView
     {
         context.register("newContactCommand", newContactExecutor);
         context.register(GlobalCommandIds.PROPERTIES, propertiesExecutor);
-        applicationConfig.securityControllerManager().addSecuredObject(propertiesExecutor);
+        getApplicationConfig().securityControllerManager().addSecuredObject(propertiesExecutor);
         context.register(GlobalCommandIds.DELETE, deleteExecutor);
-        applicationConfig.securityControllerManager().addSecuredObject(deleteExecutor);
+        getApplicationConfig().securityControllerManager().addSecuredObject(deleteExecutor);
     }
 
     /**

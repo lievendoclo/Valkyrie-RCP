@@ -17,7 +17,7 @@ public class JSR303ValidatorDialogExceptionHandler<SELF extends JSR303ValidatorD
     private static final String EXPLANATION_KEY = "jsr303ValidatorDialogExceptionHandler.explanation";
 
     public String resolveExceptionCaption(Throwable throwable) {
-        return messageSourceAccessor.getMessage(CAPTION_KEY, CAPTION_KEY);
+        return getMessageSourceAccessor().getMessage(CAPTION_KEY, CAPTION_KEY);
     }
 
     public Object createExceptionContent(Throwable throwable) {
@@ -29,7 +29,7 @@ public class JSR303ValidatorDialogExceptionHandler<SELF extends JSR303ValidatorD
             return ILLEGAL_THROWABLE_ARGUMENT;
         }
         ConstraintViolationException invalidStateException = (ConstraintViolationException) throwable;
-        String explanation = messageSourceAccessor.getMessage(EXPLANATION_KEY, EXPLANATION_KEY);
+        String explanation = getMessageSourceAccessor().getMessage(EXPLANATION_KEY, EXPLANATION_KEY);
         JPanel panel = new JPanel(new BorderLayout());
         JLabel explanationLabel = new JLabel(explanation);
         panel.add(explanationLabel, BorderLayout.NORTH);
@@ -37,7 +37,7 @@ public class JSR303ValidatorDialogExceptionHandler<SELF extends JSR303ValidatorD
         for (ConstraintViolation invalidValue : invalidStateException.getConstraintViolations()) {
             StringBuffer messageBuffer = new StringBuffer();
             String propertyName = invalidValue.getPropertyPath().toString();
-            messageBuffer.append(messageSourceAccessor.getMessage(propertyName + ".label", propertyName));
+            messageBuffer.append(getMessageSourceAccessor().getMessage(propertyName + ".label", propertyName));
             messageBuffer.append(" ");
             messageBuffer.append(invalidValue.getMessage());
             invalidValueMessageList.add(messageBuffer.toString());

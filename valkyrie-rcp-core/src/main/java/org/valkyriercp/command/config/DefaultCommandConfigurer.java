@@ -8,9 +8,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.config.ApplicationObjectConfigurer;
+import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.support.AbstractCommand;
-import org.valkyriercp.command.CommandConfigurer;
 
 /**
  * @author Keith Donald

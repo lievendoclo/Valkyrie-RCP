@@ -1,17 +1,15 @@
 package org.valkyriercp.table.support;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
+import ca.odell.glazedlists.gui.AbstractTableComparatorChooser;
+import ca.odell.glazedlists.gui.TableFormat;
+import ca.odell.glazedlists.swing.EventSelectionModel;
+import ca.odell.glazedlists.swing.TableComparatorChooser;
+import ca.odell.glazedlists.util.concurrent.Lock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.support.PropertyComparator;
@@ -27,16 +25,13 @@ import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.factory.AbstractControlFactory;
 import org.valkyriercp.util.PopupMenuMouseListener;
 
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.GlazedLists;
-import ca.odell.glazedlists.SortedList;
-import ca.odell.glazedlists.event.ListEvent;
-import ca.odell.glazedlists.event.ListEventListener;
-import ca.odell.glazedlists.gui.AbstractTableComparatorChooser;
-import ca.odell.glazedlists.gui.TableFormat;
-import ca.odell.glazedlists.swing.EventSelectionModel;
-import ca.odell.glazedlists.swing.TableComparatorChooser;
-import ca.odell.glazedlists.util.concurrent.Lock;
+import javax.annotation.PostConstruct;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 /**
  * This class provides a standard table representation for a set of objects with
@@ -153,15 +148,13 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 		this.modelId = modelId;
 		setColumnPropertyNames(columnPropertyNames);
 		init();
+        postConstruct();
 	}
 
-	// partial fix for https://jira.springsource.org/browse/SPR-9391
-	// @Configurable does work with ApplicationListener
-	@PostConstruct
 	protected void postConstruct() {
 		// this will cause a memory leak! as there is currently no support for a
 		// call to removeApplicationListener
-		((ConfigurableApplicationContext) applicationConfig
+		((ConfigurableApplicationContext) getApplicationConfig()
 				.applicationContext())
 				.addApplicationListener(new ApplicationListener() {
 					@Override
@@ -347,9 +340,9 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 	 */
 	protected void init() {
 		// Get all our messages
-		objectSingularName = applicationConfig.messageResolver().getMessage(
+		objectSingularName = getApplicationConfig().messageResolver().getMessage(
 				modelId + ".objectName.singular");
-		objectPluralName = applicationConfig.messageResolver().getMessage(
+		objectPluralName = getApplicationConfig().messageResolver().getMessage(
 				modelId + ".objectName.plural");
 	}
 
@@ -358,7 +351,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 		EventList finalEventList = getFinalEventList();
 		model = createTableModel(finalEventList);
 
-		JTable table = applicationConfig.componentFactory().createTable(model);
+		JTable table = getApplicationConfig().componentFactory().createTable(model);
 		table.setSelectionModel(new EventSelectionModel(finalEventList));
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -621,7 +614,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 			if (all == showing) {
 				String[] keys = new String[] {
 						modelId + "." + SHOWINGALL_MSG_KEY, SHOWINGALL_MSG_KEY };
-				msg = applicationConfig.messageResolver().getMessage(
+				msg = getApplicationConfig().messageResolver().getMessage(
 						keys,
 						new Object[] {
 								"" + all,
@@ -631,7 +624,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 				String[] keys = new String[] {
 						modelId + "." + SHOWINGN_MSG_KEY, SHOWINGN_MSG_KEY };
 
-				msg = applicationConfig.messageResolver().getMessage(
+				msg = getApplicationConfig().messageResolver().getMessage(
 						keys,
 						new Object[] {
 								"" + showing,
@@ -644,7 +637,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 				String[] keys = new String[] {
 						modelId + "." + SELECTEDN_MSG_KEY, SELECTEDN_MSG_KEY };
 
-				msg += applicationConfig.messageResolver().getMessage(keys,
+				msg += getApplicationConfig().messageResolver().getMessage(keys,
 						new Object[] { "" + nselected });
 			}
 			statusBar.setMessage(msg.toString());

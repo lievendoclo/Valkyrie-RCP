@@ -1,8 +1,6 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.PropertyAccessException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.binding.convert.converters.InvalidFormatException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
@@ -10,24 +8,20 @@ import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.validation.ValidationMessage;
 import org.valkyriercp.binding.validation.support.DefaultValidationMessage;
 import org.valkyriercp.core.Severity;
+import org.valkyriercp.util.ValkyrieRepository;
 
 /**
  * Default implementation of <code>BindingErrorMessageProvider</code>.
  *
  * @author Oliver Hutchison
  */
-@Configurable
 public class DefaultBindingErrorMessageProvider implements BindingErrorMessageProvider {
 
-    @Autowired
-    private MessageSourceAccessor messageSourceAccessor = null;
-
-
-    public void setMessageSourceAccessor(MessageSourceAccessor messageSourceAccessor) {
-        this.messageSourceAccessor = messageSourceAccessor;
-    }
+    private MessageSourceAccessor messageSourceAccessor;
 
     protected MessageSourceAccessor getMessageSourceAccessor() {
+        if(messageSourceAccessor == null)
+            return ValkyrieRepository.getInstance().getApplicationConfig().messageSourceAccessor();
         return messageSourceAccessor;
     }
 
@@ -59,4 +53,8 @@ public class DefaultBindingErrorMessageProvider implements BindingErrorMessagePr
             return "unknown";
         }
     }
+
+    public void setMessageSourceAccessor(MessageSourceAccessor messageSourceAccessor) {
+        this.messageSourceAccessor = messageSourceAccessor;
     }
+}

@@ -1,8 +1,5 @@
 package org.valkyriercp.convert.support;
 
-import org.springframework.binding.convert.converters.Converter;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 

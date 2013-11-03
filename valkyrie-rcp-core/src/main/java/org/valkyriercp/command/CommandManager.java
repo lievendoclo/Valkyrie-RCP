@@ -1,6 +1,5 @@
 package org.valkyriercp.command;
 
-import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.config.CommandFaceDescriptorRegistry;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.ActionCommand;
