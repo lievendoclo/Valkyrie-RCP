@@ -607,6 +607,14 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 		return valueModel;
 	}
 
+    public <T> ValueModel<T> getValueModel(String formProperty, Class<T> expectedType) {
+        ValueModel<T> valueModel = formModel.getValueModel(formProperty, expectedType);
+        if (valueModel == null) {
+            logger.warn("A value model for property '" + formProperty + "' could not be found.  Typo?");
+        }
+        return valueModel;
+    }
+
 	public boolean isEnabled() {
 		return this.formModel.isEnabled();
 	}
