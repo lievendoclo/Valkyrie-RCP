@@ -25,7 +25,7 @@ public class LoginForm extends AbstractForm {
      * @param userName to install
      */
     public void setUserName(String userName) {
-        getValueModel( LoginDetails.PROPERTY_USERNAME ).setValue( userName );
+        getValueModel( LoginDetails.PROPERTY_USERNAME, String.class ).setValue( userName );
     }
 
     /**
@@ -33,7 +33,7 @@ public class LoginForm extends AbstractForm {
      * @param password to install
      */
     public void setPassword(String password) {
-        getValueModel( LoginDetails.PROPERTY_PASSWORD ).setValue( password );
+        getValueModel( LoginDetails.PROPERTY_PASSWORD, String.class ).setValue( password );
     }
 
     /**
