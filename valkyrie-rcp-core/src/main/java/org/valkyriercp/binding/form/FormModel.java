@@ -92,7 +92,7 @@ public interface FormModel extends PropertyChangePublisher, Authorizable {
 	 * @throws IllegalArgumentException if no suitable converter from the
 	 * original property class to the targetClass can be found
 	 */
-	ValueModel getValueModel(String formProperty, Class targetClass);
+	<T> ValueModel<T> getValueModel(String formProperty, Class<T> targetClass);
 
 	/**
 	 * Returns the metadata for the given form field.

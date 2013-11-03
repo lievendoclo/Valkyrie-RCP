@@ -17,30 +17,15 @@ import javax.swing.*;
  * @see #getAuthentication()
  */
 public class LoginForm extends AbstractForm {
-    private static final String FORM_ID = "credentials";
-
-    private LoginDetails loginDetails;
-
     private JComponent usernameField;
     private JComponent passwordField;
-
-    /**
-     * Constructor.
-     */
-    public LoginForm() {
-        super(FORM_ID);
-    }
 
     /**
      * Set the user name in the form.
      * @param userName to install
      */
     public void setUserName(String userName) {
-        if( isControlCreated() ) {
-            getValueModel( LoginDetails.PROPERTY_USERNAME ).setValue( userName );
-        } else {
-            loginDetails.setUsername( userName );
-        }
+        getValueModel( LoginDetails.PROPERTY_USERNAME ).setValue( userName );
     }
 
     /**
@@ -48,11 +33,7 @@ public class LoginForm extends AbstractForm {
      * @param password to install
      */
     public void setPassword(String password) {
-        if( isControlCreated() ) {
-            getValueModel( LoginDetails.PROPERTY_PASSWORD ).setValue( password );
-        } else {
-            loginDetails.setPassword( password );
-        }
+        getValueModel( LoginDetails.PROPERTY_PASSWORD ).setValue( password );
     }
 
     /**
@@ -60,23 +41,14 @@ public class LoginForm extends AbstractForm {
      * @return authentication token
      */
     public Authentication getAuthentication() {
-        String username = loginDetails.getUsername().trim();
-        String password = loginDetails.getPassword().trim();
+        String username = getValueModel(LoginDetails.PROPERTY_USERNAME, String.class).getValue();
+        String password = getValueModel(LoginDetails.PROPERTY_PASSWORD, String.class).getValue();
         return new UsernamePasswordAuthenticationToken( username, password );
-    }
-
-    /**
-     * Create the form object to hold our login information.
-     * @return constructed form object
-     */
-    protected LoginDetails createLoginDetails() {
-        loginDetails =  new LoginDetails();
-        return loginDetails;
     }
 
     @Override
     public FormModel createFormModel() {
-        return ValkyrieRepository.getInstance().getApplicationConfig().formModelFactory().createUnbufferedFormModel(createLoginDetails());
+        return ValkyrieRepository.getInstance().getApplicationConfig().formModelFactory().createUnbufferedFormModel(new LoginDetails(), "credentials");
     }
 
     /**
@@ -92,7 +64,7 @@ public class LoginForm extends AbstractForm {
 
     public boolean requestFocusInWindow() {
         // Put the focus on the right field
-        String username = loginDetails.getUsername();
+        String username = getValueModel(LoginDetails.PROPERTY_USERNAME, String.class).getValue();
         JComponent field = (username != null && username.length() > 0) ? passwordField : usernameField;
         return field.requestFocusInWindow();
     }

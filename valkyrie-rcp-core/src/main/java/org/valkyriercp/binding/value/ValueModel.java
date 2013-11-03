@@ -25,7 +25,7 @@ import java.beans.PropertyChangeListener;
  * @author Keith Donald
  * @author Oliver Hutchison
  */
-public interface ValueModel {
+public interface ValueModel<T> {
 
     /**
      * The name of the bound property <em>value</em>.
@@ -39,7 +39,7 @@ public interface ValueModel {
      *
      * @return this model's value
      */
-    Object getValue();
+    T getValue();
 
     /**
      * Sets a new value and if the value has changed notifies any registered
@@ -47,7 +47,7 @@ public interface ValueModel {
      *
      * @param newValue  the value to be set
      */
-    void setValue(Object newValue);
+    void setValue(T newValue);
 
     /**
      * Sets a new value and if the value has changed notifies all registered
@@ -57,7 +57,7 @@ public interface ValueModel {
      * @param listenerToSkip the <code>PropertyChangeListener</code> that should
      * not be notified of this change (may be <code>null</code>).
      */
-    void setValueSilently(Object newValue, PropertyChangeListener listenerToSkip);
+    void setValueSilently(T newValue, PropertyChangeListener listenerToSkip);
 
     /**
      * Registers the given <code>PropertyChangeListener</code> with this
