@@ -22,8 +22,8 @@ Because the original project seems to be dead :(
 
 h2. And so, what's new ?
 
-* Updated dependency to Spring 3.2.2
-* Updated dependency to Spring Security 3.1.1
+* Updated dependency to Spring 3.2.4
+* Updated dependency to Spring Security 3.1.4
 * Fixed broken build for the manual
 * Released a 1.1 version available through maven central
 * Publish the "Valkyrie documentation":http://cmadsen.github.com/Valkyrie-RCP/
@@ -66,7 +66,16 @@ Feel free to fork this repo, and make a "pull request":http://help.github.com/se
 h2. How to build
 
 Just clone the repository, and then use a @mvn install@ command.
-The build was tested with "Maven 3.0.3":http://archive.apache.org/dist/maven/binaries/. 
+The build was tested with "Maven 3.0.3":http://archive.apache.org/dist/maven/binaries/.
+
+If you're using gradle, use @gradle build@.
+
+h2. Documentation
+
+To build the documentation with gradle, you'll need to navigate to the valkyrie-rcp-manual folder and issue a @gradle reference@
+command. If you want a zip with the documentation, use @gradle build@.
+
+The documentation is provided as a single html, multi-page html and PDF.
 
 h2. Greetings
 
