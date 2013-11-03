@@ -1,19 +1,6 @@
-buildscript {
-    repositories {
-        maven { url 'http://repo.springsource.org/plugins-release' }
-    }
-    dependencies {
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.4'
-    }
-}
-
 allprojects {
     apply plugin: "idea"
     apply plugin: "eclipse"
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
 
     group = "dk.navicon"
     ext.springVersion = "3.2.4.RELEASE"
@@ -23,10 +10,6 @@ allprojects {
             url "file://${rootDir}/dependencies"
         }
         mavenCentral()
-    }
-
-    dependencies {
-        provided gradleApi()
     }
 }
 
@@ -51,6 +34,7 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
     }
+
     compileTestJava {
         sourceCompatibility = 1.6
         targetCompatibility = 1.6

@@ -114,7 +114,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        List<UserDetails> userDetailsList = new ArrayList<>();
+        List<UserDetails> userDetailsList = Lists.newArrayList();
         userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
         userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
