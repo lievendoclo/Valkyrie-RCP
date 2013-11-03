@@ -130,23 +130,20 @@ public class DefaultApplicationSecurityManager implements
 	 */
 	@Override
 	public AuthenticationManager getAuthenticationManager() {
-        if(ValkyrieRepository.getInstance().getBean(AuthenticationManager.class) != null)
+        if(ValkyrieRepository.getInstance().getApplicationConfig().applicationContext().getBeansOfType(AuthenticationManager.class).size() != 0)
 		    return ValkyrieRepository.getInstance().getBean(AuthenticationManager.class);
         else {
-            return new AuthenticationManager() {
-
-                @Override
-                public Authentication authenticate(Authentication authentication)
-                        throws AuthenticationException {
-                    return new AnonymousAuthenticationToken("anon", "anon",
-                            Lists.<GrantedAuthority> newArrayList());
-                }
-            };
+            return null;
         }
 
 	}
 
-	/**
+    @Override
+    public boolean isSecuritySupported() {
+        return getAuthenticationManager() != null;
+    }
+
+    /**
 	 * Process a login attempt and fire all related events. If the
 	 * authentication fails, then a {@link AuthenticationFailedEvent} is
 	 * published and the exception is rethrown. If the authentication succeeds,

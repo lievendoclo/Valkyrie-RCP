@@ -10,6 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.Application;
+import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.splash.DefaultSplashScreenConfig;
 import org.valkyriercp.application.splash.MonitoringSplashScreen;
 import org.valkyriercp.application.splash.SplashScreen;
@@ -134,6 +135,23 @@ public class ApplicationLauncher {
 		}
 	}
 
+    public ApplicationLauncher(Class<? extends SplashScreenConfig> startupConfig, Class<? extends ApplicationConfig> applicationConfig) {
+        Assert.notNull(applicationConfig,
+                "A rich client application config must be provided");
+
+        this.startupContext = loadStartupContext(startupConfig);
+        if (startupContext != null) {
+            displaySplashScreen(startupContext);
+        }
+        try {
+            setRootApplicationContext(loadRootApplicationContext(applicationConfig, startupContext));
+            launchMyRichClient();
+        }
+        finally {
+            destroySplashScreen();
+        }
+    }
+
 	/**
 	 * Launches the application from the pre-loaded application context.
 	 *
@@ -145,6 +163,18 @@ public class ApplicationLauncher {
 	public ApplicationLauncher(ApplicationContext rootApplicationContext) {
 		this(DefaultSplashScreenConfig.class, rootApplicationContext);
 	}
+
+    /**
+     * Launches the application from the pre-loaded application context.
+     *
+     * @param rootApplicationContext The main application context.
+     *
+     * @throws IllegalArgumentException if {@code rootApplicationContext} is
+     * null.
+     */
+    public ApplicationLauncher( Class<? extends ApplicationConfig> applicationConfig) {
+        this(DefaultSplashScreenConfig.class, applicationConfig);
+    }
 
 	/**
 	 * Launch the application using a startup context from the given location
@@ -214,6 +244,23 @@ public class ApplicationLauncher {
         }
         applicationContext.refresh();
 
+        return applicationContext;
+    }
+
+    private ApplicationContext loadRootApplicationContext(Class<? extends ApplicationConfig> config, MessageSource messageSource) {
+        final AnnotationConfigApplicationContext applicationContext
+                = new AnnotationConfigApplicationContext();
+        if (splashScreen instanceof MonitoringSplashScreen) {
+            final ProgressMonitor tracker = ((MonitoringSplashScreen) splashScreen).getProgressMonitor();
+
+            applicationContext.addBeanFactoryPostProcessor(
+                    new ProgressMonitoringBeanFactoryPostProcessor(tracker));
+            applicationContext.register(config);
+            applicationContext.refresh();
+        } else {
+            applicationContext.register(config);
+            applicationContext.refresh();
+        }
         return applicationContext;
     }
 

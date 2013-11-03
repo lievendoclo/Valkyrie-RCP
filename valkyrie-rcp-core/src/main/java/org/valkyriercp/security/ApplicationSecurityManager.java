@@ -77,4 +77,6 @@ public interface ApplicationSecurityManager {
      * @return authenticationManager instance used for authentication requests
      */
     public AuthenticationManager getAuthenticationManager();
+
+    public boolean isSecuritySupported();
 }

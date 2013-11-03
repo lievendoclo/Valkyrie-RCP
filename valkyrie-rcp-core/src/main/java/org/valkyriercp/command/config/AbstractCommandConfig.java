@@ -13,7 +13,6 @@ import org.valkyriercp.security.LoginCommand;
 import org.valkyriercp.security.LogoutCommand;
 
 @Configuration
-@ImportResource("/org/valkyriercp/application/valkyrie-command-base.xml")
 public class AbstractCommandConfig implements CommandConfig {
     @Autowired
     protected ApplicationConfig parentConfig;

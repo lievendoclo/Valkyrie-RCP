@@ -4,6 +4,6 @@ import org.valkyriercp.application.support.ApplicationLauncher;
 
 public class VLDockingSampleRunner {
     public static void main(String[] args) {
-        new ApplicationLauncher(VLDockingSplashScreenConfig.class, "/org/valkyriercp/sample/vldocking/context.xml");
+        new ApplicationLauncher(VLDockingSplashScreenConfig.class, VLDockingSampleApplicationConfig.class);
     }
 }
