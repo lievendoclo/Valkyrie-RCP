@@ -15,27 +15,28 @@
  */
 package org.valkyriercp.application.docking;
 
-import com.vlsolutions.swing.docking.DockingConstants;
+import java.util.Collections;
+import java.util.Map;
+
 import org.valkyriercp.application.View;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 
-import java.util.Collections;
-import java.util.Map;
+import com.vlsolutions.swing.docking.DockingConstants;
 
 /**
  * @author Rogan Dawes
  */
 public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 
-    public static boolean DEFAULT_AUTOHIDEENABLED = false;
+	public static boolean DEFAULT_AUTOHIDEENABLED = false;
 
-    public static DockingConstants.Hide DEFAULT_AUTOHIDEBORDER = DockingConstants.HIDE_LEFT;
+	public static DockingConstants.Hide DEFAULT_AUTOHIDEBORDER = DockingConstants.HIDE_LEFT;
 
-    public static boolean DEFAULT_CLOSEENABLED = false;
+	public static boolean DEFAULT_CLOSEENABLED = false;
 
-    public static boolean DEFAULT_FLOATENABLED = false;
+	public static boolean DEFAULT_FLOATENABLED = false;
 
-    public static boolean DEFAULT_MAXIMIZEENABLED = true;
+	public static boolean DEFAULT_MAXIMIZEENABLED = true;
 
 	private DockingConstants.Hide autoHideBorder = DEFAULT_AUTOHIDEBORDER;
 
@@ -47,19 +48,20 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 
 	private boolean maximizeEnabled = DEFAULT_MAXIMIZEENABLED;
 
-     public VLDockingViewDescriptor() {
-        // default constructor for spring creation
-    }
+	public VLDockingViewDescriptor() {
+		// default constructor for spring creation
+	}
 
-    public VLDockingViewDescriptor(String id, Class<? extends View> viewClass) {
-        this(id, viewClass, Collections.<String, Object> emptyMap());
-    }
+	public VLDockingViewDescriptor(String id, Class<? extends View> viewClass) {
+		this(id, viewClass, Collections.<String, Object> emptyMap());
+	}
 
-    public VLDockingViewDescriptor(String id, Class<? extends View> viewClass, Map<String, Object> viewProperties) {
-        setId(id);
-        setViewClass(viewClass);
-        setViewProperties(viewProperties);
-    }
+	public VLDockingViewDescriptor(String id, Class<? extends View> viewClass,
+			Map<String, Object> viewProperties) {
+		setId(id);
+		setViewClass(viewClass);
+		setViewProperties(viewProperties);
+	}
 
 	/**
 	 * @return the autoHideBorder
@@ -69,7 +71,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	}
 
 	/**
-	 * @param autoHideBorder the autoHideBorder to set
+	 * @param autoHideBorder
+	 *            the autoHideBorder to set
 	 */
 	public void setAutoHideBorder(DockingConstants.Hide autoHideBorder) {
 		this.autoHideBorder = autoHideBorder;
@@ -83,7 +86,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	}
 
 	/**
-	 * @param autoHideEnabled the autoHideEnabled to set
+	 * @param autoHideEnabled
+	 *            the autoHideEnabled to set
 	 */
 	public void setAutoHideEnabled(boolean autoHideEnabled) {
 		this.autoHideEnabled = autoHideEnabled;
@@ -97,7 +101,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	}
 
 	/**
-	 * @param closeEnabled the closeEnabled to set
+	 * @param closeEnabled
+	 *            the closeEnabled to set
 	 */
 	public void setCloseEnabled(boolean closeEnabled) {
 		this.closeEnabled = closeEnabled;
@@ -111,7 +116,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	}
 
 	/**
-	 * @param floatEnabled the floatEnabled to set
+	 * @param floatEnabled
+	 *            the floatEnabled to set
 	 */
 	public void setFloatEnabled(boolean floatEnabled) {
 		this.floatEnabled = floatEnabled;
@@ -125,7 +131,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 	}
 
 	/**
-	 * @param maximizeEnabled the maximizeEnabled to set
+	 * @param maximizeEnabled
+	 *            the maximizeEnabled to set
 	 */
 	public void setMaximizeEnabled(boolean maximizeEnabled) {
 		this.maximizeEnabled = maximizeEnabled;
