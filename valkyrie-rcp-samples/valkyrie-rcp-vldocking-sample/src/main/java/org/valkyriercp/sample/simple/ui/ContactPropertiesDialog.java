@@ -56,7 +56,8 @@ public class ContactPropertiesDialog extends TitledPageApplicationDialog {
 			contact = new Contact();
 		}
 		setCloseAction(CloseAction.DISPOSE);
-		form = new ContactForm(contact);
+		form = new ContactForm();
+        form.setFormObject(contact);
 		setDialogPage(new FormBackedDialogPage(form));
 		this.dataStore = dataStore;
 
