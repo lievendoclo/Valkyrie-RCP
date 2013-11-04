@@ -28,15 +28,9 @@ import java.util.HashMap;
 
 public class ContactForm extends AbstractFocussableWidgetForm
 {
-    private Contact contact;
-
-	public ContactForm(Contact contact) {
-        this.contact = contact;
-    }
-
     @Override
     public FormModel createFormModel() {
-        return getApplicationConfig().formModelFactory().createFormModel(contact, "contactForm");
+        return getApplicationConfig().formModelFactory().createFormModel(new Contact(), "contactForm");
     }
 
     protected JComponent createFormControl()
