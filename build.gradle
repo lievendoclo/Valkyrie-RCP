@@ -1,8 +1,10 @@
 allprojects {
+    apply plugin: "java"
     apply plugin: "idea"
     apply plugin: "eclipse"
 
     group = "dk.navicon"
+    sourceCompatibility = 1.6
     ext.springVersion = "3.2.4.RELEASE"
 
     repositories {
@@ -11,33 +13,9 @@ allprojects {
         }
         mavenCentral()
     }
-}
-
-idea {
-    project {
-        ipr {
-            withXml {
-                IdeaEnricher.enableGitScm(this.project, it.asNode())
-            }
-        }
-    }
-}
-
-configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rcp-integrations")) { subproject ->
-    apply plugin: "java"
 
     configurations {
         all*.exclude group: 'commons-logging', module: 'commons-logging'
-    }
-
-    compileJava {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
-    }
-
-    compileTestJava {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
     }
 
     test {
@@ -47,19 +25,22 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
     }
 
     jar {
+        enabled = !sourceSets.main.allSource.empty
         manifest.attributes["Created-By"] =
             "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-        manifest.attributes["Implementation-Title"] = subproject.name
-        manifest.attributes["Implementation-Version"] = subproject.version
+        manifest.attributes["Implementation-Title"] = project.name
+        manifest.attributes["Implementation-Version"] = project.version
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
+        enabled = !sourceSets.main.allSource.empty
         classifier = "sources"
         from sourceSets.main.allJava.srcDirs
         include "**/*.java"
     }
 
     task javadocJar(type: Jar) {
+        enabled = !sourceSets.main.allSource.empty
         classifier = "javadoc"
         from javadoc
     }
