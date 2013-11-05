@@ -1,6 +1,6 @@
 package org.valkyriercp.application.docking;
 
-import com.vlsolutions.swing.docking.*;
+import com.vldocking.swing.docking.*;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
