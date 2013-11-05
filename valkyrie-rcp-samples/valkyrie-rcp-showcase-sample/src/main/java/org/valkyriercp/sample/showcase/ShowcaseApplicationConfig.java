@@ -78,15 +78,6 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
         return configurer;
     }
 
-
-//    @Override
-//    public MessageSource messageSource() {
-//        JoddPropsMessageSource messageSource = new JoddPropsMessageSource("properties");
-//        messageSource.addBaseName("/org/valkyriercp/messages/default");
-//        messageSource.addBaseName("/org/valkyriercp/sample/showcase/messages");
-//        return messageSource;
-//    }
-
     @Override
     public List<String> getResourceBundleLocations() {
         List<String> resourceBundleLocations = super.getResourceBundleLocations();

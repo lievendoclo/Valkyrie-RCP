@@ -15,8 +15,8 @@
  */
 package org.valkyriercp.application.docking;
 
-import com.vlsolutions.swing.docking.*;
-import com.vlsolutions.swing.docking.event.*;
+import com.vldocking.swing.docking.*;
+import com.vldocking.swing.docking.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
