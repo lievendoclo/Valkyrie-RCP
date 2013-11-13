@@ -1,0 +1,77 @@
+== Basics
+
+This chapters covers some of the basic concepts of the Valkyrie framework. Most of them will be explained in more detail
+in later chapters, but this should give the framework user a quick overview.
+
+=== Getting started using the archetype
+
+Starting development of a Valkyrie RCP application is very easy. There is an archetype which provides a basic skeleton
+application from which you can start.
+
+To create a project, making use of the archetype, you need to execute
+
+[source]
+----
+mvn archetype:generate
+   -DarchetypeGroupId=org.valkyriercp
+   -DarchetypeArtifactId=valkyrie-rcp-archetype
+   -DarchetypeVersion=1.1-SNAPSHOT
+----
+
+This creates a basic Valkyrie application consisting of the 4 basic elements needed to run a Valkyrie application:
+
+* ApplicationConfig implementation
+  This contains the basic elements of the Valkyrie application, such as the ApplicationWindowFactory,
+  ApplicationPageFactory, ... The implementation provided by the archetype uses all the default implementations of
+  these factories. It also references the
+* CommandConfig implementation
+  This contains all the commands that will make up the navigation in the application. These can be the commands contained
+  in the menubar, toolbar or any other navigation component.
+* context.xml
+  Valkyrie has only a small XML Spring config file, basically defining the ApplicationConfig bean. Valkyrie can work
+  without the XML file, but since some Spring features are still more simple to define in XML than they are in Java
+  configuration, it is included.
+* ApplicationRunner class
+  This is the executable class that runs the Valkyrie application.
+
+=== The factories
+
+Valkyrie uses the factory pattern extensively to create its objects. Most of these factories are discussed in other
+chapters, but the following list show a small overview of the essential factories:
+
+* ApplicationWindowFactory
+  This factory creates the window in which components are shown. The standard implementation creates a JXFrame and
+  defines a menubar, toolbar and statusbar by default.
+* ApplicationPageFactory
+  This factory creates the 'pages' in Valkyrie. A page is the main contentpane in which components are shown. The default
+  implementation shows a single panel in which components are shown, but there are implementations that show multiple
+  tabbed or docked content panes.
+* PageComponentPaneFactory
+  This factory the actual content pane in which the content of a page is shown. The basic implementation shows a simple
+  internal frame. There is also a simple implementation that wraps the content in a panel without decoration.
+* ComponentFactory, ButtonFactory, MenuFactory
+  These factories create basic Swing components. The default implementations create the standard Swing components in the
+  JDK (JLabel, JTextField, ...), but other implementations may provide other implementations. When creating components
+  in Valkyrie, these factories should be utilised wherever possible in order to maintain a standardized way of creating
+  components
+
+=== Lifecycle
+
+Valkyrie applications have the concept of a lifecycle. The lifecycle can be used to hook in functionality at certain
+points of execution. The lifecycle dictates when the application window should be created, what should happen before
+and after creating, when commands should be creating, ...
+
+Lifecycles enable the developer to add functionality to these extension points. For example, a developer could add a
+login window before the displaying of the application window to enforce security, or to show a confirmation dialog
+before closing an application window.
+
+=== Views
+
+Views are the abstraction of a component shown in a page. A view also has a descriptor that describes the content of the
+view, such as a title, description or icon.
+
+=== Widgets
+
+Sometimes a bunch of components make a logical group and share functionality (say, for example, a CRUD component that
+takes a list as input and consists of a table, detail form and filtering fields). Widgets provide a way to create such
+groups of components.

@@ -1,14 +1,20 @@
 buildscript {
     repositories {
         maven { url 'http://repo.springsource.org/plugins-release' }
+        maven {
+            name 'Bintray Asciidoctor repo'
+            url  'http://dl.bintray.com/content/aalmiray/asciidoctor'
+        }
     }
     dependencies {
         classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.7'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.0'
     }
 }
 
 apply plugin: 'docbook-reference'
 apply plugin: 'groovy'
+apply plugin: 'asciidoctor'
 
 reference {
     sourceDir = file('src/reference/docbook')
@@ -28,3 +34,4 @@ task docsZip(type: Zip) {
 artifacts {
     archives docsZip
 }
+
