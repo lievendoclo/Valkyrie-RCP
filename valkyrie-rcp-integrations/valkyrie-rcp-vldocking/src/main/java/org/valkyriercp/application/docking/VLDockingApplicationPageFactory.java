@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.application.docking;
 
-import com.vlsolutions.swing.docking.DockingContext;
+import com.vldocking.swing.docking.DockingContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.valkyriercp.application.*;
@@ -38,7 +38,7 @@ public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
     private static final Log logger = LogFactory.getLog(VLDockingApplicationPageFactory.class);
 
     private boolean reusePages;
-    private Map pageCache = new HashMap();
+    private Map<Object, Map<Object, Object>> pageCache = new HashMap<Object, Map<Object, Object>>();
     /*
      * (non-Javadoc)
      * 
@@ -100,9 +100,11 @@ public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
         }
         finally {
             try {
-                buffOs.close();
+                if(buffOs != null)
+                    buffOs.close();
             }
             catch (Exception e) {
+                logger.debug("Error closing layoutfile", e);
             }
         }
     }
@@ -121,13 +123,16 @@ public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
 
         // create config dir if it does not exist
         if (!configDir.exists()) {
-            configDir.mkdirs();
-            logger.debug("Newly created config directory");
+            boolean success = configDir.mkdirs();
+            if(success)
+                logger.debug("Newly created config directory");
+            else
+                logger.warn("Could not create config directory");
         }
     }
 
     protected VLDockingApplicationPage findPage(ApplicationWindow window, PageDescriptor descriptor) {
-        Map pages = (Map) pageCache.get(window);
+        Map<Object, Object> pages = pageCache.get(window);
         if (pages == null) {
             return null;
         }
@@ -136,9 +141,9 @@ public class VLDockingApplicationPageFactory implements ApplicationPageFactory {
     }
 
     protected void cachePage(VLDockingApplicationPage page) {
-        Map pages = (Map) pageCache.get(page.getWindow());
+        Map<Object, Object> pages = pageCache.get(page.getWindow());
         if (pages == null) {
-            pages = new HashMap();
+            pages = new HashMap<Object, Object>();
             pageCache.put(page.getWindow(), pages);
         }
         pages.put(page.getId(), page);

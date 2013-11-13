@@ -21,11 +21,9 @@ import org.springframework.core.style.ToStringCreator;
 import org.valkyriercp.application.PageComponent;
 import org.valkyriercp.application.ViewDescriptor;
 
-import com.vlsolutions.swing.docking.DockKey;
-import com.vlsolutions.swing.docking.Dockable;
-import com.vlsolutions.swing.docking.DockingConstants.Hide;
-import org.valkyriercp.application.PageComponent;
-import org.valkyriercp.application.ViewDescriptor;
+import com.vldocking.swing.docking.DockKey;
+import com.vldocking.swing.docking.Dockable;
+import com.vldocking.swing.docking.DockingConstants.Hide;
 
 /**
  * @author Rogan Dawes

@@ -21,7 +21,7 @@ import java.util.Map;
 import org.valkyriercp.application.View;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 
-import com.vlsolutions.swing.docking.DockingConstants;
+import com.vldocking.swing.docking.DockingConstants;
 
 /**
  * @author Rogan Dawes

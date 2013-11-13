@@ -15,8 +15,8 @@
  */
 package org.valkyriercp.application.docking;
 
-import com.vlsolutions.swing.docking.Dockable;
-import com.vlsolutions.swing.docking.DockingDesktop;
+import com.vldocking.swing.docking.Dockable;
+import com.vldocking.swing.docking.DockingDesktop;
 
 /**
  * @author Rogan Dawes
