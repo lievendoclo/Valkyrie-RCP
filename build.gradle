@@ -2,6 +2,10 @@ def props = new Properties()
 file("dependencies.properties").withInputStream { props.load(it) }
 ext.dependencyVersions = new ConfigSlurper().parse(props)
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
+
 allprojects {
     apply plugin: "java"
     apply plugin: "idea"
