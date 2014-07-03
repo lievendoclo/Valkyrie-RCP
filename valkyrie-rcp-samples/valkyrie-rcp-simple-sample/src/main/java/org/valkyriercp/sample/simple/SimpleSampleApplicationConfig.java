@@ -113,13 +113,12 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 		};
 		return new AuthenticationManagerBuilder(objectPostProcessor)
 				.inMemoryAuthentication().withUser("user").password("user")
-				.roles("USER").and().and().inMemoryAuthentication()
-				.withUser("admin").password("admin").roles("ADMIN").and().and()
-				.build();
+				.roles("USER").and().withUser("admin").password("admin")
+				.roles("ADMIN").and().and().build();
 	}
 
 	@Bean
-	public static ApplicationObjectConfigurerBeanPostProcessor ApplicationObjectConfigurerBeanPostProcessor() {
+	public static ApplicationObjectConfigurerBeanPostProcessor applicationObjectConfigurerBeanPostProcessor() {
 		return new ApplicationObjectConfigurerBeanPostProcessor();
 	}
 
