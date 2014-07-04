@@ -1,6 +1,6 @@
 package org.valkyriercp.form.binding.swing;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.binding.form.FormModel;

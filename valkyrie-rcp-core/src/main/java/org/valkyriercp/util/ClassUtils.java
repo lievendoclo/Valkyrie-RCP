@@ -383,9 +383,9 @@ public class ClassUtils {
 		return method;
 	}
 
-	private static Method getMethod(final Class theClass, final String getterName) {
+	private static Method getMethod(final Class<?> theClass, final String getterName) {
 		try {
-			return theClass.getMethod(getterName, null);
+			return theClass.getMethod(getterName, (Class[]) null);
 		}
 		catch (NoSuchMethodException e) {
 			return null;

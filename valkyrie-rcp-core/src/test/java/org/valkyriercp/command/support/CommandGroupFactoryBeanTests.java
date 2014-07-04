@@ -73,14 +73,14 @@ public class CommandGroupFactoryBeanTests extends AbstractValkyrieTest {
         CommandGroupFactoryBean factoryBean = new CommandGroupFactoryBean();
 
         try {
-            factoryBean.setMembers(null);
+            factoryBean.setMembers((Object[]) null);
             Assert.fail("Should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException e) {
             //test passes
         }
 
-        factoryBean.setMembers(new Object[] {});
+        factoryBean.setMembers();
 
     }
 

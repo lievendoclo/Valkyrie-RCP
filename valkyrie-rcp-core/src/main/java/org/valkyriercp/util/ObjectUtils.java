@@ -1,6 +1,6 @@
 package org.valkyriercp.util;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -158,7 +158,7 @@ public final class ObjectUtils {
      * {@link org.apache.commons.collections.ListUtils#isEqualList(java.util.Collection, java.util.Collection)} rewrote
      * for performance reasons.
      * <p>
-     * Basically employs {@link ObjectUtils#equals(Object, Object)} instead of {@link #equals(Object)} since the first
+     * Basically employs {@link ObjectUtils#equals(Object)} instead of {@link #equals(Object)} since the first
      * one checks identity before calling <code>equals</code>.
      *
      * @param <T>
@@ -187,7 +187,7 @@ public final class ObjectUtils {
             obj1 = itr1.next();
             obj2 = itr2.next();
 
-            if (!(obj1 == null ? obj2 == null : org.apache.commons.lang.ObjectUtils.equals(obj1, obj2))) {
+            if (!(obj1 == null ? obj2 == null : org.apache.commons.lang3.ObjectUtils.equals(obj1, obj2))) {
                 return Boolean.FALSE;
             }
         }

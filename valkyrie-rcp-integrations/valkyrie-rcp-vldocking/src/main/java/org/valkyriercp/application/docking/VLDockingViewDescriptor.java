@@ -15,13 +15,12 @@
  */
 package org.valkyriercp.application.docking;
 
-import java.util.Collections;
-import java.util.Map;
-
+import com.vldocking.swing.docking.DockingConstants;
 import org.valkyriercp.application.View;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
 
-import com.vldocking.swing.docking.DockingConstants;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author Rogan Dawes

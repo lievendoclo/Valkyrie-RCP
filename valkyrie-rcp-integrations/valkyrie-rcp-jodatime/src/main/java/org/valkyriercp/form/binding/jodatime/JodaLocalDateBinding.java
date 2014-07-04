@@ -34,7 +34,7 @@ public class JodaLocalDateBinding extends CustomBinding implements PropertyChang
         if (dateTime == null) {
             datePicker.setDate(null);
         } else {
-            datePicker.setDate(dateTime.toDateTimeAtMidnight().toGregorianCalendar().getTime());
+            datePicker.setDate(dateTime.toDateTimeAtStartOfDay().toGregorianCalendar().getTime());
         }
     }
 

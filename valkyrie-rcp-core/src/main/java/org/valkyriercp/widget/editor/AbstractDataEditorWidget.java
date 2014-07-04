@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXTable;

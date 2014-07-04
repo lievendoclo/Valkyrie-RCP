@@ -1,10 +1,10 @@
 package org.valkyriercp.application.docking;
 
 import com.vldocking.swing.docking.*;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.util.Assert;
 
 import javax.swing.*;

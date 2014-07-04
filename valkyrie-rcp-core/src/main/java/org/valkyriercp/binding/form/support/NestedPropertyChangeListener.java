@@ -4,7 +4,7 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;

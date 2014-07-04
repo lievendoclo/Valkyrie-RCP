@@ -110,7 +110,7 @@ public class DefaultMemberPropertyAccessor extends AbstractNestedMemberPropertyA
             if (readAccessor instanceof Field) {
                 return ((Field) readAccessor).get(target);
             } else {// readAccessor instanceof Method
-                return ((Method) readAccessor).invoke(target, null);
+                return ((Method) readAccessor).invoke(target, (Object[]) null);
             }
         } catch (IllegalAccessException e) {
             throw new InvalidPropertyException(getTargetClass(), propertyName, "Property is not accessible", e);
