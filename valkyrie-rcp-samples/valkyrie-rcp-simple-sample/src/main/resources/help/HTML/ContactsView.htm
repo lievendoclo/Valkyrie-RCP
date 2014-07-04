@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta name="GENERATOR" content="Solutionsoft HelpBreeze JavaHelp Edition">
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1" >
+<title>Contacts View</title>
+<link rel="stylesheet" type="text/css" href="../javahelp.css">
+</head>
+<body bgcolor="#ffffff">
+<h1>Contacts View</h1>
+<p>The Contacts view, shown below,&nbsp;presents the 
+toolbar and the summary table of all the contacts within the data store.</p>
+<p><IMG height=380 hspace=0 src="../Images/contactView.jpg" 
+width=800 border=0></p>
+<p>&nbsp;</p>
+<p>The toolbar contains actions that are also present in the File menu.&nbsp; 
+The platform supports placing an action into multiple containers.&nbsp; 
+Enabling/disabling a command will properly affect the state of all renderings (faces)&nbsp;of 
+the action within the GUI.</p>
+<p>The summary table is constructed using components in the platform that 
+leverage the power of the Glazed Lists project.&nbsp; Glazed lists provides for 
+easy creation of filtered and sorted lists and the creation of a table model from 
+such a compound list.&nbsp; Further the table model supports multi-column 
+sorting on the table.&nbsp; As shown above the sort indicator is on the "Last 
+Name" column.&nbsp; By clicking on any of the other headers, you will add a 
+secondary sort on that column.&nbsp; Clicking on a third column will add a 
+tertiary sort, and so on.&nbsp; To reset the sort to a single primary column, 
+simply double click on one of the column headers.</p>
+<p>The "Name/Address filter" text entry field offers <em>as you type</em> 
+filtering of the contents displayed in the table.&nbsp; Any text entered in the 
+field will be matched against each contact's&nbsp;<font 
+face="Times New Roman">lastName</font> and address1 fields.&nbsp; Any records 
+that match are displayed, records that don't match are filtered from the 
+view.</p>
+<P>In order to edit the properties of a contact, select a row in the table and 
+then click the properties toolbar button (or choose properties from the File 
+menu, or from the context menu, or just double click the row).&nbsp; The 
+properties dialog will be displayed, as shown below.</P>
+<P><IMG height=486 hspace=0 src="../Images/contactProperties.jpg" width=590 
+border=0></P>
+<P>Here, any properties of the Contact entry can be edited.&nbsp; Note in the 
+image above that one of the property constraints have been violated and the Last 
+Name field is displayed with a small red "x" icon and a message in the title 
+pane indicates that the field is required.&nbsp; Also, note that while the 
+validation error is present, the "Ok" button is automatically disabled.&nbsp; 
+Support for property constraints (even inter-property constraints) are an 
+important feature of the Spring Rich platform.</P>
+</body>
+</html>
