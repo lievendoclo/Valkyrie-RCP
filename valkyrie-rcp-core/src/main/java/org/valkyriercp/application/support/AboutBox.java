@@ -1,38 +1,24 @@
 package org.valkyriercp.application.support;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JViewport;
-import javax.swing.Timer;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import com.google.common.collect.Lists;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.application.ApplicationDescriptor;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.component.HtmlPane;
 import org.valkyriercp.dialog.ApplicationDialog;
 import org.valkyriercp.dialog.CloseAction;
 
-import com.google.common.collect.Lists;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * An implementation of an about box in a dialog. The dialog contents contain a
@@ -47,12 +33,8 @@ import com.google.common.collect.Lists;
  * @see org.valkyriercp.application.ApplicationDescriptor
  * @see org.valkyriercp.component.HtmlPane
  */
-@Configurable
 public class AboutBox {
 	private Resource aboutTextPath;
-
-	@Autowired
-	private ApplicationConfig applicationConfig;
 
 	public AboutBox() {
 	}
@@ -83,7 +65,7 @@ public class AboutBox {
 		private HtmlScroller scroller;
 
 		public AboutDialog() {
-			setTitle("About " + applicationConfig.application().getName());
+			setTitle("About " + getApplicationConfig().application().getName());
 			setResizable(false);
 			setCloseAction(CloseAction.DISPOSE);
 		}
@@ -102,11 +84,11 @@ public class AboutBox {
 		 */
 		protected JComponent createApplicationDescriptorComponent() {
 			// Build the application descriptor data, if available
-			JTextArea txtDescriptor = applicationConfig.componentFactory()
+			JTextArea txtDescriptor = getApplicationConfig().componentFactory()
 					.createTextAreaAsLabel();
 			txtDescriptor
 					.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
-			ApplicationDescriptor appDesc = applicationConfig
+			ApplicationDescriptor appDesc = getApplicationConfig()
 					.applicationDescriptor();
 			if (appDesc != null) {
 				String displayName = appDesc.getDisplayName();
@@ -127,13 +109,13 @@ public class AboutBox {
 				}
 				if (StringUtils.hasText(version)) {
 					sb.append(
-							applicationConfig.messageResolver().getMessage(
+							getApplicationConfig().messageResolver().getMessage(
 									"aboutBox.version.label")).append(": ")
 							.append(version).append("\n");
 				}
 				if (StringUtils.hasText(buildId)) {
 					sb.append(
-							applicationConfig.messageResolver().getMessage(
+                            getApplicationConfig().messageResolver().getMessage(
 									"aboutBox.buildId.label")).append(": ")
 							.append(buildId).append("\n");
 				}
