@@ -11,3 +11,5 @@ valkyrie-rcp-local
 build
 .gradle
 bin
+atlassian-ide-plugin.xml
+classes
