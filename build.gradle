@@ -13,6 +13,7 @@ allprojects {
 
     group = "dk.navicon"
     sourceCompatibility = 1.6
+    ext.springVersion = "3.2.8.RELEASE"
 
     repositories {
         maven {
