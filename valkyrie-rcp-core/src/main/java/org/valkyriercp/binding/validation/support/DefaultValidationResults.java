@@ -1,7 +1,7 @@
 package org.valkyriercp.binding.validation.support;
 
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.ObjectUtils;
 import org.valkyriercp.binding.validation.ValidationMessage;
 import org.valkyriercp.binding.validation.ValidationResults;
@@ -13,7 +13,7 @@ public class DefaultValidationResults implements ValidationResults {
 
     private final Set messages = new HashSet();
 
-    private CachingMapDecorator messagesSubSets = new CachingMapDecorator() {
+    private AbstractCachingMapDecorator messagesSubSets = new AbstractCachingMapDecorator() {
 
         protected Object create(Object key) {
             Set messagesSubSet = new HashSet();

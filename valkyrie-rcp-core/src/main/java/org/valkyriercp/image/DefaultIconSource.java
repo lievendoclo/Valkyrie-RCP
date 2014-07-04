@@ -3,7 +3,7 @@ package org.valkyriercp.image;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CachingMapDecorator;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class DefaultIconSource implements IconSource {
      *
      * @author Keith Donald
      */
-    protected static class IconCache extends CachingMapDecorator {
+    protected static class IconCache extends AbstractCachingMapDecorator {
         private ImageSource images;
 
         public IconCache(ImageSource images) {

@@ -1,12 +1,22 @@
 package org.valkyriercp.security.remoting;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.auth.*;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
+import org.springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 import org.springframework.security.core.Authentication;
 import org.valkyriercp.security.AuthenticationAware;
+
+import java.io.IOException;
 
 /**
  * Extension of <code>HttpInvokerProxyFactoryBean</code> that supports the use of BASIC
@@ -28,9 +38,9 @@ import org.valkyriercp.security.AuthenticationAware;
  * and every invocation should use the same credentials. If you need per-thread
  * authentication then you should look at using a combination of
  * {@link org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean} and
- * {@link org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor}.
+ * AuthenticationSimpleHttpInvokerRequestExecutor.
  * <p>
- * {@link org.springframework.richclient.security.AuthenticationAware} is implemented in order to get notifications of changes in
+ * {@link AuthenticationAware} is implemented in order to get notifications of changes in
  * the user's credentials. Please see the class documentation for
  * <code>AuthenticationAware</code> to see how to configure the application context so
  * that authentication changes are broadcast properly.
@@ -44,24 +54,26 @@ public class BasicAuthCommonsHttpInvokerProxyFactoryBean extends HttpInvokerProx
      * Constructor. Install the default executor.
      */
     public BasicAuthCommonsHttpInvokerProxyFactoryBean() {
-        setHttpInvokerRequestExecutor(new CommonsHttpInvokerRequestExecutor());
+        setHttpInvokerRequestExecutor(new HttpComponentsHttpInvokerRequestExecutor());
     }
 
 
     /**
      * Handle a change in the current authentication token.
      * This method will fail fast if the executor isn't a CommonsHttpInvokerRequestExecutor.
-     * @see org.springframework.richclient.security.AuthenticationAware#setAuthenticationToken(org.springframework.security.Authentication)
+     * @see org.valkyriercp.security.AuthenticationAware#setAuthenticationToken(org.springframework.security.core.Authentication)
      */
     public void setAuthenticationToken(Authentication authentication) {
         if( logger.isDebugEnabled() ) {
             logger.debug("New authentication token: " + authentication);
         }
 
-        CommonsHttpInvokerRequestExecutor executor
-                = (CommonsHttpInvokerRequestExecutor) getHttpInvokerRequestExecutor();
-        HttpClient httpClient = executor.getHttpClient();
-        httpClient.getParams().setAuthenticationPreemptive(authentication != null);
+        HttpComponentsHttpInvokerRequestExecutor executor
+                = (HttpComponentsHttpInvokerRequestExecutor) getHttpInvokerRequestExecutor();
+        DefaultHttpClient httpClient = (DefaultHttpClient) executor.getHttpClient();
+        BasicCredentialsProvider provider = new BasicCredentialsProvider();
+        httpClient.setCredentialsProvider(provider);
+        httpClient.addRequestInterceptor(new PreemptiveAuthInterceptor());
         UsernamePasswordCredentials usernamePasswordCredentials;
         if (authentication != null) {
             usernamePasswordCredentials = new UsernamePasswordCredentials(
@@ -69,6 +81,29 @@ public class BasicAuthCommonsHttpInvokerProxyFactoryBean extends HttpInvokerProx
         } else {
             usernamePasswordCredentials = null;
         }
-        httpClient.getState().setCredentials(AuthScope.ANY, usernamePasswordCredentials);
+        provider.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
+    }
+
+    static class PreemptiveAuthInterceptor implements HttpRequestInterceptor {
+
+        public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
+            AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+
+            if (authState.getAuthScheme() == null) {
+                AuthScheme authScheme = (AuthScheme) context.getAttribute("preemptive-auth");
+                CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
+                HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+                if (authScheme != null) {
+                    Credentials creds = credsProvider.getCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()));
+                    if (creds == null) {
+                        throw new HttpException("No credentials for preemptive authentication");
+                    }
+                    authState.setAuthScheme(authScheme);
+                    authState.setCredentials(creds);
+                }
+            }
+
+        }
+
     }
 }

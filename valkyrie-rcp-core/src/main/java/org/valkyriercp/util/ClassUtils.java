@@ -2,7 +2,6 @@ package org.valkyriercp.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.enums.LabeledEnum;
 import org.springframework.core.style.StylerUtils;
 
 import java.lang.reflect.Field;
@@ -175,7 +174,7 @@ public class ClassUtils {
 	 * Strings.
 	 */
 	public static boolean isSimpleScalar(Class clazz) {
-		return clazz.isPrimitive() || simpleClasses.contains(clazz) || LabeledEnum.class.isAssignableFrom(clazz);
+		return clazz.isPrimitive() || simpleClasses.contains(clazz);
 	}
 
 	public static Method getStaticMethod(String name, Class locatorClass, Class[] args) {

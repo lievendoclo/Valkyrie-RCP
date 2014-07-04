@@ -1,13 +1,13 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
@@ -77,7 +77,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	private final Set dirtyValueAndFormModels = new HashSet();
 
-	private final Map propertyConversionServices = new CachingMapDecorator() {
+	private final Map propertyConversionServices = new AbstractCachingMapDecorator() {
 		public Object create(Object key) {
 			return new DefaultConversionService() {
 				protected void addDefaultConverters() {
@@ -315,7 +315,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		Assert.notNull(formProperty, "formProperty");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating " + (buffered ? "buffered" : "") + " value model for form property '" + formProperty
-					+ "'.");
+                    + "'.");
 		}
 		return buffered ? new BufferedValueModel(propertyAccessStrategy.getPropertyValueModel(formProperty))
 				: propertyAccessStrategy.getPropertyValueModel(formProperty);

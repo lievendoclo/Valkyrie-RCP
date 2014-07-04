@@ -1,9 +1,9 @@
 package org.valkyriercp.binding.beans;
 
 import org.springframework.beans.*;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.util.CachingMapDecorator;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -195,7 +195,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 		childPropertyAccessors.clear();
 	}
 
-	private class ChildPropertyAccessorCache extends CachingMapDecorator {
+	private class ChildPropertyAccessorCache extends AbstractCachingMapDecorator {
 
 		@Override
 		protected Object create(Object propertyName) {

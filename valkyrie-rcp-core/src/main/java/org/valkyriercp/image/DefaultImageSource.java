@@ -3,13 +3,13 @@ package org.valkyriercp.image;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 
 import java.awt.*;
 import java.io.IOException;
@@ -197,7 +197,7 @@ public class DefaultImageSource implements ImageSource {
 		return new ToStringCreator(this).append("imageResources", imageResources).toString();
 	}
 
-	private static class ImageCache extends CachingMapDecorator {
+	private static class ImageCache extends AbstractCachingMapDecorator {
 		public ImageCache() {
 			super(true);
 		}

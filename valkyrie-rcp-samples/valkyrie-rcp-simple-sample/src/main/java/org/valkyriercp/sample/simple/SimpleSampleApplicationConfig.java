@@ -1,11 +1,10 @@
 package org.valkyriercp.sample.simple;
 
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,12 +24,10 @@ import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
 import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
-@EnableSpringConfigured
 public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 
 	@Override

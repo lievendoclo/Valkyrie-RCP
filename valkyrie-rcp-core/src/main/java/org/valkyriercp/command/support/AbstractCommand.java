@@ -1,9 +1,9 @@
 package org.valkyriercp.command.support;
 
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.command.SecuredActionCommandExecutor;
@@ -14,7 +14,6 @@ import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
 import org.valkyriercp.util.ValkyrieRepository;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -928,7 +927,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 */
 	private CommandFaceButtonManager getButtonManager(String faceDescriptorId) {
 		if (this.faceButtonManagers == null) {
-			this.faceButtonManagers = new CachingMapDecorator() {
+			this.faceButtonManagers = new AbstractCachingMapDecorator() {
 				protected Object create(Object key) {
 					return new CommandFaceButtonManager(AbstractCommand.this, (String) key);
 				}

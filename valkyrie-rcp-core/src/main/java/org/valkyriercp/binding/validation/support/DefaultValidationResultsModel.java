@@ -1,8 +1,8 @@
 package org.valkyriercp.binding.validation.support;
 
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.ObjectUtils;
 import org.valkyriercp.binding.validation.ValidationListener;
 import org.valkyriercp.binding.validation.ValidationMessage;
@@ -74,14 +74,14 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 
 	private final EventListenerListHelper validationListeners = new EventListenerListHelper(ValidationListener.class);
 
-	private final CachingMapDecorator propertyValidationListeners = new CachingMapDecorator() {
+	private final AbstractCachingMapDecorator propertyValidationListeners = new AbstractCachingMapDecorator() {
 
 		protected Object create(Object propertyName) {
 			return new EventListenerListHelper(ValidationListener.class);
 		}
 	};
 
-	private final CachingMapDecorator propertyChangeListeners = new CachingMapDecorator() {
+	private final AbstractCachingMapDecorator propertyChangeListeners = new AbstractCachingMapDecorator() {
 
 		protected Object create(Object propertyName) {
 			return new EventListenerListHelper(PropertyChangeListener.class);

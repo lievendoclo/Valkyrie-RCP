@@ -2,8 +2,8 @@ package org.valkyriercp.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public final class ReflectiveVisitorHelper {
 	private static final Log logger = LogFactory.getLog(ReflectiveVisitorHelper.class);
 
 
-	private CachingMapDecorator visitorClassVisitMethods = new CachingMapDecorator() {
+	private AbstractCachingMapDecorator visitorClassVisitMethods = new AbstractCachingMapDecorator() {
 		public Object create(Object key) {
 			return new ClassVisitMethods((Class) key);
 		}
@@ -102,7 +102,7 @@ public final class ReflectiveVisitorHelper {
 
 		private final Class visitorClass;
 
-		private CachingMapDecorator visitMethodCache = new CachingMapDecorator() {
+		private AbstractCachingMapDecorator visitMethodCache = new AbstractCachingMapDecorator() {
 			public Object create(Object argumentClazz) {
 				if (argumentClazz == null) {
 					return findNullVisitorMethod();

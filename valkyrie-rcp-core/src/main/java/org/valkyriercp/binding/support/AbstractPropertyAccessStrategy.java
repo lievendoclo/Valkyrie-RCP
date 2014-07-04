@@ -2,8 +2,8 @@ package org.valkyriercp.binding.support;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessor;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
 import org.valkyriercp.binding.value.ValueModel;
@@ -216,7 +216,7 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	/**
 	 * A cache of value models generated for specific property paths.
 	 */
-	private class ValueModelCache extends CachingMapDecorator {
+	private class ValueModelCache extends AbstractCachingMapDecorator {
 
 		protected Object create(Object propertyPath) {
 			String fullPropertyPath = getFullPropertyPath((String) propertyPath);

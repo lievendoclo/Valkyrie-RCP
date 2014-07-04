@@ -3,7 +3,6 @@ package org.valkyriercp.form.binding.support;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binder;
@@ -253,10 +252,6 @@ public abstract class AbstractBinderSelectionStrategy implements BinderSelection
 
     protected Class getPropertyType(FormModel formModel, String formPropertyPath) {
         return formModel.getFieldMetadata(formPropertyPath).getPropertyType();
-    }
-
-    protected boolean isEnumeration(FormModel formModel, String formPropertyPath) {
-        return LabeledEnum.class.isAssignableFrom(getPropertyType(formModel, formPropertyPath));
     }
 
     private static class PropertyNameKey {

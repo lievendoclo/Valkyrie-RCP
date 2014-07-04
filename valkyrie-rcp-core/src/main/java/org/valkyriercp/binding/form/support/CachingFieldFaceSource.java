@@ -1,7 +1,7 @@
 package org.valkyriercp.binding.form.support;
 
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.valkyriercp.binding.form.FieldFace;
 import org.valkyriercp.binding.form.FieldFaceSource;
 
@@ -25,7 +25,7 @@ public abstract class CachingFieldFaceSource implements FieldFaceSource {
      * A cache with context keys and Map from field to FieldFace values. The keys are held with week references so this
      * class will not prevent GC of context instances.
      */
-    private final CachingMapDecorator cachedFieldFaceDescriptors = new CachingMapDecorator(true) {
+    private final AbstractCachingMapDecorator cachedFieldFaceDescriptors = new AbstractCachingMapDecorator(true) {
         public Object create(Object key) {
             return new HashMap();
         }

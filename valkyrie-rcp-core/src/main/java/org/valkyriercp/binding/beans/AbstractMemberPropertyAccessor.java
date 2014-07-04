@@ -206,7 +206,7 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 	public Class getPropertyType(String propertyName) {
 		if (PropertyAccessorUtils.isIndexedProperty(propertyName)) {
 			int nestingLevel = PropertyAccessorUtils.getNestingLevel(propertyName);
-			if (JdkVersion.isAtLeastJava15()) {
+			if (JdkVersion.getMajorJavaVersion() >= 5) {
 				Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
 				if (accessor instanceof Field) {
 					return GenericCollectionTypeResolver.getIndexedValueFieldType((Field) accessor, nestingLevel);
@@ -268,7 +268,7 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 		if (!Map.class.isAssignableFrom(type)) {
 			return Integer.class;
 		}
-		if (JdkVersion.isAtLeastJava15()) {
+		if (JdkVersion.getMajorJavaVersion() >= 5) {
 			int nestingLevel = PropertyAccessorUtils.getNestingLevel(propertyName) - 1;
 			Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
 			if (accessor instanceof Field) {
@@ -458,7 +458,7 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 	}
 
 	protected NotReadablePropertyException createNotReadablePropertyException(String propertyName, Exception e) {
-		if (JdkVersion.isAtLeastJava14()) {
+		if (JdkVersion.getMajorJavaVersion() >= 4) {
 			NotReadablePropertyException beanException = new NotReadablePropertyException(getTargetClass(),
 					propertyName);
 			beanException.initCause(e);

@@ -83,7 +83,7 @@ project("valkyrie-rcp-core") {
         compile "commons-beanutils:commons-beanutils:${dependencyVersions.commons.beanutils}"
         compile "commons-lang:commons-lang:${dependencyVersions.commons.lang}"
         compile "commons-collections:commons-collections:${dependencyVersions.commons.collections}"
-        compile "commons-httpclient:commons-httpclient:${dependencyVersions.commons.httpclient}"
+        compile "org.apache.httpcomponents:httpclient:${dependencyVersions.httpclient}"
         compile "com.google.guava:guava:${dependencyVersions.guava}"
         compile "org.springframework.security:spring-security-core:${dependencyVersions.spring.security}"
         compile "org.springframework.security:spring-security-config:${dependencyVersions.spring.security}"

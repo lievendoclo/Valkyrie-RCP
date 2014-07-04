@@ -2,9 +2,9 @@ package org.valkyriercp.rules.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.springframework.util.StringUtils;
 import org.valkyriercp.rules.Rules;
 import org.valkyriercp.rules.RulesSource;
@@ -27,7 +27,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
 
     private static final String DEFAULT_CONTEXT_ID = "default";
 
-    private Map ruleContexts = new CachingMapDecorator() {
+    private Map ruleContexts = new AbstractCachingMapDecorator() {
         protected Object create(Object key) {
             return new HashMap();
         }

@@ -1,9 +1,9 @@
 package org.valkyriercp.util;
 
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -76,7 +76,7 @@ public class EventListenerListHelper implements Serializable {
 		}
 	};
 
-	private static final Map methodCache = new CachingMapDecorator() {
+	private static final Map methodCache = new AbstractCachingMapDecorator() {
 
         /**
          * Creates a value to cache under the given key {@code o}, which must be a
