@@ -1,15 +1,16 @@
 package org.valkyriercp.application.support;
 
-import java.awt.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.valkyriercp.application.ApplicationDescriptor;
+import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.util.ValkyrieRepository;
+import org.valkyriercp.util.WindowUtils;
 
-import javax.help.*;
+import javax.help.HelpSet;
+import javax.help.JHelp;
 import javax.swing.*;
-
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.core.io.*;
-import org.valkyriercp.application.*;
-import org.valkyriercp.application.config.*;
-import org.valkyriercp.util.*;
+import java.awt.*;
 
 /**
  * A simple implementation of a help contents frame for an application using
@@ -17,18 +18,16 @@ import org.valkyriercp.util.*;
  *
  * @author Keith Donald
  */
-@Configurable
 public class HelpContents {
 
     private Resource helpSetPath = new ClassPathResource("help/helpset.hs");
     private JFrame helpFrame;
 
-    @Autowired
     private ApplicationConfig applicationConfig;
 
 
     public HelpContents() {
-    	// empty
+        applicationConfig = ValkyrieRepository.getInstance().getApplicationConfig();
     }
 
     public void setHelpSetPath(Resource helpSetPath) {

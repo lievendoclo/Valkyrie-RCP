@@ -90,6 +90,7 @@ project("valkyrie-rcp-core") {
         compile "org.springframework:spring-web:${dependencyVersions.spring.framework}"
         compile "org.swinglabs.swingx:swingx-all:${dependencyVersions.swingx}"
         compile "com.jgoodies:forms:${dependencyVersions.jgoodies.forms}"
+        compile "javax.help:javahelp:${dependencyVersions.jhelp}"
         compile("org.springframework.webflow:spring-binding:${dependencyVersions.spring.binding}") {
             exclude module: "spring-beans"
             exclude module: "spring-core"
