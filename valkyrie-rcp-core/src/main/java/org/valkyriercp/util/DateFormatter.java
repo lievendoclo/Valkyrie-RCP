@@ -1,7 +1,5 @@
 package org.valkyriercp.util;
 
-import org.apache.commons.lang3.time.DateUtils;
-
 import javax.swing.text.DefaultFormatter;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,7 +51,7 @@ public class DateFormatter extends DefaultFormatter
             calendar.set(Calendar.DAY_OF_MONTH, 31);
             calendar.set(Calendar.MONTH, 12);
             calendar.set(Calendar.YEAR, 9999);
-            return DateUtils.truncate(calendar, Calendar.DATE);
+            return calendar.getTime();
         }
         else if ((daySep == -1) && (length > 2)) // only numbers, at least 4 -> parse numbers right to left
         {

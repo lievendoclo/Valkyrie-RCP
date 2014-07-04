@@ -4,11 +4,11 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -41,11 +41,11 @@ public class NestedPropertyChangeListener implements PropertyChangeListener
 
             if (value == null)
             {
-                return ((String) null);
+                return null;
             }
             else if (value instanceof Date)
             {
-                return DateFormatUtils.format((Date) value, "dd/MM/yyyy");
+                return new SimpleDateFormat("dd/MM/yyyy").format((Date) value);
             }
             return (value.toString());
         }

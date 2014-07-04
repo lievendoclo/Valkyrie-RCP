@@ -81,8 +81,6 @@ project("valkyrie-rcp-core") {
         compile "com.l2fprod:l2fprod-common-all:${dependencyVersions.l2fprod}"
         compile "net.java.dev.glazedlists:glazedlists_java15:${dependencyVersions.glazedlists}"
         compile "commons-beanutils:commons-beanutils:${dependencyVersions.commons.beanutils}"
-        compile "org.apache.commons:commons-lang3:${dependencyVersions.commons.lang3}"
-        compile "org.apache.commons:commons-collections4:${dependencyVersions.commons.collections4}"
         compile "org.apache.httpcomponents:httpclient:${dependencyVersions.httpclient}"
         compile "com.google.guava:guava:${dependencyVersions.guava}"
         compile "org.springframework.security:spring-security-core:${dependencyVersions.spring.security}"

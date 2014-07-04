@@ -1,10 +1,10 @@
 package org.valkyriercp.widget.editor;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXTable;
@@ -1203,7 +1203,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
                 StringBuilder builder = new StringBuilder(formattedRowList.size() * 200);
                 for (java.util.List<String> row : formattedRowList)
                 {
-                    builder.append(StringUtils.join(row.iterator(), "\t") + "\n");
+                    builder.append(Joiner.on("\t").join(row.iterator()) + "\n");
                 }
                 return builder.toString();
             }

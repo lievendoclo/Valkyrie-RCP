@@ -1,7 +1,6 @@
 package org.valkyriercp.application.exceptionhandling;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import com.google.common.base.Strings;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.ErrorCoded;
 
@@ -118,13 +117,13 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
         if (message == null) {
             return "";
         }
-        String identString = StringUtils.leftPad("", identLength);
+        String identString = Strings.padStart("", identLength, ' ');
         String newLineWithIdentString = "\n" + identString;
         StringBuilder formattedMessageBuilder = new StringBuilder(identString);
         StringTokenizer messageTokenizer = new StringTokenizer(message, "\n");
         while (messageTokenizer.hasMoreTokens()) {
             String messageToken = messageTokenizer.nextToken();
-            formattedMessageBuilder.append(WordUtils.wrap(messageToken, wrapLength, newLineWithIdentString, true));
+            formattedMessageBuilder.append(messageToken);
             if (messageTokenizer.hasMoreTokens()) {
                 formattedMessageBuilder.append(newLineWithIdentString);
             }

@@ -1,11 +1,8 @@
 package org.valkyriercp.application.docking;
 
 import com.vldocking.swing.docking.*;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,10 +80,11 @@ public final class VLDockingUtils {
         Assert.notNull(key, "key");
         Assert.notNull(active, "active");
 
-        final int index = StringUtils.lastIndexOf(key, VLDockingUtils.DOT);
+        final int index = key.lastIndexOf(VLDockingUtils.DOT);
         final String overlay = active ? VLDockingUtils.ACTIVE_INFIX : VLDockingUtils.INACTIVE_INFIX;
 
-        return StringUtils.overlay(key, overlay, index, index);
+//        return StringUtils.overlay(key, overlay, index, index);
+        return key; //TODO
     }
 
     /**
@@ -302,22 +300,22 @@ public final class VLDockingUtils {
             return this;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-
-            return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE) //
-                    .append(FocusGainedBean.instanceCount) //
-                    .append(this.getWhatsHappening()) //
-                    .append("lastTitleBar", this.titleBarToString(this.getLastTitleBar()))//
-                    .append("oldTitleBar", this.titleBarToString(this.getOldTitleBar())) //
-                    .append("newTitleBar", this.titleBarToString(this.getNewTitleBar())) //
-                    .append("oldComponent", this.componentToString(this.getOldComponent()))//
-                    .append("newComponent", this.componentToString(this.getNewComponent()))//
-                    .toString();
-        }
+//        /** //TODO
+//         * {@inheritDoc}
+//         */
+//        @Override
+//        public String toString() {
+//
+////            return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE) //
+////                    .append(FocusGainedBean.instanceCount) //
+////                    .append(this.getWhatsHappening()) //
+////                    .append("lastTitleBar", this.titleBarToString(this.getLastTitleBar()))//
+////                    .append("oldTitleBar", this.titleBarToString(this.getOldTitleBar())) //
+////                    .append("newTitleBar", this.titleBarToString(this.getNewTitleBar())) //
+////                    .append("oldComponent", this.componentToString(this.getOldComponent()))//
+////                    .append("newComponent", this.componentToString(this.getNewComponent()))//
+////                    .toString();
+//        }
 
         /**
          * Returns a legible representation of a given component.

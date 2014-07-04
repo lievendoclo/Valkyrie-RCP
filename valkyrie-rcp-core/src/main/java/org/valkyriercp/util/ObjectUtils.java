@@ -1,6 +1,6 @@
 package org.valkyriercp.util;
 
-import org.apache.commons.lang3.ArrayUtils;
+import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -12,10 +12,7 @@ import org.valkyriercp.binding.form.FormModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utility class for dealing with objects.
@@ -187,7 +184,7 @@ public final class ObjectUtils {
             obj1 = itr1.next();
             obj2 = itr2.next();
 
-            if (!(obj1 == null ? obj2 == null : org.apache.commons.lang3.ObjectUtils.equals(obj1, obj2))) {
+            if (!(obj1 == null ? obj2 == null : Objects.equal(obj1, obj2))) {
                 return Boolean.FALSE;
             }
         }
@@ -292,7 +289,7 @@ public final class ObjectUtils {
 
                 Boolean proceed = !Modifier.isFinal(field.getModifiers());
                 proceed &= (targetAccessor.isWritableProperty(fieldName));
-                proceed &= (allProperties | ArrayUtils.contains(propertyNames, fieldName));
+                proceed &= (allProperties | Arrays.asList(propertyNames).contains(fieldName));
 
                 if (proceed) {
 
