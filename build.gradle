@@ -163,19 +163,20 @@ project("valkyrie-rcp-resources") {
 project("valkyrie-rcp-core") {
     dependencies {
         compile project(":valkyrie-rcp-resources")
-        compile "com.l2fprod:l2fprod-common-all:7.3"
-        compile "net.java.dev.glazedlists:glazedlists_java15:1.9.0"
-        compile "commons-beanutils:commons-beanutils:1.8.3"
-        compile "commons-lang:commons-lang:2.6"
-        compile "commons-collections:commons-collections:3.2.1"
-        compile "commons-httpclient:commons-httpclient:3.1"
-        compile "com.google.guava:guava:14.0.1"
-        compile "org.springframework.security:spring-security-core:3.2.4.RELEASE"
-        compile "org.springframework.security:spring-security-config:3.2.4.RELEASE"
-        compile "org.springframework:spring-web:${springVersion}"
-        compile "org.swinglabs.swingx:swingx-all:1.6.5-1"
-        compile "com.jgoodies:forms:1.2.1"
-        compile("org.springframework.webflow:spring-binding:2.3.2.RELEASE") {
+        compile "com.l2fprod:l2fprod-common-all:${dependencyVersions.l2fprod}"
+        compile "net.java.dev.glazedlists:glazedlists_java15:${dependencyVersions.glazedlists}"
+        compile "commons-beanutils:commons-beanutils:${dependencyVersions.commons.beanutils}"
+        compile "commons-lang:commons-lang:${dependencyVersions.commons.lang}"
+        compile "commons-collections:commons-collections:${dependencyVersions.commons.collections}"
+        compile "org.apache.httpcomponents:httpclient:${dependencyVersions.httpclient}"
+        compile "com.google.guava:guava:${dependencyVersions.guava}"
+        compile "org.springframework.security:spring-security-core:${dependencyVersions.spring.security}"
+        compile "org.springframework.security:spring-security-config:${dependencyVersions.spring.security}"
+        compile "org.springframework:spring-web:${dependencyVersions.spring.framework}"
+        compile "org.swinglabs.swingx:swingx-all:${dependencyVersions.swingx}"
+        compile "com.jgoodies:forms:${dependencyVersions.jgoodies.forms}"
+        compile "javax.help:javahelp:${dependencyVersions.jhelp}"
+        compile("org.springframework.webflow:spring-binding:${dependencyVersions.spring.binding}") {
             exclude module: "spring-beans"
             exclude module: "spring-core"
             exclude module: "spring-context"
