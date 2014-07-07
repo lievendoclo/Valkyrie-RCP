@@ -25,7 +25,6 @@ import org.valkyriercp.widget.table.TableDescription;
 import org.valkyriercp.widget.table.TableWidget;
 import org.valkyriercp.widget.table.glazedlists.GlazedListTableWidget;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -151,7 +150,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 							.removeMessage(maximumRowsExceededMessage);
 					maximumRowsExceededMessage.setMessage(getApplicationConfig()
 							.messageResolver().getMessage(
-									"MaximumRowsExceededException.notice",
+									"dataeditor.maximumRowsExceededException.notice",
 									new Object[] { mre.getNumberOfRows(),
 											mre.getMaxRows() }));
 					validationResultsModel
@@ -529,7 +528,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 			setRows(Collections.EMPTY_LIST);
 			setMessage(new DefaultMessage(getApplicationConfig().messageResolver()
 					.getMessage(
-							"MaximumRowsExceededException.notice",
+							"dataeditor.maximumRowsExceededException.notice",
 							new Object[] { mre.getNumberOfRows(),
 									mre.getMaxRows() }), Severity.WARNING));
 			if (getToggleFilterCommand() != null) {

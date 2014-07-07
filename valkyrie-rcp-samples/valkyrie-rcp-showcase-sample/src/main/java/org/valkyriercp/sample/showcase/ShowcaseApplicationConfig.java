@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -23,10 +22,9 @@ import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
+import org.valkyriercp.util.JsonResourceBundleMessageSource;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 @Import({ShowcaseViews.class, ShowcaseBinders.class})
@@ -85,13 +83,6 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
         return resourceBundleLocations;
     }
 
-    @Override
-    public Map<String, Resource> getImageSourceResources() {
-        Map<String, Resource> imageSourceResources = super.getImageSourceResources();
-        imageSourceResources.put("showcase", new ClassPathResource("/org/valkyriercp/sample/showcase/images.properties"));
-        return imageSourceResources;
-    }
-
     @Bean
     public AuthenticationManager authenticationManager() {
         List<UserDetails> userDetailsList = Lists.newArrayList();
@@ -100,5 +91,10 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
         return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
+    }
+
+    @Override
+    protected ResourceBundleMessageSource createMessageSourceImpl() {
+        return new JsonResourceBundleMessageSource();
     }
 }

@@ -7,7 +7,7 @@ task wrapper(type: Wrapper) {
 }
 
 allprojects {
-    apply plugin: "java"
+    apply plugin: "groovy"
     apply plugin: "idea"
     apply plugin: "eclipse"
 
@@ -58,6 +58,8 @@ allprojects {
 
     dependencies {
         testCompile "junit:junit:${dependencyVersions.junit}"
+        testCompile "org.spockframework:spock-spring:${dependencyVersions.spock}"
+        testCompile "org.codehaus.groovy:groovy-all:${dependencyVersions.groovy}"
         testCompile "org.mockito:mockito-core:${dependencyVersions.mockito}"
         testCompile "org.easymock:easymock:${dependencyVersions.easymock}"
         testCompile "org.springframework:spring-test:${dependencyVersions.spring.framework}"
@@ -96,6 +98,7 @@ project("valkyrie-rcp-core") {
         }
         compile "javax.validation:validation-api:${dependencyVersions.validation.api}"
         compile "com.miglayout:miglayout-swing:${dependencyVersions.miglayout}"
+        compile "com.google.code.gson:gson:${dependencyVersions.gson}"
     }
 }
 
