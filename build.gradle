@@ -8,6 +8,7 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: "groovy"
     apply plugin: "idea"
     apply plugin: "eclipse"
     apply plugin: 'propdeps'
@@ -140,25 +141,15 @@ configure(subprojects - project(":valkyrie-rcp-samples") - project(":valkyrie-rc
     }
 
     dependencies {
-        testCompile "junit:junit:4.11"
-        testCompile "org.mockito:mockito-core:1.9.5"
-        testCompile "org.easymock:easymock:3.0"
-        testCompile "org.springframework:spring-test:${springVersion}"
-        compile "org.slf4j:slf4j-api:1.6.1"
-        compile "org.slf4j:jcl-over-slf4j:1.6.1"
-        runtime "ch.qos.logback:logback-classic:0.9.26"
-
-        compile "org.aspectj:aspectjrt:1.7.2"
-        compile "org.aspectj:aspectjweaver:1.7.2"
-        aspects("org.springframework:spring-aspects:${springVersion}") {
-            exclude module: "aspectjweaver"
-        }
-        aspectCompile "javax.persistence:persistence-api:1.0"
-        aspectCompile "org.springframework:spring-tx:${springVersion}"
-        aspectCompile "org.springframework:spring-orm:${springVersion}"
-        provided "org.springframework:spring-tx:${springVersion}"
-        provided "org.springframework:spring-orm:${springVersion}"
-        provided "javax:javaee-api:6.0"
+        testCompile "junit:junit:${dependencyVersions.junit}"
+        testCompile "org.spockframework:spock-spring:${dependencyVersions.spock}"
+        testCompile "org.codehaus.groovy:groovy-all:${dependencyVersions.groovy}"
+        testCompile "org.mockito:mockito-core:${dependencyVersions.mockito}"
+        testCompile "org.easymock:easymock:${dependencyVersions.easymock}"
+        testCompile "org.springframework:spring-test:${dependencyVersions.spring.framework}"
+        compile "org.slf4j:slf4j-api:${dependencyVersions.slf4j}"
+        compile "org.slf4j:jcl-over-slf4j:${dependencyVersions.slf4j}"
+        runtime "ch.qos.logback:logback-classic:${dependencyVersions.logback}"
     }
 }
 
@@ -190,8 +181,9 @@ project("valkyrie-rcp-core") {
             exclude module: "spring-context"
             exclude module: "spring-expression"
         }
-        compile "javax.validation:validation-api:1.1.0.Final"
-        compile "com.miglayout:miglayout-swing:4.2"
+        compile "javax.validation:validation-api:${dependencyVersions.validation.api}"
+        compile "com.miglayout:miglayout-swing:${dependencyVersions.miglayout}"
+        compile "com.google.code.gson:gson:${dependencyVersions.gson}"
     }
 }
 

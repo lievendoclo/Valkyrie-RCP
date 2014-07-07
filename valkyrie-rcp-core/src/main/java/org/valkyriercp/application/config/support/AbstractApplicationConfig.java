@@ -1,24 +1,9 @@
 package org.valkyriercp.application.config.support;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.text.JTextComponent;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
@@ -118,8 +103,13 @@ import org.valkyriercp.util.DialogFactory;
 import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.List;
 
 @Configuration
 @Import(org.valkyriercp.application.config.support.DefaultBinderConfig.class)
@@ -173,24 +163,29 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 		return defaultApplicationDescriptor;
 	}
 
-	@Bean
-	public ImageSource imageSource() {
-		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-		propertiesFactoryBean.setLocations(getImageSourceResources().values()
-				.toArray(new Resource[getImageSourceResources().size()]));
-		DefaultImageSource imageSource = null;
-		try {
-			propertiesFactoryBean.afterPropertiesSet();
-			imageSource = new DefaultImageSource(
-					propertiesFactoryBean.getObject());
-		} catch (IOException e) {
-			throw new IllegalArgumentException(
-					"Error getting imagesource property file", e);
-		}
-		imageSource.setBrokenImageIndicator(applicationContext().getResource(
-				"classpath:/com/famfamfam/silk/error.png"));
-		return imageSource;
-	}
+    @Bean
+    public ImageSource imageSource() {
+        DefaultImageSource imageSource;
+        Properties images = new Properties();
+        Gson gson = new Gson();
+
+        try {
+            for (Resource res : getImageSourceResources().values()) {
+                if(res.getFilename().endsWith("properties")) {
+                    images.load(res.getInputStream());
+                } else if(res.getFilename().endsWith("json")) {
+                    images.putAll(gson.fromJson(new InputStreamReader(res.getInputStream()), Map.class));
+                }
+            }
+            imageSource = new DefaultImageSource(images);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(
+                    "Error getting imagesource json file", e);
+        }
+        imageSource.setBrokenImageIndicator(applicationContext().getResource(
+                "classpath:/com/famfamfam/silk/error.png"));
+        return imageSource;
+    }
 
 	public Map<String, Resource> getImageSourceResources() {
 		Map<String, Resource> resources = new HashMap<String, Resource>();
@@ -263,11 +258,15 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
 	@Bean
 	public MessageSource messageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		ResourceBundleMessageSource messageSource = createMessageSourceImpl();
 		messageSource.setBasenames(getResourceBundleLocations().toArray(
 				new String[getResourceBundleLocations().size()]));
 		return messageSource;
 	}
+
+    protected ResourceBundleMessageSource createMessageSourceImpl() {
+        return new ResourceBundleMessageSource();
+    }
 
 	public List<String> getResourceBundleLocations() {
 		ArrayList<String> list = new ArrayList<String>();
@@ -472,10 +471,15 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 		return new Color(1f, 1f, 1f, 0.17f);
 	}
 
-	@Bean
-	public TitlePaneConfigurer titlePaneConfigurer() {
-		return new DefaultTitlePaneConfigurer();
-	}
+    @Bean
+    public TitlePaneConfigurer titlePaneConfigurer() {
+        return new DefaultTitlePaneConfigurer();
+    }
+
+    @Bean
+    public static ApplicationObjectConfigurerBeanPostProcessor applicationObjectConfigurerBeanPostProcessor() {
+        return new ApplicationObjectConfigurerBeanPostProcessor();
+    }
 
 	@Override
 	public ApplicationMode getApplicationMode() {
