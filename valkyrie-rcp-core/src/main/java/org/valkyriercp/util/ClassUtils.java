@@ -1,10 +1,5 @@
 package org.valkyriercp.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.enums.LabeledEnum;
-import org.springframework.core.style.StylerUtils;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -12,11 +7,21 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.style.StylerUtils;
 
 /**
  * Misc static utility functions for java classes.
- *
+ * 
  * @author Keith Donald
  * @author Jim Moore
  */
@@ -48,14 +53,14 @@ public class ClassUtils {
 
 	/**
 	 * Intializes the specified class if not initialized already.
-	 *
+	 * 
 	 * This is required for EnumUtils if the enum class has not yet been loaded.
 	 */
 	public static void initializeClass(Class clazz) {
 		try {
-			Class.forName(clazz.getName(), true, Thread.currentThread().getContextClassLoader());
-		}
-		catch (ClassNotFoundException e) {
+			Class.forName(clazz.getName(), true, Thread.currentThread()
+					.getContextClassLoader());
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -64,7 +69,7 @@ public class ClassUtils {
 	 * Returns the qualified class field name with the specified value. For
 	 * example, with a class defined with a static field "NORMAL" with value =
 	 * "0", passing in "0" would return: className.NORMAL.
-	 *
+	 * 
 	 * @return The qualified field.
 	 */
 	public static String getClassFieldNameWithValue(Class clazz, Object value) {
@@ -76,8 +81,7 @@ public class ClassUtils {
 				if (value.equals(constant)) {
 					return clazz.getName() + "." + field.getName();
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -91,39 +95,38 @@ public class ClassUtils {
 		Class clazz;
 		try {
 			clazz = classForName(ClassUtils.qualifier(qualifiedFieldName));
-		}
-		catch (ClassNotFoundException cnfe) {
+		} catch (ClassNotFoundException cnfe) {
 			return null;
 		}
 		try {
-			return clazz.getField(ClassUtils.unqualify(qualifiedFieldName)).get(null);
-		}
-		catch (Exception e) {
+			return clazz.getField(ClassUtils.unqualify(qualifiedFieldName))
+					.get(null);
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	/**
 	 * Load the class with the specified name.
-	 *
+	 * 
 	 * @param name
 	 * @return The loaded class.
 	 * @throws ClassNotFoundException
 	 */
 	public static Class classForName(String name) throws ClassNotFoundException {
 		try {
-			return Thread.currentThread().getContextClassLoader().loadClass(name);
-		}
-		catch (Exception e) {
+			return Thread.currentThread().getContextClassLoader()
+					.loadClass(name);
+		} catch (Exception e) {
 			return Class.forName(name);
 		}
 	}
 
-	public static Method findMethod(String methodName, Class clazz, Class[] parmTypes) {
+	public static Method findMethod(String methodName, Class clazz,
+			Class[] parmTypes) {
 		try {
 			return clazz.getMethod(methodName, parmTypes);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			return null;
 		}
 	}
@@ -134,8 +137,9 @@ public class ClassUtils {
 
 	/**
 	 * Returns the unqualified class name of the specified class.
-	 *
-	 * @param clazz the class to get the name for
+	 * 
+	 * @param clazz
+	 *            the class to get the name for
 	 * @return The unqualified, short name.
 	 */
 	public static String unqualify(Class clazz) {
@@ -143,14 +147,16 @@ public class ClassUtils {
 	}
 
 	public static String unqualify(String qualifiedName, char separator) {
-		return qualifiedName.substring(qualifiedName.lastIndexOf(separator) + 1);
+		return qualifiedName
+				.substring(qualifiedName.lastIndexOf(separator) + 1);
 	}
 
 	/**
 	 * Returns the qualifier for a name separated by dots. The qualified part is
 	 * everything up to the last dot separator.
-	 *
-	 * @param qualifiedName The qualified name.
+	 * 
+	 * @param qualifiedName
+	 *            The qualified name.
 	 * @return The qualifier portion.
 	 */
 	public static String qualifier(String qualifiedName) {
@@ -175,20 +181,24 @@ public class ClassUtils {
 	 * Strings.
 	 */
 	public static boolean isSimpleScalar(Class clazz) {
-		return clazz.isPrimitive() || simpleClasses.contains(clazz) || LabeledEnum.class.isAssignableFrom(clazz);
+		// return clazz.isPrimitive() || simpleClasses.contains(clazz) ||
+		// LabeledEnum.class.isAssignableFrom(clazz);
+		return clazz.isPrimitive() || simpleClasses.contains(clazz)
+				|| clazz.isEnum();
 	}
 
-	public static Method getStaticMethod(String name, Class locatorClass, Class[] args) {
+	public static Method getStaticMethod(String name, Class locatorClass,
+			Class[] args) {
 		try {
-			logger.debug("Attempting to get method '" + name + "' on class " + locatorClass + " with arguments '"
+			logger.debug("Attempting to get method '" + name + "' on class "
+					+ locatorClass + " with arguments '"
 					+ StylerUtils.style(args) + "'");
 			Method method = locatorClass.getDeclaredMethod(name, args);
 			if ((method.getModifiers() & Modifier.STATIC) != 0)
 				return method;
 
 			return null;
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			return null;
 		}
 	}
@@ -208,8 +218,9 @@ public class ClassUtils {
 	/**
 	 * Gets the equivalent class to convert to if the given clazz is a
 	 * primitive.
-	 *
-	 * @param clazz Class to examin.
+	 * 
+	 * @param clazz
+	 *            Class to examin.
 	 * @return the class to convert to or the inputted clazz.
 	 */
 	public static Class convertPrimitiveToWrapper(Class clazz) {
@@ -220,27 +231,30 @@ public class ClassUtils {
 	}
 
 	/**
-	 * Given a {@link Map}where the keys are {@link Class}es, search the map
-	 * for the closest match of the key to the <tt>typeClass</tt>. This is
-	 * extremely useful to support polymorphism (and an absolute requirement to
-	 * find proxied classes where classes are acting as keys in a map).
+	 * Given a {@link Map}where the keys are {@link Class}es, search the map for
+	 * the closest match of the key to the <tt>typeClass</tt>. This is extremely
+	 * useful to support polymorphism (and an absolute requirement to find
+	 * proxied classes where classes are acting as keys in a map).
 	 * <p />
-	 *
+	 * 
 	 * For example: If the Map has keys of Number.class and String.class, using
 	 * a <tt>typeClass</tt> of Long.class will find the Number.class entry and
 	 * return its value.
 	 * <p />
-	 *
+	 * 
 	 * When doing the search, it looks for the most exact match it can, giving
 	 * preference to interfaces over class inheritance. As a performance
 	 * optimiziation, if it finds a match it stores the derived match in the map
 	 * so it does not have to be derived again.
-	 *
-	 * @param typeClass the kind of class to search for
-	 * @param classMap the map where the keys are of type Class
+	 * 
+	 * @param typeClass
+	 *            the kind of class to search for
+	 * @param classMap
+	 *            the map where the keys are of type Class
 	 * @return null only if it can't find any match
 	 */
-	public static Object getValueFromMapForClass(final Class typeClass, final Map classMap) {
+	public static Object getValueFromMapForClass(final Class typeClass,
+			final Map classMap) {
 		Object val = classMap.get(typeClass);
 		if (val == null) {
 			// search through the interfaces first
@@ -254,7 +268,8 @@ public class ClassUtils {
 			if (val == null) {
 				// not found anywhere
 				if (logger.isDebugEnabled()) {
-					logger.debug("Could not find a definition for " + typeClass + " in " + classMap.keySet());
+					logger.debug("Could not find a definition for " + typeClass
+							+ " in " + classMap.keySet());
 				}
 				return null;
 			}
@@ -266,7 +281,8 @@ public class ClassUtils {
 		return val;
 	}
 
-	private static Object getValueFromMapForInterfaces(final Class typeClass, final Map classMap) {
+	private static Object getValueFromMapForInterfaces(final Class typeClass,
+			final Map classMap) {
 		final Class[] interfaces = typeClass.getInterfaces();
 
 		if (logger.isDebugEnabled()) {
@@ -284,7 +300,8 @@ public class ClassUtils {
 		// not found, but now check the parent interfaces
 		for (int i = 0; i < interfaces.length; i++) {
 			final Class anInterface = interfaces[i];
-			final Object val = getValueFromMapForInterfaces(anInterface, classMap);
+			final Object val = getValueFromMapForInterfaces(anInterface,
+					classMap);
 			if (val != null) {
 				return val;
 			}
@@ -293,7 +310,8 @@ public class ClassUtils {
 		return null;
 	}
 
-	private static Object getValueFromMapForSuperClass(final Class typeClass, final Map classMap) {
+	private static Object getValueFromMapForSuperClass(final Class typeClass,
+			final Map classMap) {
 		Class superClass = typeClass.getSuperclass();
 		while (superClass != null) {
 			if (logger.isDebugEnabled()) {
@@ -318,13 +336,16 @@ public class ClassUtils {
 	/**
 	 * Is the given name a property in the class? In other words, does it have a
 	 * setter and/or a getter method?
-	 *
-	 * @param theClass the class to look for the property in
-	 * @param propertyName the name of the property
-	 *
+	 * 
+	 * @param theClass
+	 *            the class to look for the property in
+	 * @param propertyName
+	 *            the name of the property
+	 * 
 	 * @return true if there is either a setter or a getter for the property
-	 *
-	 * @throws IllegalArgumentException if either argument is null
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if either argument is null
 	 */
 	public static boolean isAProperty(Class theClass, String propertyName) {
 		if (theClass == null)
@@ -344,51 +365,64 @@ public class ClassUtils {
 		if (propertyName.indexOf('.') > -1) {
 			final int index = propertyName.indexOf('.');
 			final String firstPropertyName = propertyName.substring(0, index);
-			final String restOfPropertyName = propertyName.substring(index + 1, propertyName.length());
-			final Class firstPropertyClass = getPropertyClass(theClass, firstPropertyName);
+			final String restOfPropertyName = propertyName.substring(index + 1,
+					propertyName.length());
+			final Class firstPropertyClass = getPropertyClass(theClass,
+					firstPropertyName);
 			return getReadMethod(firstPropertyClass, restOfPropertyName);
 		}
 
-		final String getterName = "get" + propertyName.substring(0, 1).toUpperCase()
+		final String getterName = "get"
+				+ propertyName.substring(0, 1).toUpperCase()
 				+ (propertyName.length() == 1 ? "" : propertyName.substring(1));
 
 		Method method = getMethod(theClass, getterName);
 		if (method == null) {
-			final String isserName = "is" + propertyName.substring(0, 1).toUpperCase()
-					+ (propertyName.length() == 1 ? "" : propertyName.substring(1));
+			final String isserName = "is"
+					+ propertyName.substring(0, 1).toUpperCase()
+					+ (propertyName.length() == 1 ? "" : propertyName
+							.substring(1));
 			method = getMethod(theClass, isserName);
 		}
 
 		if (method == null) {
-			logger.info("There is not a getter for " + propertyName + " in " + theClass);
+			logger.info("There is not a getter for " + propertyName + " in "
+					+ theClass);
 			return null;
 		}
 
 		if (!Modifier.isPublic(method.getModifiers())) {
-			logger.warn("The getter for " + propertyName + " in " + theClass + " is not public: " + method);
+			logger.warn("The getter for " + propertyName + " in " + theClass
+					+ " is not public: " + method);
 			return null;
 		}
 
 		if (Void.TYPE.equals(method.getReturnType())) {
-			logger.warn("The getter for " + propertyName + " in " + theClass + " returns void: " + method);
+			logger.warn("The getter for " + propertyName + " in " + theClass
+					+ " returns void: " + method);
 			return null;
 		}
 
 		if (method.getName().startsWith("is")
-				&& !(Boolean.class.equals(method.getReturnType()) || Boolean.TYPE.equals(method.getReturnType()))) {
-			logger.warn("The getter for " + propertyName + " in " + theClass
-					+ " uses the boolean naming convention but is not boolean: " + method);
+				&& !(Boolean.class.equals(method.getReturnType()) || Boolean.TYPE
+						.equals(method.getReturnType()))) {
+			logger.warn("The getter for "
+					+ propertyName
+					+ " in "
+					+ theClass
+					+ " uses the boolean naming convention but is not boolean: "
+					+ method);
 			return null;
 		}
 
 		return method;
 	}
 
-	private static Method getMethod(final Class theClass, final String getterName) {
+	private static Method getMethod(final Class theClass,
+			final String getterName) {
 		try {
 			return theClass.getMethod(getterName, null);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			return null;
 		}
 	}
@@ -398,26 +432,32 @@ public class ClassUtils {
 		if (propertyName.indexOf('.') > -1) {
 			final int index = propertyName.indexOf('.');
 			final String firstPropertyName = propertyName.substring(0, index);
-			final String restOfPropertyName = propertyName.substring(index + 1, propertyName.length());
-			final Class firstPropertyClass = getPropertyClass(theClass, firstPropertyName);
+			final String restOfPropertyName = propertyName.substring(index + 1,
+					propertyName.length());
+			final Class firstPropertyClass = getPropertyClass(theClass,
+					firstPropertyName);
 			return getWriteMethod(firstPropertyClass, restOfPropertyName);
 		}
 
-		final String setterName = "set" + propertyName.substring(0, 1).toUpperCase()
+		final String setterName = "set"
+				+ propertyName.substring(0, 1).toUpperCase()
 				+ (propertyName.length() == 1 ? "" : propertyName.substring(1));
 
 		final Method[] methods = theClass.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (setterName.equals(method.getName()) && method.getParameterTypes().length == 1) {
+			if (setterName.equals(method.getName())
+					&& method.getParameterTypes().length == 1) {
 
 				if (!Modifier.isPublic(method.getModifiers())) {
-					logger.warn("The setter for " + propertyName + " in " + theClass + " is not public: " + method);
+					logger.warn("The setter for " + propertyName + " in "
+							+ theClass + " is not public: " + method);
 					return null;
 				}
 
 				if (!Void.TYPE.equals(method.getReturnType())) {
-					logger.warn("The setter for " + propertyName + " in " + theClass + " is not void: " + method);
+					logger.warn("The setter for " + propertyName + " in "
+							+ theClass + " is not void: " + method);
 					return null;
 				}
 
@@ -425,27 +465,33 @@ public class ClassUtils {
 			}
 		}
 
-		logger.info("There is not a setter for " + propertyName + " in " + theClass);
+		logger.info("There is not a setter for " + propertyName + " in "
+				+ theClass);
 		return null;
 	}
 
 	/**
 	 * Returns the class of the property.
 	 * <p />
-	 *
+	 * 
 	 * For example, getPropertyClass(JFrame.class, "size") would return the
 	 * java.awt.Dimension class.
-	 *
-	 * @param parentClass the class to look for the property in
-	 * @param propertyName the name of the property
-	 *
+	 * 
+	 * @param parentClass
+	 *            the class to look for the property in
+	 * @param propertyName
+	 *            the name of the property
+	 * 
 	 * @return the class of the property; never null
-	 *
-	 * @throws IllegalArgumentException if either argument is null
-	 * @throws IllegalArgumentException <tt>propertyName</tt> is not a
-	 * property of <tt>parentClass</tt>
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if either argument is null
+	 * @throws IllegalArgumentException
+	 *             <tt>propertyName</tt> is not a property of
+	 *             <tt>parentClass</tt>
 	 */
-	public static Class getPropertyClass(Class parentClass, String propertyName) throws IllegalArgumentException {
+	public static Class getPropertyClass(Class parentClass, String propertyName)
+			throws IllegalArgumentException {
 		if (parentClass == null)
 			throw new IllegalArgumentException("theClass == null");
 		if (propertyName == null)
@@ -461,7 +507,8 @@ public class ClassUtils {
 			return setterMethod.getParameterTypes()[0];
 		}
 
-		throw new IllegalArgumentException(propertyName + " is not a property of " + parentClass);
+		throw new IllegalArgumentException(propertyName
+				+ " is not a property of " + parentClass);
 	}
 
 }

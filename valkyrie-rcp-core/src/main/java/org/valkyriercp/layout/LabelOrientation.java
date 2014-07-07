@@ -1,8 +1,6 @@
 package org.valkyriercp.layout;
 
-import org.springframework.core.enums.ShortCodedLabeledEnum;
-
-import javax.swing.*;
+import javax.swing.SwingConstants;
 
 public enum LabelOrientation {
 
@@ -14,11 +12,11 @@ public enum LabelOrientation {
 
 	RIGHT(SwingConstants.RIGHT, "Right");
 
-    private int code;
-    private String label;
+	private int code;
+	private String label;
 
-    LabelOrientation(int code, String label) {
-        this.code = code;
-        this.label = label;
-    }
+	LabelOrientation(int code, String label) {
+		this.code = code;
+		this.label = label;
+	}
 }

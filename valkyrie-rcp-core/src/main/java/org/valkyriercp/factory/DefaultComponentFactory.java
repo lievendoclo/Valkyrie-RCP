@@ -1,8 +1,35 @@
 package org.valkyriercp.factory;
 
+import java.awt.Component;
+import java.awt.LayoutManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.table.TableModel;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdesktop.swingx.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.MessageSource;
@@ -10,11 +37,6 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.core.enums.LabeledEnum;
-import org.springframework.core.enums.LabeledEnumResolver;
-import org.springframework.util.comparator.ComparableComparator;
-import org.springframework.util.comparator.CompoundComparator;
-import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.binding.format.support.AbstractFormatterFactory;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.command.config.CommandButtonLabelInfo;
@@ -25,41 +47,34 @@ import org.valkyriercp.util.Alignment;
 import org.valkyriercp.util.GuiStandardUtils;
 import org.valkyriercp.util.UIConstants;
 
-import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * Default component factory implementation that delegates to JGoodies component
  * factory.
- *
+ * 
  * @author Keith Donald
  */
 @Configurable
-public class DefaultComponentFactory implements ComponentFactory, MessageSourceAware {
+public class DefaultComponentFactory implements ComponentFactory,
+		MessageSourceAware {
 
 	private final Log logger = LogFactory.getLog(getClass());
 
-    @Autowired
+	@Autowired
 	private MessageSourceAccessor messages;
 
-    @Autowired
+	@Autowired
 	private IconSource iconSource;
 
-    @Autowired
+	@Autowired
 	private ButtonFactory buttonFactory;
 
-    @Autowired
+	@Autowired
 	private MenuFactory menuFactory;
 
-    @Autowired
+	@Autowired
 	private MessageSource messageSource;
 
-    @Autowired
+	@Autowired
 	private TableFactory tableFactory;
 
 	private int textFieldColumns = 25;
@@ -116,14 +131,16 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 */
 	public JLabel createLabel(String labelKey, Object[] arguments) {
 		JLabel label = createNewLabel();
-		getLabelInfo(getRequiredMessage(labelKey, arguments)).configureLabel(label);
+		getLabelInfo(getRequiredMessage(labelKey, arguments)).configureLabel(
+				label);
 		return label;
 	}
 
 	/**
 	 * Parse the given label to create a {@link LabelInfo}.
-	 *
-	 * @param label The label to parse.
+	 * 
+	 * @param label
+	 *            The label to parse.
 	 * @return a {@link LabelInfo} representing the label.
 	 * @see LabelInfo#valueOf(String)
 	 */
@@ -134,8 +151,9 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	/**
 	 * Get the message for the given key. Don't throw an exception if it's not
 	 * found but return a default value.
-	 *
-	 * @param messageKey Key to lookup the message.
+	 * 
+	 * @param messageKey
+	 *            Key to lookup the message.
 	 * @return the message found in the resources or a default message.
 	 */
 	protected String getRequiredMessage(String messageKey) {
@@ -145,8 +163,9 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	/**
 	 * Get the message for the given key. Don't throw an exception if it's not
 	 * found but return a default value.
-	 *
-	 * @param messageKeys The keys to use when looking for the message.
+	 * 
+	 * @param messageKeys
+	 *            The keys to use when looking for the message.
 	 * @return the message found in the resources or a default message.
 	 */
 	protected String getRequiredMessage(final String[] messageKeys) {
@@ -181,7 +200,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * {@inheritDoc}
 	 */
 	public JLabel createLabel(String labelKey, ValueModel[] argumentValueHolders) {
-		return new LabelTextRefresher(labelKey, argumentValueHolders).getLabel();
+		return new LabelTextRefresher(labelKey, argumentValueHolders)
+				.getLabel();
 	}
 
 	private class LabelTextRefresher implements PropertyChangeListener {
@@ -221,7 +241,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 				ValueModel argHolder = argumentHolders[i];
 				argValues[i] = argHolder.getValue();
 			}
-			getLabelInfo(getRequiredMessage(labelKey, argValues)).configureLabel(label);
+			getLabelInfo(getRequiredMessage(labelKey, argValues))
+					.configureLabel(label);
 		}
 	}
 
@@ -229,33 +250,36 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		try {
 			String message = getMessages().getMessage(messageKey, args);
 			return message;
-		}
-		catch (NoSuchMessageException e) {
+		} catch (NoSuchMessageException e) {
 			return messageKey;
 		}
 	}
 
 	public JLabel createTitleLabel(String labelKey) {
-		return com.jgoodies.forms.factories.DefaultComponentFactory.getInstance().createTitle(
-				getRequiredMessage(labelKey));
+		return com.jgoodies.forms.factories.DefaultComponentFactory
+				.getInstance().createTitle(getRequiredMessage(labelKey));
 	}
 
-	public JComponent createTitledBorderFor(String labelKey, JComponent component) {
+	public JComponent createTitledBorderFor(String labelKey,
+			JComponent component) {
 		component.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-                .createTitledBorder(getRequiredMessage(labelKey)), GuiStandardUtils
-                .createEvenlySpacedBorder(UIConstants.ONE_SPACE)));
+				.createTitledBorder(getRequiredMessage(labelKey)),
+				GuiStandardUtils
+						.createEvenlySpacedBorder(UIConstants.ONE_SPACE)));
 		return component;
 	}
 
 	public JLabel createLabelFor(String labelKey, JComponent component) {
 		JLabel label = createNewLabel();
-		getLabelInfo(getRequiredMessage(labelKey)).configureLabelFor(label, component);
+		getLabelInfo(getRequiredMessage(labelKey)).configureLabelFor(label,
+				component);
 		return label;
 	}
 
 	public JLabel createLabelFor(String[] labelKeys, JComponent component) {
 		JLabel label = createNewLabel();
-		getLabelInfo(getRequiredMessage(labelKeys)).configureLabelFor(label, component);
+		getLabelInfo(getRequiredMessage(labelKeys)).configureLabelFor(label,
+				component);
 		return label;
 	}
 
@@ -264,7 +288,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JButton createButton(String labelKey) {
-		return (JButton) getButtonLabelInfo(getRequiredMessage(labelKey)).configure(getButtonFactory().createButton());
+		return (JButton) getButtonLabelInfo(getRequiredMessage(labelKey))
+				.configure(getButtonFactory().createButton());
 	}
 
 	protected CommandButtonLabelInfo getButtonLabelInfo(String label) {
@@ -280,11 +305,13 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JCheckBox createCheckBox(String labelKey) {
-		return (JCheckBox) getButtonLabelInfo(getRequiredMessage(labelKey)).configure(createNewCheckBox());
+		return (JCheckBox) getButtonLabelInfo(getRequiredMessage(labelKey))
+				.configure(createNewCheckBox());
 	}
 
 	public JCheckBox createCheckBox(String[] labelKeys) {
-		return (JCheckBox) getButtonLabelInfo(getRequiredMessage(labelKeys)).configure(createNewCheckBox());
+		return (JCheckBox) getButtonLabelInfo(getRequiredMessage(labelKeys))
+				.configure(createNewCheckBox());
 	}
 
 	protected JCheckBox createNewCheckBox() {
@@ -292,11 +319,13 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JToggleButton createToggleButton(String labelKey) {
-		return (JToggleButton) getButtonLabelInfo(getRequiredMessage(labelKey)).configure(createNewToggleButton());
+		return (JToggleButton) getButtonLabelInfo(getRequiredMessage(labelKey))
+				.configure(createNewToggleButton());
 	}
 
 	public JToggleButton createToggleButton(String[] labelKeys) {
-		return (JToggleButton) getButtonLabelInfo(getRequiredMessage(labelKeys)).configure(createNewToggleButton());
+		return (JToggleButton) getButtonLabelInfo(getRequiredMessage(labelKeys))
+				.configure(createNewToggleButton());
 	}
 
 	protected AbstractButton createNewToggleButton() {
@@ -305,10 +334,14 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.richclient.factory.ComponentFactory#createRadioButton(java.lang.String)
+	 * 
+	 * @see
+	 * org.springframework.richclient.factory.ComponentFactory#createRadioButton
+	 * (java.lang.String)
 	 */
 	public JRadioButton createRadioButton(String labelKey) {
-		return (JRadioButton) getButtonLabelInfo(getRequiredMessage(labelKey)).configure(createNewRadioButton());
+		return (JRadioButton) getButtonLabelInfo(getRequiredMessage(labelKey))
+				.configure(createNewRadioButton());
 	}
 
 	protected JRadioButton createNewRadioButton() {
@@ -316,7 +349,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	}
 
 	public JRadioButton createRadioButton(String[] labelKeys) {
-		return (JRadioButton) getButtonLabelInfo(getRequiredMessage(labelKeys)).configure(createNewRadioButton());
+		return (JRadioButton) getButtonLabelInfo(getRequiredMessage(labelKeys))
+				.configure(createNewRadioButton());
 	}
 
 	public JMenuItem createMenuItem(String labelKey) {
@@ -328,9 +362,11 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		return menuFactory;
 	}
 
-	public JComponent createLabeledSeparator(String labelKey, Alignment alignment) {
-		return com.jgoodies.forms.factories.DefaultComponentFactory.getInstance().createSeparator(
-				getRequiredMessage(labelKey), ((Number) alignment.getCode()).intValue());
+	public JComponent createLabeledSeparator(String labelKey,
+			Alignment alignment) {
+		return com.jgoodies.forms.factories.DefaultComponentFactory
+				.getInstance().createSeparator(getRequiredMessage(labelKey),
+						((Number) alignment.getCode()).intValue());
 	}
 
 	public JList createList() {
@@ -341,7 +377,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		return new JComboBox();
 	}
 
-	public JComboBox createListValueModelComboBox(ValueModel selectedItemValueModel,
+	public JComboBox createListValueModelComboBox(
+			ValueModel selectedItemValueModel,
 			ValueModel selectableItemsListHolder, String renderedPropertyPath) {
 		return null;
 	}
@@ -349,7 +386,7 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	/**
 	 * Returns the default column count for new text fields (including formatted
 	 * text and password fields)
-	 *
+	 * 
 	 * @return the default column count. Must not be lower than 0
 	 * @see JTextField
 	 */
@@ -360,18 +397,23 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	/**
 	 * Defines the default column count for new text fields (including formatted
 	 * text and password fields)
-	 *
-	 * @param columns the default column count. Must not be lower than 0
+	 * 
+	 * @param columns
+	 *            the default column count. Must not be lower than 0
 	 * @see JTextField
 	 */
 	public void setTextFieldColumns(int columns) {
 		if (columns < 0)
-			throw new IllegalArgumentException("text field columns must not be lower than 0. Value was: " + columns);
+			throw new IllegalArgumentException(
+					"text field columns must not be lower than 0. Value was: "
+							+ columns);
 		this.textFieldColumns = columns;
 	}
 
-	public JFormattedTextField createFormattedTextField(AbstractFormatterFactory formatterFactory) {
-		PatchedJFormattedTextField patchedJFormattedTextField = new PatchedJFormattedTextField(formatterFactory);
+	public JFormattedTextField createFormattedTextField(
+			AbstractFormatterFactory formatterFactory) {
+		PatchedJFormattedTextField patchedJFormattedTextField = new PatchedJFormattedTextField(
+				formatterFactory);
 		configureTextField(patchedJFormattedTextField);
 		return patchedJFormattedTextField;
 	}
@@ -384,8 +426,9 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 
 	/**
 	 * Configures the text field.
-	 *
-	 * @param textField the field to configure. Must not be null
+	 * 
+	 * @param textField
+	 *            the field to configure. Must not be null
 	 */
 	protected void configureTextField(JTextField textField) {
 		textField.setColumns(getTextFieldColumns());
@@ -416,12 +459,14 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		return new JTabbedPane();
 	}
 
-	public void addConfiguredTab(JTabbedPane tabbedPane, String labelKey, JComponent tabComponent) {
+	public void addConfiguredTab(JTabbedPane tabbedPane, String labelKey,
+			JComponent tabComponent) {
 		LabelInfo info = getLabelInfo(getRequiredMessage(labelKey));
 		tabbedPane.addTab(info.getText(), tabComponent);
 		int tabIndex = tabbedPane.getTabCount() - 1;
 		tabbedPane.setMnemonicAt(tabIndex, info.getMnemonic());
-		tabbedPane.setDisplayedMnemonicIndexAt(tabIndex, info.getMnemonicIndex());
+		tabbedPane.setDisplayedMnemonicIndexAt(tabIndex,
+				info.getMnemonicIndex());
 		tabbedPane.setIconAt(tabIndex, getIcon(labelKey));
 		tabbedPane.setToolTipTextAt(tabIndex, getCaption(labelKey));
 	}
@@ -434,7 +479,8 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 		return new JScrollPane(view);
 	}
 
-	public JScrollPane createScrollPane(Component view, int vsbPolicy, int hsbPolicy) {
+	public JScrollPane createScrollPane(Component view, int vsbPolicy,
+			int hsbPolicy) {
 		return new JScrollPane(view, vsbPolicy, hsbPolicy);
 	}
 
@@ -468,22 +514,25 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	/**
 	 * Construct a JTable with a default model It will delegate the creation to
 	 * a TableFactory if it exists.
-	 *
+	 * 
 	 * @return The new table.
 	 */
 	public JTable createTable() {
-		return (tableFactory != null) ? tableFactory.createTable() : new JTable();
+		return (tableFactory != null) ? tableFactory.createTable()
+				: new JTable();
 	}
 
 	/**
 	 * Construct a JTable with the specified table model. It will delegate the
 	 * creation to a TableFactory if it exists.
-	 *
-	 * @param model the table model
+	 * 
+	 * @param model
+	 *            the table model
 	 * @return The new table.
 	 */
 	public JTable createTable(TableModel model) {
-		return (tableFactory != null) ? tableFactory.createTable(model) : new JTable(model);
+		return (tableFactory != null) ? tableFactory.createTable(model)
+				: new JTable(model);
 	}
 
 	/**
@@ -491,8 +540,9 @@ public class DefaultComponentFactory implements ComponentFactory, MessageSourceA
 	 * creating JTable object, this allows the developer to create an
 	 * application specific table factory where, say, each tables have a set of
 	 * renderers installed, are sortable, etc.
-	 *
-	 * @param tableFactory the table factory to use
+	 * 
+	 * @param tableFactory
+	 *            the table factory to use
 	 */
 	public void setTableFactory(TableFactory tableFactory) {
 		this.tableFactory = tableFactory;

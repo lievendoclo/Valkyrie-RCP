@@ -75,7 +75,9 @@ import org.valkyriercp.command.support.DefaultCommandManager;
 import org.valkyriercp.command.support.DefaultCommandRegistry;
 import org.valkyriercp.command.support.DefaultCommandServices;
 import org.valkyriercp.component.DefaultOverlayService;
+import org.valkyriercp.component.DefaultTitlePaneConfigurer;
 import org.valkyriercp.component.OverlayService;
+import org.valkyriercp.component.TitlePaneConfigurer;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.ButtonFactory;
@@ -468,6 +470,11 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	@Bean
 	public Color titlePanePinstripeColor() {
 		return new Color(1f, 1f, 1f, 0.17f);
+	}
+
+	@Bean
+	public TitlePaneConfigurer titlePaneConfigurer() {
+		return new DefaultTitlePaneConfigurer();
 	}
 
 	@Override

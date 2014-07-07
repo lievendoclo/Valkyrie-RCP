@@ -1,32 +1,32 @@
 package org.valkyriercp.binding.support;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Map;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.binding.value.support.AbstractValueModel;
 import org.valkyriercp.binding.value.support.ValueHolder;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Map;
-
 /**
- * An abstract implementation of <code>MutablePropertyAccessStrategy</code>
- * that provides support for concrete implementations.
- *
+ * An abstract implementation of <code>MutablePropertyAccessStrategy</code> that
+ * provides support for concrete implementations.
+ * 
  * <p>
  * As this class delegates to a <code>PropertyAccessor</code> for property
  * access, the support for type resolution and <b>nested properties</b> depends
  * on the implementation of the <code>PropertyAccessor</code>
- *
+ * 
  * @author Oliver Hutchison
  * @author Arne Limburg
  */
-public abstract class AbstractPropertyAccessStrategy implements MutablePropertyAccessStrategy {
+public abstract class AbstractPropertyAccessStrategy implements
+		MutablePropertyAccessStrategy {
 
 	private final ValueModel domainObjectHolder;
 
@@ -39,8 +39,9 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	/**
 	 * Creates a new instance of AbstractPropertyAccessStrategy that will
 	 * provide access to the properties of the provided object.
-	 *
-	 * @param object the object to be accessed through this class.
+	 * 
+	 * @param object
+	 *            the object to be accessed through this class.
 	 */
 	public AbstractPropertyAccessStrategy(Object object) {
 		this(new ValueHolder(object));
@@ -49,14 +50,17 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	/**
 	 * Creates a new instance of AbstractPropertyAccessStrategy that will
 	 * provide access to the object contained by the provided value model.
-	 *
-	 * @param domainObjectHolder value model that holds the object to be
-	 * accessed through this class
+	 * 
+	 * @param domainObjectHolder
+	 *            value model that holds the object to be accessed through this
+	 *            class
 	 */
 	public AbstractPropertyAccessStrategy(final ValueModel domainObjectHolder) {
-		Assert.notNull(domainObjectHolder, "domainObjectHolder must not be null.");
+		Assert.notNull(domainObjectHolder,
+				"domainObjectHolder must not be null.");
 		this.domainObjectHolder = domainObjectHolder;
-		this.domainObjectHolder.addValueChangeListener(new DomainObjectChangeListener());
+		this.domainObjectHolder
+				.addValueChangeListener(new DomainObjectChangeListener());
 		this.basePropertyPath = "";
 		this.valueModelCache = new ValueModelCache();
 		this.metaAspectAccessor = new PropertyMetaAspectAccessor();
@@ -65,14 +69,18 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	/**
 	 * Creates a child instance of AbstractPropertyAccessStrategy that will
 	 * delegate to its parent for property access.
-	 *
-	 * @param parent AbstractPropertyAccessStrategy which will be used to
-	 * provide property access
-	 * @param basePropertyPath property path that will as a base when accessing
-	 * the parent AbstractPropertyAccessStrategy
+	 * 
+	 * @param parent
+	 *            AbstractPropertyAccessStrategy which will be used to provide
+	 *            property access
+	 * @param basePropertyPath
+	 *            property path that will as a base when accessing the parent
+	 *            AbstractPropertyAccessStrategy
 	 */
-	protected AbstractPropertyAccessStrategy(AbstractPropertyAccessStrategy parent, String basePropertyPath) {
-		this.domainObjectHolder = parent.getPropertyValueModel(basePropertyPath);
+	protected AbstractPropertyAccessStrategy(
+			AbstractPropertyAccessStrategy parent, String basePropertyPath) {
+		this.domainObjectHolder = parent
+				.getPropertyValueModel(basePropertyPath);
 		this.basePropertyPath = basePropertyPath;
 		this.valueModelCache = parent.valueModelCache;
 		this.metaAspectAccessor = new PropertyMetaAspectAccessor();
@@ -80,16 +88,17 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 
 	/**
 	 * Subclasses may override this method to supply user metadata for the
-	 * specified <code>propertyPath</code> and <code>key</code>. The
-	 * default implementation invokes {@link #getAllUserMetadataFor(String)} and
-	 * uses the returned Map with the <code>key</code> parameter to find the
+	 * specified <code>propertyPath</code> and <code>key</code>. The default
+	 * implementation invokes {@link #getAllUserMetadataFor(String)} and uses
+	 * the returned Map with the <code>key</code> parameter to find the
 	 * correlated value.
-	 *
-	 * @param propertyPath path of property relative to this bean
+	 * 
+	 * @param propertyPath
+	 *            path of property relative to this bean
 	 * @param key
 	 * @return metadata associated with the specified key for the property or
-	 * <code>null</code> if there is no custom metadata associated with the
-	 * property and key.
+	 *         <code>null</code> if there is no custom metadata associated with
+	 *         the property and key.
 	 */
 	protected Object getUserMetadataFor(String propertyPath, String key) {
 		final Map allMetadata = getAllUserMetadataFor(propertyPath);
@@ -100,11 +109,12 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	 * Subclasses may override this method to supply user metadata for the
 	 * specified <code>propertyPath</code>. The default implementation always
 	 * returns <code>null</code>.
-	 *
-	 * @param propertyPath path of property relative to this bean
+	 * 
+	 * @param propertyPath
+	 *            path of property relative to this bean
 	 * @return all metadata for the specified property in the form of a Map
-	 * containing String keys and Object values. This method may return
-	 * <code>null</code> if there is no metadata for the property.
+	 *         containing String keys and Object values. This method may return
+	 *         <code>null</code> if there is no metadata for the property.
 	 */
 	protected Map getAllUserMetadataFor(String propertyPath) {
 		return null;
@@ -116,8 +126,10 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 		return domainObjectHolder;
 	}
 
-	public ValueModel getPropertyValueModel(String propertyPath) throws BeansException {
-		return (ValueModel) valueModelCache.get(getFullPropertyPath(propertyPath));
+	public ValueModel getPropertyValueModel(String propertyPath)
+			throws BeansException {
+		return (ValueModel) valueModelCache
+				.get(getFullPropertyPath(propertyPath));
 	}
 
 	/**
@@ -127,11 +139,9 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	protected String getFullPropertyPath(String propertyPath) {
 		if (basePropertyPath.equals("")) {
 			return propertyPath;
-		}
-		else if (propertyPath.equals("")) {
+		} else if (propertyPath.equals("")) {
 			return basePropertyPath;
-		}
-		else {
+		} else {
 			return basePropertyPath + '.' + propertyPath;
 		}
 	}
@@ -155,7 +165,8 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	 */
 	protected String getParentPropertyPath(String propertyPath) {
 		int lastSeparator = getLastPropertySeparatorIndex(propertyPath);
-		return lastSeparator == -1 ? "" : propertyPath.substring(0, lastSeparator);
+		return lastSeparator == -1 ? "" : propertyPath.substring(0,
+				lastSeparator);
 	}
 
 	/**
@@ -181,10 +192,11 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 		return -1;
 	}
 
-	public abstract MutablePropertyAccessStrategy getPropertyAccessStrategyForPath(String propertyPath)
-			throws BeansException;
+	public abstract MutablePropertyAccessStrategy getPropertyAccessStrategyForPath(
+			String propertyPath) throws BeansException;
 
-	public abstract MutablePropertyAccessStrategy newPropertyAccessStrategy(ValueModel domainObjectHolder);
+	public abstract MutablePropertyAccessStrategy newPropertyAccessStrategy(
+			ValueModel domainObjectHolder);
 
 	public Object getDomainObject() {
 		return domainObjectHolder.getValue();
@@ -216,13 +228,14 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	/**
 	 * A cache of value models generated for specific property paths.
 	 */
-	private class ValueModelCache extends CachingMapDecorator {
+	private class ValueModelCache extends
+			org.valkyriercp.util.CachingMapDecorator {
 
 		protected Object create(Object propertyPath) {
 			String fullPropertyPath = getFullPropertyPath((String) propertyPath);
 			String parentPropertyPath = getParentPropertyPath(fullPropertyPath);
-			ValueModel parentValueModel = parentPropertyPath == "" ? domainObjectHolder : (ValueModel) valueModelCache
-					.get(parentPropertyPath);
+			ValueModel parentValueModel = parentPropertyPath == "" ? domainObjectHolder
+					: (ValueModel) valueModelCache.get(parentPropertyPath);
 			return new PropertyValueModel(parentValueModel, fullPropertyPath);
 		}
 	}
@@ -251,23 +264,27 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 
 		private boolean settingBeanProperty;
 
-		public PropertyValueModel(ValueModel parentValueModel, String propertyPath) {
+		public PropertyValueModel(ValueModel parentValueModel,
+				String propertyPath) {
 			this.parentValueModel = parentValueModel;
-			this.parentValueModel.addValueChangeListener(new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent evt) {
-					parentValueChanged();
-				}
-			});
+			this.parentValueModel
+					.addValueChangeListener(new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							parentValueChanged();
+						}
+					});
 			this.propertyPath = propertyPath;
 			this.propertyName = getPropertyName(propertyPath);
 			if (getPropertyAccessor().isReadableProperty(propertyPath)) {
-				this.savedPropertyValue = getPropertyAccessor().getPropertyValue(propertyPath);
+				this.savedPropertyValue = getPropertyAccessor()
+						.getPropertyValue(propertyPath);
 			}
 			updateBeanPropertyChangeListener();
 		}
 
 		public Object getValue() {
-			savedPropertyValue = getPropertyAccessor().getPropertyValue(propertyPath);
+			savedPropertyValue = getPropertyAccessor().getPropertyValue(
+					propertyPath);
 			return savedPropertyValue;
 		}
 
@@ -276,8 +293,7 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 			try {
 				settingBeanProperty = true;
 				getPropertyAccessor().setPropertyValue(propertyPath, value);
-			}
-			finally {
+			} finally {
 				settingBeanProperty = false;
 			}
 			fireValueChange(savedPropertyValue, value);
@@ -312,19 +328,23 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 			if (currentParentObject != savedParentObject) {
 				// remove PropertyChangeListener from old parent
 				if (beanPropertyChangeListener != null) {
-					PropertyChangeSupportUtils.removePropertyChangeListener(savedParentObject, propertyName,
+					PropertyChangeSupportUtils.removePropertyChangeListener(
+							savedParentObject, propertyName,
 							beanPropertyChangeListener);
 					beanPropertyChangeListener = null;
 				}
 				// install PropertyChangeListener on new parent
 				if (currentParentObject != null
-						&& PropertyChangeSupportUtils.supportsBoundProperties(currentParentObject.getClass())) {
+						&& PropertyChangeSupportUtils
+								.supportsBoundProperties(currentParentObject
+										.getClass())) {
 					beanPropertyChangeListener = new PropertyChangeListener() {
 						public void propertyChange(PropertyChangeEvent evt) {
 							propertyValueChanged();
 						}
 					};
-					PropertyChangeSupportUtils.addPropertyChangeListener(currentParentObject, propertyName,
+					PropertyChangeSupportUtils.addPropertyChangeListener(
+							currentParentObject, propertyName,
 							beanPropertyChangeListener);
 				}
 				savedParentObject = currentParentObject;
@@ -336,18 +356,22 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	 * Implementation of PropertyMetadataAccessStrategy that simply delegates to
 	 * the beanWrapper.
 	 */
-	private class PropertyMetaAspectAccessor implements PropertyMetadataAccessStrategy {
+	private class PropertyMetaAspectAccessor implements
+			PropertyMetadataAccessStrategy {
 
 		public Class getPropertyType(String propertyPath) {
-			return getPropertyAccessor().getPropertyType(getFullPropertyPath(propertyPath));
+			return getPropertyAccessor().getPropertyType(
+					getFullPropertyPath(propertyPath));
 		}
 
 		public boolean isReadable(String propertyPath) {
-			return getPropertyAccessor().isReadableProperty(getFullPropertyPath(propertyPath));
+			return getPropertyAccessor().isReadableProperty(
+					getFullPropertyPath(propertyPath));
 		}
 
 		public boolean isWriteable(String propertyPath) {
-			return getPropertyAccessor().isWritableProperty(getFullPropertyPath(propertyPath));
+			return getPropertyAccessor().isWritableProperty(
+					getFullPropertyPath(propertyPath));
 		}
 
 		public Object getUserMetadata(String propertyPath, String key) {

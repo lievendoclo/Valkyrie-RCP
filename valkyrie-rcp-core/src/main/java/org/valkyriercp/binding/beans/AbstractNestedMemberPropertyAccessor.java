@@ -10,7 +10,6 @@ import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.util.CachingMapDecorator;
 
 /**
  * This implementation extends {@link AbstractMemberPropertyAccessor} with the
@@ -199,7 +198,8 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 		childPropertyAccessors.clear();
 	}
 
-	private class ChildPropertyAccessorCache extends CachingMapDecorator {
+	private class ChildPropertyAccessorCache extends
+			org.valkyriercp.util.CachingMapDecorator {
 
 		@Override
 		protected Object create(Object propertyName) {

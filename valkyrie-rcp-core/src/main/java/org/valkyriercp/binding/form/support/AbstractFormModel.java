@@ -1,5 +1,16 @@
 package org.valkyriercp.binding.form.support;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -9,11 +20,16 @@ import org.springframework.binding.convert.converters.Converter;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
-import org.valkyriercp.binding.form.*;
+import org.valkyriercp.binding.form.CommitListener;
+import org.valkyriercp.binding.form.ConfigurableFormModel;
+import org.valkyriercp.binding.form.FieldFace;
+import org.valkyriercp.binding.form.FieldFaceSource;
+import org.valkyriercp.binding.form.FieldMetadata;
+import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.binding.form.HierarchicalFormModel;
 import org.valkyriercp.binding.support.BeanPropertyAccessStrategy;
 import org.valkyriercp.binding.value.CommitTrigger;
 import org.valkyriercp.binding.value.DirtyTrackingValueModel;
@@ -26,20 +42,16 @@ import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
 import org.valkyriercp.util.ClassUtils;
 import org.valkyriercp.util.EventListenerListHelper;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.*;
-
 /**
  * Base implementation of HierarchicalFormModel and ConfigurableFormModel
  * subclasses need only implement the 4 value model interception methods.
- *
+ * 
  * @author Keith Donald
  * @author Oliver Hutchison
  */
 @Configurable
-public abstract class AbstractFormModel extends AbstractPropertyChangePublisher implements HierarchicalFormModel,
-        ConfigurableFormModel {
+public abstract class AbstractFormModel extends AbstractPropertyChangePublisher
+		implements HierarchicalFormModel, ConfigurableFormModel {
 
 	private String id;
 
@@ -67,7 +79,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	private boolean oldCommittable = true;
 
-    @Autowired
+	@Autowired
 	private ConversionService conversionService;
 
 	private final CommitTrigger commitTrigger = new CommitTrigger();
@@ -82,7 +94,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	private final Set dirtyValueAndFormModels = new HashSet();
 
-	private final Map propertyConversionServices = new CachingMapDecorator() {
+	private final Map propertyConversionServices = new org.valkyriercp.util.CachingMapDecorator() {
 		public Object create(Object key) {
 			return new DefaultConversionService() {
 				protected void addDefaultConverters() {
@@ -91,14 +103,15 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		}
 	};
 
-    @Autowired
+	@Autowired
 	private FieldFaceSource fieldFaceSource;
 
 	protected final PropertyChangeListener parentStateChangeHandler = new ParentStateChangeHandler();
 
 	protected final PropertyChangeListener childStateChangeHandler = new ChildStateChangeHandler();
 
-	private final EventListenerListHelper commitListeners = new EventListenerListHelper(CommitListener.class);
+	private final EventListenerListHelper commitListeners = new EventListenerListHelper(
+			CommitListener.class);
 
 	private Class defaultInstanceClass;
 
@@ -118,19 +131,26 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		this(new BeanPropertyAccessStrategy(domainObjectHolder), buffered);
 	}
 
-	protected AbstractFormModel(MutablePropertyAccessStrategy propertyAccessStrategy, boolean buffered) {
-		ValueModel domainObjectHolder = propertyAccessStrategy.getDomainObjectHolder();
+	protected AbstractFormModel(
+			MutablePropertyAccessStrategy propertyAccessStrategy,
+			boolean buffered) {
+		ValueModel domainObjectHolder = propertyAccessStrategy
+				.getDomainObjectHolder();
 		prepareValueModel(domainObjectHolder);
-		this.formObjectHolder = new FormModelMediatingValueModel(domainObjectHolder, false);
+		this.formObjectHolder = new FormModelMediatingValueModel(
+				domainObjectHolder, false);
 		this.propertyAccessStrategy = propertyAccessStrategy;
 		this.buffered = buffered;
 		if (domainObjectHolder.getValue() != null)
-			this.defaultInstanceClass = domainObjectHolder.getValue().getClass();
+			this.defaultInstanceClass = domainObjectHolder.getValue()
+					.getClass();
 	}
 
 	/**
 	 * Prepare the provided value model for use in this form model.
-	 * @param valueModel to prepare
+	 * 
+	 * @param valueModel
+	 *            to prepare
 	 */
 	protected void prepareValueModel(ValueModel valueModel) {
 		if (valueModel instanceof BufferedValueModel) {
@@ -140,7 +160,8 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		// If the value model that we were built on is "dirty trackable" then we
 		// need to monitor it for changes in its dirty state
 		if (valueModel instanceof DirtyTrackingValueModel) {
-			((DirtyTrackingValueModel) valueModel).addPropertyChangeListener(DIRTY_PROPERTY, childStateChangeHandler);
+			((DirtyTrackingValueModel) valueModel).addPropertyChangeListener(
+					DIRTY_PROPERTY, childStateChangeHandler);
 		}
 	}
 
@@ -160,8 +181,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		setDeliverValueChangeEvents(false, false);
 		if (formObject == null) {
 			handleSetNullFormObject();
-		}
-		else {
+		} else {
 			getFormObjectHolder().setValue(formObject);
 			setEnabled(true);
 		}
@@ -174,16 +194,18 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	/**
 	 * Disconnect view from data in MediatingValueModels, possibly clearing them
 	 * afterwards.
-	 *
-	 * @param deliverValueChangeEvents <code>true</code> if events should be
-	 * delivered.
-	 * @param clearValueModels <code>true</code> if models should be cleared
-	 * afterwards.
+	 * 
+	 * @param deliverValueChangeEvents
+	 *            <code>true</code> if events should be delivered.
+	 * @param clearValueModels
+	 *            <code>true</code> if models should be cleared afterwards.
 	 */
-	private void setDeliverValueChangeEvents(boolean deliverValueChangeEvents, boolean clearValueModels) {
+	private void setDeliverValueChangeEvents(boolean deliverValueChangeEvents,
+			boolean clearValueModels) {
 		formObjectHolder.setDeliverValueChangeEvents(deliverValueChangeEvents);
 		for (Iterator i = mediatingValueModels.values().iterator(); i.hasNext();) {
-			FormModelMediatingValueModel valueModel = (FormModelMediatingValueModel) i.next();
+			FormModelMediatingValueModel valueModel = (FormModelMediatingValueModel) i
+					.next();
 			valueModel.setDeliverValueChangeEvents(deliverValueChangeEvents);
 			if (clearValueModels)
 				valueModel.clearDirty();
@@ -203,10 +225,11 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 			logger.info("New form object value is null; resetting to a new fresh object instance and disabling form");
 		}
 		if (getDefaultInstanceClass() != null) {
-			getFormObjectHolder().setValue(BeanUtils.instantiateClass(getDefaultInstanceClass()));
-		}
-		else { // old behaviour
-			getFormObjectHolder().setValue(BeanUtils.instantiateClass(getFormObject().getClass()));
+			getFormObjectHolder().setValue(
+					BeanUtils.instantiateClass(getDefaultInstanceClass()));
+		} else { // old behaviour
+			getFormObjectHolder().setValue(
+					BeanUtils.instantiateClass(getFormObject().getClass()));
 		}
 		setEnabled(false);
 	}
@@ -225,22 +248,26 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * When the parent is set, the enabled and read-only states are bound and
 	 * updated as needed.
 	 */
 	public void setParent(HierarchicalFormModel parent) {
 		Assert.notNull(parent, "parent");
 		this.parent = parent;
-		this.parent.addPropertyChangeListener(ENABLED_PROPERTY, parentStateChangeHandler);
-		this.parent.addPropertyChangeListener(READONLY_PROPERTY, parentStateChangeHandler);
+		this.parent.addPropertyChangeListener(ENABLED_PROPERTY,
+				parentStateChangeHandler);
+		this.parent.addPropertyChangeListener(READONLY_PROPERTY,
+				parentStateChangeHandler);
 		enabledUpdated();
 		readOnlyUpdated();
 	}
 
 	public void removeParent() {
-		this.parent.removePropertyChangeListener(READONLY_PROPERTY, parentStateChangeHandler);
-		this.parent.removePropertyChangeListener(ENABLED_PROPERTY, parentStateChangeHandler);
+		this.parent.removePropertyChangeListener(READONLY_PROPERTY,
+				parentStateChangeHandler);
+		this.parent.removePropertyChangeListener(ENABLED_PROPERTY,
+				parentStateChangeHandler);
 		this.parent = null;
 		readOnlyUpdated();
 		enabledUpdated();
@@ -253,19 +280,22 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	/**
 	 * Add child to this FormModel. Dirty and committable changes are forwarded
 	 * to parent model.
-	 * @param child FormModel to add as child.
+	 * 
+	 * @param child
+	 *            FormModel to add as child.
 	 */
 	public void addChild(HierarchicalFormModel child) {
 		Assert.notNull(child, "child");
 		if (child.getParent() == this)
 			return;
-		Assert.isTrue(child.getParent() == null, "Child form model '" + child + "' already has a parent");
+		Assert.isTrue(child.getParent() == null, "Child form model '" + child
+				+ "' already has a parent");
 		child.setParent(this);
 		children.add(child);
 		child.addPropertyChangeListener(DIRTY_PROPERTY, childStateChangeHandler);
-		child.addPropertyChangeListener(COMMITTABLE_PROPERTY, childStateChangeHandler);
-		if (child.isDirty())
-		{
+		child.addPropertyChangeListener(COMMITTABLE_PROPERTY,
+				childStateChangeHandler);
+		if (child.isDirty()) {
 			dirtyValueAndFormModels.add(child);
 			dirtyUpdated();
 		}
@@ -275,14 +305,18 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	 * Remove a child FormModel. Dirty and committable listeners are removed.
 	 * When child was dirty, remove the formModel from the dirty list and update
 	 * the dirty state.
-	 * @param child FormModel to remove from childlist.
+	 * 
+	 * @param child
+	 *            FormModel to remove from childlist.
 	 */
 	public void removeChild(HierarchicalFormModel child) {
 		Assert.notNull(child, "child");
 		child.removeParent();
 		children.remove(child);
-		child.removePropertyChangeListener(DIRTY_PROPERTY, childStateChangeHandler);
-		child.removePropertyChangeListener(COMMITTABLE_PROPERTY, childStateChangeHandler);
+		child.removePropertyChangeListener(DIRTY_PROPERTY,
+				childStateChangeHandler);
+		child.removePropertyChangeListener(COMMITTABLE_PROPERTY,
+				childStateChangeHandler);
 		// when dynamically adding/removing childModels take care of
 		// dirtymessages:
 		// removing child that was dirty: remove from dirty map and update dirty
@@ -296,7 +330,8 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	}
 
 	public ValueModel getValueModel(String formProperty) {
-		ValueModel propertyValueModel = (ValueModel) propertyValueModels.get(formProperty);
+		ValueModel propertyValueModel = (ValueModel) propertyValueModels
+				.get(formProperty);
 		if (propertyValueModel == null) {
 			propertyValueModel = add(formProperty);
 		}
@@ -304,10 +339,13 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	}
 
 	public ValueModel getValueModel(String formProperty, Class targetClass) {
-		final ConvertingValueModelKey key = new ConvertingValueModelKey(formProperty, targetClass);
-		ValueModel convertingValueModel = (ValueModel) convertingValueModels.get(key);
+		final ConvertingValueModelKey key = new ConvertingValueModelKey(
+				formProperty, targetClass);
+		ValueModel convertingValueModel = (ValueModel) convertingValueModels
+				.get(key);
 		if (convertingValueModel == null) {
-			convertingValueModel = createConvertingValueModel(formProperty, targetClass);
+			convertingValueModel = createConvertingValueModel(formProperty,
+					targetClass);
 			convertingValueModels.put(key, convertingValueModel);
 		}
 		return convertingValueModel;
@@ -321,23 +359,29 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	protected ValueModel createValueModel(String formProperty) {
 		Assert.notNull(formProperty, "formProperty");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating " + (buffered ? "buffered" : "") + " value model for form property '" + formProperty
-					+ "'.");
+			logger.debug("Creating " + (buffered ? "buffered" : "")
+					+ " value model for form property '" + formProperty + "'.");
 		}
-		return buffered ? new BufferedValueModel(propertyAccessStrategy.getPropertyValueModel(formProperty))
+		return buffered ? new BufferedValueModel(
+				propertyAccessStrategy.getPropertyValueModel(formProperty))
 				: propertyAccessStrategy.getPropertyValueModel(formProperty);
 	}
 
-	protected ValueModel createConvertingValueModel(String formProperty, Class targetClass) {
+	protected ValueModel createConvertingValueModel(String formProperty,
+			Class targetClass) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating converting value model for form property '" + formProperty
-					+ "' converting to type '" + targetClass + "'.");
+			logger.debug("Creating converting value model for form property '"
+					+ formProperty + "' converting to type '" + targetClass
+					+ "'.");
 		}
 		final ValueModel sourceValueModel = getValueModel(formProperty);
-		Assert.notNull(sourceValueModel, "Form does not have a property called '" + formProperty + "'.");
+		Assert.notNull(sourceValueModel,
+				"Form does not have a property called '" + formProperty + "'.");
 		final Class sourceClass = ClassUtils
-				.convertPrimitiveToWrapper(getFieldMetadata(formProperty).getPropertyType());
-		// sour.required(ceClass can be null when using eg Map, assume that given
+				.convertPrimitiveToWrapper(getFieldMetadata(formProperty)
+						.getPropertyType());
+		// sour.required(ceClass can be null when using eg Map, assume that
+		// given
 		// targetClass is the correct one
 		if ((sourceClass == null) || (sourceClass == targetClass)) {
 			return sourceValueModel;
@@ -354,36 +398,49 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 					.get(formProperty);
 
 			if (propertyConversionService != null) {
-				convertTo = propertyConversionService.getConversionExecutor(sourceClass, targetClass);
-				convertFrom = propertyConversionService.getConversionExecutor(targetClass, sourceClass);
+				convertTo = propertyConversionService.getConversionExecutor(
+						sourceClass, targetClass);
+				convertFrom = propertyConversionService.getConversionExecutor(
+						targetClass, sourceClass);
 			}
 		}
 
 		// If we have nothing from the property level, then try the conversion
 		// service
 		if (convertTo == null) {
-			convertTo = conversionService.getConversionExecutor(sourceClass, targetClass);
+			convertTo = conversionService.getConversionExecutor(sourceClass,
+					targetClass);
 		}
-		Assert.notNull(convertTo, "conversionService returned null ConversionExecutor");
+		Assert.notNull(convertTo,
+				"conversionService returned null ConversionExecutor");
 
 		if (convertFrom == null) {
-			convertFrom = conversionService.getConversionExecutor(targetClass, sourceClass);
+			convertFrom = conversionService.getConversionExecutor(targetClass,
+					sourceClass);
 		}
-		Assert.notNull(convertFrom, "conversionService returned null ConversionExecutor");
+		Assert.notNull(convertFrom,
+				"conversionService returned null ConversionExecutor");
 
-		ValueModel convertingValueModel = preProcessNewConvertingValueModel(formProperty, targetClass,
-				new TypeConverter(sourceValueModel, convertTo, convertFrom));
-		preProcessNewConvertingValueModel(formProperty, targetClass, convertingValueModel);
+		ValueModel convertingValueModel = preProcessNewConvertingValueModel(
+				formProperty, targetClass, new TypeConverter(sourceValueModel,
+						convertTo, convertFrom));
+		preProcessNewConvertingValueModel(formProperty, targetClass,
+				convertingValueModel);
 		return convertingValueModel;
 	}
 
 	/**
 	 * Register converters for a given property name.
-	 * @param propertyName name of property on which to register converters
-	 * @param toConverter Convert from source to target type
-	 * @param fromConverter Convert from target to source type
+	 * 
+	 * @param propertyName
+	 *            name of property on which to register converters
+	 * @param toConverter
+	 *            Convert from source to target type
+	 * @param fromConverter
+	 *            Convert from target to source type
 	 */
-	public void registerPropertyConverter(String propertyName, Converter toConverter, Converter fromConverter) {
+	public void registerPropertyConverter(String propertyName,
+			Converter toConverter, Converter fromConverter) {
 		DefaultConversionService propertyConversionService = (DefaultConversionService) propertyConversionServices
 				.get(propertyName);
 		propertyConversionService.addConverter(toConverter);
@@ -406,28 +463,33 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		PropertyMetadataAccessStrategy metadataAccessStrategy = getFormObjectPropertyAccessStrategy()
 				.getMetadataAccessStrategy();
 
-		FormModelMediatingValueModel mediatingValueModel = new FormModelMediatingValueModel(valueModel,
-				metadataAccessStrategy.isWriteable(formProperty));
+		FormModelMediatingValueModel mediatingValueModel = new FormModelMediatingValueModel(
+				valueModel, metadataAccessStrategy.isWriteable(formProperty));
 		mediatingValueModels.put(formProperty, mediatingValueModel);
 
-		FieldMetadata metadata = new DefaultFieldMetadata(this, mediatingValueModel, metadataAccessStrategy
-				.getPropertyType(formProperty), !metadataAccessStrategy.isWriteable(formProperty),
+		FieldMetadata metadata = new DefaultFieldMetadata(this,
+				mediatingValueModel,
+				metadataAccessStrategy.getPropertyType(formProperty),
+				!metadataAccessStrategy.isWriteable(formProperty),
 				metadataAccessStrategy.getAllUserMetadata(formProperty));
-		metadata.addPropertyChangeListener(FieldMetadata.DIRTY_PROPERTY, childStateChangeHandler);
+		metadata.addPropertyChangeListener(FieldMetadata.DIRTY_PROPERTY,
+				childStateChangeHandler);
 		return add(formProperty, mediatingValueModel, metadata);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public ValueModel add(String propertyName, ValueModel valueModel, FieldMetadata metadata) {
+	public ValueModel add(String propertyName, ValueModel valueModel,
+			FieldMetadata metadata) {
 		fieldMetadata.put(propertyName, metadata);
 
 		valueModel = preProcessNewValueModel(propertyName, valueModel);
 		propertyValueModels.put(propertyName, valueModel);
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Registering '" + propertyName + "' form property, property value model=" + valueModel);
+			logger.debug("Registering '" + propertyName
+					+ "' form property, property value model=" + valueModel);
 		}
 		postProcessNewValueModel(propertyName, valueModel);
 		return valueModel;
@@ -437,30 +499,33 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	 * Provides a hook for subclasses to optionally decorate a new value model
 	 * added to this form model.
 	 */
-	protected abstract ValueModel preProcessNewValueModel(String formProperty, ValueModel formValueModel);
+	protected abstract ValueModel preProcessNewValueModel(String formProperty,
+			ValueModel formValueModel);
 
 	/**
 	 * Provides a hook for subclasses to perform some processing after a new
 	 * value model has been added to this form model.
 	 */
-	protected abstract void postProcessNewValueModel(String formProperty, ValueModel valueModel);
+	protected abstract void postProcessNewValueModel(String formProperty,
+			ValueModel valueModel);
 
 	/**
 	 * Provides a hook for subclasses to optionally decorate a new converting
 	 * value model added to this form model.
 	 */
-	protected abstract ValueModel preProcessNewConvertingValueModel(String formProperty, Class targetClass,
-			ValueModel formValueModel);
+	protected abstract ValueModel preProcessNewConvertingValueModel(
+			String formProperty, Class targetClass, ValueModel formValueModel);
 
 	/**
 	 * Provides a hook for subclasses to perform some processing after a new
 	 * converting value model has been added to this form model.
 	 */
-	protected abstract void postProcessNewConvertingValueModel(String formProperty, Class targetClass,
-			ValueModel valueModel);
+	protected abstract void postProcessNewConvertingValueModel(
+			String formProperty, Class targetClass, ValueModel valueModel);
 
 	public FieldMetadata getFieldMetadata(String propertyName) {
-		FieldMetadata metadata = (FieldMetadata) fieldMetadata.get(propertyName);
+		FieldMetadata metadata = (FieldMetadata) fieldMetadata
+				.get(propertyName);
 		if (metadata == null) {
 			add(propertyName);
 			metadata = (FieldMetadata) fieldMetadata.get(propertyName);
@@ -497,16 +562,20 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		return getFieldFaceSource().getFieldFace(field, this);
 	}
 
-	public ValueModel addMethod(String propertyMethodName, String derivedFromProperty) {
-		return addMethod(propertyMethodName, new String[] { derivedFromProperty });
+	public ValueModel addMethod(String propertyMethodName,
+			String derivedFromProperty) {
+		return addMethod(propertyMethodName,
+				new String[] { derivedFromProperty });
 	}
 
-	public ValueModel addMethod(String propertyMethodName, String[] derivedFromProperties) {
+	public ValueModel addMethod(String propertyMethodName,
+			String[] derivedFromProperties) {
 		ValueModel[] propertyValueModels = new ValueModel[derivedFromProperties.length];
 		for (int i = 0; i < propertyValueModels.length; i++) {
 			propertyValueModels[i] = getValueModel(derivedFromProperties[i]);
 		}
-		ValueModel valueModel = new MethodInvokingDerivedValueModel(this, propertyMethodName, propertyValueModels);
+		ValueModel valueModel = new MethodInvokingDerivedValueModel(this,
+				propertyMethodName, propertyValueModels);
 		return add(propertyMethodName, valueModel);
 	}
 
@@ -547,14 +616,13 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 				for (Iterator i = commitListeners.iterator(); i.hasNext();) {
 					((CommitListener) i.next()).postCommit(this);
 				}
-			}
-			else {
+			} else {
 				throw new IllegalStateException("Form model '" + this
 						+ "' became non-committable after preCommit phase");
 			}
-		}
-		else {
-			throw new IllegalStateException("Form model '" + this + "' is not committable");
+		} else {
+			throw new IllegalStateException("Form model '" + this
+					+ "' is not committable");
 		}
 	}
 
@@ -601,9 +669,9 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	 * Complex forms with parent-child relations can use derived formModels.
 	 * Such a Hierarchical tree cannot have its children reset on its own as it
 	 * would break the top-down structure. see RCP-329 and the cvs maillist.
-	 *
+	 * 
 	 * TODO add a unit test with such a complex use case
-	 *
+	 * 
 	 * @see FormModel#reset()
 	 */
 	public void reset() {
@@ -640,12 +708,13 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	}
 
 	public boolean isReadOnly() {
-		return readOnly || !authorized || (parent != null && parent.isReadOnly());
+		return readOnly || !authorized
+				|| (parent != null && parent.isReadOnly());
 	}
 
 	/**
 	 * Check if the form has the correct authorization and can be edited.
-	 *
+	 * 
 	 * @return <code>true</code> if this form is authorized and may be edited.
 	 */
 	public boolean isAuthorized() {
@@ -654,8 +723,9 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	/**
 	 * Set whether or not the form is authorized and can be edited.
-	 *
-	 * @param authorized <code>true</code> if this form may be edited.
+	 * 
+	 * @param authorized
+	 *            <code>true</code> if this form may be edited.
 	 */
 	public void setAuthorized(boolean authorized) {
 		this.authorized = authorized;
@@ -728,9 +798,9 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	/**
 	 * Listener to be registered on properties of the parent form model. Calls
 	 * are delegated to
-	 * {@link AbstractFormModel#parentStateChanged(java.beans.PropertyChangeEvent)}. This
-	 * way subclasses can extend the parent-&gt;child behaviour meaning state
-	 * changes in the parent that influence the children.
+	 * {@link AbstractFormModel#parentStateChanged(java.beans.PropertyChangeEvent)}
+	 * . This way subclasses can extend the parent-&gt;child behaviour meaning
+	 * state changes in the parent that influence the children.
 	 */
 	protected class ParentStateChangeHandler implements PropertyChangeListener {
 
@@ -742,7 +812,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	/**
 	 * Events from the parent form model that have side-effects on this form
 	 * model should be handled here. This includes:
-	 *
+	 * 
 	 * <ul>
 	 * <li><em>Enabled state:</em> when parent gets disabled, child should be
 	 * disabled as well. If parent is enabled, child should go back to its
@@ -755,8 +825,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	protected void parentStateChanged(PropertyChangeEvent evt) {
 		if (ENABLED_PROPERTY.equals(evt.getPropertyName())) {
 			enabledUpdated();
-		}
-		else if (READONLY_PROPERTY.equals(evt.getPropertyName())) {
+		} else if (READONLY_PROPERTY.equals(evt.getPropertyName())) {
 			readOnlyUpdated();
 		}
 	}
@@ -778,15 +847,15 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	/**
 	 * Events from the child form model or value models that have side-effects
 	 * on this form model should be handled here. This includes:
-	 *
+	 * 
 	 * <ul>
 	 * <li><em>Dirty state:</em> when a child is dirty, the parent should be
 	 * dirty.</li>
-	 * <li><em>Committable state:</em> when a child is committable, the
-	 * parent might be committable as well. The committable state of the parent
-	 * should be taken into account and revised when a child sends this event.</li>
+	 * <li><em>Committable state:</em> when a child is committable, the parent
+	 * might be committable as well. The committable state of the parent should
+	 * be taken into account and revised when a child sends this event.</li>
 	 * </ul>
-	 *
+	 * 
 	 * Note that we include value models and their metadata as being children.
 	 * As these are low level models, they cannot be parents and therefore don't
 	 * show up in
@@ -800,32 +869,26 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 				FieldMetadata metadata = (FieldMetadata) source;
 				if (metadata.isDirty()) {
 					dirtyValueAndFormModels.add(metadata);
-				}
-				else {
+				} else {
 					dirtyValueAndFormModels.remove(metadata);
 				}
-			}
-			else if (source instanceof FormModel) {
+			} else if (source instanceof FormModel) {
 				FormModel formModel = (FormModel) source;
 				if (formModel.isDirty()) {
 					dirtyValueAndFormModels.add(formModel);
-				}
-				else {
+				} else {
 					dirtyValueAndFormModels.remove(formModel);
 				}
-			}
-			else {
+			} else {
 				DirtyTrackingValueModel valueModel = (DirtyTrackingValueModel) source;
 				if (valueModel.isDirty()) {
 					dirtyValueAndFormModels.add(valueModel);
-				}
-				else {
+				} else {
 					dirtyValueAndFormModels.remove(valueModel);
 				}
 			}
 			dirtyUpdated();
-		}
-		else if (COMMITTABLE_PROPERTY.equals(evt.getPropertyName())) {
+		} else if (COMMITTABLE_PROPERTY.equals(evt.getPropertyName())) {
 			committableUpdated();
 		}
 	}
@@ -851,11 +914,13 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 				return false;
 
 			final ConvertingValueModelKey key = (ConvertingValueModelKey) o;
-			return propertyName.equals(key.propertyName) && (targetClass == key.targetClass);
+			return propertyName.equals(key.propertyName)
+					&& (targetClass == key.targetClass);
 		}
 
 		public int hashCode() {
-			return (propertyName.hashCode() * 29) + (targetClass == null ? 7 : targetClass.hashCode());
+			return (propertyName.hashCode() * 29)
+					+ (targetClass == null ? 7 : targetClass.hashCode());
 		}
 	}
 }

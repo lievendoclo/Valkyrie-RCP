@@ -1,27 +1,7 @@
 package org.valkyriercp.command.support;
 
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
-import org.springframework.util.StringUtils;
-import org.valkyriercp.application.config.ApplicationConfig;
-import org.valkyriercp.command.CommandServices;
-import org.valkyriercp.command.GuardedActionCommandExecutor;
-import org.valkyriercp.command.SecuredActionCommandExecutor;
-import org.valkyriercp.command.config.*;
-import org.valkyriercp.core.Secured;
-import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
-import org.valkyriercp.factory.ButtonFactory;
-import org.valkyriercp.factory.ComponentFactory;
-import org.valkyriercp.factory.MenuFactory;
-
-import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Container;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -29,12 +9,39 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import javax.annotation.PostConstruct;
+import javax.swing.AbstractButton;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.valkyriercp.application.config.ApplicationConfig;
+import org.valkyriercp.command.CommandServices;
+import org.valkyriercp.command.SecuredActionCommandExecutor;
+import org.valkyriercp.command.config.CommandButtonConfigurer;
+import org.valkyriercp.command.config.CommandButtonIconInfo;
+import org.valkyriercp.command.config.CommandButtonLabelInfo;
+import org.valkyriercp.command.config.CommandFaceDescriptor;
+import org.valkyriercp.command.config.CommandFaceDescriptorRegistry;
+import org.valkyriercp.core.support.AbstractPropertyChangePublisher;
+import org.valkyriercp.factory.ButtonFactory;
+import org.valkyriercp.factory.ComponentFactory;
+import org.valkyriercp.factory.MenuFactory;
+
 /**
  * <p>
  * Base class for commands. Extend this class by implementing the
  * {@link #execute()} method.
  * </p>
- *
+ * 
  * <p>
  * Most (if not all) commands result in a UI component. Several methods are
  * provided here to deliver abstractButtons or menuItems. Configuring this
@@ -43,16 +50,16 @@ import java.util.NoSuchElementException;
  * default while others can be used to create a different look by providing a
  * faceDescriptorId.
  * </p>
- *
+ * 
  * @see CommandFaceDescriptor
- *
+ * 
  * @author Keith Donald
  * @author Jan Hoskens
- *
+ * 
  */
 @Configurable
-public abstract class AbstractCommand extends AbstractPropertyChangePublisher implements
-        BeanNameAware, SecuredActionCommandExecutor {
+public abstract class AbstractCommand extends AbstractPropertyChangePublisher
+		implements BeanNameAware, SecuredActionCommandExecutor {
 
 	/** Property used to notify changes in the <em>enabled</em> state. */
 	public static final String ENABLED_PROPERTY_NAME = "enabled";
@@ -74,7 +81,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	private String securityControllerId = null;
 
-    private String[] authorities;
+	private String[] authorities;
 
 	private Map faceButtonManagers;
 
@@ -86,12 +93,12 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	private Boolean oldVisibleState;
 
-    @Autowired
-    protected ApplicationConfig applicationConfig;
+	@Autowired
+	protected ApplicationConfig applicationConfig;
 
 	/**
 	 * Default constructor. Id can be set by context.
-	 *
+	 * 
 	 * @see BeanNameAware
 	 */
 	protected AbstractCommand() {
@@ -100,7 +107,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Constructor providing an id for configuration.
-	 *
+	 * 
 	 * @param id
 	 */
 	protected AbstractCommand(String id) {
@@ -109,16 +116,18 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		// keep track of enable state for buttons
 		addEnabledListener(new ButtonEnablingListener());
 		// keep track of visible state for buttons
-		addPropertyChangeListener(VISIBLE_PROPERTY_NAME, new ButtonVisibleListener());
+		addPropertyChangeListener(VISIBLE_PROPERTY_NAME,
+				new ButtonVisibleListener());
 	}
 
 	/**
 	 * Constructor providing id and encodedLabel. A default FaceDescriptor will
 	 * be created by passing the encodedLabel.
-	 *
+	 * 
 	 * @param id
-	 * @param encodedLabel label to use when creating the default
-	 * {@link CommandFaceDescriptor}.
+	 * @param encodedLabel
+	 *            label to use when creating the default
+	 *            {@link CommandFaceDescriptor}.
 	 */
 	protected AbstractCommand(String id, String encodedLabel) {
 		this(id, new CommandFaceDescriptor(encodedLabel));
@@ -127,21 +136,26 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Constructor providing id and a number of parameters to create a default
 	 * {@link CommandFaceDescriptor}.
-	 *
+	 * 
 	 * @param id
-	 * @param encodedLabel label for the default {@link CommandFaceDescriptor}.
-	 * @param icon icon for the default {@link CommandFaceDescriptor}.
-	 * @param caption caption for the default {@link CommandFaceDescriptor}.
+	 * @param encodedLabel
+	 *            label for the default {@link CommandFaceDescriptor}.
+	 * @param icon
+	 *            icon for the default {@link CommandFaceDescriptor}.
+	 * @param caption
+	 *            caption for the default {@link CommandFaceDescriptor}.
 	 */
-	protected AbstractCommand(String id, String encodedLabel, Icon icon, String caption) {
+	protected AbstractCommand(String id, String encodedLabel, Icon icon,
+			String caption) {
 		this(id, new CommandFaceDescriptor(encodedLabel, icon, caption));
 	}
 
 	/**
 	 * Constructor providing an id and the default FaceDescriptor.
-	 *
+	 * 
 	 * @param id
-	 * @param faceDescriptor the default FaceDescriptor to use.
+	 * @param faceDescriptor
+	 *            the default FaceDescriptor to use.
 	 */
 	protected AbstractCommand(String id, CommandFaceDescriptor faceDescriptor) {
 		this(id);
@@ -153,10 +167,11 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Constructor providing an id and a number of FaceDescriptors. No default
 	 * faceDescriptor is set.
-	 *
+	 * 
 	 * @param id
-	 * @param faceDescriptors a map which contains &lt;faceDescriptorId,
-	 * faceDescriptor&gt; pairs.
+	 * @param faceDescriptors
+	 *            a map which contains &lt;faceDescriptorId, faceDescriptor&gt;
+	 *            pairs.
 	 */
 	protected AbstractCommand(String id, Map faceDescriptors) {
 		this(id);
@@ -173,7 +188,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Set the id. In most cases, this is provided by the constructor or through
 	 * the beanId provided in the applicationContext.
-	 *
+	 * 
 	 * @param id
 	 */
 	protected void setId(String id) {
@@ -194,9 +209,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the default faceDescriptor to use for this command.
-	 *
-	 * @param faceDescriptor the {@link CommandFaceDescriptor} to use as
-	 * default.
+	 * 
+	 * @param faceDescriptor
+	 *            the {@link CommandFaceDescriptor} to use as default.
 	 */
 	public void setFaceDescriptor(CommandFaceDescriptor faceDescriptor) {
 		setFaceDescriptor(getDefaultFaceDescriptorId(), faceDescriptor);
@@ -204,19 +219,23 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Add an additional {@link CommandFaceDescriptor}.
-	 *
-	 * @param faceDescriptorId key to identify and use this faceDescriptor.
-	 * @param faceDescriptor additional {@link CommandFaceDescriptor}.
+	 * 
+	 * @param faceDescriptorId
+	 *            key to identify and use this faceDescriptor.
+	 * @param faceDescriptor
+	 *            additional {@link CommandFaceDescriptor}.
 	 */
-	public void setFaceDescriptor(String faceDescriptorId, CommandFaceDescriptor faceDescriptor) {
+	public void setFaceDescriptor(String faceDescriptorId,
+			CommandFaceDescriptor faceDescriptor) {
 		getButtonManager(faceDescriptorId).setFaceDescriptor(faceDescriptor);
 	}
 
 	/**
 	 * Add a number of {@link CommandFaceDescriptor}s to this Command.
-	 *
-	 * @param faceDescriptors a {@link Map} which contains &lt;faceDescriptorId,
-	 * CommandFaceDescriptor&gt; pairs.
+	 * 
+	 * @param faceDescriptors
+	 *            a {@link Map} which contains &lt;faceDescriptorId,
+	 *            CommandFaceDescriptor&gt; pairs.
 	 */
 	public void setFaceDescriptors(Map faceDescriptors) {
 		Assert.notNull(faceDescriptors);
@@ -224,16 +243,17 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		while (it.hasNext()) {
 			Map.Entry entry = (Map.Entry) it.next();
 			String faceDescriptorId = (String) entry.getKey();
-			CommandFaceDescriptor faceDescriptor = (CommandFaceDescriptor) entry.getValue();
+			CommandFaceDescriptor faceDescriptor = (CommandFaceDescriptor) entry
+					.getValue();
 			setFaceDescriptor(faceDescriptorId, faceDescriptor);
 		}
 	}
 
 	/**
 	 * Change the default FaceDescriptor.
-	 *
-	 * @param defaultFaceDescriptorId the id of the faceDescriptor to be used as
-	 * default.
+	 * 
+	 * @param defaultFaceDescriptorId
+	 *            the id of the faceDescriptor to be used as default.
 	 */
 	public void setDefaultFaceDescriptorId(String defaultFaceDescriptorId) {
 		this.defaultFaceDescriptorId = defaultFaceDescriptorId;
@@ -242,11 +262,12 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Set the {@link CommandFaceDescriptorRegistry} to use when
 	 * registering/looking up {@link CommandFaceDescriptor}s.
-	 *
-	 * @param faceDescriptorRegistry registry to use for the
-	 * {@link CommandFaceDescriptor}s.
+	 * 
+	 * @param faceDescriptorRegistry
+	 *            registry to use for the {@link CommandFaceDescriptor}s.
 	 */
-	public void setFaceDescriptorRegistry(CommandFaceDescriptorRegistry faceDescriptorRegistry) {
+	public void setFaceDescriptorRegistry(
+			CommandFaceDescriptorRegistry faceDescriptorRegistry) {
 		this.faceDescriptorRegistry = faceDescriptorRegistry;
 	}
 
@@ -259,7 +280,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the provided label on the default {@link CommandFaceDescriptor}.
-	 *
+	 * 
 	 * @see CommandFaceDescriptor#setButtonLabelInfo(String)
 	 */
 	public void setLabel(String encodedLabel) {
@@ -268,7 +289,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the provided label on the default {@link CommandFaceDescriptor}.
-	 *
+	 * 
 	 * @see CommandFaceDescriptor#setLabelInfo(CommandButtonLabelInfo)
 	 */
 	public void setLabel(CommandButtonLabelInfo label) {
@@ -276,8 +297,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Set the provided description on the default {@link CommandFaceDescriptor}.
-	 *
+	 * Set the provided description on the default {@link CommandFaceDescriptor}
+	 * .
+	 * 
 	 * @see CommandFaceDescriptor#setCaption(String)
 	 */
 	public void setCaption(String shortDescription) {
@@ -286,7 +308,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the provided icon on the default {@link CommandFaceDescriptor}.
-	 *
+	 * 
 	 * @see CommandFaceDescriptor#setIcon(Icon)
 	 */
 	public void setIcon(Icon icon) {
@@ -295,7 +317,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the provided iconInfo on the default {@link CommandFaceDescriptor}.
-	 *
+	 * 
 	 * @see CommandFaceDescriptor#setIconInfo(CommandButtonIconInfo)
 	 */
 	public void setIconInfo(CommandButtonIconInfo iconInfo) {
@@ -303,8 +325,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Set the provided foreground colour on the default {@link CommandFaceDescriptor}.
-	 *
+	 * Set the provided foreground colour on the default
+	 * {@link CommandFaceDescriptor}.
+	 * 
 	 * @see CommandFaceDescriptor#setForeground(java.awt.Color)
 	 */
 	public void setForeground(Color foreground) {
@@ -312,8 +335,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Set the provided background colour on the default {@link CommandFaceDescriptor}.
-	 *
+	 * Set the provided background colour on the default
+	 * {@link CommandFaceDescriptor}.
+	 * 
 	 * @see CommandFaceDescriptor#setBackground(Color)
 	 */
 	public void setBackground(Color background) {
@@ -325,15 +349,17 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * dependencies have been set. If subclasses override this method, they
 	 * should begin by calling {@code super.afterPropertiesSet()}.
 	 */
-    @PostConstruct
+	@PostConstruct
 	public void afterPropertiesSet() {
 		if (getId() == null) {
-			logger.info("Command " + this + " has no set id; note: anonymous commands cannot be used in registries.");
+			logger.info("Command "
+					+ this
+					+ " has no set id; note: anonymous commands cannot be used in registries.");
 		}
 		if (this instanceof ActionCommand && !isFaceConfigured()) {
-			logger.info("The face descriptor property is not yet set for action command '" + getId()
-					+ "'; configuring");
-            applicationConfig.commandConfigurer().configure(this);
+			logger.info("The face descriptor property is not yet set for action command '"
+					+ getId() + "'; configuring");
+			applicationConfig.commandConfigurer().configure(this);
 
 		}
 	}
@@ -377,8 +403,8 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Returns the icon from the default faceDescriptor or <code>null</code>
-	 * if no faceDescriptor is available.
+	 * Returns the icon from the default faceDescriptor or <code>null</code> if
+	 * no faceDescriptor is available.
 	 */
 	public Icon getIcon() {
 		if (isFaceConfigured()) {
@@ -400,8 +426,8 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Returns the mnemonic from the default faceDescriptor or the default
-	 * mnemonic of the
-	 * {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL#getMnemonic()}.
+	 * mnemonic of the {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL
+	 * #getMnemonic()}.
 	 */
 	public int getMnemonic() {
 		if (isFaceConfigured()) {
@@ -412,8 +438,8 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Returns the mnemonicIndex from the default faceDescriptor or the default
-	 * mnemonicIndex of the
-	 * {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL#getMnemonicIndex()}.
+	 * mnemonicIndex of the {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL
+	 * #getMnemonicIndex()}.
 	 */
 	public int getMnemonicIndex() {
 		if (isFaceConfigured()) {
@@ -424,8 +450,8 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Returns the accelerator from the default faceDescriptor or the default
-	 * accelerator of the
-	 * {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL#getAccelerator()}.
+	 * accelerator of the {@link CommandButtonLabelInfo#BLANK_BUTTON_LABEL
+	 * #getAccelerator()}.
 	 */
 	public KeyStroke getAccelerator() {
 		if (isFaceConfigured()) {
@@ -454,7 +480,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Set the Id of the security controller that should manage this object.
-	 * @param controllerId Id (bean name) of the security controller
+	 * 
+	 * @param controllerId
+	 *            Id (bean name) of the security controller
 	 */
 	public void setSecurityControllerId(String controllerId) {
 		this.securityControllerId = controllerId;
@@ -463,6 +491,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Get the id (bean name) of the security controller that should manage this
 	 * object.
+	 * 
 	 * @return controller id
 	 */
 	public String getSecurityControllerId() {
@@ -473,8 +502,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * Set the authorized state. Setting authorized to false will override any
 	 * call to {@link #setEnabled(boolean)}. As long as this object is
 	 * unauthorized, it can not be enabled.
-	 * @param authorized Pass <code>true</code> if the object is to be
-	 * authorized
+	 * 
+	 * @param authorized
+	 *            Pass <code>true</code> if the object is to be authorized
 	 */
 	public void setAuthorized(boolean authorized) {
 		boolean wasAuthorized = isAuthorized();
@@ -495,7 +525,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Returns <code>true</code> if the command is enabled and
 	 * {@link #isAuthorized()}.
-	 *
+	 * 
 	 * @see #isAuthorized()
 	 */
 	public boolean isEnabled() {
@@ -512,9 +542,12 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 */
 	protected void updatedEnabledState() {
 		boolean isEnabled = isEnabled();
-		if (oldEnabledState == null || hasChanged(oldEnabledState.booleanValue(), isEnabled)) {
-			firePropertyChange(ENABLED_PROPERTY_NAME, oldEnabledState == null ? !isEnabled : oldEnabledState
-					.booleanValue(), isEnabled);
+		if (oldEnabledState == null
+				|| hasChanged(oldEnabledState.booleanValue(), isEnabled)) {
+			firePropertyChange(
+					ENABLED_PROPERTY_NAME,
+					oldEnabledState == null ? !isEnabled : oldEnabledState
+							.booleanValue(), isEnabled);
 		}
 		oldEnabledState = Boolean.valueOf(isEnabled);
 	}
@@ -523,7 +556,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * Set the enabled state of this command. Note that if we are currently not
 	 * authorized, then the new value will just be recorded and no change in the
 	 * current enabled state will be made.
-	 * @param enabled state
+	 * 
+	 * @param enabled
+	 *            state
 	 */
 	public void setEnabled(boolean enabled) {
 		if (hasChanged(this.enabled, enabled)) {
@@ -601,15 +636,16 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Returns an iterator over <em>all</em> buttons by traversing
-	 * <em>each</em> {@link CommandFaceButtonManager}.
+	 * Returns an iterator over <em>all</em> buttons by traversing <em>each</em>
+	 * {@link CommandFaceButtonManager}.
 	 */
 	protected final Iterator buttonIterator() {
 
 		if (this.faceButtonManagers == null)
 			return Collections.EMPTY_SET.iterator();
 
-		return new NestedButtonIterator(this.faceButtonManagers.values().iterator());
+		return new NestedButtonIterator(this.faceButtonManagers.values()
+				.iterator());
 	}
 
 	/**
@@ -642,16 +678,18 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		}
 
 		public void remove() {
-			throw new UnsupportedOperationException("Can't use a button-iterator on AbstractCommand to remove buttons.");
+			throw new UnsupportedOperationException(
+					"Can't use a button-iterator on AbstractCommand to remove buttons.");
 		}
 
 		private void preFetchNextButton() {
-			while (this.currentButtonIterator == null || !this.currentButtonIterator.hasNext()) {
+			while (this.currentButtonIterator == null
+					|| !this.currentButtonIterator.hasNext()) {
 				if (this.managerIterator.hasNext()) {
-					CommandFaceButtonManager cfbm = (CommandFaceButtonManager) this.managerIterator.next();
+					CommandFaceButtonManager cfbm = (CommandFaceButtonManager) this.managerIterator
+							.next();
 					this.currentButtonIterator = cfbm.iterator();
-				}
-				else {
+				} else {
 					this.currentButtonIterator = null;
 					this.nextButton = null;
 					return;
@@ -702,9 +740,12 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 */
 	protected void updatedVisibleState() {
 		boolean isVisible = isVisible();
-		if (oldVisibleState == null || hasChanged(oldVisibleState.booleanValue(), isVisible)) {
-			firePropertyChange(VISIBLE_PROPERTY_NAME, oldVisibleState == null ? !isVisible : oldVisibleState
-					.booleanValue(), isVisible);
+		if (oldVisibleState == null
+				|| hasChanged(oldVisibleState.booleanValue(), isVisible)) {
+			firePropertyChange(
+					VISIBLE_PROPERTY_NAME,
+					oldVisibleState == null ? !isVisible : oldVisibleState
+							.booleanValue(), isVisible);
 		}
 		oldVisibleState = Boolean.valueOf(isVisible);
 	}
@@ -712,62 +753,71 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Create a button using the defaults for faceDescriptorId, buttonFactory
 	 * and buttonConfigurer.
-	 *
+	 * 
 	 * @see #createButton(String, ButtonFactory, CommandButtonConfigurer)
 	 */
 	public final AbstractButton createButton() {
-		return createButton(getDefaultFaceDescriptorId(), getButtonFactory(), getDefaultButtonConfigurer());
+		return createButton(getDefaultFaceDescriptorId(), getButtonFactory(),
+				getDefaultButtonConfigurer());
 	}
 
 	/**
 	 * Create a button using the defaults for buttonFactory and
 	 * buttonConfigurer.
-	 *
+	 * 
 	 * @see #createButton(String, ButtonFactory, CommandButtonConfigurer)
 	 */
 	public final AbstractButton createButton(String faceDescriptorId) {
-		return createButton(faceDescriptorId, getButtonFactory(), getDefaultButtonConfigurer());
+		return createButton(faceDescriptorId, getButtonFactory(),
+				getDefaultButtonConfigurer());
 	}
 
 	/**
 	 * Create a button using the defaults for faceDescriptorId and
 	 * buttonConfigurer.
-	 *
+	 * 
 	 * @see #createButton(String, ButtonFactory, CommandButtonConfigurer)
 	 */
 	public final AbstractButton createButton(ButtonFactory buttonFactory) {
-		return createButton(getDefaultFaceDescriptorId(), buttonFactory, getDefaultButtonConfigurer());
+		return createButton(getDefaultFaceDescriptorId(), buttonFactory,
+				getDefaultButtonConfigurer());
 	}
 
 	/**
 	 * Create a button using the default buttonConfigurer.
-	 *
+	 * 
 	 * @see #createButton(String, ButtonFactory, CommandButtonConfigurer)
 	 */
-	public final AbstractButton createButton(String faceDescriptorId, ButtonFactory buttonFactory) {
-		return createButton(faceDescriptorId, buttonFactory, getDefaultButtonConfigurer());
+	public final AbstractButton createButton(String faceDescriptorId,
+			ButtonFactory buttonFactory) {
+		return createButton(faceDescriptorId, buttonFactory,
+				getDefaultButtonConfigurer());
 	}
 
 	/**
 	 * Create a button using the default buttonFactory.
-	 *
+	 * 
 	 * @see #createButton(String, ButtonFactory, CommandButtonConfigurer)
 	 */
-	public final AbstractButton createButton(ButtonFactory buttonFactory, CommandButtonConfigurer buttonConfigurer) {
-		return createButton(getDefaultFaceDescriptorId(), buttonFactory, buttonConfigurer);
+	public final AbstractButton createButton(ButtonFactory buttonFactory,
+			CommandButtonConfigurer buttonConfigurer) {
+		return createButton(getDefaultFaceDescriptorId(), buttonFactory,
+				buttonConfigurer);
 	}
 
 	/**
 	 * Creates a button using the provided id, factory and configurer.
-	 *
-	 * @param faceDescriptorId id of the faceDescriptor used to configure the
-	 * button.
-	 * @param buttonFactory factory that delivers the button.
-	 * @param buttonConfigurer configurer mapping the faceDescriptor on the
-	 * button.
+	 * 
+	 * @param faceDescriptorId
+	 *            id of the faceDescriptor used to configure the button.
+	 * @param buttonFactory
+	 *            factory that delivers the button.
+	 * @param buttonConfigurer
+	 *            configurer mapping the faceDescriptor on the button.
 	 * @return a button attached to this command.
 	 */
-	public AbstractButton createButton(String faceDescriptorId, ButtonFactory buttonFactory,
+	public AbstractButton createButton(String faceDescriptorId,
+			ButtonFactory buttonFactory,
 			CommandButtonConfigurer buttonConfigurer) {
 		AbstractButton button = buttonFactory.createButton();
 		attach(button, faceDescriptorId, buttonConfigurer);
@@ -777,63 +827,71 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Create a menuItem using the defaults for faceDescriptorId, menuFactory
 	 * and menuItemButtonConfigurer.
-	 *
+	 * 
 	 * @see #createMenuItem(String, MenuFactory, CommandButtonConfigurer)
 	 */
 	public final JMenuItem createMenuItem() {
-		return createMenuItem(getDefaultFaceDescriptorId(), getMenuFactory(), getMenuItemButtonConfigurer());
+		return createMenuItem(getDefaultFaceDescriptorId(), getMenuFactory(),
+				getMenuItemButtonConfigurer());
 	}
 
 	/**
 	 * Create a menuItem using the defaults for menuFactory and
 	 * menuItemButtonConfigurer.
-	 *
+	 * 
 	 * @see #createMenuItem(String, MenuFactory, CommandButtonConfigurer)
 	 */
 	public final JMenuItem createMenuItem(String faceDescriptorId) {
-		return createMenuItem(faceDescriptorId, getMenuFactory(), getMenuItemButtonConfigurer());
+		return createMenuItem(faceDescriptorId, getMenuFactory(),
+				getMenuItemButtonConfigurer());
 	}
 
 	/**
 	 * Create a menuItem using the defaults for faceDescriptorId and
 	 * menuItemButtonConfigurer.
-	 *
+	 * 
 	 * @see #createMenuItem(String, MenuFactory, CommandButtonConfigurer)
 	 */
 	public final JMenuItem createMenuItem(MenuFactory menuFactory) {
-		return createMenuItem(getDefaultFaceDescriptorId(), menuFactory, getMenuItemButtonConfigurer());
+		return createMenuItem(getDefaultFaceDescriptorId(), menuFactory,
+				getMenuItemButtonConfigurer());
 	}
 
 	/**
 	 * Create a menuItem using the default and menuItemButtonConfigurer.
-	 *
+	 * 
 	 * @see #createMenuItem(String, MenuFactory, CommandButtonConfigurer)
 	 */
-	public final JMenuItem createMenuItem(String faceDescriptorId, MenuFactory menuFactory) {
-		return createMenuItem(faceDescriptorId, menuFactory, getMenuItemButtonConfigurer());
+	public final JMenuItem createMenuItem(String faceDescriptorId,
+			MenuFactory menuFactory) {
+		return createMenuItem(faceDescriptorId, menuFactory,
+				getMenuItemButtonConfigurer());
 	}
 
 	/**
 	 * Create a menuItem using the default faceDescriptorId.
-	 *
+	 * 
 	 * @see #createMenuItem(String, MenuFactory, CommandButtonConfigurer)
 	 */
-	public final JMenuItem createMenuItem(MenuFactory menuFactory, CommandButtonConfigurer buttonConfigurer) {
-		return createMenuItem(getDefaultFaceDescriptorId(), menuFactory, buttonConfigurer);
+	public final JMenuItem createMenuItem(MenuFactory menuFactory,
+			CommandButtonConfigurer buttonConfigurer) {
+		return createMenuItem(getDefaultFaceDescriptorId(), menuFactory,
+				buttonConfigurer);
 	}
 
 	/**
 	 * Create a menuItem using the provided id, factory and configurer.
-	 *
-	 * @param faceDescriptorId id of the faceDescriptor used to configure the
-	 * button.
-	 * @param menuFactory factory that delivers the menuItem.
-	 * @param buttonConfigurer configurer mapping the faceDescriptor on the
-	 * button.
+	 * 
+	 * @param faceDescriptorId
+	 *            id of the faceDescriptor used to configure the button.
+	 * @param menuFactory
+	 *            factory that delivers the menuItem.
+	 * @param buttonConfigurer
+	 *            configurer mapping the faceDescriptor on the button.
 	 * @return a menuItem attached to this command.
 	 */
-	public JMenuItem createMenuItem(String faceDescriptorId, MenuFactory menuFactory,
-			CommandButtonConfigurer buttonConfigurer) {
+	public JMenuItem createMenuItem(String faceDescriptorId,
+			MenuFactory menuFactory, CommandButtonConfigurer buttonConfigurer) {
 		JMenuItem menuItem = menuFactory.createMenuItem();
 		attach(menuItem, faceDescriptorId, buttonConfigurer);
 		return menuItem;
@@ -842,17 +900,18 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Attach and configure the button to the default faceDescriptor using the
 	 * default configurer.
-	 *
+	 * 
 	 * @see #attach(AbstractButton, String, CommandButtonConfigurer)
 	 */
 	public void attach(AbstractButton button) {
-		attach(button, getDefaultFaceDescriptorId(), getCommandServices().getDefaultButtonConfigurer());
+		attach(button, getDefaultFaceDescriptorId(), getCommandServices()
+				.getDefaultButtonConfigurer());
 	}
 
 	/**
 	 * Attach and configure the button to the default faceDescriptor using the
 	 * given configurer.
-	 *
+	 * 
 	 * @see #attach(AbstractButton, String, CommandButtonConfigurer)
 	 */
 	public void attach(AbstractButton button, CommandButtonConfigurer configurer) {
@@ -860,26 +919,34 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	}
 
 	/**
-	 * Attach and configure the button to the faceDescriptorId using the configurer.
-	 *
-	 * @param button the button to attach and configure.
-	 * @param faceDescriptorId the id of the faceDescriptor.
-	 * @param configurer that maps the faceDescriptor on the button.
+	 * Attach and configure the button to the faceDescriptorId using the
+	 * configurer.
+	 * 
+	 * @param button
+	 *            the button to attach and configure.
+	 * @param faceDescriptorId
+	 *            the id of the faceDescriptor.
+	 * @param configurer
+	 *            that maps the faceDescriptor on the button.
 	 */
-	public void attach(AbstractButton button, String faceDescriptorId, CommandButtonConfigurer configurer) {
-		getButtonManager(faceDescriptorId).attachAndConfigure(button, configurer);
+	public void attach(AbstractButton button, String faceDescriptorId,
+			CommandButtonConfigurer configurer) {
+		getButtonManager(faceDescriptorId).attachAndConfigure(button,
+				configurer);
 		onButtonAttached(button);
 	}
 
 	/**
 	 * Additional code to execute when attaching a button.
-	 *
-	 * @param button the button that has been attached.
+	 * 
+	 * @param button
+	 *            the button that has been attached.
 	 */
 	protected void onButtonAttached(AbstractButton button) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Configuring newly attached button for command '" + getId() + "' enabled=" + isEnabled()
-					+ ", visible=" + isVisible());
+			logger.debug("Configuring newly attached button for command '"
+					+ getId() + "' enabled=" + isEnabled() + ", visible="
+					+ isVisible());
 		}
 		button.setEnabled(isEnabled());
 		button.setVisible(isVisible());
@@ -887,8 +954,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
 	/**
 	 * Detach the button from the {@link CommandFaceButtonManager}.
-	 *
-	 * @param button the button to detach.
+	 * 
+	 * @param button
+	 *            the button to detach.
 	 */
 	public void detach(AbstractButton button) {
 		if (getDefaultButtonManager().isAttachedTo(button)) {
@@ -900,10 +968,11 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Returns <code>true</code> if the provided button is attached to the
 	 * default {@link CommandFaceButtonManager}.
-	 *
-	 * @param b the button to check.
+	 * 
+	 * @param b
+	 *            the button to check.
 	 * @return <code>true</code> if b is attached to the default
-	 * {@link CommandFaceButtonManager}.
+	 *         {@link CommandFaceButtonManager}.
 	 */
 	public boolean isAttached(AbstractButton b) {
 		return getDefaultButtonManager().isAttachedTo(b);
@@ -927,20 +996,23 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Returns the {@link CommandFaceButtonManager} for the given
 	 * faceDescriptorId.
-	 *
-	 * @param faceDescriptorId id of the {@link CommandFaceDescriptor}.
+	 * 
+	 * @param faceDescriptorId
+	 *            id of the {@link CommandFaceDescriptor}.
 	 * @return the {@link CommandFaceButtonManager} managing buttons configured
-	 * with the {@link CommandFaceDescriptor}.
+	 *         with the {@link CommandFaceDescriptor}.
 	 */
 	private CommandFaceButtonManager getButtonManager(String faceDescriptorId) {
 		if (this.faceButtonManagers == null) {
-			this.faceButtonManagers = new CachingMapDecorator() {
+			this.faceButtonManagers = new org.valkyriercp.util.CachingMapDecorator() {
 				protected Object create(Object key) {
-					return new CommandFaceButtonManager(AbstractCommand.this, (String) key);
+					return new CommandFaceButtonManager(AbstractCommand.this,
+							(String) key);
 				}
 			};
 		}
-		CommandFaceButtonManager m = (CommandFaceButtonManager) this.faceButtonManagers.get(faceDescriptorId);
+		CommandFaceButtonManager m = (CommandFaceButtonManager) this.faceButtonManagers
+				.get(faceDescriptorId);
 		return m;
 	}
 
@@ -996,10 +1068,11 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Search for a button representing this command in the provided container
 	 * and let it request the focus.
-	 *
-	 * @param container the container which holds the command button.
+	 * 
+	 * @param container
+	 *            the container which holds the command button.
 	 * @return <code>true</code> if the focus request is likely to succeed.
-	 *
+	 * 
 	 * @see #getButtonIn(Container)
 	 * @see JComponent#requestFocusInWindow()
 	 */
@@ -1014,10 +1087,11 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	/**
 	 * Search for the first button of this command that is a child component of
 	 * the given container.
-	 *
-	 * @param container the container to be searched.
+	 * 
+	 * @param container
+	 *            the container to be searched.
 	 * @return the {@link AbstractButton} representing this command that is
-	 * embedded in the container or <code>null</code> if none was found.
+	 *         embedded in the container or <code>null</code> if none was found.
 	 */
 	public AbstractButton getButtonIn(Container container) {
 		Iterator it = buttonIterator();
@@ -1030,20 +1104,22 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		return null;
 	}
 
-    public String[] getAuthorities() {
-        return authorities;
-    }
+	public String[] getAuthorities() {
+		return authorities;
+	}
 
-    public void setAuthorities(String... authorities) {
-        this.authorities = authorities;
-    }
+	public void setAuthorities(String... authorities) {
+		this.authorities = authorities;
+	}
 
-    /**
+	/**
 	 * {@inheritDoc}
 	 */
 	public String toString() {
-		return new ToStringCreator(this).append("id", getId()).append("enabled", enabled).append("visible", visible)
-				.append("defaultFaceDescriptorId", defaultFaceDescriptorId).toString();
+		return new ToStringCreator(this).append("id", getId())
+				.append("enabled", enabled).append("visible", visible)
+				.append("defaultFaceDescriptorId", defaultFaceDescriptorId)
+				.toString();
 	}
 
 }

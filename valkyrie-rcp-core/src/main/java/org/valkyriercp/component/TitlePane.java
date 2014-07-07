@@ -12,13 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.painter.CompoundPainter;
-import org.jdesktop.swingx.painter.GlossPainter;
-import org.jdesktop.swingx.painter.MattePainter;
-import org.jdesktop.swingx.painter.PinstripePainter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.factory.AbstractControlFactory;
@@ -52,13 +47,16 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 
 	private MessagePane messagePane;
 
-	@Autowired
-	@Qualifier("titlePaneBackgroundColor")
-	private Color titlePaneBackgroundColor;
+	// @Autowired
+	// @Qualifier("titlePaneBackgroundColor")
+	// private Color titlePaneBackgroundColor;
+
+	// @Autowired
+	// @Qualifier("titlePanePinstripeColor")
+	// private Color titlePanePinstripeColor;
 
 	@Autowired
-	@Qualifier("titlePanePinstripeColor")
-	private Color titlePanePinstripeColor;
+	private TitlePaneConfigurer paneConfigurer;
 
 	public TitlePane() {
 		this(DefaultMessageAreaPane.DEFAULT_LINES_TO_DISPLAY);
@@ -98,17 +96,20 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 		iconLabel.setIcon(getIcon());
 
 		JXPanel panel = new JXPanel();
-
-		MattePainter matte = new MattePainter(titlePaneBackgroundColor);
-		PinstripePainter pinstripe = new PinstripePainter();
-		pinstripe.setPaint(titlePanePinstripeColor);
-		pinstripe.setSpacing(5.);
-		GlossPainter gloss = new GlossPainter();
-		CompoundPainter painter = new CompoundPainter(matte, pinstripe, gloss);
-		panel.setBackgroundPainter(painter);
-
 		panel.setName("panel");
-		panel.setBackground(getBackgroundColor());
+
+		// MattePainter matte = new MattePainter(titlePaneBackgroundColor);
+		// PinstripePainter pinstripe = new PinstripePainter();
+		// pinstripe.setPaint(titlePanePinstripeColor);
+		// pinstripe.setSpacing(5.);
+		// GlossPainter gloss = new GlossPainter();
+		// CompoundPainter<JXPanel> painter = new
+		// CompoundPainter<JXPanel>(matte,
+		// pinstripe, gloss);
+		// panel.setBackgroundPainter(painter);
+		// panel.setBackground(getBackgroundColor());
+
+		paneConfigurer.configure(panel);
 		TableLayoutBuilder table = new TableLayoutBuilder(panel);
 		table.row(FormFactory.LINE_GAP_ROWSPEC);
 		table.gapCol();
