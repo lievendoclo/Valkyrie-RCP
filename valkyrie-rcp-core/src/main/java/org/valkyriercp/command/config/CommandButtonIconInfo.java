@@ -245,14 +245,7 @@ public class CommandButtonIconInfo implements ButtonConfigurer, VisualizedElemen
 		this.selectedIcon = selectedIcon;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toString() {
-		return new ToStringCreator(this).toString();
-	}
-
-	/**
+    /**
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object o) {
@@ -280,4 +273,17 @@ public class CommandButtonIconInfo implements ButtonConfigurer, VisualizedElemen
 		return hash;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "CommandButtonIconInfo{" +
+                "icon=" + icon +
+                ", selectedIcon=" + selectedIcon +
+                ", disabledIcon=" + disabledIcon +
+                ", pressedIcon=" + pressedIcon +
+                ", rolloverIcon=" + rolloverIcon +
+                '}';
+    }
 }

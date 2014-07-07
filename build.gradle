@@ -28,6 +28,7 @@ allprojects {
     test {
         scanForTestClasses = false
         include '**/*Tests.*'
+        include '**/*Spec.*'
         exclude '**/*Abstract*.*'
     }
 
@@ -60,8 +61,8 @@ allprojects {
         testCompile "junit:junit:${dependencyVersions.junit}"
         testCompile "org.spockframework:spock-spring:${dependencyVersions.spock}"
         testCompile "org.codehaus.groovy:groovy-all:${dependencyVersions.groovy}"
+        testCompile "org.gcontracts:gcontracts-core:${dependencyVersions.gcontracts}"
         testCompile "org.mockito:mockito-core:${dependencyVersions.mockito}"
-        testCompile "org.easymock:easymock:${dependencyVersions.easymock}"
         testCompile "org.springframework:spring-test:${dependencyVersions.spring.framework}"
         compile "org.slf4j:slf4j-api:${dependencyVersions.slf4j}"
         compile "org.slf4j:jcl-over-slf4j:${dependencyVersions.slf4j}"
