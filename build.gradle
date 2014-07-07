@@ -16,7 +16,7 @@ allprojects {
     apply plugin: 'propdeps-eclipse'
 
     group = "dk.navicon"
-    ext.springVersion = "3.2.4.RELEASE"
+    ext.springVersion = "3.2.8.RELEASE"
 
     repositories {
         maven {
@@ -179,8 +179,8 @@ project("valkyrie-rcp-core") {
         compile "commons-collections:commons-collections:3.2.1"
         compile "commons-httpclient:commons-httpclient:3.1"
         compile "com.google.guava:guava:14.0.1"
-        compile "org.springframework.security:spring-security-core:3.1.4.RELEASE"
-        compile "org.springframework.security:spring-security-config:3.1.4.RELEASE"
+        compile "org.springframework.security:spring-security-core:3.2.4.RELEASE"
+        compile "org.springframework.security:spring-security-config:3.2.4.RELEASE"
         compile "org.springframework:spring-web:${springVersion}"
         compile "org.swinglabs.swingx:swingx-all:1.6.5-1"
         compile "com.jgoodies:forms:1.2.1"
