@@ -150,7 +150,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	}
 
 	public void setFormObject(Object formObject) {
-		setDeliverValueChangeEvents(false, false);
+        setDeliverValueChangeEvents(false);
 		if (formObject == null) {
 			handleSetNullFormObject();
 		}
@@ -161,26 +161,38 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		// this will cause all buffered value models to revert
 		// to the new form objects property values
 		commitTrigger.revert();
-		setDeliverValueChangeEvents(true, true);
+        clearValueModelsDirtyState();
+		setDeliverValueChangeEvents(true);
 	}
 
-	/**
-	 * Disconnect view from data in MediatingValueModels, possibly clearing them
-	 * afterwards.
-	 *
-	 * @param deliverValueChangeEvents <code>true</code> if events should be
-	 * delivered.
-	 * @param clearValueModels <code>true</code> if models should be cleared
-	 * afterwards.
-	 */
+    /**
+     * Disconnect view from data in MediatingValueModels
+     *
+     * @param enable <code>true</code> if events should be
+     * delivered.
+     */
+    private void setDeliverValueChangeEvents(boolean enable) {
+        formObjectHolder.setDeliverValueChangeEvents(enable);
+        for (Object o : mediatingValueModels.values()) {
+            FormModelMediatingValueModel valueModel = (FormModelMediatingValueModel) o;
+            valueModel.setDeliverValueChangeEvents(enable);
+        }
+    }
+
+    private void clearValueModelsDirtyState() {
+        for (Object o : mediatingValueModels.values()) {
+            ((FormModelMediatingValueModel) o).clearDirty();
+        }
+    }
+
+
 	private void setDeliverValueChangeEvents(boolean deliverValueChangeEvents, boolean clearValueModels) {
 		formObjectHolder.setDeliverValueChangeEvents(deliverValueChangeEvents);
-		for (Iterator i = mediatingValueModels.values().iterator(); i.hasNext();) {
-			FormModelMediatingValueModel valueModel = (FormModelMediatingValueModel) i.next();
-			valueModel.setDeliverValueChangeEvents(deliverValueChangeEvents);
-			if (clearValueModels)
-				valueModel.clearDirty();
-		}
+
+        for (Object o : mediatingValueModels.values()) {
+            FormModelMediatingValueModel valueModel = (FormModelMediatingValueModel) o;
+            valueModel.setDeliverValueChangeEvents(deliverValueChangeEvents);
+        }
 	}
 
 	public void setDefaultInstanceClass(Class defaultInstanceClass) {

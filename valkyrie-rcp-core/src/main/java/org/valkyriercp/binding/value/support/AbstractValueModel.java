@@ -152,8 +152,7 @@ public abstract class AbstractValueModel extends AbstractPropertyChangePublisher
             final Object listenerToSkip = listenerToSkipHolder.get();
             final PropertyChangeEvent propertyChangeEvent = new PropertyChangeEvent(this, VALUE_PROPERTY, oldValue,
                     newValue);
-            for (int i = 0; i < propertyChangeListeners.length; i++) {
-                PropertyChangeListener listener = propertyChangeListeners[i];
+            for (PropertyChangeListener listener : propertyChangeListeners) {
                 if (listener != listenerToSkip) {
                     listener.propertyChange(propertyChangeEvent);
                 }
