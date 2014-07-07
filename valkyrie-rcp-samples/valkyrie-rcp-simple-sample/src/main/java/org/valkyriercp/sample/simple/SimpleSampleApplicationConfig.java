@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
-import org.valkyriercp.application.config.support.ApplicationObjectConfigurerBeanPostProcessor;
 import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
@@ -113,10 +112,4 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 				.roles("USER").and().withUser("admin").password("admin")
 				.roles("ADMIN").and().and().build();
 	}
-
-	@Bean
-	public static ApplicationObjectConfigurerBeanPostProcessor applicationObjectConfigurerBeanPostProcessor() {
-		return new ApplicationObjectConfigurerBeanPostProcessor();
-	}
-
 }

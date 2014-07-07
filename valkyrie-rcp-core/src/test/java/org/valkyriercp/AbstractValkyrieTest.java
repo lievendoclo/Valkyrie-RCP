@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.valkyriercp.application.config.ApplicationConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = TestApplicationConfig.class)
 public abstract class AbstractValkyrieTest {
 	@Autowired
 	protected ApplicationConfig applicationConfig;
