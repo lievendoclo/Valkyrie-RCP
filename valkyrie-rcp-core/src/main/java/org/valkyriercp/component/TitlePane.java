@@ -2,10 +2,6 @@ package org.valkyriercp.component;
 
 import com.jgoodies.forms.factories.FormFactory;
 import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.painter.CompoundPainter;
-import org.jdesktop.swingx.painter.GlossPainter;
-import org.jdesktop.swingx.painter.MattePainter;
-import org.jdesktop.swingx.painter.PinstripePainter;
 import org.valkyriercp.core.Message;
 import org.valkyriercp.core.TitleConfigurable;
 import org.valkyriercp.factory.AbstractControlFactory;
@@ -87,17 +83,9 @@ public class TitlePane extends AbstractControlFactory implements MessagePane,
 		iconLabel.setIcon(getIcon());
 
 		JXPanel panel = new JXPanel();
-
-		MattePainter matte = new MattePainter(getTitlePaneBackgroundColor());
-		PinstripePainter pinstripe = new PinstripePainter();
-		pinstripe.setPaint(getTitlePanePinstripeColor());
-		pinstripe.setSpacing(5.);
-		GlossPainter gloss = new GlossPainter();
-		CompoundPainter painter = new CompoundPainter(matte, pinstripe, gloss);
-		panel.setBackgroundPainter(painter);
-
 		panel.setName("panel");
-		panel.setBackground(getBackgroundColor());
+        ValkyrieRepository.getInstance().getApplicationConfig().titlePaneConfigurer().configure(panel);
+
 		TableLayoutBuilder table = new TableLayoutBuilder(panel);
 		table.row(FormFactory.LINE_GAP_ROWSPEC);
 		table.gapCol();

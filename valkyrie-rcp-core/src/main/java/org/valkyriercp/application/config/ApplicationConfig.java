@@ -18,6 +18,7 @@ import org.valkyriercp.command.CommandConfigurer;
 import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.component.OverlayService;
+import org.valkyriercp.component.TitlePaneConfigurer;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
@@ -79,10 +80,9 @@ public interface ApplicationConfig {
     TableFactory tableFactory();
     ApplicationSecurityManager applicationSecurityManager();
     FormModelFactory formModelFactory();
-
     @Bean
     Color titlePaneBackgroundColor();
-
     @Bean
     Color titlePanePinstripeColor();
+    TitlePaneConfigurer titlePaneConfigurer();
 }

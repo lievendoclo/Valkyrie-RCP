@@ -46,7 +46,9 @@ import org.valkyriercp.command.support.DefaultCommandManager;
 import org.valkyriercp.command.support.DefaultCommandRegistry;
 import org.valkyriercp.command.support.DefaultCommandServices;
 import org.valkyriercp.component.DefaultOverlayService;
+import org.valkyriercp.component.DefaultTitlePaneConfigurer;
 import org.valkyriercp.component.OverlayService;
+import org.valkyriercp.component.TitlePaneConfigurer;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
@@ -139,7 +141,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	public ApplicationDescriptor applicationDescriptor() {
 		DefaultApplicationDescriptor defaultApplicationDescriptor = new DefaultApplicationDescriptor();
 		applicationObjectConfigurer().configure(defaultApplicationDescriptor,
-				"applicationDescriptor");
+                "applicationDescriptor");
 		return defaultApplicationDescriptor;
 	}
 
@@ -158,7 +160,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 					"Error getting imagesource property file", e);
 		}
 		imageSource.setBrokenImageIndicator(applicationContext().getResource(
-				"classpath:/com/famfamfam/silk/error.png"));
+                "classpath:/com/famfamfam/silk/error.png"));
 		return imageSource;
 	}
 
@@ -235,7 +237,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	public MessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 		messageSource.setBasenames(getResourceBundleLocations().toArray(
-				new String[getResourceBundleLocations().size()]));
+                new String[getResourceBundleLocations().size()]));
 		return messageSource;
 	}
 
@@ -358,6 +360,8 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 		return swingBinderSelectionStrategy;
 	}
 
+
+
 	protected void registerBinders(
 			BinderSelectionStrategy binderSelectionStrategy) {
 		binderSelectionStrategy
@@ -443,6 +447,12 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	public Color titlePanePinstripeColor() {
 		return new Color(1f, 1f, 1f, 0.17f);
 	}
+
+    @Bean
+
+    public TitlePaneConfigurer titlePaneConfigurer() {
+        return new DefaultTitlePaneConfigurer();
+    }
 
 	@Override
 	public ApplicationMode getApplicationMode() {

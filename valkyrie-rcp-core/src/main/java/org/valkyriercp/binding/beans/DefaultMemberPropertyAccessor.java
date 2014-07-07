@@ -183,7 +183,7 @@ public class DefaultMemberPropertyAccessor extends AbstractNestedMemberPropertyA
         if (map.containsKey(key)) {
             return map.get(key);
         } else {
-            if (JdkVersion.getMajorJavaVersion() < 5) {
+            if (JdkVersion.getMajorJavaVersion() < JdkVersion.JAVA_15) {
                 // we don't know the type of the keys, so we fall back to
                 // comparing toString()
                 for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
