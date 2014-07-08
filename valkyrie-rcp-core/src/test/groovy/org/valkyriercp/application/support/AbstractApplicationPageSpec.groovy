@@ -1,7 +1,6 @@
 package org.valkyriercp.application.support
 
 import org.gcontracts.annotations.Invariant
-import org.junit.Test
 import org.valkyriercp.AbstractValkyrieSpec
 import org.valkyriercp.application.ApplicationPage
 

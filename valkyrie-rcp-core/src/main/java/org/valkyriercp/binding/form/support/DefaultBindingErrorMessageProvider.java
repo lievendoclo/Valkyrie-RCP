@@ -1,10 +1,10 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.PropertyAccessException;
-import org.springframework.binding.convert.converters.InvalidFormatException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FormModel;
+import org.valkyriercp.binding.format.InvalidFormatException;
 import org.valkyriercp.binding.validation.ValidationMessage;
 import org.valkyriercp.binding.validation.support.DefaultValidationMessage;
 import org.valkyriercp.core.Severity;
