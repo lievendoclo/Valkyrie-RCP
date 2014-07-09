@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.valkyriercp.application.config.ApplicationConfig;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
+import org.valkyriercp.application.support.HelpContentsCommand;
 import org.valkyriercp.command.NewWindowCommand;
 import org.valkyriercp.command.support.*;
 import org.valkyriercp.security.LoginCommand;
@@ -93,5 +94,11 @@ public class AbstractCommandConfig implements CommandConfig {
     public AboutCommand aboutCommand() {
         AboutCommand aboutCommand = new AboutCommand();
         return aboutCommand;
+    }
+
+    @Bean
+    public HelpContentsCommand helpCommand() {
+        HelpContentsCommand helpCommand = new HelpContentsCommand();
+        return helpCommand;
     }
 }
