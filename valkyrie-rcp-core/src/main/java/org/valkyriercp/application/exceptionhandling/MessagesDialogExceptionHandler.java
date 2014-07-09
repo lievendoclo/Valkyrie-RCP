@@ -1,7 +1,6 @@
 package org.valkyriercp.application.exceptionhandling;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
+import com.google.common.base.Strings;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.ErrorCoded;
 
@@ -118,18 +117,47 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
         if (message == null) {
             return "";
         }
-        String identString = StringUtils.leftPad("", identLength);
+        String identString = Strings.padStart("", identLength, ' ');
         String newLineWithIdentString = "\n" + identString;
         StringBuilder formattedMessageBuilder = new StringBuilder(identString);
         StringTokenizer messageTokenizer = new StringTokenizer(message, "\n");
         while (messageTokenizer.hasMoreTokens()) {
             String messageToken = messageTokenizer.nextToken();
-            formattedMessageBuilder.append(WordUtils.wrap(messageToken, wrapLength, newLineWithIdentString, true));
+            formattedMessageBuilder.append(wrap(messageToken, wrapLength));
             if (messageTokenizer.hasMoreTokens()) {
                 formattedMessageBuilder.append(newLineWithIdentString);
             }
         }
         return formattedMessageBuilder.toString();
+    }
+
+    private static String wrap(String str, int wrapLength) {
+        int offset = 0;
+        StringBuilder resultBuilder = new StringBuilder();
+
+        while ((str.length() - offset) > wrapLength) {
+            if (str.charAt(offset) == ' ') {
+                offset++;
+                continue;
+            }
+
+            int spaceToWrapAt = str.lastIndexOf(' ', wrapLength + offset);
+            // if the next string with length maxLength doesn't contain ' '
+            if (spaceToWrapAt < offset) {
+                spaceToWrapAt = str.indexOf(' ', wrapLength + offset);
+                // if no more ' '
+                if (spaceToWrapAt < 0) {
+                    break;
+                }
+            }
+
+            resultBuilder.append(str.substring(offset, spaceToWrapAt));
+            resultBuilder.append("\n");
+            offset = spaceToWrapAt + 1;
+        }
+
+        resultBuilder.append(str.substring(offset));
+        return resultBuilder.toString();
     }
 
 }

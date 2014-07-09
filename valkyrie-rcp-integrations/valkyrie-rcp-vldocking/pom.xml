@@ -16,7 +16,7 @@
             <artifactId>valkyrie-rcp-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.vlsolutions</groupId>
+            <groupId>dk.navicon</groupId>
             <artifactId>vldocking</artifactId>
         </dependency>
         <!-- Needed by spring-aspects... -->

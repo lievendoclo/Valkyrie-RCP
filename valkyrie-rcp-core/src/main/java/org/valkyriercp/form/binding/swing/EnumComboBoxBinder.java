@@ -15,7 +15,7 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
@@ -116,7 +116,7 @@ public class EnumComboBoxBinder extends ComboBoxBinder {
 		for (Enum e : enumPropertyType.getEnumConstants()) {
 			String messageKey = enumPropertyType.getName() + "." + e.name();
 			String desc = messageResolver.getMessage(messageKey);
-			if (!StringUtils.isEmpty(desc)) {
+			if (!Strings.isNullOrEmpty(desc)) {
 				out.add(e);
 			} else {
 				log.warn("No message found for: " + messageKey + ", ignoring!");

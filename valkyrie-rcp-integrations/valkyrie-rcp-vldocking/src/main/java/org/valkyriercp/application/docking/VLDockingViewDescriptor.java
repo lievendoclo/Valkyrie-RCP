@@ -18,10 +18,9 @@ package org.valkyriercp.application.docking;
 import java.util.Collections;
 import java.util.Map;
 
+import com.vlsolutions.swing.docking.DockingConstants;
 import org.valkyriercp.application.View;
 import org.valkyriercp.application.support.DefaultViewDescriptor;
-
-import com.vlsolutions.swing.docking.DockingConstants;
 
 /**
  * @author Rogan Dawes

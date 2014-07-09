@@ -1,9 +1,6 @@
 package org.valkyriercp.security.support;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.*;

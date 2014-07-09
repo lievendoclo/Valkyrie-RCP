@@ -1,10 +1,6 @@
 package org.valkyriercp.application.docking;
 
 import com.vlsolutions.swing.docking.*;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.util.Assert;
 
 import javax.swing.*;
@@ -83,10 +79,38 @@ public final class VLDockingUtils {
         Assert.notNull(key, "key");
         Assert.notNull(active, "active");
 
-        final int index = StringUtils.lastIndexOf(key, VLDockingUtils.DOT);
+        final int index = key.lastIndexOf(key, VLDockingUtils.DOT);
         final String overlay = active ? VLDockingUtils.ACTIVE_INFIX : VLDockingUtils.INACTIVE_INFIX;
 
-        return StringUtils.overlay(key, overlay, index, index);
+        return overlay(key, overlay, index, index);
+    }
+
+    public static String overlay(String str, String overlay, int start, int end) {
+        if (str == null) {
+            return null;
+        }
+        if (overlay == null) {
+            overlay = "";
+        }
+        int len = str.length();
+        if (start < 0) {
+            start = 0;
+        }
+        if (start > len) {
+            start = len;
+        }
+        if (end < 0) {
+            end = 0;
+        }
+        if (end > len) {
+            end = len;
+        }
+        if (start > end) {
+            int temp = start;
+            start = end;
+            end = temp;
+        }
+        return str.substring(0, start) + overlay + str.substring(end);
     }
 
     /**
@@ -307,16 +331,11 @@ public final class VLDockingUtils {
          */
         @Override
         public String toString() {
-
-            return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE) //
-                    .append(FocusGainedBean.instanceCount) //
-                    .append(this.getWhatsHappening()) //
-                    .append("lastTitleBar", this.titleBarToString(this.getLastTitleBar()))//
-                    .append("oldTitleBar", this.titleBarToString(this.getOldTitleBar())) //
-                    .append("newTitleBar", this.titleBarToString(this.getNewTitleBar())) //
-                    .append("oldComponent", this.componentToString(this.getOldComponent()))//
-                    .append("newComponent", this.componentToString(this.getNewComponent()))//
-                    .toString();
+            return "FocusGainedBean{" +
+                    "event=" + event +
+                    ", lastTitleBar=" + lastTitleBar +
+                    ", whatsHappening='" + whatsHappening + '\'' +
+                    '}';
         }
 
         /**
@@ -329,7 +348,7 @@ public final class VLDockingUtils {
         private String componentToString(Component component) {
 
             final StringBuffer sb = new StringBuffer();
-            sb.append(ObjectUtils.identityToString(component));
+            sb.append(component.toString());
 
             if (component != null) {
                 sb.append(": ").append((component.getName() != null) ? component.getName() : component.toString());
@@ -348,7 +367,7 @@ public final class VLDockingUtils {
         private String titleBarToString(DockViewTitleBar titleBar) {
 
             final StringBuffer sb = new StringBuffer();
-            sb.append(ObjectUtils.identityToString(titleBar));
+            sb.append(titleBar.toString());
 
             final Character prefix;
             final String text;

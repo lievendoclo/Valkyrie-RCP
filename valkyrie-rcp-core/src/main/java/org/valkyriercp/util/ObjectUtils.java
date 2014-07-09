@@ -1,6 +1,6 @@
 package org.valkyriercp.util;
 
-import org.apache.commons.lang.ArrayUtils;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -12,10 +12,7 @@ import org.valkyriercp.binding.form.FormModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utility class for dealing with objects.
@@ -158,7 +155,7 @@ public final class ObjectUtils {
      * {@link org.apache.commons.collections.ListUtils#isEqualList(java.util.Collection, java.util.Collection)} rewrote
      * for performance reasons.
      * <p>
-     * Basically employs {@link ObjectUtils#equals(Object, Object)} instead of {@link #equals(Object)} since the first
+     * Basically employs {@link Objects#equals(Object, Object)} instead of {@link #equals(Object)} since the first
      * one checks identity before calling <code>equals</code>.
      *
      * @param <T>
@@ -187,7 +184,7 @@ public final class ObjectUtils {
             obj1 = itr1.next();
             obj2 = itr2.next();
 
-            if (!(obj1 == null ? obj2 == null : org.apache.commons.lang.ObjectUtils.equals(obj1, obj2))) {
+            if (!(obj1 == null ? obj2 == null : Objects.equals(obj1, obj2))) {
                 return Boolean.FALSE;
             }
         }
@@ -292,7 +289,7 @@ public final class ObjectUtils {
 
                 Boolean proceed = !Modifier.isFinal(field.getModifiers());
                 proceed &= (targetAccessor.isWritableProperty(fieldName));
-                proceed &= (allProperties | ArrayUtils.contains(propertyNames, fieldName));
+                proceed &= (allProperties | Lists.newArrayList(propertyNames).contains(fieldName));
 
                 if (proceed) {
 

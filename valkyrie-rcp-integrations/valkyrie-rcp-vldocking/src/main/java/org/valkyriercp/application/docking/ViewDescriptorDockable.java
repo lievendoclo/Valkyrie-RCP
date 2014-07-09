@@ -17,14 +17,12 @@ package org.valkyriercp.application.docking;
 
 import java.awt.Component;
 
+import com.vlsolutions.swing.docking.DockKey;
+import com.vlsolutions.swing.docking.Dockable;
+import com.vlsolutions.swing.docking.DockingConstants;
 import org.springframework.core.style.ToStringCreator;
 import org.valkyriercp.application.PageComponent;
 import org.valkyriercp.application.ViewDescriptor;
-
-import com.vlsolutions.swing.docking.DockKey;
-import com.vlsolutions.swing.docking.Dockable;
-import com.vlsolutions.swing.docking.DockingConstants.Hide;
-
 /**
  * @author Rogan Dawes
  */
@@ -51,7 +49,7 @@ public class ViewDescriptorDockable implements Dockable {
 		dockKey.setIcon(viewDescriptor.getIcon());
 
 		boolean autoHideEnabled = VLDockingViewDescriptor.DEFAULT_AUTOHIDEENABLED;
-		Hide autoHideBorder = VLDockingViewDescriptor.DEFAULT_AUTOHIDEBORDER;
+		DockingConstants.Hide autoHideBorder = VLDockingViewDescriptor.DEFAULT_AUTOHIDEBORDER;
 		boolean closeEnabled = VLDockingViewDescriptor.DEFAULT_CLOSEENABLED;
 		boolean floatEnabled = VLDockingViewDescriptor.DEFAULT_FLOATENABLED;
 		boolean maximizeEnabled = VLDockingViewDescriptor.DEFAULT_MAXIMIZEENABLED;
