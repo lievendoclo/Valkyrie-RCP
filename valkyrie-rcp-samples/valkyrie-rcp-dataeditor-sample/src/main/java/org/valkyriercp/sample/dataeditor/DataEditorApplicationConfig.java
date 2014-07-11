@@ -1,8 +1,8 @@
 package org.valkyriercp.sample.dataeditor;
 
 import com.google.common.collect.Lists;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
+import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.TestingAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.authentication.AuthenticationManagerFactoryBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +39,6 @@ import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetProvider;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +90,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public UIManagerConfigurer uiManagerConfigurer() {
         UIManagerConfigurer configurer = new UIManagerConfigurer();
-        configurer.setLookAndFeel(PlasticXPLookAndFeel.class);
+        configurer.setLookAndFeel(SubstanceMistAquaLookAndFeel.class);
         return configurer;
     }
 

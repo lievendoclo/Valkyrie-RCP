@@ -4,7 +4,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * A like constraint, supporting "starts with%", "%ends with", and "%contains%".
- *
+ * 
  * @author Keith Donald
  */
 public class Like implements Constraint {
@@ -28,15 +28,12 @@ public class Like implements Constraint {
 		if (encodedLikeString.startsWith("%")) {
 			if (encodedLikeString.endsWith("%")) {
 				this.type = CONTAINS;
-			}
-			else {
+			} else {
 				this.type = ENDS_WITH;
 			}
-		}
-		else if (encodedLikeString.endsWith("%")) {
+		} else if (encodedLikeString.endsWith("%")) {
 			this.type = STARTS_WITH;
-		}
-		else {
+		} else {
 			this.type = CONTAINS;
 		}
 		stringToMatch = StringUtils.deleteAny(encodedLikeString, "%");
@@ -46,11 +43,9 @@ public class Like implements Constraint {
 		String value = String.valueOf(argument);
 		if (type == STARTS_WITH) {
 			return value.startsWith(stringToMatch);
-		}
-		else if (type == ENDS_WITH) {
+		} else if (type == ENDS_WITH) {
 			return value.endsWith(stringToMatch);
-		}
-		else {
+		} else {
 			return value.indexOf(stringToMatch) != -1;
 		}
 	}
@@ -63,34 +58,34 @@ public class Like implements Constraint {
 		return stringToMatch;
 	}
 
-    public static class LikeType {
-        private String code;
-        private String label;
+	public static class LikeType {
+		private String code;
+		private String label;
 
-        public LikeType(String code, String label) {
-            this.code = code;
-            this.label = label;
-        }
+		public LikeType(String code, String label) {
+			this.code = code;
+			this.label = label;
+		}
 
-        private LikeType(String code) {
-            this(code, null);
-        }
+		private LikeType(String code) {
+			this(code, null);
+		}
 
-        public String getCode() {
-            return code;
-        }
+		public String getCode() {
+			return code;
+		}
 
-        public void setCode(String code) {
-            this.code = code;
-        }
+		public void setCode(String code) {
+			this.code = code;
+		}
 
-        public String getLabel() {
-            return label;
-        }
+		public String getLabel() {
+			return label;
+		}
 
-        public void setLabel(String label) {
-            this.label = label;
-        }
-    }
+		public void setLabel(String label) {
+			this.label = label;
+		}
+	}
 
 }

@@ -1,35 +1,36 @@
 package org.valkyriercp.util;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-
 /**
- * Helper implementation for a reflective visitor.
- * Mainly for internal use within the framework.
- *
- * <p>To use, call <code>invokeVisit</code>, passing a Visitor object
- * and the data argument to accept (double-dispatch). For example:
- *
+ * Helper implementation for a reflective visitor. Mainly for internal use
+ * within the framework.
+ * 
+ * <p>
+ * To use, call <code>invokeVisit</code>, passing a Visitor object and the data
+ * argument to accept (double-dispatch). For example:
+ * 
  * <pre>
  *   public String styleValue(Object value) {
  *     reflectiveVistorSupport.invokeVisit(this, value)
  *   }
- *
+ * 
  *   // visit call back will be invoked via reflection
  *   String visit(&lt;valueType&gt; arg) {
  *     // process argument of type &lt;valueType&gt;
  *   }
  * </pre>
- *
+ * 
  * See the DefaultValueStyler class for a concrete usage.
- *
+ * 
  * @author Keith Donald
  * @since 1.2.2
  * @see org.springframework.core.style.DefaultValueStyler
@@ -40,8 +41,8 @@ public final class ReflectiveVisitorHelper {
 
 	private static final String VISIT_NULL = "visitNull";
 
-	private static final Log logger = LogFactory.getLog(ReflectiveVisitorHelper.class);
-
+	private static final Log logger = LogFactory
+			.getLog(ReflectiveVisitorHelper.class);
 
 	private AbstractCachingMapDecorator visitorClassVisitMethods = new AbstractCachingMapDecorator() {
 		public Object create(Object key) {
@@ -49,13 +50,16 @@ public final class ReflectiveVisitorHelper {
 		}
 	};
 
-
 	/**
-	 * Use reflection to call the appropriate <code>visit</code> method
-	 * on the provided visitor, passing in the specified argument.
-	 * @param visitor the visitor encapsulating the logic to process the argument
-	 * @param argument the argument to dispatch
-	 * @throws IllegalArgumentException if the visitor parameter is null
+	 * Use reflection to call the appropriate <code>visit</code> method on the
+	 * provided visitor, passing in the specified argument.
+	 * 
+	 * @param visitor
+	 *            the visitor encapsulating the logic to process the argument
+	 * @param argument
+	 *            the argument to dispatch
+	 * @throws IllegalArgumentException
+	 *             if the visitor parameter is null
 	 */
 	public Object invokeVisit(Object visitor, Object argument) {
 		Assert.notNull(visitor, "The visitor to visit is required");
@@ -63,8 +67,11 @@ public final class ReflectiveVisitorHelper {
 		Method method = getMethod(visitor.getClass(), argument);
 		if (method == null) {
 			if (logger.isWarnEnabled()) {
-				logger.warn("No method found by reflection for visitor class [" + visitor.getClass().getName()
-						+ "] and argument of type [" + (argument != null ? argument.getClass().getName() : "") + "]");
+				logger.warn("No method found by reflection for visitor class ["
+						+ visitor.getClass().getName()
+						+ "] and argument of type ["
+						+ (argument != null ? argument.getClass().getName()
+								: "") + "]");
 			}
 			return null;
 		}
@@ -73,27 +80,28 @@ public final class ReflectiveVisitorHelper {
 			if (argument != null) {
 				args = new Object[] { argument };
 			}
-			if (!Modifier.isPublic(method.getModifiers()) && !method.isAccessible()) {
+			if (!Modifier.isPublic(method.getModifiers())
+					&& !method.isAccessible()) {
 				method.setAccessible(true);
 			}
 			return method.invoke(visitor, args);
 
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ReflectionUtils.handleReflectionException(ex);
 			throw new IllegalStateException("Should never get here");
 		}
 	}
 
 	/**
-	 * Determines the most appropriate visit method for the
-	 * given visitor class and argument.
+	 * Determines the most appropriate visit method for the given visitor class
+	 * and argument.
 	 */
 	private Method getMethod(Class visitorClass, Object argument) {
-		ClassVisitMethods visitMethods = (ClassVisitMethods) this.visitorClassVisitMethods.get(visitorClass);
-		return visitMethods.getVisitMethod(argument != null ? argument.getClass() : null);
+		ClassVisitMethods visitMethods = (ClassVisitMethods) this.visitorClassVisitMethods
+				.get(visitorClass);
+		return visitMethods.getVisitMethod(argument != null ? argument
+				.getClass() : null);
 	}
-
 
 	/**
 	 * Internal class caching visitor methods by argument class.
@@ -107,7 +115,7 @@ public final class ReflectiveVisitorHelper {
 				if (argumentClazz == null) {
 					return findNullVisitorMethod();
 				}
-				Method method = findVisitMethod((Class)argumentClazz);
+				Method method = findVisitMethod((Class) argumentClazz);
 				if (method == null) {
 					method = findDefaultVisitMethod();
 				}
@@ -120,27 +128,28 @@ public final class ReflectiveVisitorHelper {
 		}
 
 		private Method findNullVisitorMethod() {
-			for (Class clazz = this.visitorClass; clazz != null; clazz = clazz.getSuperclass()) {
+			for (Class clazz = this.visitorClass; clazz != null; clazz = clazz
+					.getSuperclass()) {
 				try {
-					return clazz.getDeclaredMethod(VISIT_NULL, (Class[])null);
-				}
-				catch (NoSuchMethodException e) {
+					return clazz.getDeclaredMethod(VISIT_NULL, (Class[]) null);
+				} catch (NoSuchMethodException e) {
 				}
 			}
 			return findDefaultVisitMethod();
 		}
 
 		private Method findDefaultVisitMethod() {
-			final Class[] args = {Object.class};
-			for (Class clazz = this.visitorClass; clazz != null; clazz = clazz.getSuperclass()) {
+			final Class[] args = { Object.class };
+			for (Class clazz = this.visitorClass; clazz != null; clazz = clazz
+					.getSuperclass()) {
 				try {
 					return clazz.getDeclaredMethod(VISIT_METHOD, args);
-				}
-				catch (NoSuchMethodException e) {
+				} catch (NoSuchMethodException e) {
 				}
 			}
 			if (logger.isWarnEnabled()) {
-				logger.warn("No default '" + VISIT_METHOD + "' method found.  Returning <null>");
+				logger.warn("No default '" + VISIT_METHOD
+						+ "' method found.  Returning <null>");
 			}
 			return null;
 		}
@@ -163,18 +172,20 @@ public final class ReflectiveVisitorHelper {
 			classQueue.addFirst(rootArgumentType);
 
 			while (!classQueue.isEmpty()) {
-				Class argumentType = (Class)classQueue.removeLast();
+				Class argumentType = (Class) classQueue.removeLast();
 				// Check for a visit method on the visitor class matching this
 				// argument type.
 				try {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Looking for method " + VISIT_METHOD + "(" + argumentType + ")");
+						logger.debug("Looking for method " + VISIT_METHOD + "("
+								+ argumentType + ")");
 					}
 					return findVisitMethod(this.visitorClass, argumentType);
-				}
-				catch (NoSuchMethodException e) {
-					// Queue up the argument super class if it's not of type Object.
-					if (!argumentType.isInterface() && (argumentType.getSuperclass() != Object.class)) {
+				} catch (NoSuchMethodException e) {
+					// Queue up the argument super class if it's not of type
+					// Object.
+					if (!argumentType.isInterface()
+							&& (argumentType.getSuperclass() != Object.class)) {
 						classQueue.addFirst(argumentType.getSuperclass());
 					}
 
@@ -189,16 +200,17 @@ public final class ReflectiveVisitorHelper {
 			return findDefaultVisitMethod();
 		}
 
-		private Method findVisitMethod(Class visitorClass, Class argumentType) throws NoSuchMethodException {
+		private Method findVisitMethod(Class visitorClass, Class argumentType)
+				throws NoSuchMethodException {
 			try {
-				return visitorClass.getDeclaredMethod(VISIT_METHOD, new Class[] {argumentType});
-			}
-			catch (NoSuchMethodException ex) {
+				return visitorClass.getDeclaredMethod(VISIT_METHOD,
+						new Class[] { argumentType });
+			} catch (NoSuchMethodException ex) {
 				// Try visitorClass superclasses.
 				if (visitorClass.getSuperclass() != Object.class) {
-					return findVisitMethod(visitorClass.getSuperclass(), argumentType);
-				}
-				else {
+					return findVisitMethod(visitorClass.getSuperclass(),
+							argumentType);
+				} else {
 					throw ex;
 				}
 			}

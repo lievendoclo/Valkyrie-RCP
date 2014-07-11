@@ -1,24 +1,16 @@
 buildscript {
     repositories {
-        maven { url 'http://repo.springsource.org/plugins-release' }
-        maven {
-            name 'Bintray Asciidoctor repo'
-            url  'http://dl.bintray.com/content/aalmiray/asciidoctor'
-        }
+        jcenter()
     }
     dependencies {
-        classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.7'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.2'
     }
 }
-
-apply plugin: 'docbook-reference'
 apply plugin: 'groovy'
-apply plugin: 'asciidoctor'
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
-reference {
-    sourceDir = file('src/reference/docbook')
-    pdfFilename = 'valkyrie-rcp-reference.pdf'
+asciidoctor {
+    backends = ["html5", "docbook5"]
 }
 
 task docsZip(type: Zip) {
@@ -26,8 +18,8 @@ task docsZip(type: Zip) {
     baseName = 'valkyrie-rcp'
     classifier = 'docs'
 
-    from (reference) {
-        into 'reference'
+    from (asciidoctor) {
+        into 'manual'
     }
 }
 

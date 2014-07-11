@@ -3,7 +3,7 @@ The Valkyrie RCP team
 :description: This guide describes the Asciidoctor attributes, values, and layout options available for producing a customized and polished document.
 :keywords: AsciiDoc, Asciidoctor, syntax, reference
 :doctype: book
-:toc: right
+:toc: left
 :toclevels: 2
 :sectanchors:
 :sectlink:
@@ -17,6 +17,8 @@ The Valkyrie RCP team
 :language: asciidoc
 :imagesdir: images
 :includedir: src/asciidoc/chapters/
+:stylesdir: src/asciidoc/stylesheets/
+:stylesheet: riak.css
 
 Valkyrie RCP's mission is to provide an elegant way to build highly-configurable, GUI-standards-following rich-client
 applications faster by leveraging the Spring Framework, and a rich library of UI factories and support classes.

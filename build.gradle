@@ -1,28 +1,47 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
+}
+
 def props = new Properties()
 file("dependencies.properties").withInputStream { props.load(it) }
 ext.dependencyVersions = new ConfigSlurper().parse(props)
+
+def globalVersion = new Version(version)
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
 }
 
-allprojects {
+configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyrie-rcp-samples")) {
     apply plugin: "groovy"
     apply plugin: "idea"
     apply plugin: "eclipse"
 
-    group = "dk.navicon"
+    group = "org.valkyriercp"
     sourceCompatibility = 1.7
+    version = globalVersion
+    status = version.status
 
     repositories {
         maven {
             url "file://${rootDir}/dependencies"
         }
-        mavenCentral()
+        jcenter()
     }
 
     configurations {
         all*.exclude group: 'commons-logging', module: 'commons-logging'
+        provided {
+            dependencies.all { dep ->
+                configurations.default.exclude group: dep.group, module: dep.name
+            }
+        }
+        compile.extendsFrom provided
     }
 
     test {
@@ -68,6 +87,38 @@ allprojects {
         runtime "ch.qos.logback:logback-classic:${dependencyVersions.logback}"
     }
 }
+
+configure([
+        project(":valkyrie-rcp-resources"),
+        project(":valkyrie-rcp-core"),
+        project(":valkyrie-rcp-integrations:valkyrie-rcp-jodatime"),
+        project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss"),
+        project(":valkyrie-rcp-integrations:valkyrie-rcp-vldocking"),
+
+]) {
+    if (project.hasProperty('bintray_api_user') && project.hasProperty('bintray_api_key')) {
+        apply plugin: 'com.jfrog.bintray'
+        apply plugin: "maven"
+
+        bintray {
+            user = "${bintray_api_user?:''}"
+            key = "${bintray_api_key?:''}"
+
+            configurations = ['archives']
+
+            pkg {
+                repo = 'maven'
+                name = 'valkyriercp'
+                version {
+                    name = globalVersion
+                    vcsTag = globalVersion
+                }
+            }
+        }
+    }
+}
+
+
 
 project("valkyrie-rcp-resources") {
     dependencies {
@@ -177,6 +228,36 @@ project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
     task(runSample, dependsOn: 'classes', type: JavaExec) {
         main = 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
         classpath = sourceSets.main.runtimeClasspath
+    }
+}
+
+class Version {
+    String originalVersion
+    String thisVersion
+    String status
+    Date buildTime
+
+    Version(String versionValue) {
+        buildTime = new Date()
+        originalVersion = versionValue
+        if (originalVersion.endsWith('-SNAPSHOT')) {
+            status = 'integration'
+            thisVersion = originalVersion.substring(0, originalVersion.length() - 'SNAPSHOT'.length()) + getTimestamp()
+        } else {
+            status = 'release'
+            thisVersion = versionValue
+        }
+    }
+
+    String getTimestamp() {
+        // Convert local file timestamp to UTC
+        def format = new java.text.SimpleDateFormat('yyyyMMddHHmmss')
+        format.setCalendar(Calendar.getInstance(TimeZone.getTimeZone('UTC')));
+        return format.format(buildTime)
+    }
+
+    String toString() {
+        thisVersion
     }
 }
 

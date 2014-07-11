@@ -22,12 +22,9 @@ Because the original project seems to be dead :(
 
 h2. And so, what's new ?
 
-* Updated dependency to Spring 3.2.4
-* Updated dependency to Spring Security 3.1.4
-* Fixed broken build for the manual
-* Released a 1.1 version available through maven central
-* Publish the "Valkyrie documentation":http://cmadsen.github.com/Valkyrie-RCP/
-
+* Updated dependency to Spring 4.0.5
+* Updated dependency to Spring Security 3.2.4
+* Removed the @Configurable system, no longer is AspectJ needed to use Valkyrie RCP
 
 h2. How to get the released versions ?
 
@@ -38,9 +35,9 @@ Just add this to your @pom.xml@ file:
 The dependencies:
 
 bc. <dependency>
-    <groupId>dk.navicon</groupId>
+    <groupId>org.valkyriercp</groupId>
     <artifactId>valkyrie-rcp-core</artifactId>
-    <version>1.1</version>
+    <version>2.0</version>
 </dependency>
 
 
@@ -49,14 +46,14 @@ h3. Gradle
 The dependencies:
 
 bc. dependencies {
-        compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.1'
+        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'2.0'
 }
 
 h2. How do I get my IDE to work and run samples
 
 h3. IntelliJ IDEA 12+
 
-Just run @gradle idea@ and import the project in IntelliJ.
+Just import the project in IntelliJ using the JetGradle plugin.
 
 h2. I found a bug, what can I do ?
 
@@ -65,10 +62,8 @@ Feel free to fork this repo, and make a "pull request":http://help.github.com/se
 
 h2. How to build
 
-Just clone the repository, and then use a @mvn install@ command.
-The build was tested with "Maven 3.0.3":http://archive.apache.org/dist/maven/binaries/.
-
-If you're using gradle, use @gradle build@.
+Just clone the repository, and then use a @./gradlew build@ command.
+The build uses the Gradle wrapper, so you don't need a local Gradle install.
 
 h2. Documentation
 
