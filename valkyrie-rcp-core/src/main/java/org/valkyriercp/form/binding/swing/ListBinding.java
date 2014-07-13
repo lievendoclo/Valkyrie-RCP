@@ -2,6 +2,7 @@ package org.valkyriercp.form.binding.swing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
@@ -64,6 +65,8 @@ public class ListBinding extends AbstractListBinding {
         try {
             getConversionService().getConversionExecutor(Object[].class, getPropertyType());
         } catch (IllegalArgumentException e) {
+            return false;
+        } catch (ConversionException e) {
             return false;
         }
         return true;
