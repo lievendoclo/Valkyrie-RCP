@@ -135,7 +135,7 @@ public class EnumRadioButtonBinding extends CustomBinding {
 	@Override
 	protected void readOnlyChanged() {
 		for (ContainerJRadioButton<Enum> button : radioButtons.values()) {
-			button.setEnabled(isReadOnly());
+			button.setEnabled(!isReadOnly());
 		}
 	}
 
