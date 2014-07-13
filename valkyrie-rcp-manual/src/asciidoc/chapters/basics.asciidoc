@@ -5,12 +5,12 @@ in later chapters, but this should give the framework user a quick overview.
 
 === Getting started using the archetype
 
-Starting development of a Valkyrie RCP application is very easy. There is an archetype which provides a basic skeleton
+Starting development of a Valkyrie RCP application is very easy. There is a Maven archetype which provides a basic skeleton
 application from which you can start.
 
 To create a project, making use of the archetype, you need to execute
 
-[source]
+[source,text]
 ----
 mvn archetype:generate
    -DarchetypeGroupId=org.valkyriercp

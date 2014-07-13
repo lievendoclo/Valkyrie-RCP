@@ -1,0 +1,196 @@
+
+== Applications
+
+=== Application
+
+An application in Valkyrie is comprised of 2 things: a lifecycle advisor (how it should behave) and a descriptor (what does it contain).
+
+The Application class is also the class that starts the actual application: it calls the startup hooks, and shows the initial window and view through theApplicationLifecycleAdvisor.
+
+=== Application lifecycle
+
+The lifecycle in a Valkyrie application is what it says it is. It’s the behavior of the application through the time when it is running. What the application should do at startup, what it needs to show, how it should behave when it’s being closed… these are all aspects of the application lifecycle.
+In Valkyrie, an ApplicationLifecycleAdvisor manages the lifecycle of the application. The default ApplicationLifecycleAdvisor handles the creation of the command context, what view should be showed initially, which command config class should be used for the menu, etc… The default implementation is as follows:
+
+[source,java]
+----
+@Bean
+public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
+    DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
+    advisor.setCommandConfigClass(getCommandConfigClass());
+    advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(emptyViewDescriptor()));
+    return advisor;
+}
+----
+
+If you want to create your own ApplicationLifeCycleAdvisor, you need to subclass the default implementation or implement the entire interface. Then you need to override the applicationLifecycleAdvisor method in your application config to return your implementation.
+
+=== Hooking into a lifecycle
+
+In the application lifecycle you can intervene on points within startup, shutdown or other events such as opening a window. These hooks are present in the ApplicationLifecycleAdvisor and can for example be used to ask data needed before startup.
+You could also stop an application from exiting (by showing a confirmation dialog for example).
+
+=== Example: adding login functionality
+
+Logging into an application is quite common behavior. You’ll probably want to show the login dialog before showing your application window (you might want to personalize the application window based on who has logged in).
+In Valkyrie, this means after the commands have been created (which is one step before the window gets created and showed). In this example, we’ll let a imaginary LoginHandler class check whether we can login or not. For the record, basic login functionality has been included into Valkyrie, but this would bring us out of scope for this example. We’ll discuss the security features later.
+Assuming our handler will show a login screen and handle the login logic, we only need to hook it into the custom application lifecycle advisor:
+
+[source,java]
+----
+public class LoginLifecycleAdvisor extends DefaultApplicationLifecycleAdvisor
+{
+    private LoginHandler handler;
+
+    public void setHandler(final LoginHandler handler)
+    {
+        this.handler = handler;
+    }
+
+    public void onCommandsCreated(final ApplicationWindow window)
+    {
+        super.onCommandsCreated(window);
+        handler.doLogin();
+    }
+}
+----
+
+As you can see, this is quite easy. Of course you’d want to know when a user is already logged in and just creates a new application window (which also triggers this method), so it doesn’t show this login window again, something like holding a security context within your application.
+
+=== Other possible uses
+
+Lifecycle advisor subclassing can also be handy in other aspects. Any Valkyrie application knows which lifecycle advisor is used for its execution. You can obtain this by autowiring the ApplicationLifecycleAdvisor in any Spring managed class.
+You could for example create an application window factory that delivers different application window applications based on which lifecycle advisor was used:
+
+[source,java]
+----
+public class DefaultApplicationWindowFactory implements ApplicationWindowFactory
+{
+    private static final Log logger = LogFactory.getLog(DefaultApplicationWindowFactory.class);
+
+    @Autowired
+    private ApplicationLifecycleAdvisor lifecycleAdvisor;
+
+    public ApplicationWindow createApplicationWindow()
+    {
+        if (lifecycleAdvisor instanceof OutlookNavigatorApplicationLifecycleAdvisor)
+        {
+             return OutlookNavigatorApplicationWindowFactory.create();
+        }
+        else if (lifecycleAdvisor instanceof TaskPaneNavigatorApplicationLifecycleAdvisor)
+        {
+             return TaskPaneNavigatorApplicationWindowFactory.create();
+        }
+        return new DefaultApplicationWindow();
+    }
+
+    static class TaskPaneNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create(boolean onlyOneExpanded)
+        {
+            ...
+        }
+    }
+
+    static class OutlookNavigatorApplicationWindowFactory
+    {
+        public static ApplicationWindow create()
+        {
+            ...
+        }
+    }
+}
+----
+
+=== Playing with the status bar
+Changing the status bar can be done by calling the statusbar through the lifecycle advisor:
+
+[source,java]
+----
+lifecycleAdvisor.getStatusBar();
+----
+
+Again, if you’re creating your own lifecycle advisor, you’re able to override this method and perhaps supply your own status bar implementation.
+
+The standard status bar supports:
+
+* Displaying messages, normal messages as well as errors
+* Containing a progress monitor to track long-running processing (and cancelling them)
+* Your status bar may hold a clock, the current logged in user, the connected server, …
+
+For example, if you’d want to add a clock to your status bar, you could create your own status bar implementation like this:
+
+[source,java]
+----
+public class DynamicStatusBar extends DefaultStatusBar
+{
+    protected JComponent createControl()
+    {
+        JPanel statusBar;
+
+        FormLayout layout = new FormLayout(
+                new ColumnSpec[]
+                        {
+                                FormFactory.GLUE_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.RELATED_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                        },
+                new RowSpec[]
+                        {
+                                FormFactory.DEFAULT_ROWSPEC
+                        });
+
+        statusBar = new JPanel(layout);
+
+        StatusBarProgressMonitor progressMonitor = createStatusBarProgressMonitor();
+
+        statusBar.add(createMessageLabel(), new CellConstraints(1, 1));
+        statusBar.add(createClock(), new CellConstraints(3, 1));
+        statusBar.add(progressMonitor.getControl(), new CellConstraints(5, 1));
+
+        progressMonitor.getControl().setPreferredSize(new Dimension(200, 17));
+
+        statusBar.setBorder(new ShadowBorder());
+
+        return statusBar;
+    }
+
+    private JLabel createClock()
+    {
+        final JLabel label = new JLabel();
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while (true)
+                {
+                    DateFormatter formatter = new DateFormatter(DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                              DateFormat.MEDIUM));
+                    final String text = formatter.formatValue(new Date());
+                    label.setText(text);
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        // ignore
+                    }
+                }
+            }
+        });
+        t.start();
+        return label;
+    }
+}
+----
+
+This will result in a status bar like this:
+
+image::statusbar.png[Configured statusbar]
+
+=== Application windows
+
+IMPORTANT: (explain ApplicationWindowFactory, creating new ApplicationWindow implementations, ...)

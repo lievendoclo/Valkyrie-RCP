@@ -1,0 +1,224 @@
+
+== Commands
+
+=== Why the abstraction
+
+Creating an abstraction over an action-based operation is quite logical when you think about it. You have behavior, which can be visually represented in different ways in Swing: a menu, a button or even just a clickable label.
+
+Managing this behavior can be cumbersome if you need to maintain it, especially when certain behavior is to be represented many times and in different ways. By taking a step back and abstraction the way how behavior gets decoupled from the visual representation, reusing that behavior is a lot easier to achieve.
+
+=== How to create a simple command
+
+Let’s make a simple command that shows a messagebox when executed:
+
+[source,java]
+----
+public class MessageBoxCommand extends ActionCommand
+{
+    protected void doExecuteCommand()
+    {
+        JOptionPane.showMessageDialog(Application.instance().getActiveWindow().getControl(), "Hello world!");
+    }
+}
+----
+
+Creating a new command can be done by extending ActionCommand. This class mandates that you implement the doExecuteCommand method, which represents the behavior of the command.
+
+=== Configure a programmatically created command
+
+Programmatically created commands need to be configured, since Valkyrie heavily relies on the Spring container to do the configuring by using postprocessors. So when you create command objects in code, you’ll have to do the configuring yourself.
+
+This can be done by calling the command configurer available as a bean through autowiring:
+
+[source,java]
+----
+@Autowired
+CommandConfigurer commandConfigurer;
+...
+MessageBoxCommand command = new MessageBoxCommand();
+commandConfigurer.configure(command);
+----
+
+After the command has been configured, it can be used to create components.
+
+=== Transforming the command to a visual component
+
+After a command is configured, it can be used to create visual components. These can be:
+
+* Menu items
+* Buttons
+
+Creating a visual component from a command is easy. Every command has methods to create visual components, with the command’s behavior coupled to it.
+
+For buttons this is
+
+[source,java]
+----
+command.createButton(...);
+----
+
+For menu items this is
+
+[source,java]
+----
+command.createMenu(...);
+----
+
+Both methods have various parameter configurations, for more information on which to use in your scenario, refer to the JavaDoc documentation.
+
+=== Commands i18n and images
+
+A button needs a text label, perhaps an icon. We’ll now show you how you can put messages on your commands and link icons to them.
+
+When configuring a command, Valkyrie sets a “face descriptor” on the command. This face descriptor manages how the command looks like. A face descriptor is put on the command by utilizing the id of the command. In a Spring configured command, this is the id of the Spring bean. Programmatically created commands need to set their command ids themselves. If you don’t set the command’s id, Valkyrie will fallback to the camel-cased class name of the command class. In our example, this will be the case, as we haven’t set the id.
+
+The label of the command, and other text related messages for that matter, is found in the message source configured for the Valkyrie application. To find the label of a command, Valkyrie searches for:
+
+[source,text]
+----
+[face descriptor id].label = The label of the command
+----
+
+The face descriptor id by default is equal to the command id.
+
+Similarly, you can put a caption on a command. In the case of a JButton, this will translate itself into a tooltip message:
+
+[source,text]
+----
+[face descriptor id].caption = The caption of the command
+----
+
+Commands can also have icons coupled to them. Valkyrie will look for the message keys and images in the image source configured for the application. To find the icon for a command, Valkyrie will search for:
+
+[source,text]
+----
+[face descriptor id].icon = some_icon.png
+----
+
+=== Grouping commands
+
+Commands can also be groups. Command groups in Valkyries are composite commands. They can be used to create menus, button stacks and other aggregate components.
+
+Command groups behave similarly to commands (command groups are subclasses of commands), so the configuration works in the same way. They can also be configured in the Spring context, as well as programmatically. However, in the latter case, the same rules as commands apply.
+
+Adding commands to a command group is easy, just call the add method. Creating a visual component of a command group works the same way as commands. Valkyrie provides functionality for:
+
+* Menus
+* Vertical button stacks
+* Horizontal button bars
+* Toolbars
+* Popup menus
+
+See the JavaDoc documentation for more information on the usage of these creation methods. With some effort, you can even make trees, taskpanes or outlook-bar style grouping.
+
+=== Building a command group in a Spring context
+
+Given our hands-dirty example, we’ll look at a command group configured there:
+
+[source,java]
+----
+CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
+fileMenuFactory.setGroupId("fileMenu");
+fileMenuFactory.setMembers(logoutCommand, CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, exitCommand());
+return fileMenuFactory.getCommandGroup();
+----
+
+As you can see, creating a command group is straightforward. You create a command group through a factory bean and set the members.
+
+You may have noticed the “separator” value in the members. Valkyrie has facilitated adding separators to menus and toolbars by adding this as a shortcut.
+
+Other shortcuts that can be used as values are:
+
+* glue : Add a glue between commands
+* command:xyz : Add a command with id xyz to the group. You could use this instead of bean references
+* group:abc : Add a command group with id abc to the group. You could use this instead of bean references
+
+Not only commands or shortcuts can be added. Also just ordinary JComponent can be added to command groups. This way you can easily add a textfield to a toolbar.
+
+These command groups can then be referenced for example in the lifecycle advisor to be used as the application’s menu bar, tool bar or other navigation you might have implemented.
+
+=== Getting a Spring configured command in code
+
+Getting a command that you have configured in a Spring context can be done by searching for it based on its id:
+
+[source,java]
+----
+@Autowired
+WindowManager windowManager;
+...
+windowManager.getActiveWindow().getCommandManager.getCommand(commandId);
+----
+
+This will return the command if it can find a command with that id, or null otherwise. You don’t need to configure this command after you’ve found it, Valkyrie has already handled this for you.
+
+=== Defining global commands
+
+Global commands are commands of which the behavior can change depending on the context. A certain view can set the behavior of a command different than that of another view. An example of this can for example be the “New” action. Depending on the context, other actions need to occur.
+
+Valkyrie handles these occurrences by using shared commands. Adding a shared command is done by adding the ids to the command manager in the command config, like this:
+
+[source,java]
+----
+@Override
+public ApplicationWindowCommandManager applicationWindowCommandManager() {
+    ApplicationWindowCommandManager applicationWindowCommandManager = super.applicationWindowCommandManager();
+    applicationWindowCommandManager.setSharedCommandIds("propertiesCommand", "deleteCommand");
+    return applicationWindowCommandManager;
+}
+----
+
+These commands can also be added in a command group:
+
+[source,java]
+----
+CommandGroupFactoryBean toolbarFactory = new CommandGroupFactoryBean();
+        toolbarFactory.setGroupId("toolbar");
+        toolbarFactory.setMembers("propertiesCommand", "deleteCommand");
+        return toolbarFactory.getCommandGroup();
+----
+
+You can then link actual commands to these command ids inside a component shown in a view by overriding the following method in your View implementation, adding behavior to the commands:
+
+[source,java]
+----
+protected void registerLocalCommandExecutors(PageComponentContext context)
+{
+    context.register("newContactCommand", newContactExecutor);
+    ...
+}
+----
+
+=== Addding shortcuts to commands
+
+Shortcuts are omnipotent nowadays. As soon as a users learns a shortcut for a particular action, he’ll use it more and more. You’ll be happy to hear in that case Valkyrie supports shortcut configuration out of the box. And with minimal effort.
+
+To add a shortcut for a command in Valkyrie, you just need to change the label for the command. A command configured like this
+
+[source,text]
+----
+newCommand.label = New
+----
+
+can be enriched with a shortcut, for example Ctrl + N, by changing the message to
+
+[source,text]
+----
+newCommand.label = New@ctrl N
+----
+
+In a menu, for example, you’ll also see the shortcut when adding it to a command.
+
+Shortcuts that can be used are compliant to the Keystroke class in standard Java, which amounts to
+
+[source,text]
+----
+modifiers>* (<typedID> | <pressedReleasedID>)
+
+modifiers := shift | control | ctrl | meta | alt | button1 | button2 | button3
+typedID := typed <typedKey>
+typedKey := string of length 1 giving Unicode character.
+pressedReleasedID := (pressed | released) key
+key := KeyEvent key code name, i.e. the name following "VK_".
+----
+
+For example, you can use F1, ctrl A, ctrl alt X, alt INSERT, … Currently, only Windows shortcuts are supported, support for Mac commands is underway.

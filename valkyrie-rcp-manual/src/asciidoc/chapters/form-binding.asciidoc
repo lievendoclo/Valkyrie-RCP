@@ -1,0 +1,471 @@
+
+== Forms and binding
+
+=== FormModel and ValueModel
+
+==== What is a ValueModel
+A valuemodel provides a way for listening for changes on a property. In its simplest form, it is a property listener wrapper around a particular property. Its purpose is to track change, so that secondary functionality such as undo functionality and validation can be provided.
+
+==== What is a FormModel
+
+A formmodel is a wrapper around a particular instance of an object. In essence, it is a consisting of valuemodels for the various properties of an object. It handles the overall state of the object.
+==== The default formmodel
+
+The default formmodel in Valkyrie handles more than just the overall state of the object by managing its value object. It also provides:
+
+* Buffering of values, effectively providing undo functionality
+* Dirty tracking
+* Validation possibilities through validators
+* Set certain properties of an object to read-only, even if they have setters
+
+Creating a formmodel of any given object can be done through this:
+
+[source,java]
+----
+MyObject object = new MyObject();
+ValidatingFormModel model = new DefaultFormModel(object);
+----
+
+From then on, you can set the values of the object through the valueobject.
+
+[source,java]
+----
+model.getValueModel("someProperty").setValue("xyz");
+----
+
+Valuemodels in formmodels are created on-demand. After creating a formmodel on an object, no valuemodels are present until you start calling for them. Valkyrie will then make these on-demand.
+
+==== Buffering
+
+Buffering provides the necessary plumbing needed for undo functionality. When changing values of property, a buffered valuemodel will still hold the old values and can revert to these if necessary.
+
+[source,java]
+----
+MyObject object = new MyObject();
+object.setXyz("xyz");
+ValidatingFormModel model = new DefaultFormModel(object);
+model.getValueModel("xyz").setValue("abc");
+// object hasn't changed, object.getXyz() will return xyz
+model.commit();
+// object has changed, object.getXyz() will return abc
+----
+
+Calling revert() before a commit on a formmodel will return all properties to their original values. Individual valuemodels can be reverted too by calling revert() on them.
+
+==== Read-only manipulation
+
+An entire formmodel can be set to be read-only by using the setReadOnly(…) method.
+
+Setting individual properties read-only is a little bit more complicated. Out of the box, Valkyrie will inspect the object and determine whether a property is read-only, based on the existence of a setter method for that property.
+
+However, there might be cases where you’d want to deliberately change the read-only behavior of a property, even if it has a setter. The fact whether a property is set as read-only is held by field metadata.
+
+For any given property you can ask the formmodel for the field metadata by calling
+
+[source,java]
+----
+FieldMetaData meta = model.getFieldMetaData("xyz");
+----
+
+Through this field metadata, you can set the read-only property of a property
+
+[source,java]
+----
+meta.setReadOnly(true);
+----
+
+Obviously, trying to set a property that has no setter to writable will cause an exception when the valuemodels are committed (and the respective setters are called).
+
+==== Validation
+
+The default form model also contains functionality for validating the enclosed values. The validation is done through Valkyrie’s own validation subsystem by utilizing validators. We’ll discuss the details of these validators in detail later.
+
+When a property is changed, the validator will be called to check whether the object is still in a consistent state. If not, the validator will produce validation errors, which then can be showed to the user through various means.
+
+Setting a validator on a formmodel is done through
+
+[source,java]
+----
+model.setValidator(someValidator);
+----
+
+After that, the validation is automatically turned on. If you needed to, you could turn it off by calling
+
+[source,java]
+----
+model.setValidating(false);
+----
+
+A model can be validated at any time. A model is aware whether it has validation errors, and if so, contains a collection of these.
+
+For more information on this, refer to the JavaDocs on ValidatingFormModel and DefaultFormModel
+
+==== Creating formmodels
+
+To create a formmodel, Valkyrie has provided a factory class that can create various formmodels called FormModelHelper and is the preferred way to create formmodels.
+
+For example, if you want to create a formmodel of an object, the simplest way would be:
+
+[source,java]
+----
+FormModelHelper.createFormModel(new SomeObject(), "formModelId");
+----
+
+With the FormModelHelper, you can create:
+
+* Default formmodels (with validation and buffering)
+* Non-buffered formmodels
+* Child formmodels of existing formmodels
+
+Formmodels, at this time, are object based. To create a formmodel, you need to be able to create an object of the class to be utilized by the formmodel.
+
+There are implementations on the way to make these class-based, but these are still in development and shaky at best at the moment.
+
+=== Binding
+
+==== What is binding
+
+Binding in Valkyrie encompasses the connection between a visual component and the state of a certain property.
+
+==== How does binding work and what does it do
+
+Binding is done through a valuemodel. A binding covers only one property at a time, most of the time (a binding could be done by aggregating different valuemodels, but that’s way out of scope for this introduction).
+
+A binding will transfer all property changes to the object behind it, and vice versa. It’s bound to a particular formmodel and property (and therefore, a valuemodel), and is responsible for creating the visual component
+
+==== Binders
+
+Binders are factories for bindings. Generally, for each sort of binding you’ll use in your application, you’ll have one (or more, if there are specific variants of certain bindings that may be occurring).
+
+==== Binder examples
+
+In Valkyrie, a number of binders have been implemented out of the box.
+
+* TextComponentBinder: can handle text-type variables like strings
+* CheckBoxBinder: can handle Boolean-type variables
+* ListBinder: can handle lists
+* And many more…
+
+There is even a binder available for enums, which visually is represented by a combobox.
+
+==== Creating a custom binder
+
+Say we want to create a binder for JodaTime’s classes. Java’s standard date classes are bad to work with, so this example may even be somewhat useful.
+
+We start off by creating the binder. A binder is able to bind any JComponent to a value, so we’ll use SwingX’s JXDatePicker class to visually represent the date.
+
+[source,java]
+----
+public class JodaTimeDateTimeBinding extends CustomBinding implements PropertyChangeListener
+{
+    private final JXDatePicker datePicker;
+    private final boolean readOnly;
+
+    private boolean isSettingText = false;
+
+    public JodaTimeDateTimeBinding(FormModel model, String path, JXDatePicker datePicker, boolean readOnly)
+    {
+        super(model, path, DateTime.class);
+        this.datePicker = datePicker;
+        this.readOnly = readOnly;
+    }
+
+    @Override
+    protected void valueModelChanged(Object newValue)
+    {
+        isSettingText = true;
+        setDatePickerValue((DateTime) newValue);
+        readOnlyChanged();
+        isSettingText = false;
+    }
+
+    private void setDatePickerValue(DateTime dateTime)
+    {
+        if (dateTime == null)
+        {
+            datePicker.setDate(null);
+        }
+        else
+        {
+            datePicker.setDate(dateTime.toDate());
+        }
+    }
+
+    @Override
+    protected JComponent doBindControl()
+    {
+        setDatePickerValue((DateTime) getValue());
+        datePicker.getEditor().addPropertyChangeListener("value", this);
+        return datePicker;
+    }
+
+    public void propertyChange(PropertyChangeEvent evt)
+    {
+        if (!isSettingText && !isReadOnly())
+            controlValueChanged(new DateTime(datePicker.getDate()));
+    }
+
+    @Override
+    protected void readOnlyChanged()
+    {
+        datePicker.setEditable(isEnabled() && !this.readOnly && !isReadOnly());
+    }
+
+    @Override
+    protected void enabledChanged()
+    {
+        datePicker.setEnabled(isEnabled());
+        readOnlyChanged();
+    }
+}
+----
+
+As you can see the class does the 2 way binding. This part
+
+[source,java]
+----
+@Override
+protected void valueModelChanged(Object newValue)
+{
+    isSettingText = true;
+    setDatePickerValue((DateTime) newValue);
+    readOnlyChanged();
+    isSettingText = false;
+}
+----
+
+handles the propagation of changes in the formmodel to the actual component, whereas the property change listener (which in this case is the binder itself, handled by
+
+[source,java]
+----
+public void propertyChange(PropertyChangeEvent evt)
+{
+    if (!isSettingText && !isReadOnly())
+        controlValueChanged(new DateTime(datePicker.getDate()));
+}
+----
+
+The isSettingText flag is there to prevent cyclic calls (formmodel changes component, which change the formmodel, which changes, …).
+
+Binding the control to the value is done through the doBindControl() method. This method is called to wire the component to the binding and prepares all the plumbing to make the binding work.
+
+Creating the binder is most of the time the easiest job of the two.
+
+[source,java]
+----
+public class JodaTimeDateTimeBinder extends org.springframework.richclient.form.binding.support.AbstractBinder
+{
+    private boolean defaultsSet = false;
+
+    private boolean readOnly = false;
+
+    public JodaTimeDateTimeBinder()
+    {
+        super(DateTime.class);
+    }
+
+    public void setReadOnly(boolean readOnly)
+    {
+        this.readOnly = readOnly;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected JComponent createControl(Map context)
+    {
+        JXDatePicker datePicker = new JXDatePicker();
+        datePicker.setEditor(new DateTextField());
+        return datePicker;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    protected Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context)
+    {
+        if (!defaultsSet)
+        {
+            Map<Object, Object> defaults = UIManager.getDefaults();
+            defaults.put("JXDatePicker.longFormat", "EEE dd/MM/yyyy");
+            defaults.put("JXDatePicker.mediumFormat", "dd/MM/yyyy");
+            defaults.put("JXDatePicker.shortFormat", "dd/MM");
+            defaultsSet = true;
+        }
+        return new JodaTimeDateTimeBinding(formModel, formPropertyPath, ((JXDatePicker) control), this.readOnly);
+    }
+}
+----
+
+The createControl() method creates the control that is to be used in bindings. Every time a binding is done, a new control will be created through this method.
+
+The actual binding is done through the doBind(). It will create a binding, do some specific behavior in some case (here we’re manipulating some UI properties to alter the JXDatePicker’s appearance.
+
+=== Forms
+
+Now that we have covered the formmodels and the binding, we can now cover the combination of these.
+
+==== What is a form
+
+Whereas a binding covers a single property, a form covers an entire object. It can contain many bindings, backed up by a formmodel that wraps the form’s object.
+
+==== Creating a form
+
+Forms are created for a specific purpose and specific objects. Say we have the following object:
+
+[source,java]
+----
+public class TestObject
+{
+    private String field1;
+    private String field2;
+
+    public String getField1()
+    {
+        return field1;
+    }
+
+    public void setField1(String field1)
+    {
+        this.field1 = field1;
+    }
+
+    public String getField2()
+    {
+        return field2;
+    }
+
+    public void setField2(String field2)
+    {
+        this.field2 = field2;
+    }
+}
+----
+
+If we want to make a form for this, we might be using something like this
+
+[source,java]
+----
+public class TestForm extends AbstractForm
+{
+    public TestForm()
+    {
+        super(FormModelHelper.createFormModel(new TestObject(), "testForm"));
+    }
+
+    protected JComponent createFormControl()
+    {
+        JPanel content = new JPanel();
+        content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        content.setLayout(new FormLayout(
+                new ColumnSpec[]
+                        {
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC
+                        },
+                new RowSpec[]
+                        {
+                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.LINE_GAP_ROWSPEC,
+                                FormFactory.DEFAULT_ROWSPEC
+                        }
+        ));
+
+        TextComponentBinder binder = new TextComponentBinder();
+
+        Map map = new HashMap();
+
+        content.add(new JLabel("Field 1"), new CellConstraints(1, 1));
+        content.add(binder.bind(getFormModel(), "field1", map).getControl(), new CellConstraints(3, 1));
+        content.add(new JLabel("Field 2"), new CellConstraints(1, 3));
+        content.add(binder.bind(getFormModel(), "field2", map).getControl(), new CellConstraints(3, 3));
+
+        return content;
+    }
+}
+----
+
+This will result in a panel with 2 text fields next to each other, that represent the 2 fields of the object. This form can then be used to show in a view or a dialog. Currently, there is no default view descriptor for forms, since these are mostly contained in views in which they only make up a part of the screen (for example, in combination with a table).
+
+image::formsample.png
+
+==== FormBuilders
+
+As shown in the example above, forms can be created by using binders and bindings directly. However, for more elaborate forms, this method is not really usable (or readable for that matter).
+
+To tackle this problem, Valkyrie has created form builders. Form builders make form creation a lot easier by providing simple addition of properties, labels and other component to forms. Form builders use the binding factory facilities built into Valkyrie.
+
+The binding factory system can set default binders for certain types, so that you don’t need to worry how something should look. It can also provide aliases for binders defined in the context, so that you can use these swiftly.
+
+Building the same form with a form builder would result in
+
+[source,java]
+----
+public class TestForm extends AbstractForm
+{
+    public TestForm()
+    {
+        super(FormModelHelper.createFormModel(new TestObject(), "testForm"));
+    }
+
+    protected JComponent createFormControl()
+    {
+        TableFormBuilder builder = new TableFormBuilder(getBindingFactory());
+        builder.add("field1");
+        builder.row();
+        builder.add("field2");
+        JPanel panel = (JPanel) builder.getForm();
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        return panel;
+    }
+}
+----
+
+Much simpler and easy to read, isn’t it?
+
+An additional advantage in using a form builder is that internationalized labels are supported out of the box. In the form builder example no labels are coded, but the form builder will add them automagically.
+
+Currently there is a form builder that works with JGoodies FormLayout named TableFormBuilder, and there is also one that supports Java’s GridbagLayout. You can always create your own form builder by extending AbstractFormBuilder.
+
+Starting from version 1.1.0, there is also an advanced form builder included, called FormLayoutFormBuilder. It uses JGoodies' FormLayout and allows more customisation than the other formbuilders.
+
+==== Binder selection
+
+Valkyrie has a mechanism to automatically choose binders based on property names, types or even the used Swing components. This is done through BinderSelectionStrategy implementations.
+
+The standard implementation is the SwingBinderSelectionStrategy, which already has support for String and Boolean type fields.
+
+If you want to extend this automatic binder selection, you can register extra mappings for the binding selection.
+
+For example, if you want to change support String, Boolean and Date fields, you just need to override the registerBinders method in your configuration:
+
+[source,java]
+----
+@Override
+protected void registerBinders(BinderSelectionStrategy binderSelectionStrategy) {
+    binderSelectionStrategy.registerBinderForPropertyType(Integer.class, new NumberBinder(Integer.class));
+}
+----
+
+==== Internationalization
+
+Remember the id you can give to your formmodel? This is the part where it’s needed. Valkyrie will use the formmodel’s id to create the key it'll use to look up the label’s text.
+
+Say your formmodel is named "personForm" and you have a field called "firstName". Then in your message bundle you’ll have to provide something like this:
+
+[source,text]
+----
+personForm.firstName.label = First name
+----
+
+If no value is found for a key, Valkyrie will show the key instead. This way you can easily spot missing keys (and don’t need to guess how they are named).
+
+==== Adding forms to forms, a.k.a. child forms
+
+Forms are just plain components. They can be added to forms as any other component. However, when creating a child form, you need to make sure the formmodel of the child form is also a child of the formmodel of that form’s parent. That way, events are carried over correctly.
+
+Child forms can also be added by using the addChildForm(…) method on a form. This way, the formmodels between the two are automatically linked. Bear in mind though, a setFormObject on a parent form does not cause a setFormObject on its children. This is something you’ll have to handle yourself.
+
+IMPORTANT: example
+
+==== Form validation
+
+Form validation is done through the validation subsystem by validating the formmodel (and underlying valuemodels). Form component interceptors such as the OverlayValidationInterceptorFactory can then show the validation errors to the user. For more information on interceptors, read the next chapter.  

@@ -1,0 +1,211 @@
+
+== Exception handling
+
+=== Why not just use try and catch?
+
+Most exceptions that are thrown are unexpected: we don't expect them to happen (especially during production) such as:
+
+* NullPointerException: Didn't I double checked all my source code to avoid NPE's?
+* CvsParserException: Why did the user pick a html file when I asked him for a CVS file?
+* IDidNotKnowThisExistedRuntimeException: What the ...?
+
+And if you except some of them, you usually can't really fix the problem, just deal with it:
+
+* Log the exception.
+* Notify the user that whatever he tried didn't work, preferably with an not-technical, exception-specific explanation.
+* Either shutdown the application or allow the user to continue (and try again).
+
+You could use try-catch during every user action:
+
+[source,java]
+----
+protected boolean onFinish() {
+    try {
+        form.getFormModel().commit();
+    // ...
+    getApplicationContext().publishEvent(new LifecycleApplicationEvent(eventType, getEditingContact()));
+    return true;
+    } catch (Throwable throwable) {
+        handleException(throwable);
+    }
+}
+----
+
+But this is tedious and error prone:
+
+It's easy to forget to try catch some code, which makes the exception escape to the top layer exception handler.
+
+You could unwillingly eat the exception, not logging it:
+
+If you handle an exception, but forget to log it and/or show it to the user.
+
+If you throw an exception in the catch or finally part, only the last exception bubbles up, effectively hiding the real exception.
+
+In production, this leads to discussions where the user is sure he pushed the button (which he did in this case) and the programmer is sure the user didn't because the system didn't report anything and nothing has changed. If you notice that while you are fixing a issue, an exception is eaten (making it hard to identify the original issue), create a new issue because exceptions are eaten and fix that first.
+
+You are in danger to handle the same exception on 2 different layers, effectively logging it or notifing the user twice.
+
+In some layers or parts of the application, it might not be clear if you need to notify the user (and which user) through a swing dialog or JSP or webservice response.
+
+Valkyrie's exception handling system uses the top layer exception handling. It expects that all other layers let the exception bubble up.
+
+=== Built-in exception handlers
+
+The standard exception handler in Valkyrie is a simple delegating handler which delegates exception handling for all exception types to a handler that shows a JXErrorDialog.
+
+However, you can use any of the following built-in handlers.
+
+==== SilentExceptionHandler
+
+Logs a throwable on an error level but does not notify the user in any way. Normally it is a bad practice not to notify the user if something goes wrong.
+
+==== MessagesDialogExceptionHandler
+
+Shows the exception in a dialog to the user (as well as logging it). You can set a log level and the icon of the dialog depends on that log level. The shown dialog has a caption (= dialog title) and description (= dialog content), which are fetched from the i18n messages files. There are 2 ways to resolve those messages: static or dynamic (default).
+
+You can statically set the title and description by setting the messagesKey property. However, it's a lot more powerfull to use the default dynamic behaviour based on the class of the exception. For example if a NumberFormatException is thrown, it will first look for these i18n keys:
+
+[source,java]
+----
+java.lang.NumberFormatException.caption=Not a number
+java.lang.NumberFormatException.description=You did not enter a a valid number.\nPlease enter a valid number.
+----
+
+If these messages keys don't exist, it will fall back to the parent class ofNumberFormatException, which is IllegalArgumentException:
+
+[source,java]
+----
+java.lang.IllegalArgumentException.caption=...
+java.lang.IllegalArgumentException.description=...
+----
+
+It will continue to fall back up the chain, untill it reaches Throwable. This allows you to direct all unexpected exceptions (for example IDidNotKnowThisExistedRuntimeException) to a MessagesDialogExceptionHandler that logs them as an error and shows a generic message. You can even use {0} in your i18n message to show the exception.getMessage() in the description:
+
+[source,text]
+----
+java.lang.RuntimeException.caption = Unexpected general bug
+java.lang.RuntimeException.description = \
+The application experienced an unexpected bug,\n\
+due to a programming error.\n\
+\n\
+The application is possibly in an inconsistent state.\n\
+It is recommended to reboot the application.\n\
+\n\
+The exact bug is:\n\
+{0}\n\
+\n\
+Please report this bug.
+
+java.lang.Error.caption = Unexpected serious system failure
+java.lang.Error.description = \
+A serious system failure occured.\n\
+\n\
+The application is possibly in an inconsistent state.\n\
+Reboot the application.\n\
+\n\
+The exact bug is:\n\
+{0}\n\
+\n\
+Please report this bug.
+----
+
+Note that, although this dynamic system is pretty powerfull and avoids a lot of boilerplate, it's usually not a replacement for DelegatingExceptionHandler, because it doesn't allow you to assign different log levels, etc.
+
+You can set a shutdown policy on a dialog exception handler:
+
+[source,java]
+----
+handler.setShutdownPolicy(ShutdownPolicy.ASK);
+----
+
+This allows you to optionally enforce or propose a System.exit(1).
+
+==== JSR303ValidatorDialogExceptionHandler
+
+A special exception handler which can only handle an InvalidStateException thrown by a JSR303 validator. It shows the failed validations to a user in a list in a dialog. In most cases it's inferiour to the JSR303alidator which validates before the user presses the commit button. But because the latter forces you to hand code@AssertTrue's and it could be working on stale client-side data, it's actually a very nice backup to also configure this exception handler as a delegate when encountering an InvalidStateException.
+
+==== Custom exception handler
+
+You can also extend AbstractLoggingExceptionHandler and implement this method:
+
+[source,java]
+----
+public void notifyUserAboutException(Thread thread, Throwable throwable) {
+    // ...
+}
+----
+
+=== Picking the right exception handler for the right exception
+
+There are bunch of build-in exception handlers, but ussually there isn't one exception handler that fits alls exceptions. A DelegatingExceptionHandler allows you to delegate an exception to the right exception handler. It accepts a delegate list and traverses that list in order. The first delegate that can handle the exception, has to handle the exception and the rest of the delegate list is ignored.
+
+For example, here we configure authentication and authorization exceptions to a WARNMessagesDialogExceptionHandler, JSR303 validator exceptions to an INFO JSR303ValidatorDialogExceptionHandler and the rest to an ERRORJXErrorDialogExceptionHandler which asks whether a shutdown is wanted.
+
+[source,java]
+----
+@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    securityHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.WARN);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.<Class<? extends Throwable>>newArrayList(AuthenticationException.class),
+                    securityHandler));
+    JSR303ValidatorDialogExceptionHandler validationHandler = new JSR303ValidatorDialogExceptionHandler();
+    validationHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.INFO);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.<Class<? extends Throwable>>newArrayList(ConstraintViolationException.class),
+                    validationHandler));
+    JXErrorDialogExceptionHandler generalHandler = new JXErrorDialogExceptionHandler();
+    generalHandler.setLevel(AbstractLoggingExceptionHandler.LoggingLevel.ERROR);
+    generalHandler.setShutdownPolicy(ShutdownPolicy.ASK);
+    handler.getDelegateList().add(
+            new SimpleExceptionHandlerDelegate(Lists.<Class<? extends Throwable>>newArrayList(Throwable.class),
+                    validationHandler));
+    return handler;
+}
+----
+
+==== SimpleExceptionHandlerDelegate
+
+Processes the exception if it is an instance of throwableClass or the throwableClassList.
+
+==== ChainInspectingExceptionHandlerDelegate
+
+In most cases this class is overkill and SimpleExceptionHandlerDelegate with a purger will suffice. However if those don't suffice, read the javadoc of this class.
+
+==== ExceptionPurger
+
+An exception purger allows you to cream off wrapper exceptions. This allows you to handle a chained exception in the chain of the uncaught exception, instead of the uncaught exception itself. Almost all exception handlers and delegate's support the use of a purger. DefaultExceptionPurger supports 2 ways to identify the depth to cream off: include or exclude based.
+
+A chained exception of the type in the includeThrowableClassList is stripped from all it's wrapper exceptions and handled by the exception handler or evaluated by the delegate. For example, we want to handle every SQLException even if it's wrapped:
+
+[source,java]
+----
+@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    SimpleExceptionHandlerDelegate handlerDelegate = new SimpleExceptionHandlerDelegate(Lists.<Class<? extends Throwable>>newArrayList(SQLException.class),
+            securityHandler);
+    handlerDelegate.setExceptionPurger(new DefaultExceptionPurger(SQLException.class, null));
+    handler.getDelegateList().add(handlerDelegate);
+    return handler;
+}
+----
+
+A chained exception of the type in the excludeThrowableClassList is stripped together with all it's wrapper exceptions and it's cause is handled by the exception handler or evaluated by the delegate. For example the server wraps all exceptions in an annoying, useless WrappingServiceCallException and we want to get rid of it:
+
+[source,java]
+----
+@Override
+public RegisterableExceptionHandler registerableExceptionHandler() {
+    DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
+    MessagesDialogExceptionHandler securityHandler = new MessagesDialogExceptionHandler();
+    SimpleExceptionHandlerDelegate handlerDelegate = new SimpleExceptionHandlerDelegate(Lists.<Class<? extends Throwable>>newArrayList(Throwable.class),
+            securityHandler);
+    handlerDelegate.setExceptionPurger(new DefaultExceptionPurger(null, WrappingServiceException.class));
+    handler.getDelegateList().add(handlerDelegate);
+    return handler;
+}
+----

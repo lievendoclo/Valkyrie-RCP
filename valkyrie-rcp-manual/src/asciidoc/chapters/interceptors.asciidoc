@@ -1,0 +1,181 @@
+
+== Form component interceptors
+
+=== Introduction
+
+Form component interceptors provide a way to intercept and add extra functionality to input components on a form.
+
+The application context specifies the list of interceptors to attach to controls constructed by the platform. This allows for a declarative model for specifying "additional" functionality to be added to various components.
+
+Examples are interceptors to overlay validation error images and background color changes, provide popup menus in text fields, and autocompletion (as you type) for comboboxes.
+
+=== Creating your own interceptor
+
+To create your own FormComponentInterceptor, you have to provide both a FormComponentInterceptor and a FormComponentInterceptorFactory implementation.
+
+public interface FormComponentInterceptor {
+    public void processLabel(String propertyName, JComponent label);
+
+    public void processComponent(String propertyName, JComponent component);
+}
+
+=== Configuration
+
+The configuration of the interceptors in the application context is done by defining the FormComponentInterceptorFactory in the formComponentInterceptorFactory method.
+
+This is the standard configuration:
+
+[source,java]
+----
+@Bean
+public FormComponentInterceptorFactory formComponentInterceptorFactory() {
+    ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
+    List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+    factories.add(new ColorValidationInterceptorFactory());
+    factories.add(new OverlayValidationInterceptorFactory());
+    factories.add(new ShowCaptionInStatusBarInterceptorFactory());
+    factories.add(new ShowDescriptionInStatusBarInterceptorFactory());
+    factory.setInterceptorFactories(factories);
+    return factory;
+}
+
+----
+=== Built-in interceptors
+
+There are a number of built-in interceptors provided with the framework. We’ll quickly explain them.
+
+==== Error overlay image
+
+This class has been specifically made to work with Valkyrie’s validation framework and will show the errors coming from that framework
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new OverlayValidationInterceptorFactory()
+----
+
+IMPORTANT: provide image
+
+==== Error background color
+
+Changes the background color of the form component when an invalid value is entered. The color of the background can be set through a property.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new ColorValidationInterceptorFactory()
+----
+
+IMPORTANT: provide image
+
+==== Text editing popup (undo, copy, paste, ...)
+
+Adds more advanced text editing functionality to text components. It adds a popup menu with "undo/redo/cut/copy/paste/select all" items. It also adds the standard keyboard accelerators for these commands to the component.
+
+IMPORTANT: provide image
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new TextComponentPopupInterceptorFactory()
+----
+
+==== Combobox auto completion
+
+Adds auto completion to a combobox.
+
+IMPORTANT: provide image
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new ComboBoxAutoCompletionInterceptorFactory()
+----
+
+==== Overlay image indicating dirty value
+
+Shows an image in the top left corner of the component if the contents of the component has been changed by the user. The image also has a tooltip showing the original value. To the right of the image is a small revert button. Pushing this button restores the original value in the component
+
+IMPORTANT: provide image
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new DirtyIndicatorInterceptorFactory()
+----
+
+==== Select all text on focus
+
+Selects all the text in text fields and spinners when they receive focus.
+
+IMPORTANT: provide image
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new SelectAllFormComponentInterceptorFactory()
+
+----
+
+==== Setting the caret to the beginning of the field
+
+If the text is set in a text component, the caret position is set to the end of the text. This means the beginning of the text will not be visible if the text is too long to fit in the text component.
+
+This FormComponentInterceptor "fixes" this behavior, and sets the caret to position 0.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new TextCaretFormComponentInterceptorFactory()
+----
+
+==== Showing a tooltip
+
+If a form property has a caption defined in the messages.properties file it will be used as the tooltip for the form component.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new ToolTipInterceptorFactory()
+----
+
+==== Changing the rendering of a checkbox
+
+Allows customization on how a CheckBox form property is rendered, for example whether the label needs to be shown.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new CheckBoxFormComponentInterceptorFactory()
+----
+
+==== Showing the caption of the currently focussed component in the statusbar
+
+Shows the caption of the form component in the statusbar when the component is focused.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new ShowCaptionInStatusBarInterceptorFactory()
+----
+
+==== Showing the description of the currently focussed component in the statusbar
+
+Shows the description of the form component in the statusbar when the component is focused.
+
+To configure this interceptor, you need to use this interceptor factory:
+
+[source,java]
+----
+new ShowDescriptionInStatusBarInterceptorFactory()
+----

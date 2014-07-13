@@ -1,0 +1,29 @@
+
+== Integration with other frameworks
+
+=== Current integrations
+
+Valkyrie, being a framework, provides the flexibility to add support for other Swing frameworks. This way, the standard toolkit can be enriched with all sorts of open-source, closed-source or even proprietary components.
+
+We’ll take a quick look at the current integrations for Valkyrie.
+
+==== VLDocking
+
+VLDocking is a set of Java components that helps the Swing developer to build applications with docking capabilities, and even leverage existing applications to higher standards.
+
+Valkyrie provides an integration for this docking framework out-of-the-box. Examples on this integration are available in the samples included in Valkyrie.
+
+==== JIDE
+
+JIDE provides a lot of Swing components that add a plethora of functionalities to the standard Swing toolkit. JIDE has both commercial as open-source components, so the possibilities for integrations are vast.
+
+=== Adding support for other frameworks
+
+Support for other Swing libraries can come in different sizes:
+
+* Other docking frameworks
+* MDI frameworks
+* Input controls to create binders and bindings with
+* Form frameworks
+
+Valkyrie is meant to be extended, so we’re sure some integrations are still to pop up.

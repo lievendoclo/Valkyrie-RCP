@@ -1,0 +1,47 @@
+
+== Wizards
+
+=== Why use wizards
+
+Wizards make flow-like form entry easy. If you have a flow of screens, with the input of the first screen affecting the behavior and possibly layout of one or more the next screens, wizards are an ideal way to accomplish this.
+
+Valkyrie has built-in wizard functionality.
+
+=== Creating a wizard
+
+In Valkyrie, a wizard consists of wizard pages. Every wizard page can determine which page is next or previous and whether the wizard can stop at this page. Wizards are mostly form-based, which means validation is included as well. The wizard framework will not allow a user to change to another screen as long as the current is invalid.
+
+Creating a wizard is quite straightforward. You create pages (or even just forms) and add them to a wizard. Creating wizard will most of the time mean subclassing the AbstractWizard class and building a wizard as a separate component.
+
+[source,java]
+----
+public class MyWizard extends AbstractWizard
+{
+    private MyForm form1;
+    private MyOtherForm form2;
+
+    public MyWizard()
+    {
+        initializeForms();
+        addForm(form1);
+        addForm(form2);
+    }
+
+    protected boolean onFinish()
+    {
+        form1.commit();
+        form2.commit();
+        doSomeLogic();
+    }
+}
+----
+
+This wizard will make 2 forms and when the wizard completes (the user presses finish), it’ll do some logic.
+
+IMPORTANT: provide image
+
+=== Showing wizards
+
+There are various ways for showing a wizard. Out of the box, Valkyrie provides you with a dialog class that can show a wizard (which most of the time is the way you’ll show a wizard).
+
+You can off course create a view class for your wizard, so you can display your wizard as a view too. To implement this, take a look at WizardDialog.

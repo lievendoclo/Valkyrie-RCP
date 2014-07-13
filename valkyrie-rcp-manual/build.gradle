@@ -1,13 +1,18 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url = "http://repo.gradle.org/gradle/jboss-public"
+        }
     }
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.2'
+        classpath 'org.jboss.jdocbook:gradle-jdocbook:1.2.2'
     }
 }
 apply plugin: 'groovy'
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: "jdocbook"
 
 asciidoctor {
     backends = ["html5", "docbook5"]
@@ -25,5 +30,9 @@ task docsZip(type: Zip) {
 
 artifacts {
     archives docsZip
+}
+
+jdocbook {
+
 }
 

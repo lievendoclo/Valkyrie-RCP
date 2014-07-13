@@ -1,0 +1,100 @@
+
+== Views
+
+=== What is a view
+
+A view is a visual representation of concepts within your application. Everything you show in the main application window is contained within a view.
+
+There can be multiple views on an application page, but only one view is active at a time. View instances encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor, which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an application with multiple windows. In other words, a single view instance is never shared between windows.
+
+=== View descriptors
+
+There can be multiple views on an application page, but only one view is active at a time. View instances encapsulate the creation of and access to the visual presentation of the underlying control. A view's descriptor, which is effectively a singleton, can be asked to instantiate new instances of a single view for display within an application with multiple windows. In other words, a single view instance is never shared between windows.
+
+View descriptors produce the page components (in this case views) that will be shown to the users.
+
+=== Creating views
+
+Creating a new view is done through subclassing the AbstractView class. This class mandates you to implement one method: createControl. In our example, the initial view class looks like this:
+
+[source,java]
+----
+public class InitialView extends AbstractView
+{
+    // omitted for brevity
+
+	protected JComponent createControl()
+        {
+		// In this view, we're just going to use standard Swing to place a
+		// few controls.
+
+		// The location of the text to display has been set as a Resource in the
+		// property descriptionTextPath. So, use that resource to obtain a URL
+		// and set that as the page for the text pane.
+
+		JTextPane textPane = new JTextPane();
+		JScrollPane spDescription = getComponentFactory().createScrollPane(textPane);
+		try {
+			textPane.setPage(getDescriptionTextPath().getURL());
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Unable to load description URL", e);
+		}
+
+		JLabel lblMessage = getComponentFactory().createLabel(getFirstMessage());
+		lblMessage.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+		JPanel panel = getComponentFactory().createPanel(new BorderLayout());
+		panel.add(spDescription);
+		panel.add(lblMessage, BorderLayout.SOUTH);
+
+		return panel;
+	}
+}
+----
+
+=== Creating a view descriptor for a view
+
+To show a view on screen, you need to create a view descriptor. Creating a descriptor is easy based on the view. Every view can gas a view descriptor, creating it if needed.
+
+[source,java]
+----
+view.getDescriptor();
+----
+
+=== Showing the view in the application
+
+Setting the current view is done by using a ShowViewCommand. This command sets the view of the application window in which the command is located.
+
+To create such a command, use the following definition:
+
+[source,java]
+----
+new ShowViewCommand("myId", myView.getDescriptor());
+----
+
+You can now use this command in your menu, or create a button in another view to switch to the defined view.
+
+=== Changing the behavior of global commands in a view context
+
+In the previous chapter, we explained how we can make shared commands, whose behavior is dependent on the context.
+
+When creating a view, these shared commands’ behavior can be changed to add context-specific behavior (such as a ‘New’ or ‘Delete’ action). This is done by registering a command executor to the shared command’s id. The view class supports this registration by overriding a method
+
+[source,java]
+----
+context.register("newContactCommand", newContactExecutor);
+----
+
+This executor then handles the behavior of the command
+
+[source,java]
+----
+private class NewContactExecutor implements ActionCommandExecutor
+{
+    public void execute() {
+        // put logic here
+    }
+}
+----
+
