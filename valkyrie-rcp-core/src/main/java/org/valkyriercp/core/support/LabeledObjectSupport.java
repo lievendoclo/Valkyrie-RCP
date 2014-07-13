@@ -61,7 +61,7 @@ public class LabeledObjectSupport implements DescribedElement, VisualizedElement
 	}
 
 	public void setCaption(String caption) {
-		String oldValue = caption;
+		String oldValue = this.caption;
 		this.caption = caption;
 		firePropertyChange(CAPTION_PROPERTY, oldValue, caption);
 	}
@@ -73,7 +73,7 @@ public class LabeledObjectSupport implements DescribedElement, VisualizedElement
 	}
 
 	public void setTitle(String title) {
-		String oldValue = null;
+		String oldValue = this.title;
 		if (this.title != null || this.label != null) {
 			oldValue = getDisplayName();
 		}
@@ -83,7 +83,7 @@ public class LabeledObjectSupport implements DescribedElement, VisualizedElement
 	}
 
 	public void setImage(Image image) {
-		Image oldValue = image;
+		Image oldValue = this.image;
 		this.image = image;
 		firePropertyChange("image", oldValue, image);
 	}
