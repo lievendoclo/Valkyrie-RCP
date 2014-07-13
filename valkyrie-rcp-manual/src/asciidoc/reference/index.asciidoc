@@ -4,7 +4,7 @@ The Valkyrie RCP team
 :keywords: AsciiDoc, Asciidoctor, syntax, reference
 :doctype: book
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectanchors:
 :sectlink:
 :linkattrs:
@@ -16,7 +16,7 @@ The Valkyrie RCP team
 :idseparator: -
 :language: asciidoc
 :imagesdir: images
-:includedir: src/asciidoc/chapters/
+:includedir: src/asciidoc/reference/chapters/
 :stylesdir: src/asciidoc/stylesheets/
 :stylesheet: riak.css
 
