@@ -18,16 +18,10 @@ import java.beans.PropertyChangeListener;
  */
 public class DefaultPageComponentPane extends AbstractControlFactory implements PageComponentPane {
     private PageComponent component;
-
-    private PropertyChangeListener updater = new PropertyChangeListener() {
-        public void propertyChange( PropertyChangeEvent evt ) {
-            handleViewPropertyChange();
-        }
-    };
+    private SimpleInternalFrame control;
 
     public DefaultPageComponentPane( PageComponent component ) {
         this.component = component;
-        this.component.addPropertyChangeListener( updater );
     }
 
     public PageComponent getPageComponent() {
@@ -35,24 +29,17 @@ public class DefaultPageComponentPane extends AbstractControlFactory implements 
     }
 
     protected JComponent createControl() {
-        return new SimpleInternalFrame( component.getIcon(), component.getDisplayName(), createViewToolBar(), component
+        control = new SimpleInternalFrame( component.getIcon(), component.getDisplayName(), createViewToolBar(), component
                 .getControl() );
+        control.setTitle( component.getDisplayName() );
+        control.setFrameIcon( component.getIcon() );
+        control.setToolTipText( component.getCaption() );
+        return control;
     }
 
     protected JToolBar createViewToolBar() {
         // todo
         return null;
-    }
-
-    public void propertyChange( PropertyChangeEvent evt ) {
-        handleViewPropertyChange();
-    }
-
-    protected void handleViewPropertyChange() {
-        SimpleInternalFrame frame = (SimpleInternalFrame) getControl();
-        frame.setTitle( component.getDisplayName() );
-        frame.setFrameIcon( component.getIcon() );
-        frame.setToolTipText( component.getCaption() );
     }
 }
 
