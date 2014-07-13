@@ -1,5 +1,7 @@
 package org.valkyriercp.text;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.valkyriercp.form.builder.AbstractFormComponentInterceptor;
 
 import javax.swing.*;
@@ -13,6 +15,8 @@ import javax.swing.text.JTextComponent;
  *
  */
 public abstract class TextComponentInterceptor extends AbstractFormComponentInterceptor {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public final void processComponent( String propertyName, JComponent component ) {
         JTextComponent textComponent = getTextComponent( getInnerComponent( component ) );
@@ -40,21 +44,21 @@ public abstract class TextComponentInterceptor extends AbstractFormComponentInte
      * @return a <code>JTextComponent</code>, or <code>null</code>
      */
     protected JTextComponent getTextComponent( JComponent component ) {
-        if( component instanceof JTextField ) {
-            return (JTextField) component;
-        }
-
         if( component instanceof JSpinner ) {
             JSpinner spinner = (JSpinner) component;
             if( spinner.getEditor() instanceof JSpinner.DefaultEditor ) {
                 return ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
-            }
-            if( spinner.getEditor() instanceof JTextField ) {
+            } else if( spinner.getEditor() instanceof JTextField ) {
                 return (JTextField) spinner.getEditor();
+            } else {
+                logger.warn("Cannot use JSpinner editor of type " + spinner.getEditor().getClass());
+                return null;
             }
+        } else if(component instanceof JTextComponent) {
+            return (JTextComponent) component;
+        } else {
+            return null;
         }
-
-        return null;
     }
 
 }
