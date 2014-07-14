@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.simple;
+package org.valkyriercp.sample.vldocking;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;

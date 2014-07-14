@@ -163,10 +163,17 @@ project("valkyrie-rcp-integrations:valkyrie-rcp-jodatime") {
 project("valkyrie-rcp-integrations:valkyrie-rcp-jideoss") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "com.jidesoft:jide-oss:${dependencyVersions.jide.oss}"
+        compile "com.jidesoft:jide-oss:${dependencyVersions.jide}"
     }
 }
 
+project("valkyrie-rcp-integrations:valkyrie-rcp-jidedocking") {
+    dependencies {
+        compile project(":valkyrie-rcp-core")
+        compile "com.jidesoft:jide-dock:${dependencyVersions.jide}"
+        compile "com.jidesoft:jide-common:${dependencyVersions.jide}"
+    }
+}
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-vldocking") {
     dependencies {

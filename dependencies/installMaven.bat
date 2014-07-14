@@ -1,1 +1,0 @@
-mvn install:install-file -DgroupId=com.l2fprod -DartifactId=l2fprod-common-all -Dversion=7.3 -Dpackaging=jar -Dfile=com\l2fprod\l2fprod-common-all\7.3\l2fprod-common-all-7.3.jar

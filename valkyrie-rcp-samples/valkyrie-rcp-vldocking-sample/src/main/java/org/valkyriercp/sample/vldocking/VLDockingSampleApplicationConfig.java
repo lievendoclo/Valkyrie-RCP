@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.simple;
+package org.valkyriercp.sample.vldocking;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,12 +24,11 @@ import org.valkyriercp.application.docking.VLDockingPageDescriptor;
 import org.valkyriercp.application.docking.VLDockingViewDescriptor;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.rules.RulesSource;
-import org.valkyriercp.sample.simple.domain.ContactDataStore;
-import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
-import org.valkyriercp.sample.simple.ui.ContactView;
-import org.valkyriercp.sample.simple.ui.InitialView;
+import org.valkyriercp.sample.vldocking.domain.ContactDataStore;
+import org.valkyriercp.sample.vldocking.domain.SimpleValidationRulesSource;
+import org.valkyriercp.sample.vldocking.ui.ContactView;
+import org.valkyriercp.sample.vldocking.ui.InitialView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.simple;
+package org.valkyriercp.sample.vldocking;
 
 import org.valkyriercp.application.support.ApplicationLauncher;
 
