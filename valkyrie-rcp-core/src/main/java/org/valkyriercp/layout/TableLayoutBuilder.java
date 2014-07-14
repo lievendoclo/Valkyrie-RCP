@@ -587,7 +587,7 @@ public class TableLayoutBuilder implements LayoutBuilder {
             for( int row=0; row < rowOccupiers.size() - 1; row++ ) {
                 for( int col=0; col < maxColumns; col++ ) {
                     Cell currentCell = getOccupier(row, col);
-                    if (currentCell != null && !focusOrder.contains(currentCell.getComponent())) {
+                    if (currentCell != null && currentCell.getComponent() != null && !focusOrder.contains(currentCell.getComponent())) {
                         focusOrder.add(currentCell.getComponent());
                     }
                 }
@@ -596,7 +596,7 @@ public class TableLayoutBuilder implements LayoutBuilder {
             for( int col = 0; col < maxColumns; col++ ) {
                 for( int row = 0; row < rowOccupiers.size() - 1; row++ ) {
                     Cell currentCell = getOccupier( row, col );
-                    if( currentCell != null && !focusOrder.contains( currentCell.getComponent() ) ) {
+                    if( currentCell != null && currentCell.getComponent() != null && !focusOrder.contains( currentCell.getComponent() ) ) {
                         focusOrder.add( currentCell.getComponent() );
                     }
                 }
