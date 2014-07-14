@@ -47,6 +47,8 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 
 	private boolean maximizeEnabled = DEFAULT_MAXIMIZEENABLED;
 
+    private float resizeWeight;
+
 	public VLDockingViewDescriptor() {
 		// default constructor for spring creation
 	}
@@ -137,4 +139,11 @@ public class VLDockingViewDescriptor extends DefaultViewDescriptor {
 		this.maximizeEnabled = maximizeEnabled;
 	}
 
+    public float getResizeWeight() {
+        return resizeWeight;
+    }
+
+    public void setResizeWeight(float resizeWeight) {
+        this.resizeWeight = resizeWeight;
+    }
 }

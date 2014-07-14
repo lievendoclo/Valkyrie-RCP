@@ -54,6 +54,7 @@ public class ViewDescriptorDockable implements Dockable {
         boolean closeEnabled = VLDockingViewDescriptor.DEFAULT_CLOSEENABLED;
         boolean floatEnabled = VLDockingViewDescriptor.DEFAULT_FLOATENABLED;
         boolean maximizeEnabled = VLDockingViewDescriptor.DEFAULT_MAXIMIZEENABLED;
+        float resizeWeight = 0;
 
         if (viewDescriptor instanceof VLDockingViewDescriptor) {
             VLDockingViewDescriptor dockingViewDescriptor = (VLDockingViewDescriptor) viewDescriptor;
@@ -62,12 +63,14 @@ public class ViewDescriptorDockable implements Dockable {
             closeEnabled = dockingViewDescriptor.isCloseEnabled();
             floatEnabled = dockingViewDescriptor.isFloatEnabled();
             maximizeEnabled = dockingViewDescriptor.isMaximizeEnabled();
+            resizeWeight = dockingViewDescriptor.getResizeWeight();
         }
         dockKey.setAutoHideEnabled(autoHideEnabled);
         dockKey.setAutoHideBorder(autoHideBorder);
         dockKey.setCloseEnabled(closeEnabled);
         dockKey.setFloatEnabled(floatEnabled);
         dockKey.setMaximizeEnabled(maximizeEnabled);
+        dockKey.setResizeWeight(resizeWeight);
     }
 
     public PageComponent getPageComponent() {
