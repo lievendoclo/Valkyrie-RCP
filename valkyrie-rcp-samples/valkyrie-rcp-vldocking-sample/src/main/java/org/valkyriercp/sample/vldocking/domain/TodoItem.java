@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.simple.domain;
+package org.valkyriercp.sample.vldocking.domain;
 
 import java.util.Date;
 

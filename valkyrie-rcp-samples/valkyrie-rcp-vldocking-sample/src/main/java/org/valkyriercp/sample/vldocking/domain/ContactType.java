@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.domain;
+package org.valkyriercp.sample.vldocking.domain;
 
 /**
  * This class provides the Enums to indicate the type of contact, personal or

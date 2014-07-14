@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
-import org.valkyriercp.sample.simple.domain.Contact;
-import org.valkyriercp.sample.simple.domain.ContactDataStore;
+import org.valkyriercp.sample.vldocking.domain.Contact;
+import org.valkyriercp.sample.vldocking.domain.ContactDataStore;
 import org.valkyriercp.table.support.AbstractObjectTable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 /**
- * This class provides a concrete implementation of a table showing {@link Contact} objects.
+ * This class provides a concrete implementation of a table showing {@link org.valkyriercp.sample.vldocking.domain.Contact} objects.
  * @author lstreepy
  */
 public class ContactTable extends AbstractObjectTable {

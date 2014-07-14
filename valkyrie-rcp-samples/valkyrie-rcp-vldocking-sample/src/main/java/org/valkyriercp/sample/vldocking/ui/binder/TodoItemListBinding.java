@@ -1,10 +1,10 @@
-package org.valkyriercp.sample.simple.ui.binder;
+package org.valkyriercp.sample.vldocking.ui.binder;
 
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.AbstractForm;
 import org.valkyriercp.form.binding.swing.AbstractGlazedListsBinding;
-import org.valkyriercp.sample.simple.domain.TodoItem;
-import org.valkyriercp.sample.simple.ui.TodoForm;
+import org.valkyriercp.sample.vldocking.domain.TodoItem;
+import org.valkyriercp.sample.vldocking.ui.TodoForm;
 import org.valkyriercp.widget.table.PropertyColumnTableDescription;
 import org.valkyriercp.widget.table.TableDescription;
 

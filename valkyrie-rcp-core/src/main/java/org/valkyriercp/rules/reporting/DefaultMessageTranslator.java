@@ -90,7 +90,7 @@ public class DefaultMessageTranslator implements MessageTranslator,
 				.getRejectedValue(), results.getViolatedConstraint());
 	}
 
-	private String buildMessage(String objectName, Object rejectedValue,
+    protected String buildMessage(String objectName, Object rejectedValue,
 			Constraint constraint) {
 		StringBuffer buf = new StringBuffer(255);
 		MessageSourceResolvable[] args = resolveArguments(constraint);
@@ -118,18 +118,18 @@ public class DefaultMessageTranslator implements MessageTranslator,
 				.toArray(new MessageSourceResolvable[0]);
 	}
 
-	void visit(CompoundPropertyConstraint rule) {
+	protected void visit(CompoundPropertyConstraint rule) {
 		visitorSupport.invokeVisit(this, rule.getPredicate());
 	}
 
-	void visit(PropertiesConstraint e) {
+    protected void visit(PropertiesConstraint e) {
 		add(
 				getMessageCode(e.getConstraint()),
 				new Object[] { resolveObjectName(e.getOtherPropertyName()) },
 				e.toString());
 	}
 
-	void visit(ParameterizedPropertyConstraint e) {
+    protected void visit(ParameterizedPropertyConstraint e) {
 		add(getMessageCode(e.getConstraint()),
 				new Object[] { e.getParameter() }, e.toString());
 	}
@@ -151,7 +151,7 @@ public class DefaultMessageTranslator implements MessageTranslator,
 						.renderShortName(objectName), locale);
 	}
 
-	void visit(PropertyValueConstraint valueConstraint) {
+    protected void visit(PropertyValueConstraint valueConstraint) {
 		visitorSupport.invokeVisit(this, valueConstraint.getConstraint());
 	}
 
@@ -162,7 +162,7 @@ public class DefaultMessageTranslator implements MessageTranslator,
      *
      * @param compoundConstraint
      */
-	void visit(CompoundConstraint compoundConstraint) {
+    protected void visit(CompoundConstraint compoundConstraint) {
 		Iterator it = compoundConstraint.iterator();
         String compoundMessage = getMessageCode(compoundConstraint);
 		while (it.hasNext()) {
@@ -174,13 +174,13 @@ public class DefaultMessageTranslator implements MessageTranslator,
 		}
 	}
 
-	void visit(Not not) {
+    protected void visit(Not not) {
 		add("not", null, "not");
 		visitorSupport.invokeVisit(this, not.getConstraint());
 	}
 
 	// @TODO - consider standard visitor here...
-	void visit(StringLengthConstraint constraint) {
+    protected void visit(StringLengthConstraint constraint) {
 		ClosureResultConstraint c = (ClosureResultConstraint) constraint
 				.getPredicate();
 		Object p = c.getPredicate();
@@ -194,7 +194,7 @@ public class DefaultMessageTranslator implements MessageTranslator,
 		add(getMessageCode(constraint), args, constraint.toString());
 	}
 
-	void visit(ClosureResultConstraint c) {
+    protected void visit(ClosureResultConstraint c) {
 		visitorSupport.invokeVisit(this, c.getPredicate());
 	}
 
@@ -213,7 +213,7 @@ public class DefaultMessageTranslator implements MessageTranslator,
 		return resolvable;
 	}
 
-	void visit(Constraint constraint) {
+    protected void visit(Constraint constraint) {
 		if (constraint instanceof Range) {
 			this.args.add(handleRange((Range) constraint));
 		} else if (constraint instanceof ParameterizedBinaryConstraint) {

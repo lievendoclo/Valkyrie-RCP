@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import org.springframework.util.Assert;
 import org.valkyriercp.application.event.LifecycleApplicationEvent;
@@ -22,8 +22,8 @@ import org.valkyriercp.dialog.ConfirmationDialog;
 import org.valkyriercp.dialog.FormBackedDialogPage;
 import org.valkyriercp.dialog.TitledPageApplicationDialog;
 import org.valkyriercp.form.Form;
-import org.valkyriercp.sample.simple.domain.Contact;
-import org.valkyriercp.sample.simple.domain.ContactDataStore;
+import org.valkyriercp.sample.vldocking.domain.Contact;
+import org.valkyriercp.sample.vldocking.domain.ContactDataStore;
 
 /**
  * This is a dialog for editing the properties of a Contact object. It is a simple "form backed" dialog, meaning that

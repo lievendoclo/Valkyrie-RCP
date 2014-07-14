@@ -1,9 +1,9 @@
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import com.jgoodies.forms.layout.FormLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
-import org.valkyriercp.sample.simple.domain.TodoItem;
+import org.valkyriercp.sample.vldocking.domain.TodoItem;
 import org.valkyriercp.widget.AbstractFocussableWidgetForm;
 
 import javax.swing.*;

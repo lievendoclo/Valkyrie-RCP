@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import com.jgoodies.forms.layout.FormLayout;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.swing.NumberBinder;
 import org.valkyriercp.form.builder.FormLayoutFormBuilder;
-import org.valkyriercp.sample.simple.domain.Contact;
-import org.valkyriercp.sample.simple.ui.binder.TodoItemListBinding;
+import org.valkyriercp.sample.vldocking.domain.Contact;
+import org.valkyriercp.sample.vldocking.ui.binder.TodoItemListBinding;
 import org.valkyriercp.widget.AbstractFocussableWidgetForm;
 
 import javax.swing.*;

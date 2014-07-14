@@ -1,4 +1,4 @@
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import org.springframework.util.StringUtils;
 import org.valkyriercp.binding.format.Formatter;

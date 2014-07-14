@@ -1,5 +1,6 @@
 package org.valkyriercp.command.support;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.valkyriercp.command.GroupContainerPopulator;
@@ -10,9 +11,9 @@ import java.util.*;
 public class GroupMemberList {
     private static final Log logger = LogFactory.getLog(GroupMemberList.class);
 
-    private List members = new ArrayList(9);
+    private List<GroupMember> members = Lists.newArrayList();
 
-    private Map builders = new WeakHashMap(6);
+    private Map<Object, GroupMemberContainerManager> builders = new WeakHashMap<>(6);
 
     private ExpansionPointGroupMember expansionPoint;
 
@@ -50,9 +51,7 @@ public class GroupMemberList {
     }
 
     public void setContainersVisible(boolean visible) {
-        Iterator it = builders.values().iterator();
-        while (it.hasNext()) {
-            GroupMemberContainerManager gcm = (GroupMemberContainerManager)it.next();
+        for (GroupMemberContainerManager gcm : builders.values()) {
             gcm.setVisible(visible);
         }
     }
@@ -65,9 +64,7 @@ public class GroupMemberList {
     }
 
     protected void rebuildControls() {
-        Iterator iter = builders.values().iterator();
-        while (iter.hasNext()) {
-            GroupMemberContainerManager builder = (GroupMemberContainerManager)iter.next();
+        for (GroupMemberContainerManager builder : builders.values()) {
             if (builder != null) {
                 builder.rebuildControlsFor(members);
             }
@@ -75,8 +72,7 @@ public class GroupMemberList {
     }
 
     public boolean contains(AbstractCommand command) {
-        for (int i = 0; i < members.size(); i++) {
-            GroupMember member = (GroupMember)members.get(i);
+        for (GroupMember member : members) {
             if (member.managesCommand(command.getId())) {
                 return true;
             }

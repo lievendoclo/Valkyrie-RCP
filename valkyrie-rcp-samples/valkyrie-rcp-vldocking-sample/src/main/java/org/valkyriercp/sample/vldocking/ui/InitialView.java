@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import org.springframework.core.io.Resource;
 import org.valkyriercp.application.support.AbstractView;

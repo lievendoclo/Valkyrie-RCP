@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.ui;
+package org.valkyriercp.sample.vldocking.ui;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.FilterList;
@@ -33,8 +33,8 @@ import org.valkyriercp.command.support.GlobalCommandIds;
 import org.valkyriercp.dialog.ConfirmationDialog;
 import org.valkyriercp.list.ListSelectionValueModelAdapter;
 import org.valkyriercp.list.ListSingleSelectionGuard;
-import org.valkyriercp.sample.simple.domain.Contact;
-import org.valkyriercp.sample.simple.domain.ContactDataStore;
+import org.valkyriercp.sample.vldocking.domain.Contact;
+import org.valkyriercp.sample.vldocking.domain.ContactDataStore;
 import org.valkyriercp.util.PopupMenuMouseListener;
 import org.valkyriercp.widget.table.PropertyColumnTableDescription;
 import org.valkyriercp.widget.table.glazedlists.GlazedListTableWidget;

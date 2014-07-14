@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.valkyriercp.sample.simple.domain;
+package org.valkyriercp.sample.vldocking.domain;
 
 import org.valkyriercp.rules.Rules;
 import org.valkyriercp.rules.constraint.Constraint;
