@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 public abstract class AbstractApplicationWindow implements ApplicationWindow, WindowFocusListener {
     private int number;
-    private JXFrame control;
+    private JFrame control;
     private ApplicationPage currentApplicationPage;
     private ApplicationConfig applicationConfig;
     private ApplicationWindowConfigurer applicationWindowConfigurer;
@@ -55,7 +55,7 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
     }
 
     @Override
-    public JXFrame getControl() {
+    public JFrame getControl() {
         return control;
     }
 
@@ -169,7 +169,7 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
         return new DefaultApplicationWindowConfigurer(this);
     }
 
-    protected JXFrame createNewWindowControl() {
+    protected JFrame createNewWindowControl() {
         JXFrame frame = new JXFrame();
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         WindowAdapter windowCloseHandler = new WindowAdapter() {

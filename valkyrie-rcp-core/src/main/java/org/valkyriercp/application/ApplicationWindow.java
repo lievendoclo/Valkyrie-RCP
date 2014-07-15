@@ -3,10 +3,11 @@ package org.valkyriercp.application;
 import org.jdesktop.swingx.JXFrame;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 
+import javax.swing.*;
 import java.util.Iterator;
 
 public interface ApplicationWindow {
-    JXFrame getControl();
+    JFrame getControl();
     ApplicationPage getPage();
     void showPage(String id);
     void showPage(PageDescriptor pageDescriptor);

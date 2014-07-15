@@ -170,6 +170,7 @@ project("valkyrie-rcp-integrations:valkyrie-rcp-jideoss") {
 project("valkyrie-rcp-integrations:valkyrie-rcp-jidedocking") {
     dependencies {
         compile project(":valkyrie-rcp-core")
+        compile "com.jidesoft:jide-components:${dependencyVersions.jide}"
         compile "com.jidesoft:jide-dock:${dependencyVersions.jide}"
         compile "com.jidesoft:jide-common:${dependencyVersions.jide}"
     }
