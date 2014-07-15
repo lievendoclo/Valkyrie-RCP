@@ -19,7 +19,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import com.jidesoft.docking.DockingManager;
-import org.slf4j.Logger;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.perspective.Perspective;
 

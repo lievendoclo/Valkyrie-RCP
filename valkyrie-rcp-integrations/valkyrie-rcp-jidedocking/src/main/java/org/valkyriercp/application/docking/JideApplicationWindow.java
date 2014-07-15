@@ -64,9 +64,9 @@ public class JideApplicationWindow extends AbstractApplicationWindow {
 			dockableHolder.dispose();
 			dockableHolder.removeWindowFocusListener(this);
 			WindowListener[] listeners = dockableHolder.getWindowListeners();
-			for(int i=0;i<listeners.length;i++){
-				dockableHolder.removeWindowListener(listeners[i]);
-			}
+            for (WindowListener listener : listeners) {
+                dockableHolder.removeWindowListener(listener);
+            }
 			Lm.setParent(null);
 			dockableHolder.removeAll();
 			dockableHolder.getRootPane().removeAll();
@@ -105,7 +105,7 @@ public class JideApplicationWindow extends AbstractApplicationWindow {
 	 * The window control is the JIDE dockable holder, so return that.
 	 */
     protected JFrame createNewWindowControl() {
-		return (JFrame)dockableHolder;
+		return dockableHolder;
     }
     
     /**

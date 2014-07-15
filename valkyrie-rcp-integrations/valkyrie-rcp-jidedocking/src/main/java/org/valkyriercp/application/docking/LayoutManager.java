@@ -34,7 +34,7 @@ public class LayoutManager {
 	
 	public static boolean isValidLayout(DockingManager manager, String pageId, Perspective perspective){
 
-		String pageLayout = MessageFormat.format(PAGE_LAYOUT, new Object[]{pageId, perspective.getId()});
+		String pageLayout = MessageFormat.format(PAGE_LAYOUT, pageId, perspective.getId());
 		return manager.isLayoutAvailable(pageLayout) && 
 			manager.isLayoutDataVersionValid(pageLayout);
 	}
@@ -52,7 +52,7 @@ public class LayoutManager {
 		manager.beginLoadLayoutData();
 		try{
 			if(isValidLayout(manager, pageId, perspective)){
-				String pageLayout = MessageFormat.format(PAGE_LAYOUT, new Object[]{pageId, perspective.getId()});
+				String pageLayout = MessageFormat.format(PAGE_LAYOUT, pageId, perspective.getId());
 				manager.loadLayoutDataFrom(pageLayout);
 				return true;
 			}
@@ -75,6 +75,6 @@ public class LayoutManager {
 	 */
 	public static void savePageLayoutData(DockingManager manager, String pageId, String perspectiveId){
 		manager.saveLayoutDataAs(MessageFormat.format(PAGE_LAYOUT,
-				new Object[]{pageId, perspectiveId}));
+                pageId, perspectiveId));
 	}
 }

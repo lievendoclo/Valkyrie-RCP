@@ -30,9 +30,7 @@ import org.valkyriercp.application.PageDescriptor;
 public class JideApplicationPageFactory implements ApplicationPageFactory {
 
 	public ApplicationPage createApplicationPage(ApplicationWindow window, PageDescriptor pageDescriptor) {
-		
-		JideApplicationPage page = new JideApplicationPage(window,  pageDescriptor);
-		return page;
+        return new JideApplicationPage(window,  pageDescriptor);
 	}
 
 }

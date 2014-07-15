@@ -95,7 +95,7 @@ public class JideApplicationWindowFactory implements ApplicationWindowFactory {
 
     private void configureDockingManager(DockingManager manager){
     	if(layoutVersion != null){
-    		manager.setVersion(layoutVersion.shortValue());
+    		manager.setVersion(layoutVersion);
     	}
     	manager.setProfileKey(profileKey);
     	manager.setRearrangable(rearrangable);

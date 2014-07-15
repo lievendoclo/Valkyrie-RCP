@@ -65,7 +65,7 @@ public class JideApplicationPage extends DefaultApplicationPage {
 
 	private static final Logger log = LoggerFactory.getLogger(JideApplicationPage.class);
 
-	private Set pageViews = new HashSet();
+	private Set<String> pageViews = new HashSet<>();
     private JideApplicationWindow window;
     private WorkspaceView workspaceComponent;
     private JComponent control;
@@ -143,21 +143,21 @@ public class JideApplicationPage extends DefaultApplicationPage {
     public void updateShowViewCommands(){
     	ViewDescriptorRegistry viewDescriptorRegistry = ValkyrieRepository.getInstance().getApplicationConfig().viewDescriptorRegistry();
         ViewDescriptor[] views = viewDescriptorRegistry.getViewDescriptors();
-       
-    	for(int i=0;i<views.length;i++){
-    		String id = views[i].getId();
-    		CommandManager commandManager = window.getCommandManager();
-    		/*if(commandManager.containsActionCommand(id)){
-	    		ActionCommand command = 
+
+        for (ViewDescriptor view : views) {
+            String id = view.getId();
+            CommandManager commandManager = window.getCommandManager();
+            /*if(commandManager.containsActionCommand(id)){
+	    		ActionCommand command =
 	    			commandManager.getActionCommand(id);
 	    		command.setVisible(pageViews.contains(views[i].getId()));
     		}*/
-    		if(commandManager.isTypeMatch(id, ActionCommand.class)){
-    			ActionCommand command = 
-	    			(ActionCommand)commandManager.getCommand(id, ActionCommand.class);
-	    		command.setVisible(pageViews.contains(views[i].getId()));
-    		}
-    	}
+            if (commandManager.isTypeMatch(id, ActionCommand.class)) {
+                ActionCommand command =
+                        (ActionCommand) commandManager.getCommand(id, ActionCommand.class);
+                command.setVisible(pageViews.contains(view.getId()));
+            }
+        }
     }
     
 	protected boolean giveFocusTo(PageComponent pageComponent) {
@@ -211,18 +211,13 @@ public class JideApplicationPage extends DefaultApplicationPage {
 			log.debug("WorkspaceComponent is null");
 			return;
 		}
-		if(!(workspaceComponent instanceof WorkspaceView)){
-			log.debug("WorkspaceComponent is not a workspace view");
-			return;
-		}
     	PageDescriptor descriptor = getPageDescriptor();
     	if(descriptor instanceof JidePageDescriptor){
     		if(editorInput.getClass().isArray()){
     			Object[] array = (Object[])editorInput;
-    			for(int i=0;i<array.length;i++){
-    				Object editorObject = array[i];
-    	    		processEditorObject(editorObject, activateAfterOpen);
-    			}
+                for (Object editorObject : array) {
+                    processEditorObject(editorObject, activateAfterOpen);
+                }
     		}
     		else{
     			processEditorObject(editorInput, activateAfterOpen);
@@ -312,7 +307,7 @@ public class JideApplicationPage extends DefaultApplicationPage {
 			DockableFrame frame = createDockableFrame(pageComponent, viewDescriptor);
 			manager.addFrame(frame);
 			if(viewDescriptor.getShowTitleBar() != null){
-				frame.setShowTitleBar(viewDescriptor.getShowTitleBar().booleanValue());
+				frame.setShowTitleBar(viewDescriptor.getShowTitleBar());
 			}
 		}
 	}
@@ -337,34 +332,34 @@ public class JideApplicationPage extends DefaultApplicationPage {
 			dockableFrame.getContext().setInitSide(viewDescriptor.getInitSide());
 			dockableFrame.getContext().setInitIndex(viewDescriptor.getInitIndex());
 			if(viewDescriptor.getAutohidable() != null){
-				dockableFrame.setAutohidable(viewDescriptor.getAutohidable().booleanValue());
+				dockableFrame.setAutohidable(viewDescriptor.getAutohidable());
 			}
 			if(viewDescriptor.getFloatable() != null){
-				dockableFrame.setFloatable(viewDescriptor.getFloatable().booleanValue());
+				dockableFrame.setFloatable(viewDescriptor.getFloatable());
 			}
 			if(viewDescriptor.getDockable() != null){
-				dockableFrame.setDockable(viewDescriptor.getDockable().booleanValue());
+				dockableFrame.setDockable(viewDescriptor.getDockable());
 			}
 			if(viewDescriptor.getHidable() != null){
-				dockableFrame.setHidable(viewDescriptor.getHidable().booleanValue());
+				dockableFrame.setHidable(viewDescriptor.getHidable());
 			}
 			if(viewDescriptor.getSideDockAllowed() != null){
-				dockableFrame.setSideDockAllowed(viewDescriptor.getSideDockAllowed().booleanValue());
+				dockableFrame.setSideDockAllowed(viewDescriptor.getSideDockAllowed());
 			}
 			if(viewDescriptor.getSlidingAutohide() != null){
-				dockableFrame.setSlidingAutohide(viewDescriptor.getSlidingAutohide().booleanValue());
+				dockableFrame.setSlidingAutohide(viewDescriptor.getSlidingAutohide());
 			}
 			if(viewDescriptor.getTabDockAllowed() != null){
-				dockableFrame.setTabDockAllowed(viewDescriptor.getTabDockAllowed().booleanValue());
+				dockableFrame.setTabDockAllowed(viewDescriptor.getTabDockAllowed());
 			}
 			if(viewDescriptor.getShowGripper() != null){
-				dockableFrame.setShowGripper(viewDescriptor.getShowGripper().booleanValue());
+				dockableFrame.setShowGripper(viewDescriptor.getShowGripper());
 			}
 			if(viewDescriptor.getMaximizable() != null){
-				dockableFrame.setMaximizable(viewDescriptor.getMaximizable().booleanValue());
+				dockableFrame.setMaximizable(viewDescriptor.getMaximizable());
 			}
 			if(viewDescriptor.getRearrangable() != null){
-				dockableFrame.setRearrangable(viewDescriptor.getRearrangable().booleanValue());
+				dockableFrame.setRearrangable(viewDescriptor.getRearrangable());
 			}
 		}
 		else{
@@ -457,7 +452,7 @@ public class JideApplicationPage extends DefaultApplicationPage {
 				if(log.isDebugEnabled()){
 					log.debug("About to fire focus gained on the active workspace component");
 				}
-				WorkspaceView workspaceView = (WorkspaceView)workspaceComponent;
+				WorkspaceView workspaceView = workspaceComponent;
 				workspaceView.fireFocusGainedOnActiveComponent();
 			}
 		}

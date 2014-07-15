@@ -63,4 +63,6 @@ public interface ApplicationPage extends ControlFactory {
     View showView(ViewDescriptor viewDescriptor);
 
     View showView(ViewDescriptor viewDescriptor, Object input);
+
+    public void openEditor(Object editorInput);
 }
