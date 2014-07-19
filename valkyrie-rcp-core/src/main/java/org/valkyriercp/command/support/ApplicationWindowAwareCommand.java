@@ -5,6 +5,8 @@ import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.config.support.ApplicationWindowAware;
 import org.valkyriercp.util.ValkyrieRepository;
 
+import javax.swing.*;
+
 /**
  * A skeleton implementation of an action command that needs to be aware of the
  * {@link ApplicationWindow} in which it resides.
@@ -53,7 +55,7 @@ public abstract class ApplicationWindowAwareCommand extends ActionCommand implem
      *
      * @return The control component of the application window, never null.
      */
-    protected JXFrame getParentWindowControl() {
+    protected JFrame getParentWindowControl() {
         // allow subclasses to derive where the application window comes from
         final ApplicationWindow applicationWindow = getApplicationWindow();
         if (applicationWindow == null) {

@@ -21,7 +21,7 @@ public class ChangeLookAndFeelCommand extends ActionCommand {
         try {
             UIManager.setLookAndFeel(lookAndFeelClass);
             for(ApplicationWindow appWindow : ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getWindows()) {
-                JXFrame control = appWindow.getControl();
+                JFrame control = appWindow.getControl();
                 SwingUtilities.updateComponentTreeUI(control);
                 for(Window window : control.getOwnedWindows()) {
                     updateWindow(window);

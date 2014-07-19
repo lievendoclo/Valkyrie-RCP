@@ -98,7 +98,7 @@ public abstract class AbstractDialogExceptionHandler<SELF extends AbstractDialog
         }
     }
 
-    protected JXFrame resolveParentFrame() {
+    protected JFrame resolveParentFrame() {
         ApplicationWindow activeWindow = getApplicationConfig().windowManager().getActiveWindow();
         if(activeWindow == null)
             return null;
