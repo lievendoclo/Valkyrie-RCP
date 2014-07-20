@@ -183,6 +183,13 @@ project("valkyrie-rcp-integrations:valkyrie-rcp-vldocking") {
     }
 }
 
+project("valkyrie-rcp-integrations:valkyrie-rcp-dockingframes") {
+    dependencies {
+        compile project(":valkyrie-rcp-core")
+        compile "org.dockingframes:docking-frames-common:${dependencyVersions.dockingframes}"
+    }
+}
+
 project("valkyrie-rcp-samples:valkyrie-rcp-simple-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
@@ -238,6 +245,20 @@ project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
         classpath = sourceSets.main.runtimeClasspath
     }
 }
+
+project("valkyrie-rcp-samples:valkyrie-rcp-dockingframes-sample") {
+    dependencies {
+        compile project(":valkyrie-rcp-core")
+        compile project(":valkyrie-rcp-integrations:valkyrie-rcp-dockingframes")
+        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
+    }
+
+    task(runSample, dependsOn: 'classes', type: JavaExec) {
+        main = 'org.valkyriercp.sample.simple.DockingFramesSampleRunner'
+        classpath = sourceSets.main.runtimeClasspath
+    }
+}
+
 
 class Version {
     String originalVersion
