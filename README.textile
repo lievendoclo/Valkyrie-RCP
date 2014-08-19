@@ -14,20 +14,15 @@ A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is itself 
 
 The Valkyrie documentation is available "here":http://cmadsen.github.com/Valkyrie-RCP/.
 
-
 h2. Why ?
 
 Because the original project seems to be dead :(
 
-
 h2. And so, what's new ?
 
-* Updated dependency to Spring 3.2.2
-* Updated dependency to Spring Security 3.1.1
-* Fixed broken build for the manual
-* Released a 1.1 version available through maven central
-* Publish the "Valkyrie documentation":http://cmadsen.github.com/Valkyrie-RCP/
-
+* Updated dependency to Spring 4.0.5
+* Updated dependency to Spring Security 3.2.4
+* Released a 1.3 version available through maven central
 
 h2. How to get the released versions ?
 
@@ -40,7 +35,7 @@ The dependencies:
 bc. <dependency>
     <groupId>dk.navicon</groupId>
     <artifactId>valkyrie-rcp-core</artifactId>
-    <version>1.1</version>
+    <version>1.3</version>
 </dependency>
 
 
@@ -49,7 +44,7 @@ h3. Gradle
 The dependencies:
 
 bc. dependencies {
-        compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.1'
+        compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.3'
 }
 
 h2. How do I get my IDE to work and run samples
