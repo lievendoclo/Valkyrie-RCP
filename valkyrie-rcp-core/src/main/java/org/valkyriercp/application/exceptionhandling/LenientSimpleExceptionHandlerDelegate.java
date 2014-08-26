@@ -6,7 +6,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Handles the thrownTrowable by the exception handler if it is an instance of one of the throwableClassList by its
