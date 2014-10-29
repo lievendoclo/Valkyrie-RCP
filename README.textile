@@ -14,17 +14,14 @@ A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is itself 
 
 The Valkyrie documentation is available "here":http://cmadsen.github.com/Valkyrie-RCP/.
 
-
 h2. Why ?
 
 Because the original project seems to be dead :(
 
-
 h2. And so, what's new ?
 
-* Updated dependency to Spring 4.0.5
-* Updated dependency to Spring Security 3.2.4
 * Removed the @Configurable system, no longer is AspectJ needed to use Valkyrie RCP
+
 
 h2. How to get the released versions ?
 
@@ -46,7 +43,7 @@ h3. Gradle
 The dependencies:
 
 bc. dependencies {
-        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'2.0'
+        compile group: 'dk.navicon', name:'valkyrie-rcp-core', version:'1.1'
 }
 
 h2. How do I get my IDE to work and run samples
