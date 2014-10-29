@@ -22,7 +22,6 @@ h2. And so, what's new ?
 
 * Removed the @Configurable system, no longer is AspectJ needed to use Valkyrie RCP
 
-
 h2. How to get the released versions ?
 
 h3. Maven
