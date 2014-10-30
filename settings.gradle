@@ -1,4 +1,5 @@
 rootProject.name = "valkyrie-rcp"
+version="2.0.0-SNAPSHOT"
 
 include "valkyrie-rcp-core"
 include "valkyrie-rcp-resources"
