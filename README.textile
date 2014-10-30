@@ -21,6 +21,10 @@ Because the original project seems to be dead :(
 h2. And so, what's new ?
 
 * Removed the @Configurable system, no longer is AspectJ needed to use Valkyrie RCP
+* Fixed RCP-613
+* Fixed RCP-622
+* Fixed RCP-634
+* Started on integrating Jide Docking into the framework. Not yet production-ready.
 
 h2. How to get the released versions ?
 
@@ -42,14 +46,14 @@ h3. Gradle
 The dependencies:
 
 bc. dependencies {
-        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'1.1'
+        compile group: 'org.valkyriercp', name:'valkyrie-rcp-core', version:'2.0'
 }
 
 h2. How do I get my IDE to work and run samples
 
 h3. IntelliJ IDEA 12+
 
-Just import the project in IntelliJ using the JetGradle plugin.
+Just open the project in IntelliJ using the build.gradle file.
 
 h2. I found a bug, what can I do ?
 
