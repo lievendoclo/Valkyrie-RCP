@@ -7,6 +7,8 @@ buildscript {
     }
 }
 
+version = "2.0.0-SNAPSHOT"
+
 def props = new Properties()
 file("dependencies.properties").withInputStream { props.load(it) }
 ext.dependencyVersions = new ConfigSlurper().parse(props)
