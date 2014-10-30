@@ -14,7 +14,7 @@ ext.dependencyVersions = new ConfigSlurper().parse(props)
 def globalVersion = new Version(version)
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '2.1'
 }
 
 configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyrie-rcp-samples")) {
