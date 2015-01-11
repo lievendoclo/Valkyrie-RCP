@@ -326,8 +326,6 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		if (this instanceof ActionCommand && !isFaceConfigured()) {
 			logger.info("The face descriptor property is not yet set for action command '" + getId()
 					+ "'; configuring");
-            ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer().configure(this);
-
 		}
 	}
 
@@ -340,7 +338,11 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 				logger.info("Lazily instantiating default face descriptor on behalf of caller to prevent npe; "
 						+ "command is being configured manually, right?");
 			}
-			setFaceDescriptor(new CommandFaceDescriptor());
+			if(ValkyrieRepository.isCurrentlyRunningInContext()) {
+				ValkyrieRepository.getInstance().getApplicationConfig().commandConfigurer().configure(this);
+			} else {
+				setFaceDescriptor(new CommandFaceDescriptor());
+			}
 		}
 		return getFaceDescriptor();
 	}
