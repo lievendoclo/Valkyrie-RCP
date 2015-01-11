@@ -11,21 +11,27 @@ public class ValkyrieRepository {
     @Autowired
     private ApplicationConfig applicationConfig;
 
-    private static CountDownLatch latch = new CountDownLatch(1);
+//    private static CountDownLatch latch = new CountDownLatch(1);
 
     public ValkyrieRepository() {
         if(instance != null)
             throw new IllegalStateException("This class should only be instantiated once!");
         instance = this;
-        latch.countDown();
+//        latch.countDown();
+    }
+
+    public static boolean isCurrentlyRunningInContext() {
+        return instance != null;
     }
 
     public static ValkyrieRepository getInstance() {
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        if(instance == null)
+            throw new IllegalStateException("Instance not yet initialized by context");
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return instance;
     }
 
