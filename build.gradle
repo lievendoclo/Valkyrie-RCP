@@ -26,6 +26,7 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
 
     group = "org.valkyriercp"
     sourceCompatibility = 1.7
+    compileJava.options.encoding = 'UTF-8'
     version = globalVersion
     status = version.status
 
