@@ -1,5 +1,7 @@
+!https://travis-ci.org/lievendoclo/Valkyrie-RCP.svg?branch=master!
+
 h1. Valkyrie RCP
- 
+
 Valkyrie-RCP's mission is to provide an elegant way to build highly-configurable, GUI-standards-following rich-client applications faster by leveraging the Spring Framework, and a rich library of UI factories and support classes. Initial focus is on providing support for Swing applications but a goal of Valkyrie-RCP is to be view agnostic as much as possible.
 
 The goal of Valkyrie-RPC is to provide a viable option for developers that need a platform and a best-practices guide for constructing Swing applications quickly.
@@ -76,4 +78,3 @@ The documentation is provided as a single html, multi-page html and PDF.
 h2. Greetings
 
 Big thanks to "lievendoclo":http://twitter.com/lievendoclo for his work on this !
-
