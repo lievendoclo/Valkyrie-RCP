@@ -16,6 +16,12 @@ A fork of "Valkyrie RCP":http://www.gitorious.org/valkyrie-rcp, which is itself 
 
 The Valkyrie documentation is available "here":http://cmadsen.github.com/Valkyrie-RCP/.
 
+h2. License
+
+This project is licensed under the Apache License Version 2.0.
+
+Unless explicitly stated otherwise all files in this repository are licensed under the Apache Software License 2.0
+
 h2. Why ?
 
 Because the original project seems to be dead :(

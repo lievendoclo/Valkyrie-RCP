@@ -1,32 +1,37 @@
-/*
- * Copyright 2002-2008 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package org.valkyriercp.application.docking;
 
-import com.vldocking.swing.docking.*;
-import com.vldocking.swing.docking.event.*;
+import com.vldocking.swing.docking.DockKey;
+import com.vldocking.swing.docking.Dockable;
+import com.vldocking.swing.docking.DockableResolver;
+import com.vldocking.swing.docking.DockableState;
+import com.vldocking.swing.docking.DockingContext;
+import com.vldocking.swing.docking.DockingDesktop;
+import com.vldocking.swing.docking.event.DockableSelectionEvent;
+import com.vldocking.swing.docking.event.DockableSelectionListener;
+import com.vldocking.swing.docking.event.DockableStateChangeEvent;
+import com.vldocking.swing.docking.event.DockableStateChangeListener;
+import com.vldocking.swing.docking.event.DockableStateWillChangeEvent;
+import com.vldocking.swing.docking.event.DockableStateWillChangeListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.valkyriercp.application.*;
+import org.valkyriercp.application.ApplicationWindow;
+import org.valkyriercp.application.PageComponent;
+import org.valkyriercp.application.PageDescriptor;
+import org.valkyriercp.application.PageLayoutBuilder;
+import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.support.AbstractApplicationPage;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
 
 /**
  * @author Rogan Dawes

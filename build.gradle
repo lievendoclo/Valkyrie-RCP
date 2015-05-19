@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
     }
 }
 
@@ -23,6 +24,7 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
     apply plugin: "groovy"
     apply plugin: "idea"
     apply plugin: "eclipse"
+    apply plugin: "license"
 
     group = "org.valkyriercp"
     sourceCompatibility = 1.7
@@ -88,6 +90,12 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
         compile "org.slf4j:slf4j-api:${dependencyVersions.slf4j}"
         compile "org.slf4j:jcl-over-slf4j:${dependencyVersions.slf4j}"
         runtime "ch.qos.logback:logback-classic:${dependencyVersions.logback}"
+    }
+
+    license {
+        header rootProject.file('codequality/HEADER')
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        ext.name = 'Valkyrie RCP'
     }
 }
 
