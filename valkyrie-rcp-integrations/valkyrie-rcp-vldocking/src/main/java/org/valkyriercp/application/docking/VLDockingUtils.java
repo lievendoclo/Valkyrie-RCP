@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2015 Valkyrie RCP
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.valkyriercp.application.docking;
 
 import com.vldocking.swing.docking.*;
@@ -11,7 +26,7 @@ import java.beans.PropertyChangeEvent;
 /**
  * Utility class for dealing with VLDocking.
  *
- * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+ * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
  */
 public final class VLDockingUtils {
 
@@ -138,7 +153,7 @@ public final class VLDockingUtils {
     /**
      * A bean useful for dealing with focus changed events within VLDocking.
      *
-     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
      */
     public static class FocusGainedBean {
 
@@ -367,7 +382,7 @@ public final class VLDockingUtils {
     /**
      * A set of colors with its own semantic.
      *
-     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
      */
     public static enum DockingColor {
 
@@ -445,7 +460,7 @@ public final class VLDockingUtils {
     /**
      * An enum to distinguish between dock view types.
      *
-     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
      */
     public static enum DockViewType {
         /**

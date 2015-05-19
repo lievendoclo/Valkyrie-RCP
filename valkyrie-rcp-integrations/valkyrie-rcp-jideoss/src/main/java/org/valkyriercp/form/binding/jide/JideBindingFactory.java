@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2015 Valkyrie RCP
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.valkyriercp.form.binding.jide;
 
 import com.jidesoft.swing.DefaultOverlayable;
@@ -19,7 +34,7 @@ import java.util.Map;
  * AOP interception the returned binding factory is a <code>$Proxy</code> class that cannot be assigned to
  * <code>SwingBindingFactory</code>. That's the reason why rewriting interface methods is the more suitable way.
  *
- * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+ * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
  *
  * @see JideRepaintManager, since according to <a href="http://forums.sun.com/thread.jspa?threadID=725127">this
  *      thread</a> the "unique" way to listen for repaint changes is overriding <code>RepaintManager</code>. This is not
@@ -101,7 +116,7 @@ public class JideBindingFactory extends SwingBindingFactory {
     /**
      * A binding implementation that wraps the original control into an overlay ready component.
      *
-     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Argüello (JAF)</a>
+     * @author <a href = "mailto:julio.arguello@gmail.com" >Julio Arg??ello (JAF)</a>
      *
      * @see DefaultOverlayable
      */
