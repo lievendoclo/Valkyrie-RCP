@@ -1,14 +1,20 @@
+import org.omg.CORBA.portable.Delegate
+
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'us.kirchmeier:gradle-capsule-plugin:1.0.0'
     }
 }
 
-version = "2.0.0-SNAPSHOT"
+version = "2.0.0"
 
 def props = new Properties()
 file("dependencies.properties").withInputStream { props.load(it) }
@@ -17,7 +23,7 @@ ext.dependencyVersions = new ConfigSlurper().parse(props)
 def globalVersion = new Version(version)
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
+    gradleVersion = '2.7'
 }
 
 configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyrie-rcp-samples")) {
@@ -25,6 +31,7 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
     apply plugin: "idea"
     apply plugin: "eclipse"
     apply plugin: "license"
+    apply plugin: "maven"
 
     group = "org.valkyriercp"
     sourceCompatibility = 1.7
@@ -58,10 +65,6 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
 
     jar {
         enabled = !sourceSets.main.allSource.empty
-        manifest.attributes["Created-By"] =
-            "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-        manifest.attributes["Implementation-Title"] = project.name
-        manifest.attributes["Implementation-Version"] = project.version
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -203,6 +206,8 @@ project("valkyrie-rcp-integrations:valkyrie-rcp-dockingframes") {
 }
 
 project("valkyrie-rcp-samples:valkyrie-rcp-simple-sample") {
+    apply plugin: 'us.kirchmeier.capsule'
+
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
@@ -213,9 +218,15 @@ project("valkyrie-rcp-samples:valkyrie-rcp-simple-sample") {
         main = 'org.valkyriercp.sample.simple.SimpleSampleRunner'
         classpath = sourceSets.main.runtimeClasspath
     }
+
+    task(fatCapsule, type: FatCapsule) {
+        applicationClass 'org.valkyriercp.sample.simple.SimpleSampleRunner'
+    }
 }
 
 project("valkyrie-rcp-samples:valkyrie-rcp-showcase-sample") {
+    apply plugin: 'us.kirchmeier.capsule'
+
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
@@ -226,10 +237,16 @@ project("valkyrie-rcp-samples:valkyrie-rcp-showcase-sample") {
         main = 'org.valkyriercp.sample.showcase.ShowcaseRunner'
         classpath = sourceSets.main.runtimeClasspath
     }
+
+    task(fatCapsule, type: FatCapsule) {
+        applicationClass 'org.valkyriercp.sample.showcase.ShowcaseRunner'
+    }
 }
 
 
 project("valkyrie-rcp-samples:valkyrie-rcp-dataeditor-sample") {
+    apply plugin: 'us.kirchmeier.capsule'
+
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
@@ -242,10 +259,16 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dataeditor-sample") {
         main = 'org.valkyriercp.sample.dataeditor.DataEditorApp'
         classpath = sourceSets.main.runtimeClasspath
     }
+
+    task(fatCapsule, type: FatCapsule) {
+        applicationClass 'org.valkyriercp.sample.dataeditor.DataEditorApp'
+    }
 }
 
 
 project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
+    apply plugin: 'us.kirchmeier.capsule'
+
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-vldocking")
@@ -256,9 +279,15 @@ project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
         main = 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
         classpath = sourceSets.main.runtimeClasspath
     }
+
+    task(fatCapsule, type: FatCapsule) {
+        applicationClass 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
+    }
 }
 
 project("valkyrie-rcp-samples:valkyrie-rcp-dockingframes-sample") {
+    apply plugin: 'us.kirchmeier.capsule'
+
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-dockingframes")
@@ -269,8 +298,11 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dockingframes-sample") {
         main = 'org.valkyriercp.sample.simple.DockingFramesSampleRunner'
         classpath = sourceSets.main.runtimeClasspath
     }
-}
 
+    task(fatCapsule, type: FatCapsule) {
+        applicationClass 'org.valkyriercp.sample.simple.DockingFramesSampleRunner'
+    }
+}
 
 class Version {
     String originalVersion
