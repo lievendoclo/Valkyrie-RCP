@@ -93,13 +93,6 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
         compile "org.slf4j:jcl-over-slf4j:${dependencyVersions.slf4j}"
         runtime "ch.qos.logback:logback-classic:${dependencyVersions.logback}"
     }
-
-    license {
-        header rootProject.file('codequality/HEADER')
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
-        ext.name = 'Valkyrie RCP'
-        includes(["**/*.groovy", "**/*.java", "**/*.properties"])
-    }
 }
 
 configure([
