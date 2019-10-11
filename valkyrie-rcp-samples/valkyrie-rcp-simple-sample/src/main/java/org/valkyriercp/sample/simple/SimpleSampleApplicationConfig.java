@@ -25,6 +25,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.valkyriercp.application.ViewDescriptor;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
 import org.valkyriercp.application.config.support.AbstractApplicationConfig;
@@ -122,9 +124,18 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 				return object;
 			}
 		};
+		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		return new AuthenticationManagerBuilder(objectPostProcessor)
-				.inMemoryAuthentication().withUser("user").password("user")
-				.roles("USER").and().withUser("admin").password("admin")
-				.roles("ADMIN").and().and().build();
+				.inMemoryAuthentication()
+					.withUser("user")
+						.password(encoder.encode("user"))
+						.roles("USER")
+						.and()
+					.withUser("admin")
+						.password(encoder.encode("admin"))
+						.roles("ADMIN")
+						.and()
+					.and()
+				.build();
 	}
 }

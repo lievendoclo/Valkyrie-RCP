@@ -16,6 +16,7 @@
 package org.valkyriercp.sample.dataeditor;
 
 import com.google.common.collect.Lists;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
 import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -31,6 +32,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.ApplicationWindowFactory;
@@ -89,12 +92,12 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Override
     protected void configureAuthorityMap(Map<String, String> idAuthorityMap) {
         super.configureAuthorityMap(idAuthorityMap);
-        idAuthorityMap.put("itemDataEditor.addrow", "ADMIN");
-        idAuthorityMap.put("itemDataEditor.removerow", "ADMIN");
-        idAuthorityMap.put("itemDataEditor.update", "ADMIN");
-        idAuthorityMap.put("itemDataEditor.create", "ADMIN");
-        idAuthorityMap.put("itemForm.save", "ADMIN");
-        idAuthorityMap.put("itemForm", "ADMIN");
+        idAuthorityMap.put("itemDataEditor.addrow", "ROLE_ADMIN");
+        idAuthorityMap.put("itemDataEditor.removerow", "ROLE_ADMIN");
+        idAuthorityMap.put("itemDataEditor.update", "ROLE_ADMIN");
+        idAuthorityMap.put("itemDataEditor.create", "ROLE_ADMIN");
+        idAuthorityMap.put("itemForm.save", "ROLE_ADMIN");
+        idAuthorityMap.put("itemForm", "ROLE_ADMIN");
     }
 
     @Override
@@ -105,7 +108,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public UIManagerConfigurer uiManagerConfigurer() {
         UIManagerConfigurer configurer = new UIManagerConfigurer();
-        configurer.setLookAndFeel(SubstanceMistAquaLookAndFeel.class);
+        configurer.setLookAndFeel(PlasticXPLookAndFeel.class);
         return configurer;
     }
 
@@ -202,8 +205,9 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         List<UserDetails> userDetailsList = Lists.newArrayList();
-        userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
-        userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        userDetailsList.add(User.builder().username("admin").password(encoder.encode("admin")).roles("ADMIN").build());
+        userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).roles("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
         return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));

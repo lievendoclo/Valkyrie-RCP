@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author Arne Limburg
  */
-public abstract class GenericCollectionTypeResolver extends org.springframework.core.GenericCollectionTypeResolver {
+public abstract class GenericCollectionTypeResolver {
 
    /**
     * Determine the generic element type of the given Collection class

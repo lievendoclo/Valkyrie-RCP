@@ -16,7 +16,6 @@
 package org.valkyriercp.binding.beans;
 
 import org.springframework.beans.*;
-import org.springframework.core.JdkVersion;
 import org.springframework.core.MethodParameter;
 
 import java.lang.reflect.*;
@@ -198,16 +197,12 @@ public class DefaultMemberPropertyAccessor extends AbstractNestedMemberPropertyA
         if (map.containsKey(key)) {
             return map.get(key);
         } else {
-            if (JdkVersion.getMajorJavaVersion() < JdkVersion.JAVA_15) {
-                // we don't know the type of the keys, so we fall back to
-                // comparing toString()
-                for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
-                    Map.Entry entry = (Map.Entry) i.next();
-                    if (entry.getKey() == key
-                            || (entry.getKey() != null && key != null && entry.getKey().toString().equals(
-                            key.toString()))) {
-                        return entry.getValue();
-                    }
+            for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
+                Map.Entry entry = (Map.Entry) i.next();
+                if (entry.getKey() == key
+                        || (entry.getKey() != null && key != null && entry.getKey().toString().equals(
+                        key.toString()))) {
+                    return entry.getValue();
                 }
             }
             return null;

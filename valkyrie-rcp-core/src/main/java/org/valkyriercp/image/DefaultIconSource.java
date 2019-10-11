@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.collection.AbstractCachingMapDecorator;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -32,7 +33,7 @@ import java.awt.*;
  *
  * @author Keith Donald
  */
-@org.springframework.stereotype.Component
+@Component
 public class DefaultIconSource implements IconSource {
     protected static final Log logger = LogFactory.getLog(DefaultIconSource.class);
 

@@ -18,9 +18,10 @@ package org.valkyriercp.security.support;
 import com.google.common.collect.Lists;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.ConfigAttributeEditor;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -73,10 +74,9 @@ public class UserRoleSecurityController extends AbstractSecurityController {
      */
     public UserRoleSecurityController() {
         // Install the default decision manager
-        AffirmativeBased adm = new AffirmativeBased();
-        List<AccessDecisionVoter> voters = Lists.newArrayList();
+        List<AccessDecisionVoter<?>> voters = Lists.newArrayList();
         voters.add(new RoleVoter());
-        adm.setDecisionVoters(voters);
+        AffirmativeBased adm = new AffirmativeBased(voters);
         setAccessDecisionManager( adm );
     }
 
@@ -90,10 +90,7 @@ public class UserRoleSecurityController extends AbstractSecurityController {
         // The ConfigAttributeEditor is named incorrectly, so you can't use it
         // to automatically convert the string to a ConfigAttributeDefinition.
         // So, we do it manually :-(
-
-        ConfigAttributeEditor editor = new ConfigAttributeEditor();
-        editor.setAsText( roles );
-        this.roles = (List<ConfigAttribute>) editor.getValue();
+        this.roles = SecurityConfig.createList(StringUtils.commaDelimitedListToStringArray(roles));
         rolesString = roles;
     }
 

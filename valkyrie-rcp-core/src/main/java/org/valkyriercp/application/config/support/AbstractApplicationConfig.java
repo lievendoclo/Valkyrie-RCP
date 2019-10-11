@@ -290,11 +290,9 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 		configureAuthorityMap(idAuthorityMap);
 		authorityConfigurableSecurityController
 				.setIdAuthorityMap(idAuthorityMap);
-		AffirmativeBased accessDecisionManager = new AffirmativeBased();
 		RoleVoter roleVoter = new RoleVoter();
 		roleVoter.setRolePrefix("");
-		accessDecisionManager.setDecisionVoters(Lists
-				.<AccessDecisionVoter> newArrayList(roleVoter));
+		AffirmativeBased accessDecisionManager = new AffirmativeBased(Lists.newArrayList(roleVoter));
 		authorityConfigurableSecurityController
 				.setAccessDecisionManager(accessDecisionManager);
 		return authorityConfigurableSecurityController;

@@ -1,5 +1,3 @@
-import org.omg.CORBA.portable.Delegate
-
 buildscript {
     repositories {
         jcenter()
@@ -16,15 +14,7 @@ buildscript {
 
 version = "2.0.0"
 
-def props = new Properties()
-file("dependencies.properties").withInputStream { props.load(it) }
-ext.dependencyVersions = new ConfigSlurper().parse(props)
-
 def globalVersion = new Version(version)
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
-}
 
 configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyrie-rcp-samples")) {
     apply plugin: "groovy"
@@ -33,7 +23,7 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
     apply plugin: "maven"
 
     group = "org.valkyriercp"
-    sourceCompatibility = 1.7
+    sourceCompatibility = 1.8
     compileJava.options.encoding = 'UTF-8'
     version = globalVersion
     status = version.status
@@ -84,14 +74,14 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
     }
 
     dependencies {
-        testCompile "junit:junit:${dependencyVersions.junit}"
-        testCompile "org.spockframework:spock-spring:${dependencyVersions.spock}"
-        testCompile "org.codehaus.groovy:groovy-all:${dependencyVersions.groovy}"
-        testCompile "org.gcontracts:gcontracts-core:${dependencyVersions.gcontracts}"
-        testCompile "org.springframework:spring-test:${dependencyVersions.spring.framework}"
-        compile "org.slf4j:slf4j-api:${dependencyVersions.slf4j}"
-        compile "org.slf4j:jcl-over-slf4j:${dependencyVersions.slf4j}"
-        runtime "ch.qos.logback:logback-classic:${dependencyVersions.logback}"
+        testCompile "junit:junit:4.12"
+        testCompile "org.spockframework:spock-spring:1.3-groovy-2.4"
+        testCompile "org.codehaus.groovy:groovy-all:2.4.17"
+        testCompile "org.gcontracts:gcontracts-core:1.2.12"
+        testCompile "org.springframework:spring-test:5.1.9.RELEASE"
+        compile "org.slf4j:slf4j-api:1.7.28"
+        compile "org.slf4j:jcl-over-slf4j:1.7.28"
+        runtime "ch.qos.logback:logback-classic:1.2.3"
     }
 }
 
@@ -129,71 +119,72 @@ configure([
 
 project("valkyrie-rcp-resources") {
     dependencies {
-        compile "com.famfamfam:silk:${dependencyVersions.silk}"
-        compile "org.freedesktop.tango:tango-icon-theme:${dependencyVersions.tango}"
+        compile "com.famfamfam:silk:1.3"
+        compile "org.freedesktop.tango:tango-icon-theme:0.8.90"
     }
 }
 
 project("valkyrie-rcp-core") {
     dependencies {
         compile project(":valkyrie-rcp-resources")
-        compile "com.l2fprod:l2fprod-common-all:${dependencyVersions.l2fprod}"
-        compile "net.java.dev.glazedlists:glazedlists_java15:${dependencyVersions.glazedlists}"
-        compile "commons-beanutils:commons-beanutils:${dependencyVersions.commons.beanutils}"
-        compile "org.apache.httpcomponents:httpclient:${dependencyVersions.httpclient}"
-        compile "com.google.guava:guava:${dependencyVersions.guava}"
-        compile "org.springframework.security:spring-security-core:${dependencyVersions.spring.security}"
-        compile "org.springframework.security:spring-security-config:${dependencyVersions.spring.security}"
-        compile "org.springframework:spring-web:${dependencyVersions.spring.framework}"
-        compile "org.swinglabs.swingx:swingx-all:${dependencyVersions.swingx}"
-        compile "com.jgoodies:forms:${dependencyVersions.jgoodies.forms}"
-        compile "javax.help:javahelp:${dependencyVersions.jhelp}"
-        compile("org.springframework.webflow:spring-binding:${dependencyVersions.spring.binding}") {
+        compile "com.l2fprod:l2fprod-common-all:7.3"
+        compile "net.java.dev.glazedlists:glazedlists_java15:1.9.1"
+        compile "commons-beanutils:commons-beanutils:1.9.4"
+        compile "org.apache.httpcomponents:httpclient:4.5.10"
+        compile "com.google.guava:guava:28.1-jre"
+        compile "org.springframework.security:spring-security-core:5.1.6.RELEASE"
+        compile "org.springframework.security:spring-security-config:5.1.6.RELEASE"
+        compile "org.springframework:spring-websocket:5.1.9.RELEASE"
+        compile "org.swinglabs.swingx:swingx-all:1.6.5-1"
+        compile "com.jgoodies:forms:1.2.1"
+        compile "javax.help:javahelp:2.0.05"
+        compile 'javax.annotation:javax.annotation-api:1.3.2'
+        compile("org.springframework.webflow:spring-binding:2.5.1.RELEASE") {
             exclude module: "spring-beans"
             exclude module: "spring-core"
             exclude module: "spring-context"
             exclude module: "spring-expression"
         }
-        compile "javax.validation:validation-api:${dependencyVersions.validation.api}"
-        compile "com.miglayout:miglayout-swing:${dependencyVersions.miglayout}"
-        compile "com.google.code.gson:gson:${dependencyVersions.gson}"
+        compile "javax.validation:validation-api:2.0.1.Final"
+        compile "com.miglayout:miglayout-swing:5.2"
+        compile "com.google.code.gson:gson:2.8.5"
     }
 }
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-jodatime") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "joda-time:joda-time:${dependencyVersions.jodatime}"
+        compile "joda-time:joda-time:2.10.3"
     }
 }
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-jideoss") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "com.jidesoft:jide-oss:${dependencyVersions.jide}"
+        compile "com.jidesoft:jide-oss:3.6.0"
     }
 }
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-jidedocking") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "com.jidesoft:jide-components:${dependencyVersions.jide}"
-        compile "com.jidesoft:jide-dock:${dependencyVersions.jide}"
-        compile "com.jidesoft:jide-common:${dependencyVersions.jide}"
+        compile "com.jidesoft:jide-components:3.6.0"
+        compile "com.jidesoft:jide-dock:3.6.0"
+        compile "com.jidesoft:jide-common:3.6.0"
     }
 }
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-vldocking") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "com.vlsolutions:vldocking:${dependencyVersions.vldocking}"
+        compile "com.vlsolutions:vldocking:3.0.2"
     }
 }
 
 project("valkyrie-rcp-integrations:valkyrie-rcp-dockingframes") {
     dependencies {
         compile project(":valkyrie-rcp-core")
-        compile "org.dockingframes:docking-frames-common:${dependencyVersions.dockingframes}"
+        compile "org.dockingframes:docking-frames-common:1.1.1"
     }
 }
 
@@ -203,16 +194,7 @@ project("valkyrie-rcp-samples:valkyrie-rcp-simple-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
-        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
-    }
-
-    task(runSample, dependsOn: 'classes', type: JavaExec) {
-        main = 'org.valkyriercp.sample.simple.SimpleSampleRunner'
-        classpath = sourceSets.main.runtimeClasspath
-    }
-
-    task(fatCapsule, type: FatCapsule) {
-        applicationClass 'org.valkyriercp.sample.simple.SimpleSampleRunner'
+        compile "com.jgoodies:jgoodies-looks:2.7.0"
     }
 }
 
@@ -222,16 +204,7 @@ project("valkyrie-rcp-samples:valkyrie-rcp-showcase-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
-        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
-    }
-
-    task(runSample, dependsOn: 'classes', type: JavaExec) {
-        main = 'org.valkyriercp.sample.showcase.ShowcaseRunner'
-        classpath = sourceSets.main.runtimeClasspath
-    }
-
-    task(fatCapsule, type: FatCapsule) {
-        applicationClass 'org.valkyriercp.sample.showcase.ShowcaseRunner'
+        compile "com.jgoodies:jgoodies-looks:2.7.0"
     }
 }
 
@@ -242,18 +215,9 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dataeditor-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
-        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
-        compile "com.github.insubstantial:substance:${dependencyVersions.substance}"
-        compile "com.github.insubstantial:substance-swingx:${dependencyVersions.substance}"
-    }
-
-    task(runSample, dependsOn: 'classes', type: JavaExec) {
-        main = 'org.valkyriercp.sample.dataeditor.DataEditorApp'
-        classpath = sourceSets.main.runtimeClasspath
-    }
-
-    task(fatCapsule, type: FatCapsule) {
-        applicationClass 'org.valkyriercp.sample.dataeditor.DataEditorApp'
+        compile "com.jgoodies:jgoodies-looks:2.7.0"
+        compile "com.github.insubstantial:substance:7.3"
+        compile "com.github.insubstantial:substance-swingx:7.3"
     }
 }
 
@@ -264,16 +228,7 @@ project("valkyrie-rcp-samples:valkyrie-rcp-vldocking-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-vldocking")
-        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
-    }
-
-    task(runSample, dependsOn: 'classes', type: JavaExec) {
-        main = 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
-        classpath = sourceSets.main.runtimeClasspath
-    }
-
-    task(fatCapsule, type: FatCapsule) {
-        applicationClass 'org.valkyriercp.sample.simple.VLDockingSampleRunner'
+        compile "com.jgoodies:jgoodies-looks:2.7.0"
     }
 }
 
@@ -283,16 +238,7 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dockingframes-sample") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-dockingframes")
-        compile "com.jgoodies:jgoodies-looks:${dependencyVersions.jgoodies.looks}"
-    }
-
-    task(runSample, dependsOn: 'classes', type: JavaExec) {
-        main = 'org.valkyriercp.sample.simple.DockingFramesSampleRunner'
-        classpath = sourceSets.main.runtimeClasspath
-    }
-
-    task(fatCapsule, type: FatCapsule) {
-        applicationClass 'org.valkyriercp.sample.simple.DockingFramesSampleRunner'
+        compile "com.jgoodies:jgoodies-looks:2.7.0"
     }
 }
 

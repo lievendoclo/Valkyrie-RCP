@@ -141,7 +141,7 @@ public class DataEditorSplash implements MonitoringSplashScreen {
 		WindowUtils.centerOnScreen(frame);
 		try {
 			UIManager
-					.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+					.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

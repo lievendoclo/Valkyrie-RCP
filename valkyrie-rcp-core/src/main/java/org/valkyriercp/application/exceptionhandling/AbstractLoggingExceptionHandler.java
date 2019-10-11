@@ -18,7 +18,6 @@ package org.valkyriercp.application.exceptionhandling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.springframework.core.ErrorCoded;
 
 import java.sql.SQLException;
 
@@ -131,9 +130,7 @@ public abstract class AbstractLoggingExceptionHandler<SELF extends AbstractLoggi
     }
 
     protected String extractErrorCode(Throwable throwable) {
-        if (throwable instanceof ErrorCoded) {
-            return ((ErrorCoded) throwable).getErrorCode();
-        } else if (throwable instanceof SQLException) {
+        if (throwable instanceof SQLException) {
             return Integer.toString(((SQLException) throwable).getErrorCode());
         } else {
             return null;

@@ -19,7 +19,6 @@ import org.springframework.beans.AbstractPropertyAccessor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.NotReadablePropertyException;
-import org.springframework.core.JdkVersion;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 
@@ -221,30 +220,15 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 	public Class getPropertyType(String propertyName) {
 		if (PropertyAccessorUtils.isIndexedProperty(propertyName)) {
 			int nestingLevel = PropertyAccessorUtils.getNestingLevel(propertyName);
-			if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-				Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
-				if (accessor instanceof Field) {
-					return GenericCollectionTypeResolver.getIndexedValueFieldType((Field) accessor, nestingLevel);
-				}
-				else {
-					Method accessorMethod = (Method) accessor;
-					MethodParameter parameter = new MethodParameter(accessorMethod,
-							accessorMethod.getParameterTypes().length - 1);
-					return GenericCollectionTypeResolver.getIndexedValueMethodType(parameter, nestingLevel);
-				}
+			Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
+			if (accessor instanceof Field) {
+				return GenericCollectionTypeResolver.getIndexedValueFieldType((Field) accessor, nestingLevel);
 			}
 			else {
-				// we can only resolve array types in Java 1.4
-				Class type = getPropertyType(getRootPropertyName(propertyName));
-				for (int i = 0; i < nestingLevel; i++) {
-					if (type.isArray()) {
-						type = type.getComponentType();
-					}
-					else {
-						return Object.class; // cannot resolve type
-					}
-				}
-				return type;
+				Method accessorMethod = (Method) accessor;
+				MethodParameter parameter = new MethodParameter(accessorMethod,
+						accessorMethod.getParameterTypes().length - 1);
+				return GenericCollectionTypeResolver.getIndexedValueMethodType(parameter, nestingLevel);
 			}
 		}
 		else {
@@ -283,23 +267,18 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 		if (!Map.class.isAssignableFrom(type)) {
 			return Integer.class;
 		}
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			int nestingLevel = PropertyAccessorUtils.getNestingLevel(propertyName) - 1;
-			Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
-			if (accessor instanceof Field) {
-				return GenericCollectionTypeResolver.getMapKeyFieldType((Field) accessor, nestingLevel);
-			}
-			else if (accessor instanceof Method) {
-				MethodParameter parameter = new MethodParameter((Method) accessor, ((Method) accessor)
-						.getParameterTypes().length - 1, nestingLevel);
-				return GenericCollectionTypeResolver.getMapKeyParameterType(parameter);
-			}
-			else {
-				throw new InvalidPropertyException(getTargetClass(), propertyName, "property not accessable");
-			}
+		int nestingLevel = PropertyAccessorUtils.getNestingLevel(propertyName) - 1;
+		Member accessor = getPropertyAccessor(getRootPropertyName(propertyName));
+		if (accessor instanceof Field) {
+			return GenericCollectionTypeResolver.getMapKeyFieldType((Field) accessor, nestingLevel);
+		}
+		else if (accessor instanceof Method) {
+			MethodParameter parameter = new MethodParameter((Method) accessor, ((Method) accessor)
+					.getParameterTypes().length - 1, nestingLevel);
+			return GenericCollectionTypeResolver.getMapKeyParameterType(parameter);
 		}
 		else {
-			return String.class; // the default for Java 1.4
+			throw new InvalidPropertyException(getTargetClass(), propertyName, "property not accessable");
 		}
 	}
 
@@ -473,20 +452,10 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 	}
 
 	protected NotReadablePropertyException createNotReadablePropertyException(String propertyName, Exception e) {
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_14) {
-			NotReadablePropertyException beanException = new NotReadablePropertyException(getTargetClass(),
-					propertyName);
-			beanException.initCause(e);
-			return beanException;
-		}
-		else {
-			ByteArrayOutputStream stackTrace = new ByteArrayOutputStream();
-			PrintWriter stackTraceWriter = new PrintWriter(stackTrace);
-			e.printStackTrace(stackTraceWriter);
-			stackTraceWriter.close();
-			return new NotReadablePropertyException(getTargetClass(), propertyName,
-					new String(stackTrace.toByteArray()));
-		}
+		NotReadablePropertyException beanException = new NotReadablePropertyException(getTargetClass(),
+				propertyName);
+		beanException.initCause(e);
+		return beanException;
 	}
 
 	/**

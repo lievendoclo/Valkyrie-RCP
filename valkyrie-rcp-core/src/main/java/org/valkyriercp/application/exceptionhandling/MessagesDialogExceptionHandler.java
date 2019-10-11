@@ -17,7 +17,6 @@ package org.valkyriercp.application.exceptionhandling;
 
 import com.google.common.base.Strings;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.ErrorCoded;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -113,12 +112,7 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
         }
         List<String> messageKeyList = new ArrayList<String>();
         Class clazz = throwable.getClass();
-        if (throwable instanceof ErrorCoded)
-        {
-            messageKeyList.add(((ErrorCoded) throwable).getErrorCode() + keySuffix);
-        }
-        if (throwable instanceof SQLException)
-        {
+        if (throwable instanceof SQLException) {
             messageKeyList.add(SQLException.class.getName() + "." + ((SQLException) throwable).getErrorCode() + keySuffix);
         }
         while (clazz != Object.class) {
