@@ -15,6 +15,7 @@
  */
 package org.valkyriercp.sample.simple;
 
+import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import org.valkyriercp.application.support.HelpContentsCommand;
 import org.valkyriercp.command.config.AbstractCommandConfig;
 import org.valkyriercp.command.support.CommandGroup;
 import org.valkyriercp.command.support.CommandGroupFactoryBean;
+import org.valkyriercp.command.support.GlobalCommandIds;
 
 @Configuration
 public class SimpleSampleCommandConfig extends AbstractCommandConfig {
@@ -53,8 +55,8 @@ public class SimpleSampleCommandConfig extends AbstractCommandConfig {
 		fileMenuFactory.setGroupId("fileMenu");
 		fileMenuFactory.setMembers(newMenu(),
 				CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE,
-				"propertiesCommand",
-				CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, "deleteCommand",
+				GlobalCommandIds.PROPERTIES,
+				CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, GlobalCommandIds.DELETE,
 				CommandGroupFactoryBean.SEPARATOR_MEMBER_CODE, logoutCommand(),
 				exitCommand());
 		return fileMenuFactory.getCommandGroup();

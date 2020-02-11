@@ -22,12 +22,12 @@ class MultiViewPageDescriptorSpec extends Specification {
     def testBuildInitialLayout() {
         given:
         MultiViewPageDescriptor pageDescriptor = new MultiViewPageDescriptor();
-        List descriptors = new ArrayList();
+        List<String> descriptors = new ArrayList();
         descriptors.add("view0");
         descriptors.add("view1");
         descriptors.add("view2");
         descriptors.add("view3");
-        pageDescriptor.setViewDescriptors(descriptors);
+        pageDescriptor.setViewDescriptorIds(descriptors);
         PageLayoutBuilder mockBuilder = Mock(PageLayoutBuilder);
 
         when:

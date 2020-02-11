@@ -15,8 +15,11 @@
  */
 package org.valkyriercp.command.support;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -37,6 +40,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * <p>
@@ -84,7 +88,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
     private String[] authorities;
 
-	private Map faceButtonManagers;
+	private Cache<String, CommandFaceButtonManager> faceButtonManagers = CacheBuilder.newBuilder().build();
 
 	private CommandServices commandServices;
 
@@ -619,7 +623,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 		if (this.faceButtonManagers == null)
 			return Collections.EMPTY_SET.iterator();
 
-		return new NestedButtonIterator(this.faceButtonManagers.values().iterator());
+		return new NestedButtonIterator(this.faceButtonManagers.asMap().values().iterator());
 	}
 
 	/**
@@ -943,15 +947,12 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * with the {@link CommandFaceDescriptor}.
 	 */
 	private CommandFaceButtonManager getButtonManager(String faceDescriptorId) {
-		if (this.faceButtonManagers == null) {
-			this.faceButtonManagers = new AbstractCachingMapDecorator() {
-				protected Object create(Object key) {
-					return new CommandFaceButtonManager(AbstractCommand.this, (String) key);
-				}
-			};
+		try {
+			return this.faceButtonManagers.get(faceDescriptorId, () ->
+					new CommandFaceButtonManager(AbstractCommand.this, faceDescriptorId));
+		} catch (ExecutionException e) {
+			throw new RuntimeException("Error getting button manager for " + faceDescriptorId);
 		}
-		CommandFaceButtonManager m = (CommandFaceButtonManager) this.faceButtonManagers.get(faceDescriptorId);
-		return m;
 	}
 
 	/**

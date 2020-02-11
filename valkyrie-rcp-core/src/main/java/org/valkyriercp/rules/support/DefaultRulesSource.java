@@ -15,9 +15,11 @@
  */
 package org.valkyriercp.rules.support;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -42,11 +44,11 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
 
     private static final String DEFAULT_CONTEXT_ID = "default";
 
-    private Map ruleContexts = new AbstractCachingMapDecorator() {
-        protected Object create(Object key) {
+    private LoadingCache ruleContexts = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+        public Object load(Object key) {
             return new HashMap();
         }
-    };
+    });
 
     /**
      * Add or update the rules for a single bean class.
@@ -69,7 +71,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
     }
 
     private Map getRuleContext(String contextId) {
-        return (Map) ruleContexts.get(contextId);
+        return (Map) ruleContexts.getUnchecked(contextId);
     }
 
     /**

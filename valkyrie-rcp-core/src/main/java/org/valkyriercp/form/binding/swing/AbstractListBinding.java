@@ -15,8 +15,8 @@
  */
 package org.valkyriercp.form.binding.swing;
 
-import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.ConversionService;
+import org.valkyriercp.convert.ConversionException;
+import org.valkyriercp.convert.ConversionService;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueModel;
@@ -151,7 +151,7 @@ public abstract class AbstractListBinding extends AbstractBinding {
      *            the target class to convert the value to
      * @return the converted value
      *
-     * @throws org.springframework.binding.convert.ConversionException
+     * @throws org.valkyriercp.convert.ConversionException
      *             if the value can not be converted
      */
     protected Object convertValue(Object value, Class targetClass) throws ConversionException {

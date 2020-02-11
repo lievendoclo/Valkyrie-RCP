@@ -61,4 +61,5 @@ public interface ImageSource {
      */
     public AwtImageResource getImageResource(String key);
 
+    boolean hasImageFor(Object key);
 }

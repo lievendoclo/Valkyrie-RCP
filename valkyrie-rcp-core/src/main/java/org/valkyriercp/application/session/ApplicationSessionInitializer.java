@@ -15,6 +15,7 @@
  */
 package org.valkyriercp.application.session;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -76,9 +77,17 @@ public class ApplicationSessionInitializer
      /**
      * Sets the list of command ids to be executed before startup of the application window
      */
-    public void setPreStartupCommands(List<String> commandIds)
+    public void setPreStartupCommandIds(List<String> commandIds)
     {
         this.preStartupCommands = commandIds;
+    }
+
+    /**
+     * Sets the list of command ids to be executed before startup of the application window
+     */
+    public void setPreStartupCommandIds(String... commandIds)
+    {
+        this.preStartupCommands = Arrays.asList(commandIds);
     }
 
     /**

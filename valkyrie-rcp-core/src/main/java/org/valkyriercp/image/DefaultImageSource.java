@@ -15,10 +15,12 @@
  */
 package org.valkyriercp.image;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.style.StylerUtils;
@@ -30,6 +32,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A collection of image resources, each indexed by a common key alias.
@@ -74,7 +77,7 @@ public class DefaultImageSource implements ImageSource {
 
 	private Map imageResources;
 
-	private ImageCache imageCache;
+	private Cache imageCache;
 
 	private AwtImageResource brokenImageIndicatorResource;
 
@@ -110,15 +113,14 @@ public class DefaultImageSource implements ImageSource {
 		Assert.notNull(imageResources);
 		this.imageResources = new HashMap(imageResources);
 		debugPrintResources();
-		this.imageCache = new ImageCache();
+		this.imageCache = CacheBuilder.newBuilder().build();
 		if (installUrlHandler) {
 			Handler.installImageUrlHandler(this);
 		}
 	}
 
 	public DefaultImageSource() {
-		this.imageCache = new ImageCache();
-		Handler.installImageUrlHandler(this);
+		this(true, Maps.newHashMap());
 	}
 
 	public void setImageResources(Map imageResources) {
@@ -134,15 +136,25 @@ public class DefaultImageSource implements ImageSource {
 
 	public Image getImage(String key) {
 		Assert.notNull(key);
-		AwtImageResource resource = getImageResource(key);
 		try {
-			return (Image) imageCache.get(resource);
-		}
-		catch (RuntimeException e) {
-			if (brokenImageIndicator != null) {
-				return returnBrokenImageIndicator(resource);
+			if(!hasImageFor(key)) {
+				return null;
 			}
-			throw e;
+			return (Image) imageCache.get(key, () -> {
+				try {
+					AwtImageResource resource = getImageResource(key);
+					return resource.getImage();
+				}
+				catch (IOException e) {
+					throw new NoSuchImageResourceException("No image found for key '" + key + '"', e);
+				}
+			});
+		}
+		catch (RuntimeException | ExecutionException e) {
+			if (brokenImageIndicator != null) {
+				return returnBrokenImageIndicator();
+			}
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -172,12 +184,12 @@ public class DefaultImageSource implements ImageSource {
 		}
 	}
 
-	public boolean containsKey(Object key) {
+	@Override
+	public boolean hasImageFor(Object key) {
 		return imageResources.containsKey(key);
 	}
 
-	private Image returnBrokenImageIndicator(Resource resource) {
-		logger.warn("Unable to load image resource at '" + resource + "'; returning the broken image indicator.");
+	private Image returnBrokenImageIndicator() {
 		return brokenImageIndicator;
 	}
 
@@ -189,7 +201,7 @@ public class DefaultImageSource implements ImageSource {
 			if (brokenImageIndicator == null) {
 				throw new NoSuchImageResourceException(location, e);
 			}
-			return returnBrokenImageIndicator(location);
+			return returnBrokenImageIndicator();
 		}
 	}
 
@@ -210,20 +222,5 @@ public class DefaultImageSource implements ImageSource {
 
 	public String toString() {
 		return new ToStringCreator(this).append("imageResources", imageResources).toString();
-	}
-
-	private static class ImageCache extends AbstractCachingMapDecorator {
-		public ImageCache() {
-			super(true);
-		}
-
-		public Object create(Object resource) {
-			try {
-				return ((AwtImageResource) resource).getImage();
-			}
-			catch (IOException e) {
-				throw new NoSuchImageResourceException("No image found at resource '" + resource + '"', e);
-			}
-		}
 	}
 }

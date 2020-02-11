@@ -16,7 +16,7 @@
 package org.valkyriercp.binding.form.support;
 
 import org.springframework.beans.PropertyAccessException;
-import org.springframework.binding.convert.ConversionException;
+import org.valkyriercp.convert.ConversionException;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;

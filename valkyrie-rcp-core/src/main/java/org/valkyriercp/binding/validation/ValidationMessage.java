@@ -29,7 +29,7 @@ public interface ValidationMessage extends Message {
 	 * The property name for messages that have a global scope i.e. do not apply
 	 * to a specific property.
 	 */
-	public static final String GLOBAL_PROPERTY = null;
+	public static final String GLOBAL_PROPERTY = "<<<global>>>";
 
 	/**
 	 * The property that this validation message applies to; or

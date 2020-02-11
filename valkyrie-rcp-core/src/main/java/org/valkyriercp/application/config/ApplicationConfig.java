@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.application.config;
 
-import org.springframework.binding.convert.ConversionService;
+import org.valkyriercp.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

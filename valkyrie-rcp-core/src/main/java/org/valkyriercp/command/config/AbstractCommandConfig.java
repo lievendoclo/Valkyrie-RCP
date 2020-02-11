@@ -89,7 +89,7 @@ public class AbstractCommandConfig implements CommandConfig {
         return new ShowViewMenu();
     }
 
-    @Bean
+    @Bean(name = LoginCommand.ID)
     public LoginCommand loginCommand() {
         LoginCommand loginCommand = new LoginCommand();
         loginCommand.setDisplaySuccess(false);

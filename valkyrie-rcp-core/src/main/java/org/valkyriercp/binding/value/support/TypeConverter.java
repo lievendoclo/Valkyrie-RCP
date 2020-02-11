@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.binding.value.support;
 
-import org.springframework.binding.convert.ConversionExecutor;
+import org.valkyriercp.convert.ConversionExecutor;
 import org.valkyriercp.binding.value.DerivedValueModel;
 import org.valkyriercp.binding.value.ValueChangeDetector;
 import org.valkyriercp.binding.value.ValueModel;

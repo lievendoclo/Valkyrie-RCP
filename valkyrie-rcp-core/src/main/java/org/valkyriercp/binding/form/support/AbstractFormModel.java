@@ -15,13 +15,16 @@
  */
 package org.valkyriercp.binding.form.support;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.beans.BeanUtils;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
-import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.converters.Converter;
-import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.binding.convert.service.GenericConversionService;
+import org.valkyriercp.convert.ConversionExecutor;
+import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.converters.Converter;
+import org.valkyriercp.convert.service.DefaultConversionService;
+import org.valkyriercp.convert.service.GenericConversionService;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyAccessStrategy;
@@ -92,14 +95,14 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 
 	private final Set dirtyValueAndFormModels = new HashSet();
 
-	private final Map propertyConversionServices = new AbstractCachingMapDecorator() {
-		public Object create(Object key) {
+	private final LoadingCache propertyConversionServices = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+		public Object load(Object key) {
 			return new DefaultConversionService() {
 				protected void addDefaultConverters() {
 				}
 			};
 		}
-	};
+	});
 
 	protected final PropertyChangeListener parentStateChangeHandler = new ParentStateChangeHandler();
 
@@ -368,10 +371,10 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 		ConversionExecutor convertFrom = null;
 
 		// Check for locally registered property converters
-		if (propertyConversionServices.containsKey(formProperty)) {
+		if (propertyConversionServices.getIfPresent(formProperty) != null) {
 			// TODO - extract ConfigurableConversionService interface...
 			final GenericConversionService propertyConversionService = (GenericConversionService) propertyConversionServices
-					.get(formProperty);
+					.getUnchecked(formProperty);
 
 			if (propertyConversionService != null) {
 				convertTo = propertyConversionService.getConversionExecutor(sourceClass, targetClass);
@@ -405,7 +408,7 @@ public abstract class AbstractFormModel extends AbstractPropertyChangePublisher 
 	 */
 	public void registerPropertyConverter(String propertyName, Converter toConverter, Converter fromConverter) {
 		DefaultConversionService propertyConversionService = (DefaultConversionService) propertyConversionServices
-				.get(propertyName);
+				.getUnchecked(propertyName);
 		propertyConversionService.addConverter(toConverter);
 		propertyConversionService.addConverter(fromConverter);
 	}

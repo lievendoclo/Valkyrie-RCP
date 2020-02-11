@@ -17,10 +17,10 @@ package org.valkyriercp.binding.form.support;
 
 import org.junit.Test;
 import org.springframework.beans.NotReadablePropertyException;
-import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.ConversionExecutor;
-import org.springframework.binding.convert.service.GenericConversionService;
-import org.springframework.binding.convert.service.StaticConversionExecutor;
+import org.valkyriercp.convert.ConversionException;
+import org.valkyriercp.convert.ConversionExecutor;
+import org.valkyriercp.convert.service.GenericConversionService;
+import org.valkyriercp.convert.service.StaticConversionExecutor;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.binding.form.CommitListener;
 import org.valkyriercp.binding.form.FormModel;

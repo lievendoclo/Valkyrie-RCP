@@ -118,7 +118,6 @@ import java.util.Arrays;
  * @author Larry Streepy
  */
 public abstract class AbstractObjectTable extends AbstractControlFactory
-// implements ApplicationListener
 {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -171,12 +170,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 		// call to removeApplicationListener
 		((ConfigurableApplicationContext) getApplicationConfig()
 				.applicationContext())
-				.addApplicationListener(new ApplicationListener() {
-					@Override
-					public void onApplicationEvent(ApplicationEvent event) {
-						AbstractObjectTable.this.onApplicationEvent(event);
-					}
-				});
+				.addApplicationListener(AbstractObjectTable.this::onApplicationEvent);
 	}
 
 	/**

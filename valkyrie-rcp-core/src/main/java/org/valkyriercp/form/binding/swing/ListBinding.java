@@ -17,8 +17,8 @@ package org.valkyriercp.form.binding.swing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.binding.convert.ConversionException;
-import org.springframework.binding.convert.ConversionExecutor;
+import org.valkyriercp.convert.ConversionException;
+import org.valkyriercp.convert.ConversionExecutor;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 

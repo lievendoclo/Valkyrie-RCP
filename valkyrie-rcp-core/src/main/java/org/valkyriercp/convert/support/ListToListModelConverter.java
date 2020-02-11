@@ -15,8 +15,8 @@
  */
 package org.valkyriercp.convert.support;
 
-import org.springframework.binding.convert.converters.Converter;
 import org.valkyriercp.binding.value.support.ListListModel;
+import org.valkyriercp.convert.converters.Converter;
 
 import javax.swing.*;
 import java.util.List;

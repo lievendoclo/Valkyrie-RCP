@@ -18,10 +18,13 @@ package org.valkyriercp.util;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
+import java.util.Map;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
@@ -59,11 +62,11 @@ public final class ReflectiveVisitorHelper {
 	private static final Log logger = LogFactory
 			.getLog(ReflectiveVisitorHelper.class);
 
-	private AbstractCachingMapDecorator visitorClassVisitMethods = new AbstractCachingMapDecorator() {
-		public Object create(Object key) {
+	private LoadingCache visitorClassVisitMethods = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+		public Object load(Object key) {
 			return new ClassVisitMethods((Class) key);
 		}
-	};
+	});
 
 	/**
 	 * Use reflection to call the appropriate <code>visit</code> method on the
@@ -113,7 +116,7 @@ public final class ReflectiveVisitorHelper {
 	 */
 	private Method getMethod(Class visitorClass, Object argument) {
 		ClassVisitMethods visitMethods = (ClassVisitMethods) this.visitorClassVisitMethods
-				.get(visitorClass);
+				.getUnchecked(visitorClass);
 		return visitMethods.getVisitMethod(argument != null ? argument
 				.getClass() : null);
 	}
@@ -125,8 +128,8 @@ public final class ReflectiveVisitorHelper {
 
 		private final Class visitorClass;
 
-		private AbstractCachingMapDecorator visitMethodCache = new AbstractCachingMapDecorator() {
-			public Object create(Object argumentClazz) {
+		private LoadingCache visitMethodCache = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+			public Object load(Object argumentClazz) {
 				if (argumentClazz == null) {
 					return findNullVisitorMethod();
 				}
@@ -136,7 +139,7 @@ public final class ReflectiveVisitorHelper {
 				}
 				return method;
 			}
-		};
+		});
 
 		private ClassVisitMethods(Class visitorClass) {
 			this.visitorClass = visitorClass;
@@ -173,7 +176,7 @@ public final class ReflectiveVisitorHelper {
 		 * Gets a cached visitor method for the specified argument type.
 		 */
 		private Method getVisitMethod(Class argumentClass) {
-			return (Method) this.visitMethodCache.get(argumentClass);
+			return (Method) this.visitMethodCache.getUnchecked(argumentClass);
 		}
 
 		/**

@@ -17,10 +17,9 @@ package org.valkyriercp.application.config.support;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.binding.convert.ConversionService;
-import org.springframework.binding.convert.service.DefaultConversionService;
+import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -163,14 +162,11 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     public ImageSource imageSource() {
         DefaultImageSource imageSource;
         Properties images = new Properties();
-        Gson gson = new Gson();
 
         try {
             for (Resource res : getImageSourceResources().values()) {
                 if(res.getFilename().endsWith("properties")) {
                     images.load(res.getInputStream());
-                } else if(res.getFilename().endsWith("json")) {
-                    images.putAll(gson.fromJson(new InputStreamReader(res.getInputStream()), Map.class));
                 }
             }
             imageSource = new DefaultImageSource(images);

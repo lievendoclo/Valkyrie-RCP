@@ -25,7 +25,7 @@ import org.valkyriercp.dialog.TitledPageApplicationDialog;
 import org.valkyriercp.util.ValkyrieRepository;
 
 public class LoginCommand extends ApplicationWindowAwareCommand {
-    private static final String ID = "loginCommand";
+    public static final String ID = "loginCommand";
 
     private boolean displaySuccessMessage = true;
 

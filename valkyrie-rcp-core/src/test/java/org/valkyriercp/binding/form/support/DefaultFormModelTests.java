@@ -16,9 +16,9 @@
 package org.valkyriercp.binding.form.support;
 
 import org.junit.Test;
-import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.binding.convert.converters.Converter;
-import org.springframework.binding.convert.service.StaticConversionExecutor;
+import org.valkyriercp.convert.ConversionExecutionException;
+import org.valkyriercp.convert.converters.Converter;
+import org.valkyriercp.convert.service.StaticConversionExecutor;
 import org.valkyriercp.binding.form.BindingErrorMessageProvider;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.form.ValidatingFormModel;

@@ -18,7 +18,6 @@ package org.valkyriercp.sample.dataeditor;
 import com.google.common.collect.Lists;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
-import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +25,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -52,9 +49,8 @@ import org.valkyriercp.form.builder.ToolTipInterceptorFactory;
 import org.valkyriercp.sample.dataeditor.domain.ItemService;
 import org.valkyriercp.sample.dataeditor.domain.SupplierService;
 import org.valkyriercp.sample.dataeditor.ui.*;
+import org.valkyriercp.security.LoginCommand;
 import org.valkyriercp.text.TextComponentPopupInterceptorFactory;
-import org.valkyriercp.widget.Widget;
-import org.valkyriercp.widget.WidgetProvider;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
 import java.util.List;
@@ -85,7 +81,7 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationSessionInitializer applicationSessionInitializer() {
         ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
-        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+        initializer.setPreStartupCommandIds(LoginCommand.ID);
         return initializer;
     }
 
@@ -114,18 +110,16 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
 
     @Override
     public ApplicationWindowFactory applicationWindowFactory() {
-        JXTaskPaneNavigatorApplicationWindowFactory navigatorApplicationWindowFactory = new JXTaskPaneNavigatorApplicationWindowFactory();
-        return navigatorApplicationWindowFactory;
+        return new JXTaskPaneNavigatorApplicationWindowFactory();
     }
 
     @Override
     public FormComponentInterceptorFactory formComponentInterceptorFactory() {
         ChainedInterceptorFactory formComponentInterceptorFactory = (ChainedInterceptorFactory) super.formComponentInterceptorFactory();
-//        formComponentInterceptorFactory.getInterceptorFactories().add(new SelectAllFormComponentInterceptorFactory());
         formComponentInterceptorFactory.getInterceptorFactories().add(new ToolTipInterceptorFactory());
         formComponentInterceptorFactory.getInterceptorFactories().add(new TextComponentPopupInterceptorFactory());
         formComponentInterceptorFactory.getInterceptorFactories().add(new SearchableInterceptorFactory());
-        return formComponentInterceptorFactory;    //To change body of overridden methods use File | Settings | File Templates.
+        return formComponentInterceptorFactory;
     }
 
     @Override
@@ -164,23 +158,13 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
 
     @Bean
     public WidgetViewDescriptor itemView() {
-        return new WidgetViewDescriptor("itemView", new WidgetProvider<Widget>() {
-            @Override
-            public Widget getWidget() {
-                return itemDataEditor();
-            }
-        });
+        return new WidgetViewDescriptor("itemView", this::itemDataEditor);
 
     }
 
     @Bean
     public WidgetViewDescriptor supplierView() {
-        return new WidgetViewDescriptor("supplierView", new WidgetProvider<Widget>() {
-            @Override
-            public Widget getWidget() {
-                return supplierDataEditor();
-            }
-        });
+        return new WidgetViewDescriptor("supplierView", this::supplierDataEditor);
     }
 
     // Services
@@ -210,6 +194,6 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
         userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).roles("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
+        return new ProviderManager(Lists.newArrayList(provider));
     }
 }

@@ -15,7 +15,9 @@
  */
 package org.valkyriercp.binding.validation.support;
 
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.ObjectUtils;
 import org.valkyriercp.binding.validation.ValidationMessage;
@@ -28,9 +30,9 @@ public class DefaultValidationResults implements ValidationResults {
 
     private final Set messages = new HashSet();
 
-    private AbstractCachingMapDecorator messagesSubSets = new AbstractCachingMapDecorator() {
+    private LoadingCache messagesSubSets = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
 
-        protected Object create(Object key) {
+        public Object load(Object key) {
             Set messagesSubSet = new HashSet();
             for (Iterator i = messages.iterator(); i.hasNext();) {
                 ValidationMessage message = (ValidationMessage)i.next();
@@ -44,7 +46,7 @@ public class DefaultValidationResults implements ValidationResults {
             return Collections.unmodifiableSet(messagesSubSet);
         }
 
-    };
+    });
 
     public DefaultValidationResults() {
     }
@@ -63,13 +65,13 @@ public class DefaultValidationResults implements ValidationResults {
 
     public void addAllMessages(Collection validationMessages) {
         if (messages.addAll(validationMessages)) {
-            messagesSubSets.clear();
+            messagesSubSets.invalidateAll();
         }
     }
 
     public void addMessage(ValidationMessage validationMessage) {
         if (messages.add(validationMessage)) {
-            messagesSubSets.clear();
+            messagesSubSets.invalidateAll();
         }
     }
 
@@ -79,7 +81,7 @@ public class DefaultValidationResults implements ValidationResults {
 
     public void removeMessage(ValidationMessage message) {
         messages.remove(message);
-        messagesSubSets.clear();
+        messagesSubSets.invalidateAll();
     }
 
     public boolean getHasErrors() {
@@ -111,11 +113,11 @@ public class DefaultValidationResults implements ValidationResults {
     }
 
     public Set getMessages(Severity severity) {
-        return (Set)messagesSubSets.get(severity);
+        return (Set)messagesSubSets.getUnchecked(severity);
     }
 
     public Set getMessages(String fieldName) {
-        return (Set)messagesSubSets.get(fieldName);
+        return (Set)messagesSubSets.getUnchecked(fieldName);
     }
 
     public String toString() {
@@ -128,7 +130,7 @@ public class DefaultValidationResults implements ValidationResults {
     public void clearMessages()
     {
         messages.clear();
-        messagesSubSets.clear();
+        messagesSubSets.invalidateAll();
     }
 
     /**
@@ -139,6 +141,6 @@ public class DefaultValidationResults implements ValidationResults {
     	for (Iterator mi = messagesForFieldName.iterator(); mi.hasNext();) {
 			messages.remove(mi.next());
 		}
-    	messagesSubSets.clear();
+    	messagesSubSets.invalidateAll();
     }
 }

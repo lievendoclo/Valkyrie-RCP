@@ -15,9 +15,12 @@
  */
 package org.valkyriercp.binding.support;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessor;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.MutablePropertyAccessStrategy;
 import org.valkyriercp.binding.PropertyMetadataAccessStrategy;
@@ -47,7 +50,7 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 
 	private final String basePropertyPath;
 
-	private final ValueModelCache valueModelCache;
+	private final LoadingCache valueModelCache;
 
 	private final PropertyMetadataAccessStrategy metaAspectAccessor;
 
@@ -73,7 +76,16 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 		this.domainObjectHolder = domainObjectHolder;
 		this.domainObjectHolder.addValueChangeListener(new DomainObjectChangeListener());
 		this.basePropertyPath = "";
-		this.valueModelCache = new ValueModelCache();
+		this.valueModelCache = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+			@Override
+			public Object load(Object propertyPath) throws Exception {
+				String fullPropertyPath = getFullPropertyPath((String) propertyPath);
+				String parentPropertyPath = getParentPropertyPath(fullPropertyPath);
+				ValueModel parentValueModel = parentPropertyPath == "" ? domainObjectHolder : (ValueModel) valueModelCache
+						.get(parentPropertyPath);
+				return new PropertyValueModel(parentValueModel, fullPropertyPath);
+			}
+		});
 		this.metaAspectAccessor = new PropertyMetaAspectAccessor();
 	}
 
@@ -132,7 +144,7 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 	}
 
 	public ValueModel getPropertyValueModel(String propertyPath) throws BeansException {
-		return (ValueModel) valueModelCache.get(getFullPropertyPath(propertyPath));
+		return (ValueModel) valueModelCache.getUnchecked(getFullPropertyPath(propertyPath));
 	}
 
 	/**
@@ -225,20 +237,6 @@ public abstract class AbstractPropertyAccessStrategy implements MutablePropertyA
 
 		public void propertyChange(PropertyChangeEvent evt) {
 			domainObjectChanged();
-		}
-	}
-
-	/**
-	 * A cache of value models generated for specific property paths.
-	 */
-	private class ValueModelCache extends AbstractCachingMapDecorator {
-
-		protected Object create(Object propertyPath) {
-			String fullPropertyPath = getFullPropertyPath((String) propertyPath);
-			String parentPropertyPath = getParentPropertyPath(fullPropertyPath);
-			ValueModel parentValueModel = parentPropertyPath == "" ? domainObjectHolder : (ValueModel) valueModelCache
-					.get(parentPropertyPath);
-			return new PropertyValueModel(parentValueModel, fullPropertyPath);
 		}
 	}
 

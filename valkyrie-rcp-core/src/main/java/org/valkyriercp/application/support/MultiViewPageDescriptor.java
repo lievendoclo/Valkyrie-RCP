@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2015 Valkyrie RCP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,34 +17,23 @@ package org.valkyriercp.application.support;
 
 import com.google.common.collect.Lists;
 import org.valkyriercp.application.PageLayoutBuilder;
-import org.valkyriercp.application.ViewDescriptor;
 
 import java.util.List;
 
 public class MultiViewPageDescriptor  extends AbstractPageDescriptor {
 
-    private List viewDescriptors = Lists.newArrayList();
+    private List<String> viewDescriptorIds = Lists.newArrayList();
 
     public void buildInitialLayout(PageLayoutBuilder pageLayout) {
-        for (Object viewDescriptor : getViewDescriptors()) {
-            String descriptor = null;
-            if (viewDescriptor instanceof String) {
-               descriptor = (String) viewDescriptor;
-            } else if(viewDescriptor instanceof ViewDescriptor) {
-                descriptor = ((ViewDescriptor) viewDescriptor).getId();
-            } else {
-                throw new IllegalStateException("ViewDescriptors should either be String or ViewDescriptor elements");
-            }
-            pageLayout.addView(descriptor);
-        }
+        getViewDescriptorIds().forEach(pageLayout::addView);
     }
 
-    public List getViewDescriptors() {
-        return viewDescriptors;
+    public List<String> getViewDescriptorIds() {
+        return viewDescriptorIds;
     }
 
-    public void setViewDescriptors(List viewDescriptors) {
-        this.viewDescriptors = viewDescriptors;
+    public void setViewDescriptorIds(List<String> viewDescriptorIds) {
+        this.viewDescriptorIds = viewDescriptorIds;
     }
 
     public void setBeanName(String name) {

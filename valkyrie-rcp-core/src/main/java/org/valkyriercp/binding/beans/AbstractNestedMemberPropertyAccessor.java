@@ -15,13 +15,17 @@
  */
 package org.valkyriercp.binding.beans;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.beans.*;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.util.Map;
 
 /**
  * This implementation extends {@link AbstractMemberPropertyAccessor} with the
@@ -37,7 +41,12 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 
 	private String basePropertyName;
 
-	private final ChildPropertyAccessorCache childPropertyAccessors = new ChildPropertyAccessorCache();
+	private final LoadingCache childPropertyAccessors = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+		@Override
+		public Object load(Object key) throws Exception {
+			return createChildPropertyAccessor((String) key);
+		}
+	});
 
 	private final boolean strictNullHandlingEnabled;
 
@@ -94,7 +103,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 				return false;
 			} else {
 				return ((PropertyAccessor) childPropertyAccessors
-						.get(baseProperty))
+						.getUnchecked(baseProperty))
 						.isReadableProperty(childPropertyPath);
 			}
 		} else {
@@ -109,7 +118,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 			String childPropertyPath = getChildPropertyPath(propertyPath);
 			return super.isReadableProperty(baseProperty)
 					&& ((PropertyAccessor) childPropertyAccessors
-							.get(baseProperty))
+							.getUnchecked(baseProperty))
 							.isWritableProperty(childPropertyPath);
 		} else {
 			return super.isWritableProperty(propertyPath);
@@ -121,7 +130,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 		if (PropertyAccessorUtils.isNestedProperty(propertyPath)) {
 			String baseProperty = getBasePropertyName(propertyPath);
 			String childPropertyPath = getChildPropertyPath(propertyPath);
-			return ((PropertyAccessor) childPropertyAccessors.get(baseProperty))
+			return ((PropertyAccessor) childPropertyAccessors.getUnchecked(baseProperty))
 					.getPropertyType(childPropertyPath);
 		} else {
 			return super.getPropertyType(propertyPath);
@@ -159,7 +168,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 		if (PropertyAccessorUtils.isNestedProperty(propertyPath)) {
 			String baseProperty = getBasePropertyName(propertyPath);
 			String childPropertyPath = getChildPropertyPath(propertyPath);
-			return ((PropertyAccessor) childPropertyAccessors.get(baseProperty))
+			return ((PropertyAccessor) childPropertyAccessors.getUnchecked(baseProperty))
 					.getPropertyValue(childPropertyPath);
 		} else if (isStrictNullHandlingEnabled() && getTarget() == null) {
 			throw new NullValueInNestedPathException(getTargetClass(),
@@ -174,7 +183,7 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 		if (PropertyAccessorUtils.isNestedProperty(propertyPath)) {
 			String baseProperty = getBasePropertyName(propertyPath);
 			String childPropertyPath = getChildPropertyPath(propertyPath);
-			((PropertyAccessor) childPropertyAccessors.get(baseProperty))
+			((PropertyAccessor) childPropertyAccessors.getUnchecked(baseProperty))
 					.setPropertyValue(childPropertyPath, value);
 		} else if (isStrictNullHandlingEnabled() && getTarget() == null) {
 			throw new NullValueInNestedPathException(getTargetClass(),
@@ -200,21 +209,13 @@ public abstract class AbstractNestedMemberPropertyAccessor extends
 	}
 
 	protected PropertyAccessor getChildPropertyAccessor(String propertyName) {
-		return (PropertyAccessor) childPropertyAccessors.get(propertyName);
+		return (PropertyAccessor) childPropertyAccessors.getUnchecked(propertyName);
 	}
 
 	protected abstract AbstractNestedMemberPropertyAccessor createChildPropertyAccessor(
 			String propertyName);
 
 	protected void clearChildPropertyAccessorCache() {
-		childPropertyAccessors.clear();
-	}
-
-	private class ChildPropertyAccessorCache extends AbstractCachingMapDecorator {
-
-		@Override
-		protected Object create(Object propertyName) {
-			return createChildPropertyAccessor((String) propertyName);
-		}
+		childPropertyAccessors.invalidateAll();
 	}
 }

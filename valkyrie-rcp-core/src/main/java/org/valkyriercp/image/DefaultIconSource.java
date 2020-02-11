@@ -15,15 +15,19 @@
  */
 package org.valkyriercp.image;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The default implementation of ImageIconRegistry. This implementation caches
@@ -37,24 +41,27 @@ import java.awt.*;
 public class DefaultIconSource implements IconSource {
     protected static final Log logger = LogFactory.getLog(DefaultIconSource.class);
 
-    private IconCache cache;
+    private Cache cache = CacheBuilder.newBuilder().build();
 
     @Autowired
     private ImageSource imageSource;
-
-    @PostConstruct
-    protected void initIconCache() {
-        this.cache = new IconCache(imageSource);
-    }
 
     public Icon getIcon(String key) {
         try {
             if (logger.isDebugEnabled()) {
                 logger.debug("Resolving icon with key '" + key + "'");
             }
-            return (ImageIcon)cache.get(key);
+            if(imageSource.hasImageFor(key)) {
+                return (ImageIcon) cache.get(key, () -> {
+                    Image image = imageSource.getImage(key);
+                    return new ImageIcon(image);
+                });
+            } else {
+                return null;
+            }
+
         }
-        catch (NoSuchImageResourceException e) {
+        catch (NoSuchImageResourceException | ExecutionException e) {
             if (logger.isInfoEnabled()) {
                 logger.info("No image resource found for icon with key '" + key + "'; returning a <null> icon.");
             }
@@ -63,38 +70,6 @@ public class DefaultIconSource implements IconSource {
     }
 
     public void clear() {
-        cache.clear();
-    }
-
-    protected String doProcessImageKeyBeforeLookup(String key) {
-        // subclasses can override
-        return key;
-    }
-
-    protected IconCache cache() {
-        return cache;
-    }
-
-    /**
-     * Icon cache using soft references.
-     *
-     * @author Keith Donald
-     */
-    protected static class IconCache extends AbstractCachingMapDecorator {
-        private ImageSource images;
-
-        public IconCache(ImageSource images) {
-            super(true);
-            this.images = images;
-        }
-
-        public Object create(Object key) {
-            Image image = images.getImage((String)key);
-            return new ImageIcon(image);
-        }
-
-        public ImageSource images() {
-            return images;
-        }
+        cache.invalidateAll();
     }
 }

@@ -310,6 +310,7 @@ public class ContactView extends AbstractView
                         Contact contact = (Contact) selected;
                         // Delete the object from the persistent store.
                         getContactDataStore().delete(contact);
+                        widget.updateTable();
                         // And notify the rest of the application of the change
                         getApplicationConfig().applicationContext().publishEvent(
                                 new LifecycleApplicationEvent(LifecycleApplicationEvent.DELETED, contact));

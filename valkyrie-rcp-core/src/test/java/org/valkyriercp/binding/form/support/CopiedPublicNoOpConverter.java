@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.binding.form.support;
 
-import org.springframework.binding.convert.converters.Converter;
+import org.valkyriercp.convert.converters.Converter;
 
 public class CopiedPublicNoOpConverter implements Converter {
 

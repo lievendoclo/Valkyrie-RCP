@@ -132,9 +132,9 @@ public class ContactView extends AbstractView
         table.add(widget.getButtonBar(), BorderLayout.SOUTH);
 
         CommandGroup popup = new CommandGroup();
-        popup.add((ActionCommand) getWindowCommandManager().getCommand("deleteCommand", ActionCommand.class));
+        popup.add((ActionCommand) getWindowCommandManager().getCommand(GlobalCommandIds.DELETE, ActionCommand.class));
         popup.addSeparator();
-        popup.add((ActionCommand) getWindowCommandManager().getCommand("propertiesCommand", ActionCommand.class));
+        popup.add((ActionCommand) getWindowCommandManager().getCommand(GlobalCommandIds.PROPERTIES, ActionCommand.class));
         JPopupMenu popupMenu = popup.createPopupMenu();
 
         widget.getTable().addMouseListener(new MouseAdapter()

@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.binding.form;
 
-import org.springframework.binding.convert.converters.Converter;
+import org.valkyriercp.convert.converters.Converter;
 import org.valkyriercp.binding.value.ValueModel;
 import org.valkyriercp.core.Authorizable;
 import org.valkyriercp.core.PropertyChangePublisher;

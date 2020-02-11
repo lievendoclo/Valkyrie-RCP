@@ -15,7 +15,9 @@
  */
 package org.valkyriercp.util;
 
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -91,7 +93,7 @@ public class EventListenerListHelper implements Serializable {
 		}
 	};
 
-	private static final Map methodCache = new AbstractCachingMapDecorator() {
+	private static final LoadingCache methodCache = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
 
         /**
          * Creates a value to cache under the given key {@code o}, which must be a
@@ -106,7 +108,7 @@ public class EventListenerListHelper implements Serializable {
          * @throws IllegalArgumentException if the listener class specified by {@code o}, does not
          * have an implementation of the method specified in the given key.
          */
-		protected Object create(Object o) {
+		public Object load(Object o) {
 			MethodCacheKey key = (MethodCacheKey) o;
 			Method fireMethod = null;
 
@@ -130,7 +132,7 @@ public class EventListenerListHelper implements Serializable {
 			}
 			return fireMethod;
 		}
-	};
+	});
 
 	private final Class listenerClass;
 
@@ -393,7 +395,7 @@ public class EventListenerListHelper implements Serializable {
      * listeners.
      */
 	private void fireEventByReflection(String methodName, Object[] eventArgs) {
-		Method eventMethod = (Method)methodCache.get(new MethodCacheKey(listenerClass, methodName, eventArgs.length));
+		Method eventMethod = (Method)methodCache.getUnchecked(new MethodCacheKey(listenerClass, methodName, eventArgs.length));
 		Object[] listenersCopy = listeners;
 		for (int i = 0; i < listenersCopy.length; i++) {
 			try {

@@ -15,7 +15,9 @@
  */
 package org.valkyriercp.binding.validation.support;
 
-import org.springframework.binding.collection.AbstractCachingMapDecorator;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -54,7 +56,7 @@ import java.util.*;
  * polling for messages, childMessages will be available as well. This makes it
  * possible to efficiently couple formModels and their validation aspect and
  * provides a means to bundle validation reporting. When eg using a
- * {@link org.springframework.richclient.form.ValidationResultsReporter}, you have the opportunity to bundle
+ * {@link org.valkyriercp.form.ValidationResultsReporter}, you have the opportunity to bundle
  * results from various unrelated formModels to report to one end point.</p>
  *
  * <p>Example:</p>
@@ -89,19 +91,19 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 
 	private final EventListenerListHelper validationListeners = new EventListenerListHelper(ValidationListener.class);
 
-	private final AbstractCachingMapDecorator propertyValidationListeners = new AbstractCachingMapDecorator() {
+	private final LoadingCache propertyValidationListeners = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
 
-		protected Object create(Object propertyName) {
+		public Object load(Object propertyName) {
 			return new EventListenerListHelper(ValidationListener.class);
 		}
-	};
+	});
 
-	private final AbstractCachingMapDecorator propertyChangeListeners = new AbstractCachingMapDecorator() {
+	private final LoadingCache propertyChangeListeners = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
 
-		protected Object create(Object propertyName) {
+		public Object load(Object propertyName) {
 			return new EventListenerListHelper(PropertyChangeListener.class);
 		}
-	};
+	});
 
 	/** Delegate or reference to this. */
 	private final ValidationResultsModel delegateFor;
@@ -145,7 +147,7 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 			return;
 		}
 		fireChangedEvents();
-		for (Iterator i = propertyValidationListeners.keySet().iterator(); i.hasNext();) {
+		for (Iterator i = propertyValidationListeners.asMap().keySet().iterator(); i.hasNext();) {
 			String propertyName = (String) i.next();
 			if (oldValidationResults.getMessageCount(propertyName) > 0
 					|| validationResults.getMessageCount(propertyName) > 0) {
@@ -405,7 +407,7 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 	}
 
 	protected EventListenerListHelper getValidationListeners(String propertyName) {
-		return ((EventListenerListHelper) propertyValidationListeners.get(propertyName));
+		return ((EventListenerListHelper) propertyValidationListeners.getUnchecked(propertyName));
 	}
 
 	protected void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
@@ -420,7 +422,7 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 	}
 
 	protected EventListenerListHelper getPropertyChangeListeners(String propertyName) {
-		return ((EventListenerListHelper) propertyChangeListeners.get(propertyName));
+		return ((EventListenerListHelper) propertyChangeListeners.getUnchecked(propertyName));
 	}
 
 	public String toString() {

@@ -23,12 +23,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.config.ApplicationLifecycleAdvisor;
@@ -37,7 +38,7 @@ import org.valkyriercp.application.config.support.UIManagerConfigurer;
 import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.JideTabbedApplicationPageFactory;
 import org.valkyriercp.application.support.SingleViewPageDescriptor;
-import org.valkyriercp.util.JsonResourceBundleMessageSource;
+import org.valkyriercp.security.LoginCommand;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationSessionInitializer applicationSessionInitializer() {
         ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
-        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+        initializer.setPreStartupCommandIds(LoginCommand.ID);
         return initializer;
     }
 
@@ -101,15 +102,16 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         List<UserDetails> userDetailsList = Lists.newArrayList();
-        userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
-        userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        userDetailsList.add(new User("admin", encoder.encode("admin"), Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
+        userDetailsList.add(new User("user", encoder.encode("user"), Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
+        return new ProviderManager(Lists.newArrayList(provider));
     }
 
     @Override
     protected ResourceBundleMessageSource createMessageSourceImpl() {
-        return new JsonResourceBundleMessageSource();
+        return new ResourceBundleMessageSource();
     }
 }

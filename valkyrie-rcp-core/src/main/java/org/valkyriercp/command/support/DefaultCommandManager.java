@@ -141,12 +141,12 @@ public class DefaultCommandManager implements CommandManager, BeanPostProcessor,
             return null;
         }
         try {
-            return (CommandFaceDescriptor)beanFactory.getBean(command.getId() + "." + faceDescriptorId,
+            return beanFactory.getBean(command.getId() + "." + faceDescriptorId,
                     CommandFaceDescriptor.class);
         }
         catch (NoSuchBeanDefinitionException e) {
             try {
-                return (CommandFaceDescriptor)beanFactory.getBean(faceDescriptorId, CommandFaceDescriptor.class);
+                return beanFactory.getBean(faceDescriptorId, CommandFaceDescriptor.class);
             }
             catch (NoSuchBeanDefinitionException ex) {
                 return null;

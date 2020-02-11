@@ -39,6 +39,7 @@ import org.valkyriercp.sample.simple.domain.ContactDataStore;
 import org.valkyriercp.sample.simple.domain.SimpleValidationRulesSource;
 import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
+import org.valkyriercp.security.LoginCommand;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 	@Override
 	public ApplicationSessionInitializer applicationSessionInitializer() {
 		ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
-		initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+		initializer.setPreStartupCommandIds(LoginCommand.ID);
 		return initializer;
 	}
 

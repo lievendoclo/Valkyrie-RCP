@@ -22,12 +22,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.valkyriercp.application.ApplicationPageFactory;
 import org.valkyriercp.application.ViewDescriptor;
@@ -43,6 +43,7 @@ import org.valkyriercp.sample.vldocking.domain.ContactDataStore;
 import org.valkyriercp.sample.vldocking.domain.SimpleValidationRulesSource;
 import org.valkyriercp.sample.vldocking.ui.ContactView;
 import org.valkyriercp.sample.vldocking.ui.InitialView;
+import org.valkyriercp.security.LoginCommand;
 
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
         VLDockingPageDescriptor descriptor = new VLDockingPageDescriptor();
-        descriptor.getViewDescriptors().add(initialView());
+        descriptor.getViewDescriptorIds().add(initialView().getId());
         lifecycleAdvisor.setStartingPageDescriptor(descriptor);
         return lifecycleAdvisor;
     }
@@ -67,7 +68,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
     @Override
     public ApplicationSessionInitializer applicationSessionInitializer() {
         ApplicationSessionInitializer initializer = new ApplicationSessionInitializer();
-        initializer.setPreStartupCommands(Lists.newArrayList("loginCommand"));
+        initializer.setPreStartupCommandIds(LoginCommand.ID);
         return initializer;
     }
 
@@ -129,10 +130,11 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
     @Bean
     public AuthenticationManager authenticationManager() {
         List<UserDetails> userDetailsList = Lists.newArrayList();
-        userDetailsList.add(new User("admin", "admin", Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
-        userDetailsList.add(new User("user", "user", Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        userDetailsList.add(User.builder().username("admin").password(encoder.encode("admin")).authorities("ADMIN").build());
+        userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).authorities("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
+        return new ProviderManager(Lists.newArrayList(provider));
     }
 }
