@@ -15,8 +15,6 @@
  */
 package org.valkyriercp.widget.editor;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
@@ -702,7 +700,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
      */
     protected CommandGroup getTablePopupMenuCommandGroup()
     {
-        return getApplicationConfig().commandManager().createCommandGroup(Lists.newArrayList(getEditRowCommand(), "separator",
+        return getApplicationConfig().commandManager().createCommandGroup(Arrays.asList(getEditRowCommand(), "separator",
                 getAddRowCommand(), getCloneRowCommand(), getRemoveRowsCommand(), "separator",
                 getRefreshCommand(), "separator", getCopySelectedRowsToClipboardCommand()));
     }
@@ -760,7 +758,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
 
     private JComponent getFilterControlPanel()
     {
-        CommandGroup controlCommands = getApplicationConfig().commandManager().createCommandGroup(Lists.newArrayList(
+        CommandGroup controlCommands = getApplicationConfig().commandManager().createCommandGroup(Arrays.asList(
                 getExecuteFilterCommand(), getEmptyFilterCommand()));
 
         return controlCommands.createButtonBar((Size) null, (Border) null);
@@ -1218,7 +1216,7 @@ public abstract class AbstractDataEditorWidget extends AbstractTitledWidget
                 StringBuilder builder = new StringBuilder(formattedRowList.size() * 200);
                 for (java.util.List<String> row : formattedRowList)
                 {
-                    builder.append(Joiner.on("\t").join(row.iterator()) + "\n");
+                    builder.append(String.join("\t", row)).append("\n");
                 }
                 return builder.toString();
             }

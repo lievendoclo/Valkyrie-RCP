@@ -28,12 +28,12 @@ import org.springframework.core.convert.ConversionService;
  * 
  * @author Keith Donald
  */
-public class DefaultConversionService extends GenericConversionService {
+public class DefaultRichClientConversionService extends GenericRichClientConversionService {
 
 	/**
 	 * Creates a new default conversion service, installing the default converters.
 	 */
-	public DefaultConversionService() {
+	public DefaultRichClientConversionService() {
 		addDefaultConverters();
 		addDefaultAliases();
 	}
@@ -43,7 +43,7 @@ public class DefaultConversionService extends GenericConversionService {
 	 * 
 	 * @param delegateConversionService the Spring conversion service
 	 */
-	public DefaultConversionService(ConversionService delegateConversionService) {
+	public DefaultRichClientConversionService(ConversionService delegateConversionService) {
 		super(delegateConversionService);
 		addDefaultConverters();
 		addDefaultAliases();
@@ -55,7 +55,7 @@ public class DefaultConversionService extends GenericConversionService {
 	 * Note: Staring with Spring Web Flow 2.1, this method does not register any Spring Binding converters. All type
 	 * conversion is driven through Spring's type conversion instead.
 	 * 
-	 * @see GenericConversionService
+	 * @see GenericRichClientConversionService
 	 */
 	protected void addDefaultConverters() {
 	}

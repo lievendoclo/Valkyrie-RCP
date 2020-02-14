@@ -17,6 +17,7 @@ package org.valkyriercp.selection.dialog;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.GlazedLists;
+import ca.odell.glazedlists.swing.DefaultEventListModel;
 import ca.odell.glazedlists.swing.EventListModel;
 import org.springframework.util.Assert;
 
@@ -33,28 +34,28 @@ import java.util.List;
  * 
  * @author Peter De Bruycker
  */
-public class ListSelectionDialog extends AbstractSelectionDialog {
+public class ListSelectionDialog<E> extends AbstractSelectionDialog {
 
-	private ListCellRenderer renderer;
+	private ListCellRenderer<E> renderer;
 
-	private JList list;
+	private JList<E> list;
 
-	private EventList items;
+	private EventList<E> items;
 
-	public ListSelectionDialog(String title, List items) {
+	public ListSelectionDialog(String title, List<E> items) {
 		this(title, null, GlazedLists.eventList(items));
 	}
 
-	public ListSelectionDialog(String title, Window parent, List items) {
+	public ListSelectionDialog(String title, Window parent, List<E> items) {
 		this(title, parent, GlazedLists.eventList(items));
 	}
 
-	public ListSelectionDialog(String title, Window parent, EventList items) {
+	public ListSelectionDialog(String title, Window parent, EventList<E> items) {
 		super(title, parent);
 		this.items = items;
 	}
 
-	public void setRenderer(ListCellRenderer renderer) {
+	public void setRenderer(ListCellRenderer<E> renderer) {
 		Assert.notNull(renderer, "Renderer cannot be null.");
 		Assert.isTrue(!isControlCreated(),
 				"Install the renderer before the control is created.");
@@ -64,7 +65,7 @@ public class ListSelectionDialog extends AbstractSelectionDialog {
 
 	protected JComponent createSelectionComponent() {
 		list = getApplicationConfig().componentFactory().createList();
-		list.setModel(new EventListModel(items));
+		list.setModel(new DefaultEventListModel<>(items));
 
 		list.getSelectionModel().setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
@@ -117,11 +118,11 @@ public class ListSelectionDialog extends AbstractSelectionDialog {
 		return items.get(list.getSelectedIndex());
 	}
 
-	protected final JList getList() {
+	protected final JList<E> getList() {
 		return list;
 	}
 
-	public EventList getItems() {
+	public EventList<E> getItems() {
 		return items;
 	}
 

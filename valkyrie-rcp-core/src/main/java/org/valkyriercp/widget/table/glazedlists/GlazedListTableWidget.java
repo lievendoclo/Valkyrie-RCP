@@ -21,7 +21,6 @@ import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.gui.TableFormat;
 import ca.odell.glazedlists.gui.WritableTableFormat;
 import ca.odell.glazedlists.swing.*;
-import com.google.common.collect.Lists;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.Size;
@@ -390,7 +389,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 	}
 
 	private void initializeNavigationCommands() {
-		this.navigationCommands = Lists.newArrayList();
+		this.navigationCommands = new ArrayList<>();
 		navigationCommands.add(new ActionCommand(NAVIGATE_FIRSTROW_CMDID) {
 			@Override
 			protected void doExecuteCommand() {
@@ -515,7 +514,7 @@ public final class GlazedListTableWidget extends AbstractWidget implements
 		this.selectColumnCommandGroup = getApplicationConfig()
 				.commandManager()
 				.createCommandGroup(
-						Lists.newArrayList(selectAll, selectNone, selectInverse));
+						Arrays.asList(selectAll, selectNone, selectInverse));
 	}
 
 	public final void setRows(Collection newRows) {

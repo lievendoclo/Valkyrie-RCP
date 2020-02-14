@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.binding.validation.support;
 
-import com.google.common.collect.Sets;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.ValidatingFormModel;
 import org.valkyriercp.binding.validation.RichValidator;
@@ -123,7 +122,7 @@ public class JSR303Validator<T>  implements RichValidator<T>, ObjectNameResolver
 	 */
 	protected Set<ConstraintViolation<T>> doValidate(final T object, final String property) {
 		if (property == null) {
-			final Set<ConstraintViolation<T>> ret = Sets.newHashSet();
+			final Set<ConstraintViolation<T>> ret = new HashSet<>();
 			PropertyDescriptor[] propertyDescriptors;
 			try {
 				propertyDescriptors = Introspector.getBeanInfo(object.getClass()).getPropertyDescriptors();

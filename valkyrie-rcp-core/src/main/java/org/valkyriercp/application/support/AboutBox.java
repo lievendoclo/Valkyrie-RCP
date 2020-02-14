@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.application.support;
 
-import com.google.common.collect.Lists;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -34,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
 
 /**
  * An implementation of an about box in a dialog. The dialog contents contain a
@@ -205,7 +205,7 @@ public class AboutBox {
 		}
 
 		protected java.util.List<AbstractCommand> getCommandGroupMembers() {
-			return Lists.<AbstractCommand> newArrayList(getFinishCommand());
+			return Collections.singletonList(getFinishCommand());
 		}
 
 		/**

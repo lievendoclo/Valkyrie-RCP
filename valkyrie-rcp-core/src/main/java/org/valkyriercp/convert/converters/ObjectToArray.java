@@ -18,17 +18,17 @@ package org.valkyriercp.convert.converters;
 import java.lang.reflect.Array;
 
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 
 /**
  * Special two-way converter that converts an object to an single-element array. Mainly used internally by
- * {@link ConversionService} implementations.
+ * {@link RichClientConversionService} implementations.
  * 
  * @author Keith Donald
  */
 public class ObjectToArray implements Converter {
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
@@ -37,7 +37,7 @@ public class ObjectToArray implements Converter {
 	 * @param conversionService the conversion service to resolve the converter to use to convert the object added to
 	 * the target array.
 	 */
-	public ObjectToArray(ConversionService conversionService) {
+	public ObjectToArray(RichClientConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

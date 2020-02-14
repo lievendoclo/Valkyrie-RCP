@@ -15,14 +15,14 @@
  */
 package org.valkyriercp.application.support;
 
-import com.google.common.collect.Lists;
 import org.valkyriercp.application.PageLayoutBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MultiViewPageDescriptor  extends AbstractPageDescriptor {
 
-    private List<String> viewDescriptorIds = Lists.newArrayList();
+    private List<String> viewDescriptorIds = new ArrayList<>();
 
     public void buildInitialLayout(PageLayoutBuilder pageLayout) {
         getViewDescriptorIds().forEach(pageLayout::addView);

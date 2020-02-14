@@ -26,7 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.springframework.core.ResolvableType;
 
 /**
@@ -38,13 +38,13 @@ import org.springframework.core.ResolvableType;
  * Note that type erasure prevents arbitrary access to generic collection element type information at runtime,
  * preventing the ability to convert elements for collections declared as properties.
  * 
- * Mainly used internally by {@link ConversionService} implementations.
+ * Mainly used internally by {@link RichClientConversionService} implementations.
  * 
  * @author Keith Donald
  */
 public class ArrayToCollection implements TwoWayConverter {
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
@@ -53,7 +53,7 @@ public class ArrayToCollection implements TwoWayConverter {
 	 * @param conversionService the conversion service to use to lookup the converter to apply to array elements added
 	 * to the target collection
 	 */
-	public ArrayToCollection(ConversionService conversionService) {
+	public ArrayToCollection(RichClientConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

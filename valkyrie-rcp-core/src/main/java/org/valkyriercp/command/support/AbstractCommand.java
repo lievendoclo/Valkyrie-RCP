@@ -15,10 +15,8 @@
  */
 package org.valkyriercp.command.support;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -88,7 +86,9 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 
     private String[] authorities;
 
-	private Cache<String, CommandFaceButtonManager> faceButtonManagers = CacheBuilder.newBuilder().build();
+	private Cache<String, CommandFaceButtonManager> faceButtonManagers = new Cache2kBuilder<String, CommandFaceButtonManager>() {}
+			.loader(key -> new CommandFaceButtonManager(AbstractCommand.this, key))
+			.build();
 
 	private CommandServices commandServices;
 
@@ -947,12 +947,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * with the {@link CommandFaceDescriptor}.
 	 */
 	private CommandFaceButtonManager getButtonManager(String faceDescriptorId) {
-		try {
-			return this.faceButtonManagers.get(faceDescriptorId, () ->
-					new CommandFaceButtonManager(AbstractCommand.this, faceDescriptorId));
-		} catch (ExecutionException e) {
-			throw new RuntimeException("Error getting button manager for " + faceDescriptorId);
-		}
+		return this.faceButtonManagers.get(faceDescriptorId);
 	}
 
 	/**

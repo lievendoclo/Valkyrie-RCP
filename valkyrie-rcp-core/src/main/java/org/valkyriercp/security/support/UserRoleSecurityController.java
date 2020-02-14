@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.security.support;
 
-import com.google.common.collect.Lists;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -23,6 +22,7 @@ import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,7 +74,7 @@ public class UserRoleSecurityController extends AbstractSecurityController {
      */
     public UserRoleSecurityController() {
         // Install the default decision manager
-        List<AccessDecisionVoter<?>> voters = Lists.newArrayList();
+        List<AccessDecisionVoter<?>> voters = new ArrayList<>();
         voters.add(new RoleVoter());
         AffirmativeBased adm = new AffirmativeBased(voters);
         setAccessDecisionManager( adm );

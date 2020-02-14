@@ -18,7 +18,7 @@ package org.valkyriercp.convert;
 /**
  * Thrown when a conversion executor could not be found in a conversion service.
  * 
- * @see ConversionService#getConversionExecutor(Class, Class)
+ * @see RichClientConversionService#getConversionExecutor(Class, Class)
  * @author Keith Donald
  */
 public class ConversionExecutorNotFoundException extends ConversionException {

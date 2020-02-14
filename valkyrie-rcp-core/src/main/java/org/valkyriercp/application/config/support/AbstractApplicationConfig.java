@@ -15,11 +15,7 @@
  */
 package org.valkyriercp.application.config.support;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.valkyriercp.convert.ConversionService;
-import org.valkyriercp.convert.service.DefaultConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +25,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
-import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.valkyriercp.application.*;
@@ -63,6 +58,8 @@ import org.valkyriercp.component.DefaultOverlayService;
 import org.valkyriercp.component.DefaultTitlePaneConfigurer;
 import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.component.TitlePaneConfigurer;
+import org.valkyriercp.convert.RichClientConversionService;
+import org.valkyriercp.convert.service.DefaultRichClientConversionService;
 import org.valkyriercp.convert.support.CollectionToListModelConverter;
 import org.valkyriercp.convert.support.ListToListModelConverter;
 import org.valkyriercp.factory.*;
@@ -282,13 +279,13 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	@Bean
 	public SecurityController authorityConfigurableSecurityController() {
 		AuthorityConfigurableSecurityController authorityConfigurableSecurityController = new AuthorityConfigurableSecurityController();
-		Map<String, String> idAuthorityMap = Maps.newHashMap();
+		Map<String, String> idAuthorityMap = new HashMap<>();
 		configureAuthorityMap(idAuthorityMap);
 		authorityConfigurableSecurityController
 				.setIdAuthorityMap(idAuthorityMap);
 		RoleVoter roleVoter = new RoleVoter();
 		roleVoter.setRolePrefix("");
-		AffirmativeBased accessDecisionManager = new AffirmativeBased(Lists.newArrayList(roleVoter));
+		AffirmativeBased accessDecisionManager = new AffirmativeBased(Collections.singletonList(roleVoter));
 		authorityConfigurableSecurityController
 				.setAccessDecisionManager(accessDecisionManager);
 		return authorityConfigurableSecurityController;
@@ -303,9 +300,9 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
 	@Bean
 	public RegisterableExceptionHandler registerableExceptionHandler() {
-		JXErrorDialogExceptionHandler errorDialogExceptionHandler = new JXErrorDialogExceptionHandler();
-		DelegatingExceptionHandler handler = new DelegatingExceptionHandler();
-		handler.addDelegateToList(new SimpleExceptionHandlerDelegate()
+		JXErrorDialogExceptionHandler<?> errorDialogExceptionHandler = new JXErrorDialogExceptionHandler<>();
+		DelegatingExceptionHandler<?> handler = new DelegatingExceptionHandler<>();
+		handler.addDelegateToList(new SimpleExceptionHandlerDelegate<>()
 				.forThrowable(Throwable.class).handledBy(
 						errorDialogExceptionHandler));
 		return handler;
@@ -352,8 +349,8 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	}
 
 	@Bean
-	public ConversionService conversionService() {
-		DefaultConversionService conversionService = new DefaultConversionService();
+	public RichClientConversionService conversionService() {
+		DefaultRichClientConversionService conversionService = new DefaultRichClientConversionService();
 		conversionService.addConverter(new ListToListModelConverter());
 		conversionService.addConverter(new CollectionToListModelConverter());
 		return conversionService;
@@ -362,7 +359,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	@Bean
 	public FormComponentInterceptorFactory formComponentInterceptorFactory() {
 		ChainedInterceptorFactory factory = new ChainedInterceptorFactory();
-		List<FormComponentInterceptorFactory> factories = Lists.newArrayList();
+		List<FormComponentInterceptorFactory> factories = new ArrayList<>();
 		factories.add(new ColorValidationInterceptorFactory());
 		factories.add(new OverlayValidationInterceptorFactory());
 		factories.add(new ShowCaptionInStatusBarInterceptorFactory());

@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.form.binding.swing.editor;
 
-import com.google.common.base.Function;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXPanel;
 import org.springframework.util.Assert;
@@ -31,7 +30,6 @@ import org.valkyriercp.widget.editor.AbstractDataEditorWidget;
 import org.valkyriercp.widget.editor.DataEditorWidgetViewCommand;
 import org.valkyriercp.widget.editor.DefaultDataEditorWidget;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -43,6 +41,7 @@ import java.beans.VetoableChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Function;
 
 public class LookupBinding<T> extends CustomBinding {
 

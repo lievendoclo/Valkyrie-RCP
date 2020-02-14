@@ -15,9 +15,9 @@
  */
 package org.valkyriercp.sample.dataeditor.domain;
 
-import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +43,7 @@ public class SupplierService
     }
 
     private Map<Integer, Supplier> generateMap() {
-        Map<Integer, Supplier> repository = Maps.newHashMap();
+        Map<Integer, Supplier> repository = new HashMap<>();
         repository.put(1, new Supplier("Jake Johnson","jake@springcource.com","555-5236","SpringCource","555-3636"));
         repository.put(2, new Supplier("Tim Sears","tim@microshoft.com","555-3634","Microshoft","555-8978"));
         repository.put(3, new Supplier("Peter Deloye","peter@ibmn.com","525-6636","IBMN","556-5654"));

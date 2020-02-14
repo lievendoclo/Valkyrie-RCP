@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.form.binding.swing;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.valkyriercp.application.support.MessageResolver;
 import org.valkyriercp.binding.form.FormModel;
@@ -116,7 +116,7 @@ public class EnumComboBoxBinder extends ComboBoxBinder {
 		for (Enum e : enumPropertyType.getEnumConstants()) {
 			String messageKey = enumPropertyType.getName() + "." + e.name();
 			String desc = getMessageResolver().getMessage(messageKey);
-			if (!Strings.isNullOrEmpty(desc)) {
+			if (!StringUtils.isBlank(desc)) {
 				out.add(e);
 			} else {
 				log.warn("No message found for: " + messageKey + ", ignoring!");

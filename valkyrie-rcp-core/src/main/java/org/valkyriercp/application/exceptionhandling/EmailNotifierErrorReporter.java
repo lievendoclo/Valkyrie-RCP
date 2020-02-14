@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.application.exceptionhandling;
 
-import com.google.common.base.Joiner;
 import org.jdesktop.swingx.error.ErrorInfo;
 import org.jdesktop.swingx.error.ErrorReporter;
 import org.springframework.beans.factory.BeanNameAware;
@@ -82,7 +81,7 @@ public class EmailNotifierErrorReporter implements ErrorReporter, BeanNameAware 
         String body = getMessageByKeySuffix(".body", messageParams);
 
         String uriStr = String.format("mailto:%s?subject=%s&body=%s",
-                Joiner.on(',').join(toAddrs), // use semicolon ";" for Outlook!
+                String.join(", ", toAddrs),
                 urlEncode(subject),
                 urlEncode(body));
 

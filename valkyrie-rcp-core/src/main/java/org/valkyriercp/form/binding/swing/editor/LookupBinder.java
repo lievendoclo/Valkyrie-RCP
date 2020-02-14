@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.form.binding.swing.editor;
 
-import com.google.common.base.Function;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binder;
@@ -26,6 +25,7 @@ import org.valkyriercp.widget.editor.DefaultDataEditorWidget;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+import java.util.function.Function;
 
 public class LookupBinder<T> implements Binder
 {
@@ -52,20 +52,12 @@ public class LookupBinder<T> implements Binder
     private Object filter;
     private boolean enableViewCommand;
     private boolean loadDetailedObject = false;
-    private Function<T, String> objectLabelFunction = new Function<T, String>() {
-        @Override
-        public String apply(T t) {
-            if(t == null)
-                return null;
-            return t.toString();
-        }
-    };
-    private Function<String, ? extends Object> createFilterFromFieldFunction = new Function<String, Object>() {
-        @Override
-        public Object apply(String s) {
+    private Function<T, String> objectLabelFunction = t -> {
+        if(t == null)
             return null;
-        }
+        return t.toString();
     };
+    private Function<String, ? extends Object> createFilterFromFieldFunction = (Function<String, Object>) s -> null;
     private Class<T> requiredSourceClass;
     private Dimension dialogSize;
 

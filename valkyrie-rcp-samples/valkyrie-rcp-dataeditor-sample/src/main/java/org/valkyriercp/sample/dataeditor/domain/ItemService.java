@@ -15,9 +15,8 @@
  */
 package org.valkyriercp.sample.dataeditor.domain;
 
-import com.google.common.collect.Maps;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class ItemService
     @SuppressWarnings("unchecked")
     public List<Item> findItems(final ItemFilter filter)
     {
-        List<Item> filtered = new ArrayList<Item>();
+        List<Item> filtered = new ArrayList<>();
         for (Item supplier : generateMap().values())
         {
             if (checkFilter(supplier, filter))
@@ -38,7 +37,7 @@ public class ItemService
     }
 
     private Map<Integer, Item> generateMap() {
-        Map<Integer, Item> repository = Maps.newHashMap();
+        Map<Integer, Item> repository = new HashMap<>();
         repository.put(1, new Item("Cheese", "Gouda", new Supplier("Jake Johnson","jake@springcource.com","555-5236","SpringCource","555-3636")));
         repository.put(2, new Item("Cheese", "Emmental", new Supplier("Jake Johnson","jake@springcource.com","555-5236","SpringCource","555-3636")));
         repository.put(3, new Item("Cheese", "Stilton", new Supplier("Jake Johnson","jake@springcource.com","555-5236","SpringCource","555-3636")));

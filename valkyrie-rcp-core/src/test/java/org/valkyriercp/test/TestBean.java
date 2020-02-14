@@ -15,12 +15,8 @@
  */
 package org.valkyriercp.test;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Oliver Hutchison
@@ -34,9 +30,9 @@ public class TestBean {
 
     public TestEnum enumProperty;
 
-    private Map mapProperty = Maps.newHashMap();
+    private Map mapProperty = new HashMap();
 
-    private List listProperty = Lists.newArrayList();
+    private List listProperty = new ArrayList();
 
     private Object[] arrayProperty;
 

@@ -3,7 +3,7 @@ package org.valkyriercp.convert.converters;
 import java.util.Collection;
 
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.springframework.core.CollectionFactory;
 import org.springframework.core.ResolvableType;
 
@@ -16,7 +16,7 @@ public class CollectionToCollection implements Converter {
 
 	private static final int DEFAULT_INITIAL_SIZE = 16;
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
@@ -25,7 +25,7 @@ public class CollectionToCollection implements Converter {
 	 * @param conversionService the conversion service to use to convert collection elements to add to the target
 	 * collection
 	 */
-	public CollectionToCollection(ConversionService conversionService) {
+	public CollectionToCollection(RichClientConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

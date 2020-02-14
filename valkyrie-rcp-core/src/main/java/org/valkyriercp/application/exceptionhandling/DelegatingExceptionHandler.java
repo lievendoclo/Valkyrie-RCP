@@ -15,13 +15,13 @@
  */
 package org.valkyriercp.application.exceptionhandling;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,17 +57,17 @@ public class DelegatingExceptionHandler<SELF extends DelegatingExceptionHandler<
     }
 
     public SELF delegatingInOrderTo(ExceptionHandlerDelegate... delegateList) {
-        setDelegateList(Lists.newArrayList(delegateList));
+        setDelegateList(Arrays.asList(delegateList));
         return self();
     }
 
     public void addDelegateToList(ExceptionHandlerDelegate... delegateList) {
-        getDelegateList().addAll(Lists.newArrayList(delegateList));
+        getDelegateList().addAll(Arrays.asList(delegateList));
     }
 
     public List<ExceptionHandlerDelegate> getDelegateList() {
         if(delegateList == null)
-            delegateList = new ArrayList<ExceptionHandlerDelegate>();
+            delegateList = new ArrayList<>();
         return delegateList;
     }
 

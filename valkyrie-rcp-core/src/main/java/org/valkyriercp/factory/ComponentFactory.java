@@ -160,7 +160,7 @@ public interface ComponentFactory {
          *
          * @return The new list.
          */
-        public JList createList();
+        public <E> JList<E> createList();
 
         /**
          * Create a combo box using this component factory.

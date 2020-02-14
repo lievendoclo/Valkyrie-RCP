@@ -15,7 +15,7 @@
  */
 package org.valkyriercp.application.exceptionhandling;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 import java.sql.SQLException;
@@ -126,7 +126,7 @@ public class MessagesDialogExceptionHandler<SELF extends MessagesDialogException
         if (message == null) {
             return "";
         }
-        String identString = Strings.padStart("", identLength, ' ');
+        String identString = StringUtils.leftPad("", identLength, ' ');
         String newLineWithIdentString = "\n" + identString;
         StringBuilder formattedMessageBuilder = new StringBuilder(identString);
         StringTokenizer messageTokenizer = new StringTokenizer(message, "\n");

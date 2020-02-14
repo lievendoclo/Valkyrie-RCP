@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.widget;
 
-import com.google.common.collect.Lists;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -35,6 +34,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Allows to create an applicationDialog in which a given widget can be shown
@@ -154,15 +155,15 @@ public class TitledWidgetApplicationDialog extends ApplicationDialog
         return panel;
     }
 
-    protected ArrayList<AbstractCommand> getCommandGroupMembers()
+    protected java.util.List<AbstractCommand> getCommandGroupMembers()
     {
         if (this.mode == SELECT_CANCEL_MODE)
-            return Lists.<AbstractCommand>newArrayList(getFinishCommand(), getSelectNoneCommand(), getCancelCommand());
+            return Arrays.asList(getFinishCommand(), getSelectNoneCommand(), getCancelCommand());
         if (this.mode == OK_MODE)
-            return Lists.<AbstractCommand>newArrayList(getFinishCommand());
+            return Collections.singletonList(getFinishCommand());
         if (this.mode == CANCEL_MODE)
-            return Lists.<AbstractCommand>newArrayList(getCancelCommand());
-        return Lists.<AbstractCommand>newArrayList(getCancelCommand());
+            return Collections.singletonList(getCancelCommand());
+        return Collections.singletonList(getCancelCommand());
     }
 
     protected ActionCommand getSelectNoneCommand()

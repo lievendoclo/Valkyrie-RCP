@@ -15,10 +15,8 @@
  */
 package org.valkyriercp.binding.form.support;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FieldFace;
 import org.valkyriercp.binding.form.FieldFaceSource;
@@ -43,11 +41,9 @@ public abstract class CachingFieldFaceSource implements FieldFaceSource {
      * A cache with context keys and Map from field to FieldFace values. The keys are held with week references so this
      * class will not prevent GC of context instances.
      */
-    private final LoadingCache cachedFieldFaceDescriptors = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
-        public Object load(Object key) {
-            return new HashMap();
-        }
-    });
+    private final Cache<Object, Map<String, FieldFace>> cachedFieldFaceDescriptors = new Cache2kBuilder<Object, Map<String, FieldFace>>() {}
+            .loader(key -> new HashMap<>())
+            .build();
 
     protected CachingFieldFaceSource() {
     }
@@ -57,7 +53,7 @@ public abstract class CachingFieldFaceSource implements FieldFaceSource {
     }
 
     public FieldFace getFieldFace(final String field, final Object context) {
-        Map faceDescriptors = (Map) cachedFieldFaceDescriptors.getUnchecked(context == null ? DEFAULT_CONTEXT : context);
+        Map faceDescriptors = cachedFieldFaceDescriptors.get(context == null ? DEFAULT_CONTEXT : context);
         FieldFace fieldFaceDescriptor = (FieldFace) faceDescriptors.get(field);
         if (fieldFaceDescriptor == null) {
             fieldFaceDescriptor = loadFieldFace(field, context);

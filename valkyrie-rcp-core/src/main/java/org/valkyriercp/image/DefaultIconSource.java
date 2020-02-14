@@ -15,12 +15,10 @@
  */
 package org.valkyriercp.image;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +39,15 @@ import java.util.concurrent.ExecutionException;
 public class DefaultIconSource implements IconSource {
     protected static final Log logger = LogFactory.getLog(DefaultIconSource.class);
 
-    private Cache cache = CacheBuilder.newBuilder().build();
-
     @Autowired
     private ImageSource imageSource;
+
+    private Cache<String, ImageIcon> cache = new Cache2kBuilder<String, ImageIcon>() {}
+            .loader(key -> {
+                Image image = imageSource.getImage(key);
+                return new ImageIcon(image);
+            })
+            .build();
 
     public Icon getIcon(String key) {
         try {
@@ -52,16 +55,13 @@ public class DefaultIconSource implements IconSource {
                 logger.debug("Resolving icon with key '" + key + "'");
             }
             if(imageSource.hasImageFor(key)) {
-                return (ImageIcon) cache.get(key, () -> {
-                    Image image = imageSource.getImage(key);
-                    return new ImageIcon(image);
-                });
+                return cache.get(key);
             } else {
                 return null;
             }
 
         }
-        catch (NoSuchImageResourceException | ExecutionException e) {
+        catch (NoSuchImageResourceException e) {
             if (logger.isInfoEnabled()) {
                 logger.info("No image resource found for icon with key '" + key + "'; returning a <null> icon.");
             }
@@ -70,6 +70,6 @@ public class DefaultIconSource implements IconSource {
     }
 
     public void clear() {
-        cache.invalidateAll();
+        cache.clear();
     }
 }

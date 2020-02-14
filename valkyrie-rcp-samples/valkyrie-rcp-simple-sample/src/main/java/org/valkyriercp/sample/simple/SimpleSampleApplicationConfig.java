@@ -15,8 +15,6 @@
  */
 package org.valkyriercp.sample.simple;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +39,7 @@ import org.valkyriercp.sample.simple.ui.ContactView;
 import org.valkyriercp.sample.simple.ui.InitialView;
 import org.valkyriercp.security.LoginCommand;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +111,7 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 	public ViewDescriptor contactView() {
 		DefaultViewDescriptor initialView = new DefaultViewDescriptor(
 				"contactView", ContactView.class);
-		Map<String, Object> viewProperties = Maps.newHashMap();
+		Map<String, Object> viewProperties = new HashMap<>();
 		viewProperties.put("contactDataStore", new ContactDataStore());
 		initialView.setViewProperties(viewProperties);
 		return initialView;

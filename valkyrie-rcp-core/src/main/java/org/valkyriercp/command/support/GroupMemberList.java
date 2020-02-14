@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.command.support;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.valkyriercp.command.GroupContainerPopulator;
@@ -26,7 +25,7 @@ import java.util.*;
 public class GroupMemberList {
     private static final Log logger = LogFactory.getLog(GroupMemberList.class);
 
-    private List<GroupMember> members = Lists.newArrayList();
+    private List<GroupMember> members = new ArrayList<>();
 
     private Map<Object, GroupMemberContainerManager> builders = new WeakHashMap<>(6);
 

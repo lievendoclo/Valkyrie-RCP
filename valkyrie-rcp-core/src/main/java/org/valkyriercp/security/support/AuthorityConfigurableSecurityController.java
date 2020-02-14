@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.security.support;
 
-import com.google.common.collect.Maps;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDecisionManager;
@@ -64,7 +63,7 @@ public class AuthorityConfigurableSecurityController implements SecurityControll
     private  List<ConfigAttribute> configAttributeDefinition;
 
     /** Id bound configAttributeDefinitions. */
-    private Map<String,  List<ConfigAttribute>> idConfigAttributeDefinitionMap = Maps.newHashMap();
+    private Map<String,  List<ConfigAttribute>> idConfigAttributeDefinitionMap = new HashMap<>();
 
     /**
      * Last authentication token = currently used.

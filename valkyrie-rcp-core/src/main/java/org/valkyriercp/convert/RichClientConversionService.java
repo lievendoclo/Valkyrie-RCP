@@ -23,7 +23,7 @@ package org.valkyriercp.convert;
  * 
  * @author Keith Donald
  */
-public interface ConversionService {
+public interface RichClientConversionService {
 
 	/**
 	 * Execute a conversion of the source object provided to the specified <code>targetClass</code>

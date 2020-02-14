@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.form.builder;
 
-import com.google.common.collect.Lists;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 
@@ -28,7 +27,7 @@ import java.util.List;
  */
 public class ChainedInterceptorFactory implements FormComponentInterceptorFactory {
 
-    private List<FormComponentInterceptorFactory> interceptorFactories = Lists.newArrayList();
+    private List<FormComponentInterceptorFactory> interceptorFactories = new ArrayList<>();
 
     public ChainedInterceptorFactory() {
     }

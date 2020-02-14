@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.dialog;
 
-import com.google.common.collect.Lists;
 import org.springframework.util.Assert;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.core.DefaultMessage;
@@ -25,6 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Collections;
 
 /**
  * Dialog for showing an message to the user. The severity of the message is used to
@@ -129,7 +129,7 @@ public class MessageDialog extends ApplicationDialog {
     }
 
     protected java.util.List<AbstractCommand> getCommandGroupMembers() {
-        return Lists.<AbstractCommand>newArrayList(getCancelCommand());
+        return Collections.singletonList(getCancelCommand());
     }
 
     protected JComponent createDialogContentPane() {

@@ -16,7 +16,7 @@
 package org.valkyriercp.form.binding.swing;
 
 import org.valkyriercp.convert.ConversionException;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.ValueModel;
@@ -87,7 +87,7 @@ public abstract class AbstractListBinding extends AbstractBinding {
         }
     }
 
-    protected ConversionService getConversionService() {
+    protected RichClientConversionService getConversionService() {
         return ValkyrieRepository.getInstance().getApplicationConfig().conversionService();
     }
 

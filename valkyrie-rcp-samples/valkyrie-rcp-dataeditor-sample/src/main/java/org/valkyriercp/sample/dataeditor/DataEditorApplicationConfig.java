@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.sample.dataeditor;
 
-import com.google.common.collect.Lists;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -53,6 +52,8 @@ import org.valkyriercp.security.LoginCommand;
 import org.valkyriercp.text.TextComponentPopupInterceptorFactory;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -188,12 +189,12 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        List<UserDetails> userDetailsList = Lists.newArrayList();
+        List<UserDetails> userDetailsList = new ArrayList<>();
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         userDetailsList.add(User.builder().username("admin").password(encoder.encode("admin")).roles("ADMIN").build());
         userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).roles("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.newArrayList(provider));
+        return new ProviderManager(Collections.singletonList(provider));
     }
 }

@@ -15,8 +15,6 @@
  */
 package org.valkyriercp.sample.dockingframes;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +46,7 @@ import org.valkyriercp.sample.dockingframes.ui.ContactView;
 import org.valkyriercp.sample.dockingframes.ui.InitialView;
 import org.valkyriercp.security.LoginCommand;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
 public class DockingFramesSampleApplicationConfig extends AbstractApplicationConfig {
@@ -107,7 +104,7 @@ public class DockingFramesSampleApplicationConfig extends AbstractApplicationCon
     @Bean
     public ViewDescriptor initialView() {
         DefaultViewDescriptor initialView = new DefaultViewDescriptor("initialView", InitialView.class);
-        Map<String,Object> viewProperties = Maps.newHashMap();
+        Map<String,Object> viewProperties = new HashMap<>();
         viewProperties.put("firstMessage", "firstMessage.text");
         viewProperties.put("descriptionTextPath", "org/valkyriercp/sample/dockingframes/ui/initialViewText.html");
         initialView.setViewProperties(viewProperties);
@@ -117,7 +114,7 @@ public class DockingFramesSampleApplicationConfig extends AbstractApplicationCon
     @Bean
     public ViewDescriptor contactView() {
         DefaultViewDescriptor contactView = new DefaultViewDescriptor("contactView", ContactView.class);
-        Map<String,Object> viewProperties = Maps.newHashMap();
+        Map<String,Object> viewProperties = new HashMap<>();
         viewProperties.put("contactDataStore", new ContactDataStore());
         contactView.setViewProperties(viewProperties);
         return contactView;
@@ -125,12 +122,12 @@ public class DockingFramesSampleApplicationConfig extends AbstractApplicationCon
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        List<UserDetails> userDetailsList = Lists.newArrayList();
+        List<UserDetails> userDetailsList = new ArrayList<>();
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        userDetailsList.add(new User("admin", encoder.encode("admin"), Lists.newArrayList(new SimpleGrantedAuthority("ADMIN"))));
-        userDetailsList.add(new User("user", encoder.encode("user"), Lists.newArrayList(new SimpleGrantedAuthority("READ"))));
+        userDetailsList.add(User.builder().username("admin").password(encoder.encode("admin")).roles("ADMIN").build());
+        userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).roles("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.<AuthenticationProvider>newArrayList(provider));
+        return new ProviderManager(Collections.singletonList(provider));
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.dialog;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -37,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -778,7 +778,7 @@ public abstract class ApplicationDialog implements TitleConfigurable, Guarded {
 	 * identifier)
 	 */
 	protected java.util.List<? extends AbstractCommand> getCommandGroupMembers() {
-		return Lists.<AbstractCommand>newArrayList(getFinishCommand(), getCancelCommand());
+		return Arrays.asList(getFinishCommand(), getCancelCommand());
 	}
 
 	/**

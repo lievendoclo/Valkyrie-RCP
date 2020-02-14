@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.wizard;
 
-import com.google.common.collect.Lists;
 import org.springframework.util.Assert;
 import org.valkyriercp.command.support.AbstractCommand;
 import org.valkyriercp.command.support.ActionCommand;
@@ -29,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
 /**
  * Dialog for wizards.
@@ -106,7 +106,7 @@ public class WizardDialog extends TitledApplicationDialog implements WizardConta
             }
         };
         backCommand.setEnabled(false);
-        return Lists.newArrayList( backCommand, nextCommand, getFinishCommand(), getCancelCommand());
+        return Arrays.asList( backCommand, nextCommand, getFinishCommand(), getCancelCommand());
     }
 
     protected void onAboutToShow() {

@@ -128,9 +128,12 @@ project("valkyrie-rcp-core") {
     dependencies {
         compile project(":valkyrie-rcp-resources")
         compile "com.l2fprod:l2fprod-common-all:7.3"
-        compile "net.java.dev.glazedlists:glazedlists_java15:1.9.1"
+        compile "com.glazedlists:glazedlists:1.11.0"
         compile "commons-beanutils:commons-beanutils:1.9.4"
-        compile "com.google.guava:guava:28.1-jre"
+        compile 'org.apache.commons:commons-lang3:3.8.1'
+        compile "org.cache2k:cache2k-api:1.2.4.Final"
+        runtime "org.cache2k:cache2k-core:1.2.4.Final"
+//        compile "com.google.guava:guava:28.1-jre"
         compile "org.springframework.security:spring-security-core:5.2.2.RELEASE"
         compile "org.springframework.security:spring-security-config:5.2.2.RELEASE"
         compile "org.springframework:spring-context:5.2.3.RELEASE"
@@ -209,8 +212,6 @@ project("valkyrie-rcp-samples:valkyrie-rcp-dataeditor-sample") {
         compile project(":valkyrie-rcp-core")
         compile project(":valkyrie-rcp-integrations:valkyrie-rcp-jideoss")
         compile "com.jgoodies:jgoodies-looks:2.7.0"
-        compile "com.github.insubstantial:substance:7.3"
-        compile "com.github.insubstantial:substance-swingx:7.3"
     }
 }
 

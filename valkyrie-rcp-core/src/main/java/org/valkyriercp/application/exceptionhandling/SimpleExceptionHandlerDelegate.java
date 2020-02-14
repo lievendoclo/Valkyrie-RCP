@@ -15,8 +15,9 @@
  */
 package org.valkyriercp.application.exceptionhandling;
 
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class SimpleExceptionHandlerDelegate<SELF extends SimpleExceptionHandlerD
 
     public SimpleExceptionHandlerDelegate(Class<? extends Throwable> throwableClass,
                                           Thread.UncaughtExceptionHandler exceptionHandler) {
-        this(Lists.<Class<? extends Throwable>>newArrayList(throwableClass), exceptionHandler);
+        this(Collections.singletonList(throwableClass), exceptionHandler);
     }
 
     public SimpleExceptionHandlerDelegate(List<Class<? extends Throwable>> throwableClassList,
@@ -45,7 +46,7 @@ public class SimpleExceptionHandlerDelegate<SELF extends SimpleExceptionHandlerD
     }
 
     public void setThrowableClass(Class<? extends Throwable> throwableClass) {
-        setThrowableClassList(Lists.<Class<? extends Throwable>>newArrayList(throwableClass));
+        setThrowableClassList(Collections.singletonList(throwableClass));
     }
 
     public SELF forThrowable(Class<? extends Throwable> throwableClass) {

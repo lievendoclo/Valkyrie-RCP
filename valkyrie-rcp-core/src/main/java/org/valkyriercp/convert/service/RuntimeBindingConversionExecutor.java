@@ -17,7 +17,7 @@ package org.valkyriercp.convert.service;
 
 import org.valkyriercp.convert.ConversionExecutionException;
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.springframework.util.Assert;
 
 /**
@@ -28,14 +28,14 @@ public class RuntimeBindingConversionExecutor implements ConversionExecutor {
 
 	private Class<?> targetClass;
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	/**
 	 * Creates a new runtime binding conversion executor.
 	 * @param targetClass the target type to convert to
 	 * @param conversionService the conversion service to get converters from
 	 */
-	public RuntimeBindingConversionExecutor(Class<?> targetClass, ConversionService conversionService) {
+	public RuntimeBindingConversionExecutor(Class<?> targetClass, RichClientConversionService conversionService) {
 		Assert.notNull(targetClass, "The target class of the conversion is required");
 		Assert.notNull(conversionService, "The conversion service is required");
 		this.targetClass = targetClass;

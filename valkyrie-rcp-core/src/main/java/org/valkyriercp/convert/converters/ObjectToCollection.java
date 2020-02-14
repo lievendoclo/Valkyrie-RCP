@@ -18,7 +18,7 @@ package org.valkyriercp.convert.converters;
 import java.util.Collection;
 
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.springframework.core.CollectionFactory;
 import org.springframework.core.ResolvableType;
 
@@ -32,7 +32,7 @@ public class ObjectToCollection implements Converter {
 
 	private static final int DEFAULT_INITIAL_CAPACITY = 16;
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
@@ -41,7 +41,7 @@ public class ObjectToCollection implements Converter {
 	 * @param conversionService the conversion service to lookup the converter to use to convert an object when adding
 	 * it to a target collection
 	 */
-	public ObjectToCollection(ConversionService conversionService) {
+	public ObjectToCollection(RichClientConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

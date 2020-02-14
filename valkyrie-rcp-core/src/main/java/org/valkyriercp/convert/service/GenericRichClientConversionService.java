@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class GenericConversionService implements ConversionService {
+public class GenericRichClientConversionService implements RichClientConversionService {
 
 	/**
 	 * Spring ConversionService where existing custom {@link Converter} types will be registered through an adapter.
@@ -52,12 +52,12 @@ public class GenericConversionService implements ConversionService {
 	/**
 	 * An optional parent conversion service.
 	 */
-	private ConversionService parent;
+	private RichClientConversionService parent;
 
 	/**
 	 * Default constructor.
 	 */
-	public GenericConversionService() {
+	public GenericRichClientConversionService() {
 		FormattingConversionServiceFactoryBean factoryBean = new FormattingConversionServiceFactoryBean();
 		factoryBean.afterPropertiesSet();
 		this.delegate = factoryBean.getObject();
@@ -67,7 +67,7 @@ public class GenericConversionService implements ConversionService {
 	 * Constructor accepting a specific instance of a Spring ConversionService to delegate to.
 	 * @param delegateConversionService the conversion service
 	 */
-	public GenericConversionService(org.springframework.core.convert.ConversionService delegateConversionService) {
+	public GenericRichClientConversionService(org.springframework.core.convert.ConversionService delegateConversionService) {
 		Assert.notNull(delegateConversionService, "Missing delegate ConversionService");
 		this.delegate = delegateConversionService;
 	}
@@ -75,14 +75,14 @@ public class GenericConversionService implements ConversionService {
 	/**
 	 * Returns the parent of this conversion service. Could be null.
 	 */
-	public ConversionService getParent() {
+	public RichClientConversionService getParent() {
 		return parent;
 	}
 
 	/**
 	 * Set the parent of this conversion service. This is optional.
 	 */
-	public void setParent(ConversionService parent) {
+	public void setParent(RichClientConversionService parent) {
 		this.parent = parent;
 	}
 

@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.form.builder;
 
-import com.google.common.collect.Maps;
 import net.miginfocom.swing.MigLayout;
 import org.valkyriercp.form.binding.BindingFactory;
 import org.valkyriercp.form.binding.swing.SwingBindingFactory;
@@ -69,19 +68,19 @@ public class MigLayoutFormBuilder extends AbstractFormBuilder {
     }
 
     public JComponent addProperty(String property) {
-        return addPropertyWithBinder(property, null, null, Maps.<String, Object>newHashMap());
+        return addPropertyWithBinder(property, null, null, new HashMap<>());
     }
 
     public JComponent addProperty(String property, String migLayoutProperties) {
-        return addPropertyWithBinder(property, null, migLayoutProperties, Maps.<String, Object>newHashMap());
+        return addPropertyWithBinder(property, null, migLayoutProperties, new HashMap<>());
     }
 
     public JComponent addPropertyWithBinder(String property, String binderId) {
-        return addPropertyWithBinder(property, binderId, null, Maps.<String, Object>newHashMap());
+        return addPropertyWithBinder(property, binderId, null, new HashMap<>());
     }
 
     public JComponent addPropertyWithBinder(String property, String binderId, String migLayoutProperties) {
-        return addPropertyWithBinder(property, binderId, migLayoutProperties, Maps.<String, Object>newHashMap());
+        return addPropertyWithBinder(property, binderId, migLayoutProperties, new HashMap<>());
     }
 
     public JComponent addPropertyWithBinder(String property, String binderId, Map<String, Object> context) {
@@ -136,19 +135,19 @@ public class MigLayoutFormBuilder extends AbstractFormBuilder {
     }
 
     public JComponent[] addPropertyAndLabel(String property) {
-        return addPropertyAndLabelWithBinder(property, null, Maps.<String, Object>newHashMap());
+        return addPropertyAndLabelWithBinder(property, null, new HashMap<>());
     }
 
     public JComponent[] addPropertyAndLabel(String property, String migLayoutProperties) {
-        return addPropertyAndLabelWithBinder(property, null, migLayoutProperties, Maps.<String, Object>newHashMap());
+        return addPropertyAndLabelWithBinder(property, null, migLayoutProperties, new HashMap<>());
     }
 
     public JComponent[] addPropertyAndLabelWithBinder(String property, String binderId) {
-        return addPropertyAndLabelWithBinder(property, binderId, null, Maps.<String, Object>newHashMap());
+        return addPropertyAndLabelWithBinder(property, binderId, null, new HashMap<>());
     }
 
     public JComponent[] addPropertyAndLabelWithBinder(String property, String binderId, String migLayoutProperties) {
-        return addPropertyAndLabelWithBinder(property, binderId, migLayoutProperties, Maps.<String, Object>newHashMap());
+        return addPropertyAndLabelWithBinder(property, binderId, migLayoutProperties, new HashMap<>());
     }
 
     public JComponent[] addPropertyAndLabelWithBinder(String property, String binderId, Map<String, Object> context) {

@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.springframework.beans.NotReadablePropertyException;
 import org.valkyriercp.convert.ConversionException;
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.service.GenericConversionService;
+import org.valkyriercp.convert.service.GenericRichClientConversionService;
 import org.valkyriercp.convert.service.StaticConversionExecutor;
 import org.valkyriercp.AbstractValkyrieTest;
 import org.valkyriercp.binding.form.CommitListener;
@@ -454,7 +454,7 @@ public abstract class AbstractFormModelTests extends AbstractValkyrieTest {
 		}
 	}
 
-	public class TestConversionService extends GenericConversionService {
+	public class TestConversionService extends GenericRichClientConversionService {
 
 		public int calls;
 

@@ -18,18 +18,18 @@ package org.valkyriercp.convert.converters;
 import java.lang.reflect.Array;
 
 import org.valkyriercp.convert.ConversionExecutor;
-import org.valkyriercp.convert.ConversionService;
+import org.valkyriercp.convert.RichClientConversionService;
 
 /**
  * Special one-way converter that converts from a source array to a target array. Supports type conversion of the
  * individual array elements; for example, the ability to convert a String[] to an Integer[]. Mainly used internally by
- * {@link ConversionService} implementations.
+ * {@link RichClientConversionService} implementations.
  * 
  * @author Keith Donald
  */
 public class ArrayToArray implements Converter {
 
-	private ConversionService conversionService;
+	private RichClientConversionService conversionService;
 
 	private ConversionExecutor elementConverter;
 
@@ -38,7 +38,7 @@ public class ArrayToArray implements Converter {
 	 * @param conversionService the service to use to lookup conversion executors for individual array elements
 	 * dynamically
 	 */
-	public ArrayToArray(ConversionService conversionService) {
+	public ArrayToArray(RichClientConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

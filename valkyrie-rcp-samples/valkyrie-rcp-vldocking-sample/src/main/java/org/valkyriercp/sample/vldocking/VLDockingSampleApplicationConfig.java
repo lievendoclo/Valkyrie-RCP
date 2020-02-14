@@ -15,8 +15,6 @@
  */
 package org.valkyriercp.sample.vldocking;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +43,7 @@ import org.valkyriercp.sample.vldocking.ui.ContactView;
 import org.valkyriercp.sample.vldocking.ui.InitialView;
 import org.valkyriercp.security.LoginCommand;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
 public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig {
@@ -108,7 +105,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
         initialView.setFloatEnabled(true);
         initialView.setAutoHideEnabled(true);
         initialView.setCloseEnabled(true);
-        Map<String,Object> viewProperties = Maps.newHashMap();
+        Map<String,Object> viewProperties = new HashMap<>();
         viewProperties.put("firstMessage", "firstMessage.text");
         viewProperties.put("descriptionTextPath", "org/valkyriercp/sample/vldocking/ui/initialViewText.html");
         initialView.setViewProperties(viewProperties);
@@ -121,7 +118,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
         contactView.setFloatEnabled(true);
         contactView.setAutoHideEnabled(true);
         contactView.setCloseEnabled(true);
-        Map<String,Object> viewProperties = Maps.newHashMap();
+        Map<String,Object> viewProperties = new HashMap<>();
         viewProperties.put("contactDataStore", new ContactDataStore());
         contactView.setViewProperties(viewProperties);
         return contactView;
@@ -129,12 +126,12 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        List<UserDetails> userDetailsList = Lists.newArrayList();
+        List<UserDetails> userDetailsList = new ArrayList<>();
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         userDetailsList.add(User.builder().username("admin").password(encoder.encode("admin")).authorities("ADMIN").build());
         userDetailsList.add(User.builder().username("user").password(encoder.encode("user")).authorities("READ").build());
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(new InMemoryUserDetailsManager(userDetailsList));
-        return new ProviderManager(Lists.newArrayList(provider));
+        return new ProviderManager(Collections.singletonList(provider));
     }
 }

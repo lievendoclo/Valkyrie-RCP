@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Valkyrie RCP
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,10 @@
  */
 package org.valkyriercp.rules.support;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -44,11 +43,10 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
 
     private static final String DEFAULT_CONTEXT_ID = "default";
 
-    private LoadingCache ruleContexts = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
-        public Object load(Object key) {
-            return new HashMap();
-        }
-    });
+    private Cache<String, Map> ruleContexts = new Cache2kBuilder<String, Map>() {
+    }
+            .loader(key -> new HashMap())
+            .build();
 
     /**
      * Add or update the rules for a single bean class.
@@ -71,7 +69,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
     }
 
     private Map getRuleContext(String contextId) {
-        return (Map) ruleContexts.getUnchecked(contextId);
+        return ruleContexts.get(contextId);
     }
 
     /**
@@ -87,7 +85,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
             logger.debug("Configuring rules in source...");
         }
         getRuleContext(DEFAULT_CONTEXT_ID).clear();
-        for (Iterator i = rules.iterator(); i.hasNext();) {
+        for (Iterator i = rules.iterator(); i.hasNext(); ) {
             addRules((Rules) i.next());
         }
     }
@@ -122,7 +120,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
 
     public static RulesSource create(Rules... rules) {
         DefaultRulesSource rulesSource = new DefaultRulesSource();
-        for(Rules rule : rules ) {
+        for (Rules rule : rules) {
             rulesSource.addRules(rule);
         }
         return rulesSource;

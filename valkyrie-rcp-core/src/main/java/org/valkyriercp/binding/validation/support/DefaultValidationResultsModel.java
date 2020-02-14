@@ -15,9 +15,8 @@
  */
 package org.valkyriercp.binding.validation.support;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -91,19 +90,13 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 
 	private final EventListenerListHelper validationListeners = new EventListenerListHelper(ValidationListener.class);
 
-	private final LoadingCache propertyValidationListeners = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
+	private final Cache<String, EventListenerListHelper> propertyValidationListeners = new Cache2kBuilder<String, EventListenerListHelper>() {}
+		.loader(key -> new EventListenerListHelper(ValidationListener.class))
+		.build();
 
-		public Object load(Object propertyName) {
-			return new EventListenerListHelper(ValidationListener.class);
-		}
-	});
-
-	private final LoadingCache propertyChangeListeners = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
-
-		public Object load(Object propertyName) {
-			return new EventListenerListHelper(PropertyChangeListener.class);
-		}
-	});
+	private final Cache<String, EventListenerListHelper> propertyChangeListeners = new Cache2kBuilder<String, EventListenerListHelper>() {}
+			.loader(key -> new EventListenerListHelper(PropertyChangeListener.class))
+			.build();
 
 	/** Delegate or reference to this. */
 	private final ValidationResultsModel delegateFor;
@@ -407,7 +400,7 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 	}
 
 	protected EventListenerListHelper getValidationListeners(String propertyName) {
-		return ((EventListenerListHelper) propertyValidationListeners.getUnchecked(propertyName));
+		return propertyValidationListeners.get(propertyName);
 	}
 
 	protected void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
@@ -422,7 +415,7 @@ public class DefaultValidationResultsModel implements ValidationResultsModel, Va
 	}
 
 	protected EventListenerListHelper getPropertyChangeListeners(String propertyName) {
-		return ((EventListenerListHelper) propertyChangeListeners.getUnchecked(propertyName));
+		return propertyChangeListeners.get(propertyName);
 	}
 
 	public String toString() {

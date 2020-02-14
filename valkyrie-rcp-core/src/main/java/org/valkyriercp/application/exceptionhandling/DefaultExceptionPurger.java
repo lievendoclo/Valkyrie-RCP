@@ -15,8 +15,8 @@
  */
 package org.valkyriercp.application.exceptionhandling;
 
-import com.google.common.collect.Lists;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
      * @param includeThrowableClassList a list of classes
      */
     public void setIncludeThrowableClasses(Class<? extends Throwable>... includeThrowableClassList) {
-        this.includeThrowableClassList = Lists.newArrayList(includeThrowableClassList);
+        this.includeThrowableClassList = Arrays.asList(includeThrowableClassList);
     }
 
     public SELF including(Class<? extends Throwable>... throwableClasses) {
@@ -114,7 +114,7 @@ public class DefaultExceptionPurger<SELF extends DefaultExceptionPurger<SELF>> i
      * @param throwableClasses a list of classes
      */
     public void setExcludeThrowableClasses(Class<? extends Throwable>... throwableClasses) {
-        this.excludeThrowableClassList = Lists.newArrayList(throwableClasses);
+        this.excludeThrowableClassList = Arrays.asList(throwableClasses);
     }
 
     public Throwable purge(Throwable root) {

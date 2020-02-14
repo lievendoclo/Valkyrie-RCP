@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Valkyrie RCP
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,8 @@
  */
 package org.valkyriercp.binding.validation.support;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import org.cache2k.Cache;
+import org.cache2k.Cache2kBuilder;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.ObjectUtils;
 import org.valkyriercp.binding.validation.ValidationMessage;
@@ -30,23 +29,21 @@ public class DefaultValidationResults implements ValidationResults {
 
     private final Set messages = new HashSet();
 
-    private LoadingCache messagesSubSets = CacheBuilder.newBuilder().build(new CacheLoader<Object, Object>() {
-
-        public Object load(Object key) {
-            Set messagesSubSet = new HashSet();
-            for (Iterator i = messages.iterator(); i.hasNext();) {
-                ValidationMessage message = (ValidationMessage)i.next();
-                if (key instanceof Severity && message.getSeverity().equals(key)) {
-                    messagesSubSet.add(message);
+    private Cache<Object, Set<ValidationMessage>> messagesSubSets = new Cache2kBuilder<Object, Set<ValidationMessage>>() {
+    }
+            .loader(key -> {
+                Set messagesSubSet = new HashSet();
+                for (Iterator i = messages.iterator(); i.hasNext(); ) {
+                    ValidationMessage message = (ValidationMessage) i.next();
+                    if (key instanceof Severity && message.getSeverity().equals(key)) {
+                        messagesSubSet.add(message);
+                    } else if (ObjectUtils.nullSafeEquals(message.getProperty(), key)) {
+                        messagesSubSet.add(message);
+                    }
                 }
-                else if (ObjectUtils.nullSafeEquals(message.getProperty(), key)) {
-                    messagesSubSet.add(message);
-                }
-            }
-            return Collections.unmodifiableSet(messagesSubSet);
-        }
-
-    });
+                return Collections.unmodifiableSet(messagesSubSet);
+            })
+            .build();
 
     public DefaultValidationResults() {
     }
@@ -65,13 +62,13 @@ public class DefaultValidationResults implements ValidationResults {
 
     public void addAllMessages(Collection validationMessages) {
         if (messages.addAll(validationMessages)) {
-            messagesSubSets.invalidateAll();
+            messagesSubSets.clear();
         }
     }
 
     public void addMessage(ValidationMessage validationMessage) {
         if (messages.add(validationMessage)) {
-            messagesSubSets.invalidateAll();
+            messagesSubSets.clear();
         }
     }
 
@@ -81,7 +78,7 @@ public class DefaultValidationResults implements ValidationResults {
 
     public void removeMessage(ValidationMessage message) {
         messages.remove(message);
-        messagesSubSets.invalidateAll();
+        messagesSubSets.clear();
     }
 
     public boolean getHasErrors() {
@@ -113,11 +110,11 @@ public class DefaultValidationResults implements ValidationResults {
     }
 
     public Set getMessages(Severity severity) {
-        return (Set)messagesSubSets.getUnchecked(severity);
+        return messagesSubSets.get(severity);
     }
 
     public Set getMessages(String fieldName) {
-        return (Set)messagesSubSets.getUnchecked(fieldName);
+        return messagesSubSets.get(fieldName);
     }
 
     public String toString() {
@@ -127,20 +124,19 @@ public class DefaultValidationResults implements ValidationResults {
     /**
      * Clear all messages.
      */
-    public void clearMessages()
-    {
+    public void clearMessages() {
         messages.clear();
-        messagesSubSets.invalidateAll();
+        messagesSubSets.clear();
     }
 
     /**
      * Clear all messages of the given fieldName.
      */
     public void clearMessages(String fieldName) {
-    	Set messagesForFieldName = getMessages(fieldName);
-    	for (Iterator mi = messagesForFieldName.iterator(); mi.hasNext();) {
-			messages.remove(mi.next());
-		}
-    	messagesSubSets.invalidateAll();
+        Set messagesForFieldName = getMessages(fieldName);
+        for (Iterator mi = messagesForFieldName.iterator(); mi.hasNext(); ) {
+            messages.remove(mi.next());
+        }
+        messagesSubSets.clear();
     }
 }

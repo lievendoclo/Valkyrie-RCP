@@ -20,7 +20,7 @@ import org.valkyriercp.convert.ConversionExecutor;
 import org.valkyriercp.convert.converters.TwoWayConverter;
 
 /**
- * A special conversion executor used by {@link DefaultConversionService} that can dynamically resolve whether to do a
+ * A special conversion executor used by {@link DefaultRichClientConversionService} that can dynamically resolve whether to do a
  * forward or "reverse" conversion using a {@link TwoWayConverter} based on the type of the object passed in.
  * 
  * Used in conjunction with custom converters to support dynamic conversion of collection elements.

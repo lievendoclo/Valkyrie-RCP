@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.util;
 
-import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
@@ -199,7 +198,7 @@ public final class ObjectUtils {
             obj1 = itr1.next();
             obj2 = itr2.next();
 
-            if (!(obj1 == null ? obj2 == null : Objects.equal(obj1, obj2))) {
+            if (!(obj1 == null ? obj2 == null : Objects.equals(obj1, obj2))) {
                 return Boolean.FALSE;
             }
         }

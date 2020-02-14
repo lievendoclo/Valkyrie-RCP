@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.application.config;
 
-import org.valkyriercp.convert.ConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +33,7 @@ import org.valkyriercp.command.CommandManager;
 import org.valkyriercp.command.CommandServices;
 import org.valkyriercp.component.OverlayService;
 import org.valkyriercp.component.TitlePaneConfigurer;
+import org.valkyriercp.convert.RichClientConversionService;
 import org.valkyriercp.factory.ButtonFactory;
 import org.valkyriercp.factory.ComponentFactory;
 import org.valkyriercp.factory.MenuFactory;
@@ -85,7 +85,7 @@ public interface ApplicationConfig {
     MessageTranslatorFactory messageTranslatorFactory();
     RulesSource rulesSource();
     FieldFaceSource fieldFaceSource();
-    ConversionService conversionService();
+    RichClientConversionService conversionService();
     FormComponentInterceptorFactory formComponentInterceptorFactory();
     BinderSelectionStrategy binderSelectionStrategy();
     BindingFactoryProvider bindingFactoryProvider();
