@@ -133,7 +133,7 @@ project("valkyrie-rcp-core") {
         compile 'org.apache.commons:commons-lang3:3.8.1'
         compile "org.cache2k:cache2k-api:1.2.4.Final"
         runtime "org.cache2k:cache2k-core:1.2.4.Final"
-//        compile "com.google.guava:guava:28.1-jre"
+        compile "com.github.jiconfont:jiconfont-swing:1.0.0"
         compile "org.springframework.security:spring-security-core:5.2.2.RELEASE"
         compile "org.springframework.security:spring-security-config:5.2.2.RELEASE"
         compile "org.springframework:spring-context:5.2.3.RELEASE"
@@ -143,7 +143,6 @@ project("valkyrie-rcp-core") {
         compile 'javax.annotation:javax.annotation-api:1.3.2'
         compile "javax.validation:validation-api:2.0.1.Final"
         compile "com.miglayout:miglayout-swing:5.2"
-        //compile "com.google.code.gson:gson:2.8.5"
     }
 }
 

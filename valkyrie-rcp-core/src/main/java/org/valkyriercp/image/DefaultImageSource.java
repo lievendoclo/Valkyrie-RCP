@@ -15,6 +15,8 @@
  */
 package org.valkyriercp.image;
 
+import jiconfont.DefaultIconCode;
+import jiconfont.swing.IconFontSwing;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cache2k.Cache;
@@ -27,11 +29,11 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A collection of image resources, each indexed by a common key alias.
@@ -74,13 +76,13 @@ import java.util.concurrent.ExecutionException;
 public class DefaultImageSource implements ImageSource {
 	protected static final Log logger = LogFactory.getLog(DefaultImageSource.class);
 
-	private Map imageResources;
+	private Map<String, String> imageResources;
 
-	private Cache<String, Image> imageCache = new Cache2kBuilder<String, Image>() {
+	private final Cache<String, Image> imageCache = new Cache2kBuilder<String, Image>() {
 	}
 	.loader(key -> {
 		try {
-			AwtImageResource resource = getImageResource(key);
+			ImageResource resource = getImageResource(key);
 			return resource.getImage();
 		}
 		catch (IOException e) {
@@ -107,7 +109,7 @@ public class DefaultImageSource implements ImageSource {
 	 *
 	 * @param imageResources a map of key-to-image-resources.
 	 */
-	public DefaultImageSource(Map imageResources) {
+	public DefaultImageSource(Map<String, String> imageResources) {
 		this(true, imageResources);
 	}
 
@@ -118,9 +120,9 @@ public class DefaultImageSource implements ImageSource {
 	 * @param installUrlHandler should a URL handler be installed.
 	 * @param imageResources a map of key-to-image-resources.
 	 */
-	public DefaultImageSource(boolean installUrlHandler, Map imageResources) {
+	public DefaultImageSource(boolean installUrlHandler, Map<String, String> imageResources) {
 		Assert.notNull(imageResources);
-		this.imageResources = new HashMap(imageResources);
+		this.imageResources = new HashMap<>(imageResources);
 		debugPrintResources();
 		if (installUrlHandler) {
 			Handler.installImageUrlHandler(this);
@@ -131,8 +133,8 @@ public class DefaultImageSource implements ImageSource {
 		this(true, new HashMap<>());
 	}
 
-	public void setImageResources(Map imageResources) {
-		this.imageResources = new HashMap(imageResources);
+	public void setImageResources(Map<String, String> imageResources) {
+		this.imageResources = new HashMap<>(imageResources);
 		debugPrintResources();
 	}
 
@@ -145,7 +147,17 @@ public class DefaultImageSource implements ImageSource {
 	public Image getImage(String key) {
 		Assert.notNull(key);
 		try {
-			if(!hasImageFor(key)) {
+			String value = imageResources.get(key);
+			if(value == null) {
+				return null;
+			}
+			if(value.startsWith("iconfont:")) {
+				String[] iconFontKey = value.substring(9).split("[:]");
+				String fontFamily = iconFontKey[0];
+				char character = iconFontKey[1].charAt(0);
+				Font font = new JLabel().getFont();
+				return IconFontSwing.buildImage(new DefaultIconCode(fontFamily, character), font.getSize());
+			} else if(!hasImageFor(key)) {
 				return null;
 			}
 			return imageCache.get(key);
@@ -165,7 +177,8 @@ public class DefaultImageSource implements ImageSource {
 		if(tmp instanceof Resource)
 			resource = (Resource)tmp;
 		if(tmp instanceof String) {
-			resource = resourceLoader.getResource((String)tmp);
+			String imageKey = (String) tmp;
+			resource = resourceLoader.getResource(imageKey);
 			Assert.notNull(resourceLoader, "Resource loader must be set to resolve resources");
 		}
 		if (resource == null) {

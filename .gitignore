@@ -13,3 +13,4 @@ build
 bin
 atlassian-ide-plugin.xml
 classes
+out

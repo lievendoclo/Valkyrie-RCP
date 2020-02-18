@@ -19,13 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cache2k.Cache;
 import org.cache2k.Cache2kBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.ExecutionException;
 
 /**
  * The default implementation of ImageIconRegistry. This implementation caches
@@ -35,19 +31,21 @@ import java.util.concurrent.ExecutionException;
  *
  * @author Keith Donald
  */
-@Component
 public class DefaultIconSource implements IconSource {
     protected static final Log logger = LogFactory.getLog(DefaultIconSource.class);
 
-    @Autowired
-    private ImageSource imageSource;
+    private final ImageSource imageSource;
+    private final Cache<String, ImageIcon> cache;
 
-    private Cache<String, ImageIcon> cache = new Cache2kBuilder<String, ImageIcon>() {}
-            .loader(key -> {
-                Image image = imageSource.getImage(key);
-                return new ImageIcon(image);
-            })
-            .build();
+    public DefaultIconSource(ImageSource imageSource) {
+        this.imageSource = imageSource;
+        cache = new Cache2kBuilder<String, ImageIcon>() {}
+                .loader(key -> {
+                    Image image = imageSource.getImage(key);
+                    return new ImageIcon(image);
+                })
+                .build();
+    }
 
     public Icon getIcon(String key) {
         try {

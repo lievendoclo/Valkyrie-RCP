@@ -94,9 +94,10 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @Import(org.valkyriercp.application.config.support.DefaultBinderConfig.class)
@@ -159,14 +160,18 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     public ImageSource imageSource() {
         DefaultImageSource imageSource;
         Properties images = new Properties();
-
         try {
             for (Resource res : getImageSourceResources().values()) {
                 if(res.getFilename().endsWith("properties")) {
                     images.load(res.getInputStream());
                 }
             }
-            imageSource = new DefaultImageSource(images);
+			Stream<Map.Entry<Object, Object>> stream = images.entrySet().stream();
+			Map<String, String> mapOfProperties = stream.collect(Collectors.toMap(
+					e -> String.valueOf(e.getKey()),
+					e -> String.valueOf(e.getValue())));
+
+			imageSource = new DefaultImageSource(mapOfProperties);
         } catch (IOException e) {
             throw new IllegalArgumentException(
                     "Error getting imagesource json file", e);
@@ -217,7 +222,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 
 	@Bean
 	public IconSource iconSource() {
-		return new DefaultIconSource();
+		return new DefaultIconSource(imageSource());
 	}
 
 	@Bean

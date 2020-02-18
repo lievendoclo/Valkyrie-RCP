@@ -48,7 +48,7 @@ public interface ImageSource {
      *             if no image could be found and no broken image indicator is
      *             set.
      */
-    public Image getImage(String key);
+    Image getImage(String key);
 
     /**
      * Returns the image resource indexed by the specified key. A resource is a
@@ -59,7 +59,7 @@ public interface ImageSource {
      *            The image key.
      * @return The image resource.
      */
-    public AwtImageResource getImageResource(String key);
+    AwtImageResource getImageResource(String key);
 
     boolean hasImageFor(Object key);
 }

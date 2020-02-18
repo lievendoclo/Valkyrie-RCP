@@ -33,7 +33,7 @@ import java.net.URL;
  *
  * @author Keith Donald
  */
-public class AwtImageResource extends AbstractResource implements ImageObserver {
+public class AwtImageResource extends AbstractResource implements ImageObserver, ImageResource {
     private Resource wrappedResource;
 
     private boolean imageLoaded;
