@@ -70,7 +70,7 @@ public class DataEditorCommandConfig extends DefaultCommandConfig {
     public CommandGroup fileMenu() {
         CommandGroupFactoryBean fileMenuFactory = new CommandGroupFactoryBean();
         fileMenuFactory.setGroupId("fileMenu");
-        fileMenuFactory.setMembers(exitCommand());
+        fileMenuFactory.setMembers(logoutCommand(), exitCommand());
         return fileMenuFactory.getCommandGroup();
     }
 

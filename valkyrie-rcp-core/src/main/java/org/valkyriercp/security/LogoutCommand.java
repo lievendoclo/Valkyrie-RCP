@@ -16,6 +16,7 @@
 package org.valkyriercp.security;
 
 import org.springframework.security.core.Authentication;
+import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.command.support.ApplicationWindowAwareCommand;
 import org.valkyriercp.util.ValkyrieRepository;
 
@@ -63,6 +64,8 @@ public class LogoutCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         Authentication loggedOutAuth = getApplicationSecurityManager().doLogout();
+        ApplicationWindow currentApplicationWindow = ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getActiveWindow();
+        currentApplicationWindow.disable();
         if (displaySuccess) {
             JOptionPane.showMessageDialog(getParentWindowControl(), "You have been logged out.", "Logout Successful",
                     JOptionPane.INFORMATION_MESSAGE);

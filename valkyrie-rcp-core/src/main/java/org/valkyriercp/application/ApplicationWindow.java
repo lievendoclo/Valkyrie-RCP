@@ -29,10 +29,11 @@ public interface ApplicationWindow {
     void showPage(ApplicationPage page);
     boolean close();
     void setWindowManager(WindowManager windowManager);
-    public Iterator getSharedCommands();
+    Iterator getSharedCommands();
     ApplicationWindowCommandManager getCommandManager();
     StatusBar getStatusBar();
-
+    void enable();
+    void disable();
     void addPageListener(PageListener listener);
 
     void removePageListener(PageListener listener);

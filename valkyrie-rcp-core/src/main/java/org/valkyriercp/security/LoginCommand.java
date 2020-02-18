@@ -16,6 +16,7 @@
 package org.valkyriercp.security;
 
 import org.springframework.security.core.Authentication;
+import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.command.support.ActionCommand;
 import org.valkyriercp.command.support.ApplicationWindowAwareCommand;
 import org.valkyriercp.dialog.ApplicationDialog;
@@ -82,6 +83,10 @@ public class LoginCommand extends ApplicationWindowAwareCommand {
                 try {
                     sm.doLogin( authentication );
                     postLogin();
+                    ApplicationWindow activeWindow = ValkyrieRepository.getInstance().getApplicationConfig().windowManager().getActiveWindow();
+                    if(activeWindow != null) {
+                        activeWindow.enable();
+                    }
                     return true;
                 } finally {
                     if( isClearPasswordOnFailure() ) {

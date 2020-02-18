@@ -34,7 +34,7 @@ import java.util.Iterator;
 
 public abstract class AbstractApplicationWindow implements ApplicationWindow, WindowFocusListener {
     private int number;
-    private JFrame control;
+    private JXFrame control;
     private ApplicationPage currentApplicationPage;
     private ApplicationConfig applicationConfig;
     private ApplicationWindowConfigurer applicationWindowConfigurer;
@@ -70,7 +70,7 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
     }
 
     @Override
-    public JFrame getControl() {
+    public JXFrame getControl() {
         return control;
     }
 
@@ -81,6 +81,16 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
 
     protected ApplicationLifecycleAdvisor getAdvisor() {
         return applicationConfig.applicationLifecycleAdvisor();
+    }
+
+    @Override
+    public void enable() {
+        getControl().setWaitPaneVisible(false);
+    }
+
+    @Override
+    public void disable() {
+        getControl().setWaitPaneVisible(true);
     }
 
     @Override
@@ -125,10 +135,10 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
             this.control = createNewWindowControl();
             this.control.addWindowFocusListener(this);
             initWindowControl(this.control);
-            getAdvisor().onWindowCreated(this);
+            getAdvisor().getOnWindowCreated().accept(this);
             setActivePage(page);
             this.control.setVisible(true);
-            getAdvisor().onWindowOpened(this);
+            getAdvisor().getOnWindowOpened().accept(this);
         } else {
             if (!currentApplicationPage.getId().equals(page.getId())) {
                 final ApplicationPage oldPage = this.currentApplicationPage;
@@ -184,8 +194,10 @@ public abstract class AbstractApplicationWindow implements ApplicationWindow, Wi
         return new DefaultApplicationWindowConfigurer(this);
     }
 
-    protected JFrame createNewWindowControl() {
+    protected JXFrame createNewWindowControl() {
         JXFrame frame = new JXFrame();
+        frame.setIdleThreshold(10000);
+        frame.setWaitPane(new JPanel());
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         WindowAdapter windowCloseHandler = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

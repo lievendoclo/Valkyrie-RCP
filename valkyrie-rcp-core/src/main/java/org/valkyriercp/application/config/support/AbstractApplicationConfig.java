@@ -137,7 +137,7 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
 	public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
 		DefaultApplicationLifecycleAdvisor advisor = new DefaultApplicationLifecycleAdvisor();
 		advisor.setCommandConfigClass(getCommandConfigClass());
-		advisor.setStartingPageDescriptor(new SingleViewPageDescriptor(
+		advisor.setStartingPageDescriptor(() -> new SingleViewPageDescriptor(
 				emptyViewDescriptor()));
 		return advisor;
 	}

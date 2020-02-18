@@ -24,18 +24,25 @@ import org.valkyriercp.application.session.ApplicationSessionInitializer;
 import org.valkyriercp.application.support.ApplicationWindowCommandManager;
 import org.valkyriercp.command.support.CommandGroup;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public interface ApplicationLifecycleAdvisor {
     PageDescriptor getStartingPageDescriptor();
 
-    void setStartingPageDescriptor(PageDescriptor descriptor);
+    void setStartingPageDescriptor(Supplier<PageDescriptor> descriptor);
 
     void onPreStartup();
 
     void onPostStartup();
 
-    void onWindowCreated(ApplicationWindow window);
+    void setOnWindowCreated(Consumer<ApplicationWindow> fn);
 
-    void onWindowOpened(ApplicationWindow window);
+    void setOnWindowOpened(Consumer<ApplicationWindow> fn);
+
+    Consumer<ApplicationWindow> getOnWindowCreated();
+
+    Consumer<ApplicationWindow> getOnWindowOpened();
 
     boolean onPreWindowClose(ApplicationWindow window);
 

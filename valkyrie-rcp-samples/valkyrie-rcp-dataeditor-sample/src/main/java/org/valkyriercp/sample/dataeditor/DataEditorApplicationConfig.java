@@ -52,6 +52,7 @@ import org.valkyriercp.security.LoginCommand;
 import org.valkyriercp.text.TextComponentPopupInterceptorFactory;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,8 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor = super.applicationLifecycleAdvisor();
-        lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(itemView()));
+        lifecycleAdvisor.setStartingPageDescriptor(() -> new SingleViewPageDescriptor(itemView()));
+        lifecycleAdvisor.setOnWindowCreated(window -> window.getControl().setExtendedState(JFrame.MAXIMIZED_BOTH));
         return lifecycleAdvisor;
     }
 

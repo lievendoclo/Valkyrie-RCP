@@ -27,6 +27,8 @@ import org.valkyriercp.application.support.SwingXStatusBar;
 import org.valkyriercp.command.support.CommandGroup;
 
 import javax.annotation.PostConstruct;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Component
 public abstract class AbstractApplicationLifecycleAdvisor implements ApplicationLifecycleAdvisor {
@@ -41,20 +43,22 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
 
 	private ApplicationWindow openingWindow;
 
-    protected PageDescriptor startingPageId;
+    protected Supplier<PageDescriptor> startingPageId;
 
     @Autowired
     private RegisterableExceptionHandler registerableExceptionHandler;
 
     @Autowired
     private ApplicationSessionInitializer applicationSessionInitializer;
+	private Consumer<ApplicationWindow> onWindowCreated = window -> {};
+	private Consumer<ApplicationWindow> onWindowOpened = window -> {};
 
-    @Override
+	@Override
     public PageDescriptor getStartingPageDescriptor() {
-        return startingPageId;
+        return startingPageId.get();
     }
 
-    public void setStartingPageDescriptor(PageDescriptor startingPageId) {
+    public void setStartingPageDescriptor(Supplier<PageDescriptor> startingPageId) {
         this.startingPageId = startingPageId;
     }
 
@@ -64,13 +68,25 @@ public abstract class AbstractApplicationLifecycleAdvisor implements Application
     @Override
     public void onPostStartup() {}
 
-    @Override
-    public void onWindowCreated(ApplicationWindow window) {}
+    public void setOnWindowCreated(Consumer<ApplicationWindow> fn) {
+	    onWindowCreated = fn;
+    }
 
-    @Override
-    public void onWindowOpened(ApplicationWindow window) {}
+    public void setOnWindowOpened(Consumer<ApplicationWindow> fn) {
+	    onWindowOpened = fn;
+    }
 
-    @Override
+	@Override
+	public Consumer<ApplicationWindow> getOnWindowCreated() {
+		return onWindowCreated;
+	}
+
+	@Override
+	public Consumer<ApplicationWindow> getOnWindowOpened() {
+		return onWindowOpened;
+	}
+
+	@Override
     public boolean onPreWindowClose(ApplicationWindow window) { return true; }
 
     /**
