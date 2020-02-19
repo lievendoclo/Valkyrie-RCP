@@ -17,12 +17,16 @@ package org.valkyriercp.sample.dataeditor;
 
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jidesoft.swing.JideTabbedPane;
+import jiconfont.IconFont;
+import jiconfont.swing.IconFontSwing;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -53,6 +57,8 @@ import org.valkyriercp.text.TextComponentPopupInterceptorFactory;
 import org.valkyriercp.widget.WidgetViewDescriptor;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +66,9 @@ import java.util.Map;
 
 @Configuration
 public class DataEditorApplicationConfig extends AbstractApplicationConfig {
+    @Autowired
+    private ResourceLoader resourceLoader;
+
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor = super.applicationLifecycleAdvisor();
@@ -76,8 +85,23 @@ public class DataEditorApplicationConfig extends AbstractApplicationConfig {
     }
 
     public Map<String, Resource> getImageSourceResources() {
+        IconFontSwing.register(new IconFont() {
+            @Override
+            public String getFontFamily() {
+                return "IcoFont";
+            }
+
+            @Override
+            public InputStream getFontInputStream() {
+                try {
+                    return resourceLoader.getResource("classpath:/org/valkyriercp/sample/dataeditor/icofont.ttf").getInputStream();
+                } catch (IOException e) {
+                    throw new RuntimeException("Could not load icon font", e);
+                }
+            }
+        });
         Map<String, Resource> resources = super.getImageSourceResources();
-        resources.put("simple", applicationContext().getResource("classpath:/org/valkyriercp/sample/dataeditor/images.properties"));
+        resources.put("simple", applicationContext().getResource("classpath:/org/valkyriercp/sample/dataeditor/images.yaml"));
         return resources;
     }
 

@@ -14,8 +14,14 @@
 # limitations under the License.
 #
 
-itemView.icon = /com/famfamfam/silk/anchor.png
-supplierView.icon = /com/famfamfam/silk/user.png
+itemView:
+  icon: "iconfont:IcoFont:\uf019:22"
 
-itemDataEditorCommand.icon = /com/famfamfam/silk/anchor.png
-supplierDataEditorCommand.icon = /com/famfamfam/silk/user.png
+supplierView:
+  icon: "iconfont:IcoFont:\uefd9:22"
+
+itemDataEditorCommand:
+  icon: "iconfont:IcoFont:\uf019:22"
+
+supplierDataEditorCommand:
+  icon: "iconfont:IcoFont:\uefd9:22"

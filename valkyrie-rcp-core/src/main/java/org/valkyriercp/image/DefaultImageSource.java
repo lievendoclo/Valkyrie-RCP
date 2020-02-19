@@ -155,8 +155,11 @@ public class DefaultImageSource implements ImageSource {
 				String[] iconFontKey = value.substring(9).split("[:]");
 				String fontFamily = iconFontKey[0];
 				char character = iconFontKey[1].charAt(0);
-				Font font = new JLabel().getFont();
-				return IconFontSwing.buildImage(new DefaultIconCode(fontFamily, character), font.getSize());
+				int fontSize = new JLabel().getFont().getSize();
+				if(iconFontKey.length == 3) {
+					fontSize = Integer.parseInt(iconFontKey[2]);
+				}
+				return IconFontSwing.buildImage(new DefaultIconCode(fontFamily, character), fontSize);
 			} else if(!hasImageFor(key)) {
 				return null;
 			}

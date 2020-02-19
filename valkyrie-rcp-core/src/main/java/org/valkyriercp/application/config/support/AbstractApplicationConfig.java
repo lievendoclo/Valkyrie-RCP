@@ -89,6 +89,7 @@ import org.valkyriercp.util.DialogFactory;
 import org.valkyriercp.util.ValkyrieRepository;
 import org.valkyriercp.widget.Widget;
 import org.valkyriercp.widget.WidgetViewDescriptor;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -159,19 +160,21 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
     @Bean
     public ImageSource imageSource() {
         DefaultImageSource imageSource;
-        Properties images = new Properties();
+		Map<String, String> imageProperties = new HashMap<>();
         try {
             for (Resource res : getImageSourceResources().values()) {
                 if(res.getFilename().endsWith("properties")) {
-                    images.load(res.getInputStream());
-                }
+					Properties p = new Properties();
+                    p.load(res.getInputStream());
+					p.forEach((key, value) -> imageProperties.put(String.valueOf(key), String.valueOf(value)));
+                } else if(res.getFilename().endsWith("yaml") || res.getFilename().endsWith("yml")) {
+					Yaml yaml = new Yaml();
+					Map<String, Object> yamlValues = yaml.load(res.getInputStream());
+					Map<String, Object> flattened = flatten(yamlValues, "");
+					flattened.forEach((key, value) -> imageProperties.put(String.valueOf(key), String.valueOf(value)));
+				}
             }
-			Stream<Map.Entry<Object, Object>> stream = images.entrySet().stream();
-			Map<String, String> mapOfProperties = stream.collect(Collectors.toMap(
-					e -> String.valueOf(e.getKey()),
-					e -> String.valueOf(e.getValue())));
-
-			imageSource = new DefaultImageSource(mapOfProperties);
+			imageSource = new DefaultImageSource(imageProperties);
         } catch (IOException e) {
             throw new IllegalArgumentException(
                     "Error getting imagesource json file", e);
@@ -180,6 +183,18 @@ public abstract class AbstractApplicationConfig implements ApplicationConfig {
                 "classpath:/com/famfamfam/silk/error.png"));
         return imageSource;
     }
+
+    private Map<String, Object> flatten(Map<String, Object> map, String root) {
+    	Map<String, Object> flattened = new HashMap<>();
+    	map.forEach((key, value) -> {
+    		if(value instanceof Map) {
+    			flattened.putAll(flatten((Map<String, Object>) value, root.isEmpty() ? key : root + "." + key));
+			} else {
+    			flattened.put(root.isEmpty() ? key : root + "." + key, value);
+			}
+		});
+    	return flattened;
+	}
 
 	public Map<String, Resource> getImageSourceResources() {
 		Map<String, Resource> resources = new HashMap<String, Resource>();
