@@ -52,7 +52,7 @@ public class SimpleSampleApplicationConfig extends AbstractApplicationConfig {
 		ApplicationLifecycleAdvisor lifecycleAdvisor = super
 				.applicationLifecycleAdvisor();
 		lifecycleAdvisor
-				.setStartingPageDescriptor(new SingleViewPageDescriptor(
+				.setStartingPageDescriptor(() -> new SingleViewPageDescriptor(
 						initialView()));
 		return lifecycleAdvisor;
 	}

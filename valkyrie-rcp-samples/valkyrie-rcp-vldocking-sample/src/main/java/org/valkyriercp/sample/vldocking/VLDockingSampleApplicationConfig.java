@@ -53,7 +53,7 @@ public class VLDockingSampleApplicationConfig extends AbstractApplicationConfig 
         ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
         VLDockingPageDescriptor descriptor = new VLDockingPageDescriptor();
         descriptor.getViewDescriptorIds().add(initialView().getId());
-        lifecycleAdvisor.setStartingPageDescriptor(descriptor);
+        lifecycleAdvisor.setStartingPageDescriptor(() -> descriptor);
         return lifecycleAdvisor;
     }
 

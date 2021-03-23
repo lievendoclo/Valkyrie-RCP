@@ -55,7 +55,7 @@ public class DockingFramesSampleApplicationConfig extends AbstractApplicationCon
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor =  super.applicationLifecycleAdvisor();
         PageDescriptor descriptor = new SingleViewPageDescriptor(initialView());
-        lifecycleAdvisor.setStartingPageDescriptor(descriptor);
+        lifecycleAdvisor.setStartingPageDescriptor(() -> descriptor);
         return lifecycleAdvisor;
     }
 

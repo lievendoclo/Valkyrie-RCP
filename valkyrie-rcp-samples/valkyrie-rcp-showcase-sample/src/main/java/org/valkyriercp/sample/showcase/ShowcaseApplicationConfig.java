@@ -68,7 +68,7 @@ public class ShowcaseApplicationConfig extends AbstractApplicationConfig {
     @Override
     public ApplicationLifecycleAdvisor applicationLifecycleAdvisor() {
         ApplicationLifecycleAdvisor lifecycleAdvisor = super.applicationLifecycleAdvisor();
-        lifecycleAdvisor.setStartingPageDescriptor(new SingleViewPageDescriptor(getViews().startView()));
+        lifecycleAdvisor.setStartingPageDescriptor(() -> new SingleViewPageDescriptor(getViews().startView()));
         return lifecycleAdvisor;
     }
 

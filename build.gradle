@@ -32,6 +32,9 @@ configure(subprojects - project(":valkyrie-rcp-integrations") - project(":valkyr
         maven {
             url "file://${rootDir}/dependencies"
         }
+        maven {
+            url "http://maven.icm.edu.pl/artifactory/repo/"
+        }
         jcenter()
     }
 
@@ -158,15 +161,6 @@ project("valkyrie-rcp-integrations:valkyrie-rcp-jideoss") {
     dependencies {
         compile project(":valkyrie-rcp-core")
         compile "com.jidesoft:jide-oss:3.6.0"
-    }
-}
-
-project("valkyrie-rcp-integrations:valkyrie-rcp-jidedocking") {
-    dependencies {
-        compile project(":valkyrie-rcp-core")
-        compile "com.jidesoft:jide-components:3.6.0"
-        compile "com.jidesoft:jide-dock:3.6.0"
-        compile "com.jidesoft:jide-common:3.6.0"
     }
 }
 
