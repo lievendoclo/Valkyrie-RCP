@@ -10,7 +10,7 @@
 
     <properties>
         <valkyrie.version>1.0-SNAPSHOT</valkyrie.version>
-        <logback.version>0.9.26</logback.version>
+        <logback.version>1.2.0</logback.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
