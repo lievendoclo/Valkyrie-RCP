@@ -414,8 +414,8 @@ public abstract class AbstractMemberPropertyAccessor extends AbstractPropertyAcc
 	}
 
 	private String[] split(String indices) {
-		Assert.isTrue(indices.startsWith(PROPERTY_KEY_PREFIX));
-		Assert.isTrue(indices.endsWith(PROPERTY_KEY_SUFFIX));
+		Assert.isTrue(indices.startsWith(PROPERTY_KEY_PREFIX), "indices has incorrect prefix");
+		Assert.isTrue(indices.endsWith(PROPERTY_KEY_SUFFIX), "indices has incorrect suffix");
 		List result = new ArrayList();
 		int fromIndex = 1;
 		int toIndex = -1;

@@ -16,7 +16,6 @@
 package org.valkyriercp.form.binding.jide;
 
 import com.jidesoft.swing.DefaultOverlayable;
-import org.springframework.util.Assert;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.form.binding.Binding;
 import org.valkyriercp.form.binding.swing.SwingBindingFactory;
@@ -228,9 +227,6 @@ public class JideBindingFactory extends SwingBindingFactory {
          *            the control to set.
          */
         private void setControl(JComponent control) {
-
-            Assert.notNull(control, "control");
-
             this.control = control;
         }
 
@@ -241,9 +237,6 @@ public class JideBindingFactory extends SwingBindingFactory {
          *            model the form model to set.
          */
         private void setFormModel(FormModel formModel) {
-
-            Assert.notNull(formModel, "formModel");
-
             this.formModel = formModel;
         }
 
@@ -254,9 +247,6 @@ public class JideBindingFactory extends SwingBindingFactory {
          *            the property name to set.
          */
         private void setProperty(String property) {
-
-            Assert.notNull(property, "property");
-
             this.property = property;
         }
     }

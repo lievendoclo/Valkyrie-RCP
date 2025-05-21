@@ -16,9 +16,6 @@
 package org.valkyriercp.component;
 
 import com.jidesoft.swing.DefaultOverlayable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,12 +35,6 @@ import java.text.MessageFormat;
  * @see DefaultOverlayable
  */
 public class JideOverlayService implements OverlayService, SwingConstants {
-
-    /**
-     * The logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(JideOverlayService.class);
-
     /**
      * Return value for searchs with no result.
      */
@@ -81,9 +72,6 @@ public class JideOverlayService implements OverlayService, SwingConstants {
      */
     public Boolean isOverlayInstalled(JComponent targetComponent, JComponent overlay) {
 
-        Assert.notNull(targetComponent, JideOverlayService.TARGET_COMPONENT_PARAM);
-        Assert.notNull(overlay, JideOverlayService.OVERLAY);
-
         final DefaultOverlayable overlayable = this.findOverlayable(targetComponent);
 
         return this.isOverlayInstalled(overlayable, overlay);
@@ -107,10 +95,6 @@ public class JideOverlayService implements OverlayService, SwingConstants {
      */
     @Override
     public Boolean installOverlay(JComponent targetComponent, JComponent overlay, int position, Insets insets) {
-
-        Assert.notNull(targetComponent, JideOverlayService.TARGET_COMPONENT_PARAM);
-        Assert.notNull(overlay, JideOverlayService.OVERLAY);
-
         final DefaultOverlayable overlayable = this.findOverlayable(targetComponent);
 
         if ((overlayable != null) && !this.isOverlayInstalled(overlayable, overlay)) {
@@ -123,15 +107,9 @@ public class JideOverlayService implements OverlayService, SwingConstants {
 
             return this.hideOverlay(targetComponent, overlay);
         } else if (overlayable == null) {
-            JideOverlayService.LOGGER.warn(JideOverlayService.NOT_FOUND_FMT.format(//
-                    new String[] { targetComponent.getName() }));
-
             return Boolean.FALSE;
         } else {
-            JideOverlayService.LOGGER.warn(JideOverlayService.ALREADY_INSTALLED_FMT.format(//
-                    new String[] { overlay.getName(), targetComponent.getName() }));
-
-            return Boolean.FALSE;
+           return Boolean.FALSE;
         }
     }
 
@@ -151,10 +129,6 @@ public class JideOverlayService implements OverlayService, SwingConstants {
      * {@inheritDoc}
      */
     public Boolean uninstallOverlay(JComponent targetComponent, JComponent overlay, Insets insets) {
-
-        Assert.notNull(targetComponent, JideOverlayService.TARGET_COMPONENT_PARAM);
-        Assert.notNull(overlay, JideOverlayService.OVERLAY);
-
         final DefaultOverlayable overlayable = this.findOverlayable(targetComponent);
 
         // If overlay is installed...
@@ -170,14 +144,8 @@ public class JideOverlayService implements OverlayService, SwingConstants {
 
             return Boolean.TRUE;
         } else if (overlayable == null) {
-            JideOverlayService.LOGGER.warn(JideOverlayService.NOT_FOUND_FMT.format(//
-                    new String[] { targetComponent.getName() }));
-
-            return Boolean.FALSE;
+           return Boolean.FALSE;
         } else {
-            JideOverlayService.LOGGER.warn(JideOverlayService.NOT_INSTALLED_FMT.format(//
-                    new String[] { overlay.getName(), targetComponent.getName() }));
-
             return Boolean.FALSE;
         }
     }
@@ -206,9 +174,6 @@ public class JideOverlayService implements OverlayService, SwingConstants {
      * {@inheritDoc}
      */
     protected final Boolean isOverlayInstalled(DefaultOverlayable overlayable, JComponent overlay) {
-
-        Assert.notNull(overlay, JideOverlayService.OVERLAY);
-
         if (overlayable != null) {
 
             return (overlayable.getOverlayLocation(overlay) != JideOverlayService.NOT_FOUND);
@@ -250,11 +215,6 @@ public class JideOverlayService implements OverlayService, SwingConstants {
      * @return <code>true</code> if success and <code>false</code> in other case.
      */
     protected final Boolean setVisible(JComponent targetComponent, JComponent overlay, Boolean show) {
-
-        Assert.notNull(targetComponent, JideOverlayService.TARGET_COMPONENT_PARAM);
-        Assert.notNull(overlay, JideOverlayService.OVERLAY);
-        Assert.notNull(show, "show");
-
         // If overlay is installed...
         if (this.isOverlayInstalled(targetComponent, overlay)) {
 

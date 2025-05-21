@@ -232,7 +232,7 @@ public abstract class AbstractCommand extends AbstractPropertyChangePublisher im
 	 * CommandFaceDescriptor&gt; pairs.
 	 */
 	public void setFaceDescriptors(Map faceDescriptors) {
-		Assert.notNull(faceDescriptors);
+		Assert.notNull(faceDescriptors, "faceDescriptors should not be null");
 		Iterator it = faceDescriptors.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry entry = (Map.Entry) it.next();

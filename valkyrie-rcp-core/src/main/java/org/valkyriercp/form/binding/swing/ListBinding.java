@@ -54,7 +54,7 @@ public class ListBinding extends AbstractListBinding {
     }
 
     public void setSelectionMode(int selectionMode) {
-        Assert.isTrue(ListSelectionModel.SINGLE_SELECTION == selectionMode || isPropertyConversionExecutorAvailable());
+        Assert.isTrue(ListSelectionModel.SINGLE_SELECTION == selectionMode || isPropertyConversionExecutorAvailable(), ""); //todo
         getList().setSelectionMode(selectionMode);
     }
 

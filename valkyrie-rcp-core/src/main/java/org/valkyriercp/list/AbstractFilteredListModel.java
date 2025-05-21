@@ -32,7 +32,7 @@ public abstract class AbstractFilteredListModel extends AbstractListModel implem
     protected ListModel filteredModel;
 
     public AbstractFilteredListModel(ListModel model) {
-        Assert.notNull(model);
+        Assert.notNull(model, "model should not be null");
         this.filteredModel = model;
         this.filteredModel.addListDataListener(this);
     }
@@ -42,7 +42,7 @@ public abstract class AbstractFilteredListModel extends AbstractListModel implem
     }
 
     public void setFilteredModel(ListModel model) {
-        Assert.notNull(model);
+        Assert.notNull(model, "model should not be null");
         this.filteredModel.removeListDataListener(this);
         this.filteredModel = model;
         this.filteredModel.addListDataListener(this);

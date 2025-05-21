@@ -365,7 +365,7 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 		// Install the sorter
-		Assert.notNull(baseList);
+		Assert.notNull(baseList, "baseList should not be null");
 		tableSorter = createTableSorter(table, baseList);
 
 		// Allow the derived type to configure the table
@@ -552,8 +552,8 @@ public abstract class AbstractObjectTable extends AbstractControlFactory
 	}
 
 	private void runWithLock(Runnable runnable, Lock lock) {
-		Assert.notNull(runnable);
-		Assert.notNull(lock);
+		Assert.notNull(runnable, "runnable should not be null");
+		Assert.notNull(lock, "lock should not be null");
 		lock.lock();
 		try {
 			runnable.run();

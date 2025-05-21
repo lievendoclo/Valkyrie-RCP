@@ -66,7 +66,7 @@ public class DefaultViewDescriptor extends LabeledObjectSupport implements ViewD
     }
 
     public void setId(String id) {
-        Assert.notNull("id is required");
+        Assert.notNull(id, "id is required");
         this.id = id;
     }
 

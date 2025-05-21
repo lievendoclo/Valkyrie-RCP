@@ -37,7 +37,7 @@ public class CompositeRichValidator implements RichValidator {
 	 * from the given validators.
 	 */
 	public CompositeRichValidator(RichValidator... validators) {
-		Assert.notNull(validators);
+		Assert.notNull(validators, "validators should not be null");
 		this.validators = validators;
 	}
 

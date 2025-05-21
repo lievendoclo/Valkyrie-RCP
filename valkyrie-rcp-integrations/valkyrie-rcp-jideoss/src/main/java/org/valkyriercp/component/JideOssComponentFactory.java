@@ -16,7 +16,6 @@
 package org.valkyriercp.component;
 
 import com.jidesoft.swing.JideTabbedPane;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.valkyriercp.factory.ComponentFactoryDecorator;
 import org.valkyriercp.factory.DefaultComponentFactory;
 import org.valkyriercp.image.ImageSource;
@@ -32,15 +31,14 @@ public class JideOssComponentFactory extends ComponentFactoryDecorator {
      */
     private static final String JIDE_TABBED_PANE_TAB_TRAILING_IMAGE = "jideTabbedPane.tabTrailingImage";
 
-    @Autowired
-    private ImageSource imageSource;
+//    private final ImageSource imageSource;
 
     /**
      * Creates de Jide OSS component factory.
      */
     public JideOssComponentFactory() {
-
         super(new DefaultComponentFactory());
+//        this.imageSource = imageSource;
     }
 
     /**
@@ -64,10 +62,10 @@ public class JideOssComponentFactory extends ComponentFactoryDecorator {
         tabbedPane.setShowCloseButtonOnTab(Boolean.TRUE);
         tabbedPane.setTabEditingAllowed(Boolean.FALSE);
 
-        // Install tab trailing component
-        final Image image = imageSource.getImage(JideOssComponentFactory.JIDE_TABBED_PANE_TAB_TRAILING_IMAGE);
-        tabbedPane.setTabTrailingComponent(SwingUtils.generateComponent(image));
-
+//        // Install tab trailing component
+//        final Image image = imageSource.getImage(JideOssComponentFactory.JIDE_TABBED_PANE_TAB_TRAILING_IMAGE);
+//        tabbedPane.setTabTrailingComponent(SwingUtils.generateComponent(image));
+// todo
         return tabbedPane;
     }
 }

@@ -52,7 +52,7 @@ public class AwtImageResource extends AbstractResource implements ImageObserver,
      *             if the resource is invalid.
      */
     public AwtImageResource(Resource resource) {
-        Assert.notNull(resource);
+        Assert.notNull(resource, "resource should not be null");
         if (resource instanceof AwtImageResource) {
             throw new IllegalArgumentException("Wrapping another AwtImageResource instance is illegal.");
         }

@@ -46,7 +46,7 @@ public class SortedListModel extends AbstractFilteredListModel {
 
     public SortedListModel(ListModel model, Comparator comparator) {
         super(model);
-        Assert.notNull(comparator);
+        Assert.notNull(comparator, "comparator should not be null");
         this.comparator = comparator;
         if (comparator instanceof Observable) {
             ((Observable) comparator).addObserver(comparatorObserver);
@@ -55,7 +55,7 @@ public class SortedListModel extends AbstractFilteredListModel {
     }
 
     public void setComparator(Comparator comparator) {
-        Assert.notNull(comparator);
+        Assert.notNull(comparator, "comparator should not be null");
         if (this.comparator instanceof Observable) {
             ((Observable) comparator).deleteObserver(comparatorObserver);
         }

@@ -62,8 +62,8 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
     }
 
     public void addRules(String contextId, Rules rules) {
-        Assert.notNull(contextId);
-        Assert.notNull(rules);
+        Assert.notNull(contextId, "contextId should not be null");
+        Assert.notNull(rules, "rules should not be null");
         Map context = getRuleContext(contextId);
         context.put(rules.getDomainObjectType(), rules);
     }
@@ -80,7 +80,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
      *            The list of rules.
      */
     public void setRules(List rules) {
-        Assert.notNull(rules);
+        Assert.notNull(rules, "rules should not be null");
         if (logger.isDebugEnabled()) {
             logger.debug("Configuring rules in source...");
         }
@@ -95,7 +95,7 @@ public class DefaultRulesSource extends ConstraintsAccessor implements RulesSour
     }
 
     public Rules getRules(Class beanType, String contextId) {
-        Assert.notNull(beanType);
+        Assert.notNull(beanType, "beanType should not be null");
         if (!StringUtils.hasText(contextId)) {
             contextId = DEFAULT_CONTEXT_ID;
         }

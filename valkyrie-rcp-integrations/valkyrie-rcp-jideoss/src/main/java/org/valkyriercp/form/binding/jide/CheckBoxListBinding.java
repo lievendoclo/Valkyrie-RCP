@@ -16,8 +16,6 @@
 package org.valkyriercp.form.binding.jide;
 
 import com.jidesoft.swing.CheckBoxList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.binding.value.support.ListListModel;
 import org.valkyriercp.form.binding.support.CustomBinding;
@@ -29,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckBoxListBinding<T> extends CustomBinding {
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     private CheckBoxList list;
     private List<T> possibleValues;
 

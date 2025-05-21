@@ -33,7 +33,7 @@ public class ChainedInterceptorFactory implements FormComponentInterceptorFactor
     }
 
     public void setInterceptorFactories(List<FormComponentInterceptorFactory> interceptorFactories) {
-        Assert.notNull(interceptorFactories);
+        Assert.notNull(interceptorFactories, "interceptorFactories should not be null");
         this.interceptorFactories = interceptorFactories;
     }
 

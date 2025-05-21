@@ -375,7 +375,7 @@ public class DefaultDataEditorWidget extends AbstractDataEditorWidget implements
 	 *            description of columns used to create the table.
 	 */
 	protected void setTableWidget(final TableDescription tableDescription) {
-		Assert.notNull(tableDescription);
+		Assert.notNull(tableDescription, "tableDescription should not be null");
 		tableWidget = new CachedCallable<TableWidget>() {
 			@Override
 			protected TableWidget doCall() {

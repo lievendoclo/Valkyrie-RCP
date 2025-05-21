@@ -629,7 +629,7 @@ public class LookupBinding<T> extends CustomBinding {
 
         @Override
         protected void doExecuteCommand() {
-            Assert.notNull(dataEditorViewCommandId);
+            Assert.notNull(dataEditorViewCommandId, "dataEditorViewCommandId should not be null");
             DataEditorWidgetViewCommand command = (DataEditorWidgetViewCommand) getApplicationConfig().commandManager().getCommand(dataEditorViewCommandId);
             executeViewDataEditorCommand(command, filter, selectedObject);
         }

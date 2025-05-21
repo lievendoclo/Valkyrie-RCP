@@ -237,7 +237,7 @@ public class NumberBinder extends AbstractBinder
      */
     public void setShiftFactor(BigDecimal shiftFactor)
     {
-        Assert.isTrue(getRequiredSourceClass() == BigDecimal.class);
+        Assert.isTrue(getRequiredSourceClass() == BigDecimal.class, "source class should be BigDecimal");
         // Only BigDecimal's can divide safely
         this.shiftFactor = shiftFactor;
     }

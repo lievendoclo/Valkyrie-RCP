@@ -69,7 +69,7 @@ public class DefaultFilteredListModel extends AbstractFilteredListModel implemen
      *             if constraint is null
      */
     public final void setConstraint(Constraint constraint) {
-        Assert.notNull(constraint);
+        Assert.notNull(constraint, "constraint should not be null");
         if (!constraint.equals(this.constraint)) {
             if (this.constraint instanceof Observable) {
                 ((Observable) constraint).deleteObserver(this);

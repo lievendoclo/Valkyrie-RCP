@@ -162,7 +162,7 @@ public abstract class AbstractForm extends AbstractControlFactory implements For
 	 * @param formModel
 	 */
 	protected void setFormModel(ValidatingFormModel formModel) {
-		Assert.notNull(formModel);
+		Assert.notNull(formModel, "formModel should not be null");
 		if (this.formModel != null && isControlCreated()) {
 			throw new UnsupportedOperationException("Cannot reset form model once form control has been created");
 		}

@@ -138,7 +138,7 @@ public abstract class CompositeDialogPage extends AbstractDialogPage {
 	public void setActivePage(DialogPage activePage) {
 		DialogPage oldPage = this.activePage;
 
-		Assert.isTrue(activePage == null || pages.contains(activePage));
+		Assert.isTrue(activePage == null || pages.contains(activePage), "pages must contain active page");
 		if (oldPage == activePage) {
 			return;
 		}

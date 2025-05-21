@@ -15,7 +15,6 @@
  */
 package org.valkyriercp.sample.simple;
 
-import jdk.nashorn.internal.objects.Global;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

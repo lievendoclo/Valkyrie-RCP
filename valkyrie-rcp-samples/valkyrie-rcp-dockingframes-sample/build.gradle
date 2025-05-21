@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(":valkyrie-rcp-core")
+    implementation project(":valkyrie-rcp-integrations:valkyrie-rcp-dockingframes")
+    implementation "com.jgoodies:jgoodies-looks:2.7.0"
+}

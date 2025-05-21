@@ -448,8 +448,8 @@ public class EventListenerListHelper implements Serializable {
         public final int numParams;
 
         public MethodCacheKey(Class listenerClass, String methodName, int numParams) {
-            Assert.notNull(listenerClass);
-            Assert.notNull(methodName);
+            Assert.notNull(listenerClass, "listenerClass should not be null");
+            Assert.notNull(methodName, "methodName should not be null");
 
             this.listenerClass = listenerClass;
             this.methodName = methodName;

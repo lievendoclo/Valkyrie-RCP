@@ -41,7 +41,7 @@ public class AsYouTypeTextComponentAdapter extends AbstractValueModelAdapter imp
     public AsYouTypeTextComponentAdapter(JTextComponent control, ValueModel valueModel, boolean convertEmptyStringToNull)
     {
         super(valueModel);
-        Assert.notNull(control);
+        Assert.notNull(control, "control should not be null");
         this.control = control;
         this.control.getDocument().addDocumentListener(this);
         this.convertEmptyStringToNull = convertEmptyStringToNull;

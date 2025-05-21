@@ -93,7 +93,7 @@ public class EnumRadioButtonBinding extends CustomBinding {
 
 	@Override
 	protected JComponent doBindControl() {
-		Assert.notNull(selectableEnumsList);
+		Assert.notNull(selectableEnumsList, "selectableEnumsList should not be null");
 		return createBindingControl();
 	}
 

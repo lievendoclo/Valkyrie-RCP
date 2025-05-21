@@ -48,7 +48,7 @@ public class FormatterFactory extends JFormattedTextField.AbstractFormatterFacto
     }
 
     public void setValueCommitPolicy(ValueCommitPolicy policy) {
-        Assert.notNull(policy);
+        Assert.notNull(policy, "policy should not be null");
         this.valueCommitPolicy = policy;
     }
 

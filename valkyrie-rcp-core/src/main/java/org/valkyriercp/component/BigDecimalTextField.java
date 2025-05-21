@@ -126,8 +126,8 @@ public class BigDecimalTextField extends JTextField {
 	public BigDecimalTextField(int nrOfNonDecimals, int nrOfDecimals, boolean negativeSign, Class numberClass,
 			NumberFormat format, NumberFormat unformat) {
 		super();
-		Assert.notNull(format);
-		Assert.notNull(unformat);
+		Assert.notNull(format, "format should not be null");
+		Assert.notNull(unformat, "unformat should not be null");
 		this.format = format;
 		setBigDecimalFormat(format, numberClass);
 		this.unformat = unformat;

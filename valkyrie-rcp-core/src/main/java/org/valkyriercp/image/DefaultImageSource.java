@@ -121,7 +121,7 @@ public class DefaultImageSource implements ImageSource {
 	 * @param imageResources a map of key-to-image-resources.
 	 */
 	public DefaultImageSource(boolean installUrlHandler, Map<String, String> imageResources) {
-		Assert.notNull(imageResources);
+		Assert.notNull(imageResources, "imageResources should not be null");
 		this.imageResources = new HashMap<>(imageResources);
 		debugPrintResources();
 		if (installUrlHandler) {
@@ -145,7 +145,7 @@ public class DefaultImageSource implements ImageSource {
 	}
 
 	public Image getImage(String key) {
-		Assert.notNull(key);
+		Assert.notNull(key, "key should not be null");
 		try {
 			String value = imageResources.get(key);
 			if(value == null) {
@@ -174,7 +174,7 @@ public class DefaultImageSource implements ImageSource {
 	}
 
 	public AwtImageResource getImageResource(String key) {
-		Assert.notNull(key);
+		Assert.notNull(key, "key should not be null");
 		Resource resource = null;
 		final Object tmp = imageResources.get(key);
 		if(tmp instanceof Resource)

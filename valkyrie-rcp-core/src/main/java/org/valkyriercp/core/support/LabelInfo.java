@@ -397,7 +397,7 @@ public final class LabelInfo {
      * @throws IllegalArgumentException if {@code button} is null.
      */
     public void configureButton(AbstractButton button) {
-        Assert.notNull(button);
+        Assert.notNull(button, "button should not be null");
         button.setText(this.text);
         button.setMnemonic(getMnemonic());
         button.setDisplayedMnemonicIndex(getMnemonicIndex());

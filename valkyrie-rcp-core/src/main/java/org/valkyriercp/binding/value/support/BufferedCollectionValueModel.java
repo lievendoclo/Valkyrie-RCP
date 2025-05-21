@@ -70,7 +70,7 @@ public class BufferedCollectionValueModel extends BufferedValueModel {
      */
     public BufferedCollectionValueModel(ValueModel wrappedModel, Class wrappedType) {
         super(wrappedModel);
-        Assert.notNull(wrappedType);
+        Assert.notNull(wrappedType, "wrappedType should not be null");
         this.wrappedType = wrappedType;
         this.wrappedConcreteType = getConcreteCollectionType(wrappedType);
         updateBufferedListModel(getWrappedValue());

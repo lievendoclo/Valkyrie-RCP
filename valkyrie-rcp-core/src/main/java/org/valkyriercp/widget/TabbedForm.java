@@ -124,7 +124,7 @@ public abstract class TabbedForm extends AbstractFocussableWidgetForm implements
 
         public Tab(String tabId, JComponent panel)
         {
-            Assert.notNull(panel);
+            Assert.notNull(panel, "panel should not be null");
             this.tabId = tabId;
             this.title = getApplicationConfig().messageResolver().getMessage(getId(), this.tabId, "title");
             this.panel = panel;

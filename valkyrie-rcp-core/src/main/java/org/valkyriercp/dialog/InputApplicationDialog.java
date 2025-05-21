@@ -103,7 +103,7 @@ public class InputApplicationDialog extends ApplicationDialog implements
 	}
 
 	public void setInputField(JComponent field) {
-		Assert.notNull(field);
+		Assert.notNull(field, "field should not be null");
 		this.inputField = field;
 	}
 

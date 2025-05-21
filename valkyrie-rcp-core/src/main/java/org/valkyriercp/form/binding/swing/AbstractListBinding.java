@@ -80,7 +80,7 @@ public abstract class AbstractListBinding extends AbstractBinding {
     }
 
     public final void setSelectableItems(Object selectableItems) {
-        Assert.notNull(selectableItems);
+        Assert.notNull(selectableItems, "selectableItems should not be null");
         if (!selectableItems.equals(this.selectableItems)) {
             this.selectableItems = selectableItems;
             selectableItemsChanged();
@@ -155,8 +155,8 @@ public abstract class AbstractListBinding extends AbstractBinding {
      *             if the value can not be converted
      */
     protected Object convertValue(Object value, Class targetClass) throws ConversionException {
-        Assert.notNull(value);
-        Assert.notNull(targetClass);
+        Assert.notNull(value, "value should not be null");
+        Assert.notNull(targetClass, "targetClass should not be null");
         return getConversionService().getConversionExecutor(value.getClass(), targetClass).execute(value);
     }
 

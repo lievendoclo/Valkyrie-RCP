@@ -122,8 +122,8 @@ public class ConditionalPropertyConstraint extends AbstractPropertyConstraint im
 	public ConditionalPropertyConstraint(PropertyConstraint ifConstraint, PropertyConstraint thenConstraint,
 			PropertyConstraint elseConstraint, String type) {
 		super(ifConstraint.getPropertyName());
-		Assert.notNull(ifConstraint);
-		Assert.notNull(thenConstraint);
+		Assert.notNull(ifConstraint, "ifConstraint should not be null");
+		Assert.notNull(thenConstraint, "thenConstraint should not be null");
 		this.ifConstraint = ifConstraint;
 		this.thenConstraint = thenConstraint;
 		this.elseConstraint = elseConstraint;

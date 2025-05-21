@@ -28,7 +28,7 @@ public class FocusLostTextComponentAdapter extends AbstractValueModelAdapter imp
 
     public FocusLostTextComponentAdapter(JTextComponent component, ValueModel valueModel) {
         super(valueModel);
-        Assert.notNull(component);
+        Assert.notNull(component, "component should not be null");
         this.control = component;
         this.control.addFocusListener(this);
         initalizeAdaptedValue();

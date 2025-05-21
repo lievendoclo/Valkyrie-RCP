@@ -95,7 +95,7 @@ public class Handler extends URLStreamHandler {
 	 * be resolved from the provided image source.
 	 */
 	public static void installImageUrlHandler(ImageSource urlHandlerImageSource) {
-		Assert.notNull(urlHandlerImageSource);
+		Assert.notNull(urlHandlerImageSource, "image source should not be null");
 
 		Handler.urlHandlerImageSource = urlHandlerImageSource;
 

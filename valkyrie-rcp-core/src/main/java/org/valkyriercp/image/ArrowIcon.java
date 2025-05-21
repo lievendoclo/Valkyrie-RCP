@@ -124,7 +124,7 @@ public class ArrowIcon implements Icon {
      * @param color
      */
     private void setColor(Color color) {
-        Assert.notNull(color);
+        Assert.notNull(color, "color should not be null");
         this.color = color;
     }
 

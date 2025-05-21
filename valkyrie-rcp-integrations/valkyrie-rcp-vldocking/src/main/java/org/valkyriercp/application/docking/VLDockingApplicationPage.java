@@ -28,8 +28,6 @@ import com.vldocking.swing.docking.event.DockableStateChangeListener;
 import com.vldocking.swing.docking.event.DockableStateWillChangeEvent;
 import com.vldocking.swing.docking.event.DockableStateWillChangeListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.valkyriercp.application.ApplicationWindow;
 import org.valkyriercp.application.PageComponent;
@@ -52,9 +50,6 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author Rogan Dawes
  */
 public class VLDockingApplicationPage extends AbstractApplicationPage implements PageLayoutBuilder {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     private DockingDesktop desktop;
 
     private DockingContext dockingContext;
@@ -149,13 +144,10 @@ public class VLDockingApplicationPage extends AbstractApplicationPage implements
                 desktop.getContext().readXML(in);
                 in.close();
             } catch (IOException ioe) {
-                logger.warn("Error reading workspace layout " + initialLayout + ", using defaults", ioe);
                 getPageDescriptor().buildInitialLayout(this);
             } catch (SAXException saxe) {
-                logger.warn("Error parsing workspace layout " + initialLayout + ", using defaults", saxe);
                 getPageDescriptor().buildInitialLayout(this);
             } catch (ParserConfigurationException pce) {
-                logger.warn("Error parsing workspace layout " + initialLayout + ", using defaults", pce);
                 getPageDescriptor().buildInitialLayout(this);
             }
             if (desktop.getDockables().length == 0) {
@@ -227,7 +219,6 @@ public class VLDockingApplicationPage extends AbstractApplicationPage implements
                         desktop.getContext().writeXML(out);
                         out.close();
                     } catch (IOException ioe) {
-                        logger.warn("Error saving desktop layout to " + file, ioe);
                     }
                 }
             } catch (IOException ioe) {

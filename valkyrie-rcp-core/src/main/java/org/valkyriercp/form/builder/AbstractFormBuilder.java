@@ -45,7 +45,7 @@ public abstract class AbstractFormBuilder {
 	 * @param bindingFactory the factory creating the {@link Binding}s.
 	 */
 	protected AbstractFormBuilder(BindingFactory bindingFactory) {
-		Assert.notNull(bindingFactory);
+		Assert.notNull(bindingFactory, "bindingFactory should not be null");
 		this.bindingFactory = bindingFactory;
 	}
 

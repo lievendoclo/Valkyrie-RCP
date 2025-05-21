@@ -172,7 +172,7 @@ public abstract class AbstractListBinder extends AbstractBinder {
      */
     protected final Binding doBind(JComponent control, FormModel formModel, String formPropertyPath, Map context) {
         AbstractListBinding binding = createListBinding(control, formModel, formPropertyPath);
-        Assert.notNull(binding);
+        Assert.notNull(binding, "binding should not be null");
         applyContext(binding, context);
         return binding;
     }

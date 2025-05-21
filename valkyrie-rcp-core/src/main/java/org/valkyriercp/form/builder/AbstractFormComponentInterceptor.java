@@ -39,7 +39,7 @@ public abstract class AbstractFormComponentInterceptor implements FormComponentI
 	}
 
 	protected AbstractFormComponentInterceptor(FormModel formModel) {
-		Assert.notNull(formModel);
+		Assert.notNull(formModel, "formModel should not be null");
 		this.formModel = formModel;
 	}
 

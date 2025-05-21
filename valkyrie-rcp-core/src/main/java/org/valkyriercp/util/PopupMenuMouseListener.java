@@ -46,7 +46,7 @@ public class PopupMenuMouseListener extends MouseAdapter {
      * Creates a new PopupMenuMouseListener that will show the provided popup.
      */
     public PopupMenuMouseListener(JPopupMenu popupMenu) {
-        Assert.notNull(popupMenu);
+        Assert.notNull(popupMenu, "popupMenu should not be null");
         this.popupMenu = popupMenu;
     }
 

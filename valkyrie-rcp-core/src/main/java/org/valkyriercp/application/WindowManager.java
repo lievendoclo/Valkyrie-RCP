@@ -65,7 +65,7 @@ public class WindowManager extends Observable implements PropertyChangePublisher
      *            the parent window manager
      */
     public WindowManager(WindowManager parent) {
-        Assert.notNull(parent);
+        Assert.notNull(parent,"parent should not be null");
         parent.addWindowManager(this);
     }
 

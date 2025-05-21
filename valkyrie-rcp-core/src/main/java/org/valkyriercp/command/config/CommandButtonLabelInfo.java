@@ -247,7 +247,7 @@ public final class CommandButtonLabelInfo implements ButtonConfigurer {
      * @param button
      */
     public AbstractButton configure(AbstractButton button) {
-        Assert.notNull(button);
+        Assert.notNull(button, "button should not be null");
         button.setText(this.labelInfo.getText());
         button.setMnemonic(this.labelInfo.getMnemonic());
         button.setDisplayedMnemonicIndex(this.labelInfo.getMnemonicIndex());

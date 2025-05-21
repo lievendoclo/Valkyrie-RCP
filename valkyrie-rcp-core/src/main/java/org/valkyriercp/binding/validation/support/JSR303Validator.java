@@ -166,7 +166,7 @@ public class JSR303Validator<T>  implements RichValidator<T>, ObjectNameResolver
 	 * @param propertyName Name of the property to ignore. Cannot be null.
 	 */
 	public void addIgnoredProperty(String propertyName) {
-		Assert.notNull(propertyName);
+		Assert.notNull(propertyName, "propertyName should not be null");
 		ignoredProperties.add(propertyName);
 	}
 
@@ -176,7 +176,7 @@ public class JSR303Validator<T>  implements RichValidator<T>, ObjectNameResolver
 	 * @param propertyName Name of the property to be removed. Cannot be null.
 	 */
 	public void removeIgnoredProperty(String propertyName) {
-		Assert.notNull(propertyName);
+		Assert.notNull(propertyName, "propertyName should not be null");
 		ignoredProperties.remove(propertyName);
 	}
 

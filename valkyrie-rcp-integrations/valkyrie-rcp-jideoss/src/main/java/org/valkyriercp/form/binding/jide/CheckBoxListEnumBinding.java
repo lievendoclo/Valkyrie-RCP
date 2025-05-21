@@ -16,9 +16,7 @@
 package org.valkyriercp.form.binding.jide;
 
 import com.jidesoft.swing.CheckBoxList;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.valkyriercp.binding.form.FormModel;
 import org.valkyriercp.component.EnumListRenderer;
 
@@ -30,7 +28,6 @@ import java.util.List;
  * Binding for a list of Enum values. Shows all possible enum values in a checkbox list and binds on the selected ones.
  */
 public class CheckBoxListEnumBinding extends CheckBoxListBinding<Enum> {
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     private CheckBoxList list;
     private Class<? extends Enum> enumClass;
@@ -47,10 +44,8 @@ public class CheckBoxListEnumBinding extends CheckBoxListBinding<Enum> {
         List<Enum> out = new ArrayList<Enum>();
         for (Enum e : enumClass.getEnumConstants()) {
             String desc = getApplicationConfig().messageResolver().getMessage(enumClass.getName() + "." + e.name());
-            if (StringUtils.isNotBlank(desc)) {
+            if (desc.isBlank()) {
                 out.add(e);
-            } else {
-                log.warn("No message found for: " + e + ", ignoring!");
             }
         }
         return out;
